@@ -2,7 +2,7 @@ E6SSM-Tuning
 ============
 
 Code for evaluating fine tuning in the E6SSM.
-Makes use of the SoftSUSY [1] 3.3.10 for evaluating fine tuning in the (p)MSSM 
+Makes use of SoftSUSY [1] 3.3.10 for evaluating fine tuning in the (p)MSSM 
 and E6SSM spectrum generators produced using FlexibleSUSY [2] for 
 evaluating the fine tuning in the E6SSM.
 

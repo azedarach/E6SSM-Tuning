@@ -1,24 +1,34 @@
+# Switch between local machine and cloud
+IS_LOCAL        := yes
+
 # Package information
 PKGNAME         := FlexibleSUSY
 VERSION         := 1.0.1
 # Needs to be changed to correspond to the fine tuning
 # executable, not FlexibleSUSY
 ABSBASEDIR      := /data/dylan/FlexibleSUSY
+ifeq ($(IS_LOCAL),yes)
+ABSBASEDIR      := /home/dylan/Documents/Postgraduate/E6SSM-Tuning
+SRCDIR          := $(ABSBASEDIR)/src
+endif
 
 # Switches
 ENABLE_FFLITE    := no
 ENABLE_LOOPTOOLS := no
 ENABLE_THREADS   := no
+ifeq ($(IS_LOCAL),yes)
+ENABLE_THREADS   := yes
+endif
 
 LIBEXT          := .a
 
 MODEL           := genericE6SSM
 
-MODELDIR        := $(ABSBASEDIR)/models/$(MODEL)
-CONFIGDIR       := $(ABSBASEDIR)/config
-FLEXIDIR        := $(ABSBASEDIR)/src
-LEGACYDIR       := $(ABSBASEDIR)/legacy
-FFLITEDIR       := $(ABSBASEDIR)/fflite
+MODELDIR        := $(SRCDIR)/E6SSM_Spectrum_Generators/models/$(MODEL)
+CONFIGDIR       := $(SRCDIR)/E6SSM_Spectrum_Generators/config
+FLEXIDIR        := $(SRCDIR)/E6SSM_Spectrum_Generators/src
+LEGACYDIR       := $(SRCDIR)/E6SSM_Spectrum_Generators/legacy
+FFLITEDIR       := $(SRCDIR)/E6SSM_Spectrum_Generators/fflite
 
 INCMODEL        := -I$(MODELDIR)
 INCCONFIG       := -I$(CONFIGDIR)
@@ -52,6 +62,31 @@ LOOPTOOLSFLAGS  :=
 LOOPTOOLSLIBS   := 
 THREADLIBS      := -lpthread
 
+ifeq ($(IS_LOCAL),yes)
+CXX                := g++
+CPPFLAGS           :=  -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
+                      $(INCMODEL)  
+CXXFLAGS           := -std=c++11 -O2
+CXX_DEP_GEN        := g++
+CXXFLAGS_DEP_GEN   := -std=c++11
+FC                 := gfortran
+FFLAGS             := -O2 -frecursive
+FLIBS              := -L/usr/lib/gcc/x86_64-linux-gnu/4.8/ -lgfortran -lm
+FOR_DEP_GEN        := gfortran
+MAKELIB            := ar cru
+LIBEXT             := .a
+BOOSTTESTLIBS      := -lboost_unit_test_framework
+BOOSTTHREADLIBS    := 
+BOOSTFLAGS         := 
+EIGENFLAGS         := -I/usr/include/eigen3
+GSLLIBS            := -L/usr/lib -lgsl -lgslcblas -lm
+GSLFLAGS           := -I/usr/include
+LAPACKLIBS         := -llapack
+LOOPTOOLSFLAGS     := 
+LOOPTOOLSLIBS      := 
+THREADLIBS         := -lpthread
+endif
+
 ifeq ($(ENABLE_LOOPTOOLS),yes)
 LOOPFUNCFLAGS	   := $(LOOPTOOLSFLAGS)
 LOOPFUNCLIBS	   := $(LOOPTOOLSLIBS)
@@ -61,17 +96,25 @@ LOOPFUNCFLAGS	   :=
 LOOPFUNCLIBS	    = $(LIBFFLITE)
 endif
 
+TUNING_HDR := \
+                $(SRCDIR)/essmtuningutils.h \
+                $(SRCDIR)/tuningutils.h \
+                $(SRCDIR)/flags.h \
+                $(SRCDIR)/tuningnumerics.h
+
 TUNING_SRC := \
-		essmScanner.cpp
+		$(SRCDIR)/essmScanner.cpp \
+                $(SRCDIR)/essmtuningutils.cpp \
+                $(SRCDIR)/tuningnumerics.cpp
 
-STANDALONE_OBJ := \
-		$(patsubst %.cpp, %.o, $(filter %.cpp, $(STANDALONE_SRC))) \
-		$(patsubst %.f, %.o, $(filter %.f, $(STANDALONE_SRC)))
+TUNING_OBJ := \
+		$(patsubst %.cpp, %.o, $(filter %.cpp, $(TUNING_SRC))) \
+		$(patsubst %.f, %.o, $(filter %.f, $(TUNING_SRC)))
 
-STANDALONE_DEP := \
-		$(STANDALONE_OBJ:.o=.d)
+TUNING_DEP := \
+		$(TUNING_OBJ:.o=.d)
 
-STANDALONE_EXE := \
+TUNING_EXE := \
 		essmScanner.x
 
 # returns file name with absolute path, taking whitespace in directory
@@ -79,29 +122,26 @@ STANDALONE_EXE := \
 abspathx        = $(foreach name,$(1),\
 		$(shell echo '$(abspath $(name))' | sed s/\[\[:space:\]\]/\\\\\&/g))
 
-.PHONY:         all clean clean-dep clean-obj distclean showbuild
+.PHONY:         all clean clean-dep clean-obj showbuild
 
-all: $(STANDALONE_EXE)
+all: $(TUNING_EXE)
 
 clean-dep:
-		-rm -f $(STANDALONE_DEP)
+		-rm -f $(TUNING_DEP)
 
 clean-obj:
-		-rm -f $(STANDALONE_OBJ)
+		-rm -f $(TUNING_OBJ)
 
 clean: clean-dep clean-obj
-		-rm -f $(STANDALONE_EXE)
+		-rm -f $(TUNING_EXE)
 
-distclean: clean
-		-rm -f Makefile
-
-$(STANDALONE_DEP) $(STANDALONE_OBJ): CPPFLAGS += $(GSLFLAGS) $(EIGENFLAGS) $(BOOSTFLAGS)
+$(TUNING_DEP) $(TUNING_OBJ): CPPFLAGS += $(GSLFLAGS) $(EIGENFLAGS) $(BOOSTFLAGS)
 
 ifneq (,$(findstring yes,$(ENABLE_LOOPTOOLS)$(ENABLE_FFLITE)))
-$(STANDALONE_DEP) $(STANDALONE_OBJ): CPPFLAGS += $(LOOPFUNCFLAGS)
+$(TUNING_DEP) $(TUNING_OBJ): CPPFLAGS += $(LOOPFUNCFLAGS)
 endif
 
-$(STANDALONE_EXE): $(STANDALONE_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+$(TUNING_EXE): $(TUNING_OBJ) $(TUNING_HDR) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS)
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -109,7 +149,7 @@ ifneq ($(MAKECMDGOALS),clean-dep)
 ifneq ($(MAKECMDGOALS),clean-obj)
 ifneq ($(MAKECMDGOALS),distclean)
 ifneq ($(MAKECMDGOALS),showbuild)
--include $(STANDALONE_DEP)
+-include $(TUNING_DEP)
 endif
 endif
 endif

@@ -6,13 +6,13 @@
  */
 
 #include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_input_parameters.hpp"
-#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_slha_io.hpp"
 #include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_spectrum_generator.hpp"
 
 #include "./E6SSM_Spectrum_Generators/src/error.hpp"
 #include "./E6SSM_Spectrum_Generators/src/spectrum_generator_settings.hpp"
 #include "./E6SSM_Spectrum_Generators/src/lowe.h"
 #include "./E6SSM_Spectrum_Generators/src/command_line_options.hpp"
+#include "./E6SSM_Spectrum_Generators/src/wrappers.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -20,55 +20,69 @@
 #include "flags.h"
 #include "tuningnumerics.h"
 #include "tuningutils.h"
+#include "essmtuningutils.h"
 
-// Define charges (used as inputs)
-const static double QQPsi = 1.0/(2.0*Sqrt(6.0));
-const static double QuPsi = 1.0/(2.0*Sqrt(6.0));
-const static double QdPsi = 1.0/(2.0*Sqrt(6.0));
-const static double QLPsi = 1.0/(2.0*Sqrt(6.0));
-const static double QePsi = 1.0/(2.0*Sqrt(6.0));
-const static double QNPsi = 1.0/(2.0*Sqrt(6.0));
-const static double QSPsi = 4.0/(2.0*Sqrt(6.0));
-const static double QH1Psi = -1.0/Sqrt(6.0);
-const static double QH2Psi = -1.0/Sqrt(6.0);
-const static double QXPsi = -1.0/Sqrt(6.0);
-const static double QXbarPsi = -1.0/Sqrt(6.0);
-const static double QHPrPsi = 1.0/(2.0*Sqrt(6.0));
-const static double QHbarPrPsi = -1.0/(2.0*Sqrt(6.0));
+void errorCall();
+string ToUpper(const string & s);
 
-const static double QQChi = -1.0/(2.0*Sqrt(10.0));
-const static double QuChi = -1.0/(2.0*Sqrt(10.0));
-const static double QdChi = 3.0/(2.0*Sqrt(10.0));
-const static double QLChi = 3.0/(2.0*Sqrt(10.0));
-const static double QeChi = -1.0/(2.0*Sqrt(10.0));
-const static double QNChi = -5.0/(2.0*Sqrt(10.0));
-const static double QSChi = 0.0;
-const static double QH1Chi = -1.0/Sqrt(10.0);
-const static double QH2Chi = 1.0/Sqrt(10.0);
-const static double QXChi = 1.0/Sqrt(10.0);
-const static double QXbarChi = -1.0/Sqrt(10.0);
-const static double QHPrChi = 3.0/(2.0*Sqrt(10.0));
-const static double QHbarPrChi = -3.0/(2.0*Sqrt(10.0));
-
-const static double QQY = Sqrt(0.6)*(1.0/6.0);
-const static double QuY = Sqrt(0.6)*(-2.0/3.0);
-const static double QdY = Sqrt(0.6)*(1.0/3.0);
-const static double QLY = Sqrt(0.6)*(-1.0/2.0);
-const static double QeY = Sqrt(0.6);
-const static double QNY = 0.0;
-const static double QSY = 0.0;
-const static double QH1Y = Sqrt(0.6)*(-1.0/2.0);
-const static double QH2Y = Sqrt(0.6)*(1.0/2.0);
-const static double QXY = Sqrt(0.6)*(-1.0/3.0);
-const static double QXbarY = Sqrt(0.6)*(1.0/3.0);
-const static double QHPrY = Sqrt(0.6)*(-1.0/2.0);
-const static double QHbarPrY = Sqrt(0.6)*(1.0/2.0);
 
 int main(int argc, const char* argv[])
 {
   using namespace flexiblesusy;
   using namespace softsusy;
   typedef Two_scale algorithm_type;
+
+  /*
+    --------------------------------------------------------------
+    E6SSM U(1)_\psi and U(1)_\chi charges
+    --------------------------------------------------------------
+   */
+
+  const double QQPsi = 1.0/(2.0*Sqrt(6.0));
+  const double QuPsi = 1.0/(2.0*Sqrt(6.0));
+  const double QdPsi = 1.0/(2.0*Sqrt(6.0));
+  const double QLPsi = 1.0/(2.0*Sqrt(6.0));
+  const double QePsi = 1.0/(2.0*Sqrt(6.0));
+  const double QNPsi = 1.0/(2.0*Sqrt(6.0));
+  const double QSPsi = 4.0/(2.0*Sqrt(6.0));
+  const double QH1Psi = -1.0/Sqrt(6.0);
+  const double QH2Psi = -1.0/Sqrt(6.0);
+  const double QXPsi = -1.0/Sqrt(6.0);
+  const double QXbarPsi = -1.0/Sqrt(6.0);
+  const double QHPrPsi = 1.0/(2.0*Sqrt(6.0));
+  const double QHbarPrPsi = -1.0/(2.0*Sqrt(6.0));
+  
+  const double QQChi = -1.0/(2.0*Sqrt(10.0));
+  const double QuChi = -1.0/(2.0*Sqrt(10.0));
+  const double QdChi = 3.0/(2.0*Sqrt(10.0));
+  const double QLChi = 3.0/(2.0*Sqrt(10.0));
+  const double QeChi = -1.0/(2.0*Sqrt(10.0));
+  const double QNChi = -5.0/(2.0*Sqrt(10.0));
+  const double QSChi = 0.0;
+  const double QH1Chi = -1.0/Sqrt(10.0);
+  const double QH2Chi = 1.0/Sqrt(10.0);
+  const double QXChi = 1.0/Sqrt(10.0);
+  const double QXbarChi = -1.0/Sqrt(10.0);
+  const double QHPrChi = 3.0/(2.0*Sqrt(10.0));
+  const double QHbarPrChi = -3.0/(2.0*Sqrt(10.0));
+  
+  const double QQY = Sqrt(0.6)*(1.0/6.0);
+  const double QuY = Sqrt(0.6)*(-2.0/3.0);
+  const double QdY = Sqrt(0.6)*(1.0/3.0);
+  const double QLY = Sqrt(0.6)*(-1.0/2.0);
+  const double QeY = Sqrt(0.6);
+  const double QNY = 0.0;
+  const double QSY = 0.0;
+  const double QH1Y = Sqrt(0.6)*(-1.0/2.0);
+  const double QH2Y = Sqrt(0.6)*(1.0/2.0);
+  const double QXY = Sqrt(0.6)*(-1.0/3.0);
+  const double QXbarY = Sqrt(0.6)*(1.0/3.0);
+  const double QHPrY = Sqrt(0.6)*(-1.0/2.0);
+  const double QHbarPrY = Sqrt(0.6)*(1.0/2.0);
+  
+  /*
+    --------------------------------------------------------------
+  */
 
   /*
     --------------------------------------------------------------
@@ -369,7 +383,7 @@ int main(int argc, const char* argv[])
   double vin = 246.0; //< Higgs vev, GeV
 
   // Need M_Z' at least 2.5 TeV
-  double sin = 5000.0; //< singlet vev, GeV
+  double vsin = 5000.0; //< singlet vev, GeV
 
   /*
     ----------------------------------------------------
@@ -677,7 +691,7 @@ int main(int argc, const char* argv[])
 		    }
 		  else if (word1 == "LAMBDAUL")
 		    {
-		      kk >> lamdba3_up;
+		      kk >> lambda3_up;
 		      hasLambda3UL = true;
 		    }
 		  else if (word1 == "LAMBDANPTS")
@@ -801,84 +815,84 @@ int main(int argc, const char* argv[])
 		    }
 		  else if (word1 == "ALAMBDALL")
 		    {
-		      if (hasLogAlambdaOption)
+		      if (hasLogAlambda3Option)
 			{
 			  cerr << "WARNING: log scan of A_lambda3 already requested:";
 			  cerr << " ignoring option '" << word1 << "' at line " << lineNum << "." << endl;
 			}
 		      else
 			{
-			  hasNonLogAlambdaOption = true;
+			  hasNonLogAlambda3Option = true;
 			  kk >> Alambda3_low;
 			  hasAlambda3LL = true;
 			}
 		    }
 		  else if (word1 == "ALAMBDAUL")
 		    {
-		      if (hasLogAlambdaOption)
+		      if (hasLogAlambda3Option)
 			{
 			  cerr << "WARNING: log scan of A_lambda3 already requested:";
 			  cerr << " ignoring option '" << word1 << "' at line " << lineNum << "." << endl;
 			}
 		      else
 			{
-			  hasNonLogAlambdaOption = true;
+			  hasNonLogAlambda3Option = true;
 			  kk >> Alambda3_up;
 			  hasAlambda3UL = true;
 			}
 		    }
 		  else if (word1 == "ALAMBDANPTS")
 		    {
-		      if (hasLogAlambdaOption)
+		      if (hasLogAlambda3Option)
 			{
 			  cerr << "WARNING: log scan of A_lambda3 already requested:";
 			  cerr << " ignoring option '" << word1 << "' at line " << lineNum << "." << endl;
 			}
 		      else
 			{
-			  hasNonLogAlambdaOption = true;
+			  hasNonLogAlambda3Option = true;
 			  kk >> Alambda3_npts;
 			  hasAlambda3Npts = true;
 			}
 		    }
 		  else if (word1 == "LOGLAMBDALL")
 		    {
-		      if (hasNonLogAlambdaOption)
+		      if (hasNonLogAlambda3Option)
 			{
 			  cerr << "WARNING: linear scan of A_lambda3 already requested:";
 			  cerr << " ignoring option '" << word1 << "' at line " << lineNum << "." << endl;
 			}
 		      else
 			{
-			  hasLogAlambdaOption = true;
+			  hasLogAlambda3Option = true;
 			  kk >> Alambda3_low;
 			  hasAlambda3LL = true;
 			}
 		    }
 		  else if (word1 == "LOGALAMBDAUL")
 		    {
-		      if (hasNonLogAlambdaOption)
+		      if (hasNonLogAlambda3Option)
 			{
 			  cerr << "WARNING: linear scan of A_lambda3 already requested:";
 			  cerr << " ignoring option '" << word1 << "' at line " << lineNum << "." << endl;
 			}
 		      else
 			{
-			  hasLogAlambdaOption = true;
+			  hasLogAlambda3Option = true;
 			  kk >> Alambda3_up;
 			  hasAlambda3UL = true;
 			}
 		    }
 		  else if (word1 == "LOGALAMBDANPTS")
 		    {
-		      if (hasNonLogAlambdaOption)
+		      if (hasNonLogAlambda3Option)
 			{
 			  cerr << "WARNING: linear scan of A_lambda3 already requested:";
 			  cerr << " ignoring option '" << word1 << "' at line " << lineNum << "." << endl;
 			}
 		      else
 			{
-			  hasLogAlambdaOption = true;
+			  hasLogAlambda3Option = true;
 			  kk >> Alambda3_npts;
 			  hasAlambda3Npts = true;
 			}
@@ -970,7 +984,7 @@ int main(int argc, const char* argv[])
 		    }
 		  else if (word1 == "SVEV")
 		    {
-		      kk >> sin;
+		      kk >> vsin;
 		      hass = true;
 		    }
 		  else
@@ -1058,7 +1072,7 @@ int main(int argc, const char* argv[])
 
       if (!hass)
 	{
-	  cerr << "WARNING: Singlet vev s value not found: default value is " << sin << "." << endl;
+	  cerr << "WARNING: Singlet vev s value not found: default value is " << vsin << "." << endl;
 	}
 
       if (!hasTanbLL)
@@ -1165,10 +1179,10 @@ int main(int argc, const char* argv[])
 	  cerr << "WARNING: number of A_t points not found: using default value " << At_npts << "." << endl;
 	}
 
-      if (!hasLogAlambdaOption && !hasNonLogAlambdaOption)
+      if (!hasLogAlambda3Option && !hasNonLogAlambda3Option)
 	{
 	  cerr << "WARNING: A_lambda3 scan type not defined: using default ";
-	  if (!uselogscanAlambda)
+	  if (!uselogscanAlambda3)
 	    {
 	      cerr << "linear scan." << endl;
 	    }
@@ -1177,19 +1191,19 @@ int main(int argc, const char* argv[])
 	      cerr << "log scan." << endl;
 	    }
 	} 
-      else if (hasLogAlambdaOption)
+      else if (hasLogAlambda3Option)
 	{
-	  uselogscanAlambda = true;
+	  uselogscanAlambda3 = true;
 	}
       else
 	{
-	  uselogscanAlambda = false;
+	  uselogscanAlambda3 = false;
 	}
 
       if (!hasAlambda3LL)
 	{
 	  cerr << "WARNING: lower A_lambda3 limit not found: using default value ";
-	  if (uselogscanAlambda)
+	  if (uselogscanAlambda3)
 	    {
 	      cerr << -Alambda3_up << "." << endl;
 	    }
@@ -1357,7 +1371,7 @@ int main(int argc, const char* argv[])
 	  if (At_npts > 1) At_vals.setEnd(At_npts);
 	}
 
-      if (uselogscanAlambda)
+      if (uselogscanAlambda3)
 	{
 	  Alambda3_vals.setEnd(2*Alambda3_npts); //< symmetric scan about the origin
 	}
@@ -1452,7 +1466,7 @@ int main(int argc, const char* argv[])
 	}
 
 
-      if (!uselogscanAlambda)
+      if (!uselogscanAlambda3)
 	{
 	  if (Alambda3_npts != 1)
 	    {
@@ -1507,425 +1521,425 @@ int main(int argc, const char* argv[])
       for (int s = 1; s <= M2_vals.displayEnd(); s++)
 	{
 
-	  // Update variable values
-	  mQlSq(3,3) = mqL3sq_vals(l);
-	  mUrSq(3,3) = mtRsq_vals(p);
-	  tu(3,3) = yuin(3,3)*At_vals(q);
-	  mGaugino(2) = M2_vals(s);
-
-	  // Default guesses for values determined by iteration
-	  mHdSq = 1.0e6;
-	  mHuSq = 1.0e6;
-	  mSSq = 1.0e6;
-	  MS = 1.0e3;
-
-	  // Define model, first reset problem flags
-	  hasEWSBProblem = false;
-	  squarksTachyons = false;
-	  higgsTachyons = false;
-	  tadpoleProblem = false;
-	  poleHiggsTachyons = false;
-	  inaccurateHiggsMass = false;
-	  hasSeriousProblem = false;
-
-	  // m is returned at M_{SUSY}
-	  m = doSimplifiedSpectrum(yuin, ydin, yein, gin, gNin, lambda3_vals(j), tb_vals(i), vin, sin,
-				   mGaugino, tu, td, te, mQlSq, mUrSq, mDrSq, mLlSq, mErSq, 
-				   B_vals(k)*mu_vals(j), mGrav, MX, LOOPS, THRESH, oneset, 
-				   physpars, TOLEWSB, mHdSq, mHuSq, mSSq, MS, 
-				   hasEWSBProblem, squarksTachyons, higgsTachyons, 
-				   tadpoleProblem, poleHiggsTachyons, 
-				   inaccurateHiggsMass, hasSeriousProblem);
-
-	  f1 = ESSM_EWSBCondition1(m);
-	  f2 = ESSM_EWSBCondition2(m);
-	  f3 = ESSM_EWSBCondition3(m);
-
-	  // While at M_{SUSY}, check that we are not in a point where the
-	  // unphysical vacuum v_1 = v_2 = 0 is stable.
-	  hasWrongVacuum = false;
-
-	  double wrongVacuumTest = (m.displayTanb()/(1.0-sqr(m.displayTanb())))*
-	    (m.displayMh2Squared()*m.displayTanb()-m.displayMh1Squared()/m.displayTanb())-0.5*sqr(m.displayMzRun());
-
-	  if (wrongVacuumTest < 0.0)
-	    {
-	      hasWrongVacuum = true;
-	    }
-
-	  // Check for UFB or CCB problems. Because I'm not sure where
-	  // exactly is the best scale to do this, do it at both and
-	  // if it fails at either one flag it (we can always go back
-	  // and check the points later in more detail, anyway).
-
-	  hasUFBProblem = false; hasCCBProblem = false;
-
-	  // Test at M_{SUSY}
-
-	  // According to hep-ph/9507294v3, to avoid UFB problems
-	  // the constrain m_1^2+m_2^2 >= 2|m_3^2| should hold at all
-	  // scales greater than M_{SUSY}, and supposedly in particular at MX.
-	  double ufbTest = m.displayMh1Squared() + m.displayMh2Squared() +2.0*sqr(m.displaySusyMu())
-	    -2.0*fabs(m.displayM3Squared());
-
-	  if (ufbTest < 0)
-	    {
-	      hasUFBProblem = true;
-	    }
-
-	  // For simplicity, apply the CCB criterion of hep-ph/9604417v3 Eq. (2a)
-	  // and Eq. (5) of hep-ph/9507294v3 at M_{SUSY} (this might not be
-	  // the optimum scale though).
-
-	  double ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-				+m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mUr, 3, 3))
-	    -sqr(m.displaySoftA(UA, 3, 3));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // Check the other CCB conditions as well, even though the chance
-	  // of them being a problem is small.
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-			 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mUr, 2, 2))
-	    -sqr(m.displaySoftA(UA, 2, 2));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-			 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mUr, 1, 1))
-	    -sqr(m.displaySoftA(UA, 1, 1));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // A_b CCB tests
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mDr, 3, 3))
-	    -sqr(m.displaySoftA(DA, 3, 3));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mDr, 2, 2))
-	    -sqr(m.displaySoftA(DA, 2, 2));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mDr, 1, 1))
-	    -sqr(m.displaySoftA(DA, 1, 1));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // A_tau test
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mLl, 3, 3)+m.displaySoftMassSquared(mEr, 3, 3))
-	    -sqr(m.displaySoftA(EA, 3, 3));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mLl, 2, 2)+m.displaySoftMassSquared(mEr, 2, 2))
-	    -sqr(m.displaySoftA(EA, 2, 2));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mLl, 1, 1)+m.displaySoftMassSquared(mEr, 1, 1))
-	    -sqr(m.displaySoftA(EA, 1, 1));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  m.runto(MX);
-
-	  // Test at MX
-
-	  ufbTest = m.displayMh1Squared() + m.displayMh2Squared() +2.0*sqr(m.displaySusyMu())
-	    -2.0*fabs(m.displayM3Squared());
-
-	  if (ufbTest < 0)
-	    {
-	      hasUFBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-			 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mUr, 3, 3))
-	    -sqr(m.displaySoftA(UA, 3, 3));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // Check the other CCB conditions as well, even though the chance
-	  // of them being a problem is small.
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-			 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mUr, 2, 2))
-	    -sqr(m.displaySoftA(UA, 2, 2));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-			 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mUr, 1, 1))
-	    -sqr(m.displaySoftA(UA, 1, 1));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // A_b CCB tests
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mDr, 3, 3))
-	    -sqr(m.displaySoftA(DA, 3, 3));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mDr, 2, 2))
-	    -sqr(m.displaySoftA(DA, 2, 2));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mDr, 1, 1))
-	    -sqr(m.displaySoftA(DA, 1, 1));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // A_tau test
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mLl, 3, 3)+m.displaySoftMassSquared(mEr, 3, 3))
-	    -sqr(m.displaySoftA(EA, 3, 3));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mLl, 2, 2)+m.displaySoftMassSquared(mEr, 2, 2))
-	    -sqr(m.displaySoftA(EA, 2, 2));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-			 +m.displaySoftMassSquared(mLl, 1, 1)+m.displaySoftMassSquared(mEr, 1, 1))
-	    -sqr(m.displaySoftA(EA, 1, 1));
-
-	  if (ccbTest < 0.0)
-	    {
-	      hasCCBProblem = true;
-	    }
-
-	  // Calculate fine tuning
-	  hasTuningError = false;
-
-	  bool tuningEWSBProblem = false;
-
-	  try
-	    {
-	      tunings = doCalcpMSSMFineTuning(m, MS, tuningEWSBProblem, hasTuningError, USEAPPROXSOLNS, TOLEWSB);
-
-	      // Possible numerical errors here in running should be accounted for.
-	      if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
-		{
-		  // Probably a numerical issue.
-		  cerr << "WARNING: numerical issue in RG running for tuning calculation." << endl;
-		  hasTuningError = true;
-		}
-	    }
-	  catch(const string & a) 
-	    { 
-	      cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
-	      hasSeriousProblem = true; 
-	    }
-	  catch(const char * a) 
-	    { 
-	      cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
-	      hasSeriousProblem = true; 
-	    }
-	  catch(...) 
-	    { 
-	      cerr << "WARNING: unknown problem encountered in fine tuning calculation." << endl; 
-	      hasSeriousProblem = true; 
-	    }
-
-
-	  // Display output
-	  cout << tb_vals(i) << " ";
-	  cout << mu_vals(j) << " ";
-	  cout << B_vals(k) << " ";
-	  cout << mqL3sq_vals(l) << " ";
-	  cout << mtRsq_vals(p) << " ";
-	  cout << At_vals(q) << " ";
-	  cout << M2_vals(s) << " "; 
-	  cout << m.displayPhys().mh0 << " ";
-	  cout << m.displayPhys().mA0 << " ";
-	  cout << mHdSq << " ";
-	  cout << mHuSq << " ";
-	  cout << f1 << " ";
-	  cout << f2 << " ";
-	  cout << m.displayMsusy() << " ";
-	  cout << m.displayDrBarPars().mu(1,3) << " ";
-	  cout << m.displayDrBarPars().mu(2,3) << " ";
-	  cout << m.displayDrBarPars().md(1,3) << " ";
-	  cout << m.displayDrBarPars().md(2,3) << " ";
-	  cout << m.displayDrBarPars().mchBpmz(1) << " ";
-	  cout << m.displayDrBarPars().mchBpmz(2) << " ";
-	  cout << m.displayDrBarPars().mnBpmz(1) << " ";
-	  cout << m.displayDrBarPars().mnBpmz(2) << " ";
-	  cout << m.displayDrBarPars().mnBpmz(3) << " ";
-	  cout << m.displayDrBarPars().mnBpmz(4) << " ";
-	  cout << m.displayDrBarPars().mh0 << " ";
-	  cout << m.displayDrBarPars().mA0 << " ";
-	  cout << tunings.max() << " ";
-	  for (int i = 1; i <= tunings.displayEnd(); i++)
-	    {
-	      cout << tunings(i) << " ";
-	    }
-	  if (hasUFBProblem)
-	    {
-	      cout << UFBPROBLEM << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-	  if (hasCCBProblem)
-	    {
-	      cout << CCBPROBLEM << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-
-	  if (hasEWSBProblem)
-	    {
-	      cout << EWSBPROBLEM << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-
-	  if (hasWrongVacuum)
-	    {
-	      cout << WRONGVACUUM << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-
-	  if (squarksTachyons)
-	    {
-	      cout << SQUARKTACHYON << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-	  if (higgsTachyons)
-	    {
-	      cout << HIGGSTACHYON << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-	  if (tadpoleProblem)
-	    {
-	      cout << TADPOLESPROBLEM << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-	  if (m.displayPhys().mh0 < HIGGSCENT-HIGGSERROR || m.displayPhys().mh0 > HIGGSCENT+HIGGSERROR)
-	    {
-	      cout << NOTEXPVALID << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-	  if (poleHiggsTachyons)
-	    {
-	      cout << POLEHIGGSTACHYON << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-	  if (inaccurateHiggsMass)
-	    {
-	      cout << HIGGSPROBLEM << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-
-	  if (hasTuningError)
-	    {
-	      cout << TUNINGERROR << " ";
-	    }
-	  else
-	    {
-	      cout << "0 ";
-	    }
-
-	  if (hasSeriousProblem)
-	    {
-	      cout << NUMERICALPROBLEM << endl;
-	    }
-	  else
-	    {
-	      cout << "0" << endl;
-	    }
+	  // // Update variable values
+	  // mQlSq(3,3) = mqL3sq_vals(l);
+	  // mUrSq(3,3) = mtRsq_vals(p);
+	  // tu(3,3) = yuin(3,3)*At_vals(q);
+	  // mGaugino(2) = M2_vals(s);
+
+	  // // Default guesses for values determined by iteration
+	  // mHdSq = 1.0e6;
+	  // mHuSq = 1.0e6;
+	  // mSSq = 1.0e6;
+	  // MS = 1.0e3;
+
+	  // // Define model, first reset problem flags
+	  // hasEWSBProblem = false;
+	  // squarksTachyons = false;
+	  // higgsTachyons = false;
+	  // tadpoleProblem = false;
+	  // poleHiggsTachyons = false;
+	  // inaccurateHiggsMass = false;
+	  // hasSeriousProblem = false;
+
+	  // // m is returned at M_{SUSY}
+	  // m = doSimplifiedSpectrum(yuin, ydin, yein, gin, gNin, lambda3_vals(j), tb_vals(i), vin, sin,
+	  // 			   mGaugino, tu, td, te, mQlSq, mUrSq, mDrSq, mLlSq, mErSq, 
+	  // 			   B_vals(k)*mu_vals(j), mGrav, MX, LOOPS, THRESH, oneset, 
+	  // 			   physpars, TOLEWSB, mHdSq, mHuSq, mSSq, MS, 
+	  // 			   hasEWSBProblem, squarksTachyons, higgsTachyons, 
+	  // 			   tadpoleProblem, poleHiggsTachyons, 
+	  // 			   inaccurateHiggsMass, hasSeriousProblem);
+
+	  // f1 = ESSM_EWSBCondition1(m);
+	  // f2 = ESSM_EWSBCondition2(m);
+	  // f3 = ESSM_EWSBCondition3(m);
+
+	  // // While at M_{SUSY}, check that we are not in a point where the
+	  // // unphysical vacuum v_1 = v_2 = 0 is stable.
+	  // hasWrongVacuum = false;
+
+	  // double wrongVacuumTest = (m.displayTanb()/(1.0-sqr(m.displayTanb())))*
+	  //   (m.displayMh2Squared()*m.displayTanb()-m.displayMh1Squared()/m.displayTanb())-0.5*sqr(m.displayMzRun());
+
+	  // if (wrongVacuumTest < 0.0)
+	  //   {
+	  //     hasWrongVacuum = true;
+	  //   }
+
+	  // // Check for UFB or CCB problems. Because I'm not sure where
+	  // // exactly is the best scale to do this, do it at both and
+	  // // if it fails at either one flag it (we can always go back
+	  // // and check the points later in more detail, anyway).
+
+	  // hasUFBProblem = false; hasCCBProblem = false;
+
+	  // // Test at M_{SUSY}
+
+	  // // According to hep-ph/9507294v3, to avoid UFB problems
+	  // // the constrain m_1^2+m_2^2 >= 2|m_3^2| should hold at all
+	  // // scales greater than M_{SUSY}, and supposedly in particular at MX.
+	  // double ufbTest = m.displayMh1Squared() + m.displayMh2Squared() +2.0*sqr(m.displaySusyMu())
+	  //   -2.0*fabs(m.displayM3Squared());
+
+	  // if (ufbTest < 0)
+	  //   {
+	  //     hasUFBProblem = true;
+	  //   }
+
+	  // // For simplicity, apply the CCB criterion of hep-ph/9604417v3 Eq. (2a)
+	  // // and Eq. (5) of hep-ph/9507294v3 at M_{SUSY} (this might not be
+	  // // the optimum scale though).
+
+	  // double ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
+	  // 			+m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mUr, 3, 3))
+	  //   -sqr(m.displaySoftA(UA, 3, 3));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // Check the other CCB conditions as well, even though the chance
+	  // // of them being a problem is small.
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mUr, 2, 2))
+	  //   -sqr(m.displaySoftA(UA, 2, 2));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mUr, 1, 1))
+	  //   -sqr(m.displaySoftA(UA, 1, 1));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // A_b CCB tests
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mDr, 3, 3))
+	  //   -sqr(m.displaySoftA(DA, 3, 3));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mDr, 2, 2))
+	  //   -sqr(m.displaySoftA(DA, 2, 2));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mDr, 1, 1))
+	  //   -sqr(m.displaySoftA(DA, 1, 1));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // A_tau test
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mLl, 3, 3)+m.displaySoftMassSquared(mEr, 3, 3))
+	  //   -sqr(m.displaySoftA(EA, 3, 3));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mLl, 2, 2)+m.displaySoftMassSquared(mEr, 2, 2))
+	  //   -sqr(m.displaySoftA(EA, 2, 2));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mLl, 1, 1)+m.displaySoftMassSquared(mEr, 1, 1))
+	  //   -sqr(m.displaySoftA(EA, 1, 1));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // m.runto(MX);
+
+	  // // Test at MX
+
+	  // ufbTest = m.displayMh1Squared() + m.displayMh2Squared() +2.0*sqr(m.displaySusyMu())
+	  //   -2.0*fabs(m.displayM3Squared());
+
+	  // if (ufbTest < 0)
+	  //   {
+	  //     hasUFBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mUr, 3, 3))
+	  //   -sqr(m.displaySoftA(UA, 3, 3));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // Check the other CCB conditions as well, even though the chance
+	  // // of them being a problem is small.
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mUr, 2, 2))
+	  //   -sqr(m.displaySoftA(UA, 2, 2));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mUr, 1, 1))
+	  //   -sqr(m.displaySoftA(UA, 1, 1));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // A_b CCB tests
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mDr, 3, 3))
+	  //   -sqr(m.displaySoftA(DA, 3, 3));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mDr, 2, 2))
+	  //   -sqr(m.displaySoftA(DA, 2, 2));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mDr, 1, 1))
+	  //   -sqr(m.displaySoftA(DA, 1, 1));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // A_tau test
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mLl, 3, 3)+m.displaySoftMassSquared(mEr, 3, 3))
+	  //   -sqr(m.displaySoftA(EA, 3, 3));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mLl, 2, 2)+m.displaySoftMassSquared(mEr, 2, 2))
+	  //   -sqr(m.displaySoftA(EA, 2, 2));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
+	  // 		 +m.displaySoftMassSquared(mLl, 1, 1)+m.displaySoftMassSquared(mEr, 1, 1))
+	  //   -sqr(m.displaySoftA(EA, 1, 1));
+
+	  // if (ccbTest < 0.0)
+	  //   {
+	  //     hasCCBProblem = true;
+	  //   }
+
+	  // // Calculate fine tuning
+	  // hasTuningError = false;
+
+	  // bool tuningEWSBProblem = false;
+
+	  // try
+	  //   {
+	  //     tunings = doCalcpMSSMFineTuning(m, MS, tuningEWSBProblem, hasTuningError, USEAPPROXSOLNS, TOLEWSB);
+
+	  //     // Possible numerical errors here in running should be accounted for.
+	  //     if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
+	  // 	{
+	  // 	  // Probably a numerical issue.
+	  // 	  cerr << "WARNING: numerical issue in RG running for tuning calculation." << endl;
+	  // 	  hasTuningError = true;
+	  // 	}
+	  //   }
+	  // catch(const string & a) 
+	  //   { 
+	  //     cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
+	  //     hasSeriousProblem = true; 
+	  //   }
+	  // catch(const char * a) 
+	  //   { 
+	  //     cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
+	  //     hasSeriousProblem = true; 
+	  //   }
+	  // catch(...) 
+	  //   { 
+	  //     cerr << "WARNING: unknown problem encountered in fine tuning calculation." << endl; 
+	  //     hasSeriousProblem = true; 
+	  //   }
+
+
+	  // // Display output
+	  // cout << tb_vals(i) << " ";
+	  // cout << mu_vals(j) << " ";
+	  // cout << B_vals(k) << " ";
+	  // cout << mqL3sq_vals(l) << " ";
+	  // cout << mtRsq_vals(p) << " ";
+	  // cout << At_vals(q) << " ";
+	  // cout << M2_vals(s) << " "; 
+	  // cout << m.displayPhys().mh0 << " ";
+	  // cout << m.displayPhys().mA0 << " ";
+	  // cout << mHdSq << " ";
+	  // cout << mHuSq << " ";
+	  // cout << f1 << " ";
+	  // cout << f2 << " ";
+	  // cout << m.displayMsusy() << " ";
+	  // cout << m.displayDrBarPars().mu(1,3) << " ";
+	  // cout << m.displayDrBarPars().mu(2,3) << " ";
+	  // cout << m.displayDrBarPars().md(1,3) << " ";
+	  // cout << m.displayDrBarPars().md(2,3) << " ";
+	  // cout << m.displayDrBarPars().mchBpmz(1) << " ";
+	  // cout << m.displayDrBarPars().mchBpmz(2) << " ";
+	  // cout << m.displayDrBarPars().mnBpmz(1) << " ";
+	  // cout << m.displayDrBarPars().mnBpmz(2) << " ";
+	  // cout << m.displayDrBarPars().mnBpmz(3) << " ";
+	  // cout << m.displayDrBarPars().mnBpmz(4) << " ";
+	  // cout << m.displayDrBarPars().mh0 << " ";
+	  // cout << m.displayDrBarPars().mA0 << " ";
+	  // cout << tunings.max() << " ";
+	  // for (int i = 1; i <= tunings.displayEnd(); i++)
+	  //   {
+	  //     cout << tunings(i) << " ";
+	  //   }
+	  // if (hasUFBProblem)
+	  //   {
+	  //     cout << UFBPROBLEM << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+	  // if (hasCCBProblem)
+	  //   {
+	  //     cout << CCBPROBLEM << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+
+	  // if (hasEWSBProblem)
+	  //   {
+	  //     cout << EWSBPROBLEM << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+
+	  // if (hasWrongVacuum)
+	  //   {
+	  //     cout << WRONGVACUUM << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+
+	  // if (squarksTachyons)
+	  //   {
+	  //     cout << SQUARKTACHYON << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+	  // if (higgsTachyons)
+	  //   {
+	  //     cout << HIGGSTACHYON << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+	  // if (tadpoleProblem)
+	  //   {
+	  //     cout << TADPOLESPROBLEM << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+	  // if (m.displayPhys().mh0 < HIGGSCENT-HIGGSERROR || m.displayPhys().mh0 > HIGGSCENT+HIGGSERROR)
+	  //   {
+	  //     cout << NOTEXPVALID << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+	  // if (poleHiggsTachyons)
+	  //   {
+	  //     cout << POLEHIGGSTACHYON << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+	  // if (inaccurateHiggsMass)
+	  //   {
+	  //     cout << HIGGSPROBLEM << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+
+	  // if (hasTuningError)
+	  //   {
+	  //     cout << TUNINGERROR << " ";
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0 ";
+	  //   }
+
+	  // if (hasSeriousProblem)
+	  //   {
+	  //     cout << NUMERICALPROBLEM << endl;
+	  //   }
+	  // else
+	  //   {
+	  //     cout << "0" << endl;
+	  //   }
 
 	} //< M_2 scan
 	}//< A_t scan
@@ -1949,12 +1963,36 @@ int main(int argc, const char* argv[])
     } 
   catch(const string & a) { cout << a; return -1; }
   catch(const char * a) { cout << a; return -1; }
-  catch(...) { cout << "Unknown type of exception caught.\n"; return -1; }
   catch (const Error& error) 
     {
       ERROR(error.what());
       return EXIT_FAILURE;
      }
+  catch(...) { cout << "Unknown type of exception caught.\n"; return -1; }
 
   return 0;
 }
+
+// Prints an error message
+void errorCall()
+{
+  ostringstream ii;
+  ii << "pmssmScanner called with incorrect arguments.\n";
+  ii << "To run, you must provide as a file containing\n";
+  ii << "the scan parameters you wish to use. Usage is:\n";
+  ii << "./pmssmScanner < input_file.params\n";
+  throw ii.str();
+}
+
+// Returns a string with all characters in upper case: very handy
+string ToUpper(const string & s) {
+        string result;
+        unsigned int index;
+        for (index = 0; index < s.length(); index++) {
+	  char a = s[index];
+	  a = toupper(a);
+	  result = result + a;
+        }
+	
+	return result;
+    }

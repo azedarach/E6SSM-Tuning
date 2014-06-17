@@ -51,9 +51,11 @@ DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, Double
       double lambda = essmSusy.get_Lambdax();
       double Alambda;
       
-      if (Abs(Tlambda) < EPSTOL) Alambda = 0.0;
-      
-      if (Abs(lambda) < 1.0e-100)
+      if (Abs(Tlambda) < EPSTOL) 
+	{
+	  Alambda = 0.0;
+	}
+      else if (Abs(lambda) < 1.0e-100)
 	{
 	  ostringstream ii;
 	  ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
@@ -153,9 +155,11 @@ double ESSM_EWSBCondition1(genericE6SSM_soft_parameters const & r)
   double lambda = r.get_Lambdax();
   double Alambda;
 
-  if (Abs(Tlambda) < EPSTOL) Alambda = 0.0;
-
-  if (Abs(lambda) < 1.0e-100)
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
@@ -222,9 +226,11 @@ double ESSM_EWSBCondition2(genericE6SSM_soft_parameters const & r)
   double lambda = r.get_Lambdax();
   double Alambda;
 
-  if (Abs(Tlambda) < EPSTOL) Alambda = 0.0;
-
-  if (Abs(lambda) < 1.0e-100)
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
@@ -290,9 +296,11 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
   double lambda = r.get_Lambdax();
   double Alambda;
 
-  if (Abs(Tlambda) < EPSTOL) Alambda = 0.0;
-
-  if (Abs(lambda) < 1.0e-100)
+  if (Abs(Tlambda) < EPSTOL)
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
@@ -348,6 +356,366 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
 
 }
 
+// Implement the EWSB conditions by varying the values of m_Hu^2 and m_Hd^2 at MX.
+// Scale factors needed for Newton's method implementation. 
+static double mHuSqScaleFactor = 1.0e6;
+static double mHdSqScaleFactor = 1.0e6;
+static double mSSqScaleFactor = 1.0e6;
+static double MsusyScaleFactor = 1.0e3;
+bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, double mx, double ms, bool useMxEqualsMs,
+					      DoubleVector & updatedSoln, double tol)
+{
+  // We have to use a shooting method to do this in general if MX is different from M_{SUSY}. 
+  // We should start with an object given at the scale MX.
+  double q = r.get_scale();
+
+  bool hasProblem = false;
+
+  if (fabs(q-mx) > TOLERANCE)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate required soft masses at inappropriate scale q = " << q << " GeV,\n"
+	 << "         instead of at MX = " << mx << " GeV: exiting." << endl;
+      throw ii.str();
+    }
+  else
+    {
+      // If MX = M_{SUSY} there is no need to use the shooting approach; just
+      // rearrange the EWSB conditions to solve for m_Hu^2 and m_Hd^2.
+      if (useMxEqualsMs)
+	{
+	  if (fabs(mx-ms) > TOLERANCE || fabs(q-ms) > TOLERANCE)
+	    {
+	      cerr << "WARNING: MX = M_{SUSY} requested but given values do not agree. Assuming M_{SUSY} = " << ms << "." << endl;
+	      r.run_to(ms);
+	    }
+
+	  // Solve for the updated soft Higgs masses
+
+	  double Tlambda = r.get_TLambdax();
+	  double lambda = r.get_Lambdax();
+	  double Alambda;
+	  
+	  if (Abs(Tlambda) < EPSTOL)
+	    {
+	      Alambda = 0.0;
+	    }
+	  else if (Abs(lambda) < 1.0e-100)
+	    {
+	      ostringstream ii;
+	      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+		Abs(lambda) << endl;
+	      throw ii.str();
+	    }
+	  else
+	    {
+	      Alambda = Tlambda/lambda;
+	    }
+
+	  double mSSq, mH1Sq, mH2Sq;
+	  double g1 = r.get_g1();
+	  double g2 = r.get_g2();
+	  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+	  double gdash_1 = r.get_gN();	  
+
+	  double v1 = r.get_vd();
+	  double v2 = r.get_vu();
+	  double s = r.get_vs();
+	  double v = Sqrt(v1*v1+v2*v2);
+	  double tb = v2/v1;  
+
+	  double cSqb = 1.0/(1.0+tb*tb);
+	  double sSqb = (tb*tb)/(1.0+tb*tb);
+	  double c2b = (1.0-tb*tb)/(1.0+tb*tb);
+	  double s2b = 2.0*tb/(1.0+tb*tb);	  
+
+	  genericE6SSM_input_parameters input = r.get_input();
+	  
+	  // Because we are neglecting U(1) mixing, 
+	  // we will for now approximate the effective charges
+	  // by the U(1)' charges
+	  double Qtilde_1 = input.QH1p;
+	  double Qtilde_2 = input.QH2p;
+	  double Qtilde_s = input.QSp;
+
+	  if (!INCLUDE1LPTADPOLES)
+	    {
+
+	      mSSq = (1.0/s)*(lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0))-0.5*lambda*lambda*v*v*s
+			      -0.5*gdash_1*gdash_1*Qtilde_s*s*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s));
+	      mH1Sq = lambda*Alambda*s*tb/Sqrt(2.0)-0.5*lambda*lambda*(s*s+v*v*sSqb)-gbar*gbar*v*v*c2b/8.0
+		-0.5*Qtilde_1*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+	      mH2Sq = lambda*Alambda*s/(Sqrt(2.0)*tb)-0.5*lambda*lambda*(s*s+v*v*cSqb)+gbar*gbar*v*v*c2b/8.0
+		-0.5*Qtilde_2*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+
+	    }
+	  else
+	    {
+
+	      // Calculate the values of the soft squared masses using the three EWSB
+	      // conditions at tree level.
+	      mSSq = (1.0/s)*(lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0))-0.5*lambda*lambda*v*v*s
+			      -0.5*gdash_1*gdash_1*Qtilde_s*s*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s));
+	      mH1Sq = lambda*Alambda*s*tb/Sqrt(2.0)-0.5*lambda*lambda*(s*s+v*v*sSqb)-gbar*gbar*v*v*c2b/8.0
+		-0.5*Qtilde_1*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+	      mH2Sq = lambda*Alambda*s/(Sqrt(2.0)*tb)-0.5*lambda*lambda*(s*s+v*v*cSqb)+gbar*gbar*v*v*c2b/8.0
+		-0.5*Qtilde_2*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+
+	      // Add in appropriate loop corrections (note sign!).
+	      mSSq = mSSq + doCalcTadpolesESSMS(r, s, tb);
+	      mH1Sq = mH1Sq + doCalcTadpoleESSMH1(r, s, tb);
+	      mH2Sq = mH2Sq + doCalcTadpoleESSMH2(r, s, tb);
+
+	    }
+	  updatedSoln(1) = mH1Sq;
+	  updatedSoln(2) = mH2Sq;
+	  updatedSoln(3) = mSSq;
+	  updatedSoln(4) = ms;
+	}
+      else
+	{
+	  // Otherwise we have to use a shooting method to determine the values
+	  // of m_Hu^2, m_Hd^2 and m_S^2 at MX that satisfy the EWSB conditions at M_{SUSY}.
+
+	  // Guess initial values of m_Hu^2, m_Hd^2 and m_S^2 at MX that solve the EWSB conditions,
+	  // and guess the initial scale M_{SUSY}.
+
+	  // The initial guess for M_{SUSY} is pretty obvious - it is the provided value ms.
+	  double mSusy_guess = ms;
+
+	  MsusyScaleFactor = ms;
+
+	  // To guess the appropriate initial values of m_Hu^2(MX), m_Hd^2(MX) and m_S^2, we use 
+	  // our approximate Taylor series solution to the RGEs. This should be reasonable
+	  // for small values of log(MX/M_{SUSY}). Note that this assumes only non-zero
+	  // couplings are third generation.
+	  int nLps = r.get_loops();
+	  if (nLps != 1 && nLps != 2)
+	    {
+	      cerr << "WARNING: requested RG running at " << nLps << " loop order: can only do 1 or 2 loop running:" << endl;
+	      cerr << "         assuming 2 loop running." << endl;
+	      nLps = 2;
+	    }
+
+	  double t_run = log(mx/ms);
+
+	  double mHuSq_guess, mHdSq_guess, mSSq_guess;
+
+	  // If t is too large, this is an unreliable estimate, so just use a default value.
+	  const int TLIMIT = 10;
+	  if (t_run >= TLIMIT)
+	    {
+	      mHdSqScaleFactor = r.get_mHd2();
+	      mHuSqScaleFactor = r.get_mHu2();
+	      mSSqScaleFactor = r.get_ms2();
+
+	      mHuSq_guess = mHuSqScaleFactor;
+	      mHdSq_guess = mHdSqScaleFactor;
+
+	    }
+	  else
+	    {
+	      // The Taylor series expansion is about the solution at M_{SUSY} initially.
+	      genericE6SSM_soft_parameters w = r; // copy object to avoid numerical errors
+	      w.run_to(ms);
+	      
+	      double mHuSqInit, mHdSqInit, mSSqInit;
+	     
+	      double Tlambda = w.get_TLambdax();
+	      double lambda = w.get_Lambdax();
+	      double Alambda;
+	      
+	      if (Abs(Tlambda) < EPSTOL)
+		{
+		  Alambda = 0.0;
+		}
+	      else if (Abs(lambda) < 1.0e-100)
+		{
+		  ostringstream ii;
+		  ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+		    Abs(lambda) << endl;
+		  throw ii.str();
+		}
+	      else
+		{
+		  Alambda = Tlambda/lambda;
+		} 
+	      
+	      double g1 = w.get_g1();
+	      double g2 = w.get_g2();
+	      double gbar = Sqrt(g2*g2+0.6*g1*g1);
+	      double gdash_1 = w.get_gN();	      
+
+	      double v1 = w.get_vd();
+	      double v2 = w.get_vu();
+	      double s = w.get_vs();
+	      double v = Sqrt(v1*v1+v2*v2);
+	      double tb = v2/v1;
+  	      
+	      double cSqb = 1.0/(1.0+tb*tb);
+	      double sSqb = (tb*tb)/(1.0+tb*tb);
+	      double c2b = (1.0-tb*tb)/(1.0+tb*tb);
+	      double s2b = 2.0*tb/(1.0+tb*tb);	  
+	      
+	      genericE6SSM_input_parameters input = w.get_input();
+	      
+	      // Because we are neglecting U(1) mixing, 
+	      // we will for now approximate the effective charges
+	      // by the U(1)' charges
+	      double Qtilde_1 = input.QH1p;
+	      double Qtilde_2 = input.QH2p;
+	      double Qtilde_s = input.QSp;
+
+	      if (!INCLUDE1LPTADPOLES)
+		{
+		  mSSqInit = (1.0/s)*(lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0))-0.5*lambda*lambda*v*v*s
+				      -0.5*gdash_1*gdash_1*Qtilde_s*s*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s));
+		  mHdSqInit = lambda*Alambda*s*tb/Sqrt(2.0)-0.5*lambda*lambda*(s*s+v*v*sSqb)-gbar*gbar*v*v*c2b/8.0
+		    -0.5*Qtilde_1*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+		  mHuSqInit = lambda*Alambda*s/(Sqrt(2.0)*tb)-0.5*lambda*lambda*(s*s+v*v*cSqb)+gbar*gbar*v*v*c2b/8.0
+		    -0.5*Qtilde_2*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+		}
+	      else
+		{
+		  // Calculate the values of the soft squared masses using the three EWSB
+		  // conditions at tree level.
+		  mSSqInit = (1.0/s)*(lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0))-0.5*lambda*lambda*v*v*s
+				      -0.5*gdash_1*gdash_1*Qtilde_s*s*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s));
+		  mHdSqInit = lambda*Alambda*s*tb/Sqrt(2.0)-0.5*lambda*lambda*(s*s+v*v*sSqb)-gbar*gbar*v*v*c2b/8.0
+		    -0.5*Qtilde_1*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+		  mHuSqInit = lambda*Alambda*s/(Sqrt(2.0)*tb)-0.5*lambda*lambda*(s*s+v*v*cSqb)+gbar*gbar*v*v*c2b/8.0
+		    -0.5*Qtilde_2*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s);
+		  
+		  // Add in appropriate loop corrections (note sign!).
+		  mSSqInit = mSSqInit + doCalcTadpolesESSMS(w, s, tb);
+		  mHdSqInit = mHdSqInit + doCalcTadpoleESSMH1(w, s, tb);
+		  mHuSqInit = mHuSqInit + doCalcTadpoleESSMH2(w, s, tb);
+		}
+	      
+	      // Construct required coefficients in Taylor series.
+	      double mHdSqLogCoeff = doCalcMh1SquaredLogCoeff(w, nLps);
+	      double mHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(w, 1);
+	      double mHuSqLogCoeff = doCalcMh2SquaredLogCoeff(w, nLps);
+	      double mHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(w, 1);
+	      double mSSqLogCoeff = doCalcMsSquaredLogCoeff(w, nLps);
+	      double mSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(w, 1);
+	      
+	      mHuSq_guess = mHuSqInit + t_run*mHuSqLogCoeff + Sqr(t_run)*mHuSqLogSqCoeff;
+	      mHdSq_guess = mHdSqInit + t_run*mHdSqLogCoeff + Sqr(t_run)*mHdSqLogSqCoeff;
+	      mSSq_guess = mSSqInit + t_run*mSSqLogCoeff + Sqr(t_run)*mSSqLogSqCoeff;
+	      
+	      mHuSqScaleFactor = mHuSq_guess;
+	      mHdSqScaleFactor = mHdSq_guess;
+	      mSSqScaleFactor = mSSq_guess;
+
+	    }
+
+	  // Then shoot using Newton's method to try to get the actual solution. 
+	  DoubleVector solEstimate(4);
+
+	  solEstimate(1) = mHdSq_guess/mHdSqScaleFactor;
+	  solEstimate(2) = mHuSq_guess/mHuSqScaleFactor;
+	  solEstimate(3) = mSSq_guess/mSSqScaleFactor;
+	  solEstimate(4) = mSusy_guess/MsusyScaleFactor;
+
+	  hasProblem = ESSM_EWSB_NewtonShooter(r, solEstimate, tol);
+
+	  updatedSoln(1) = solEstimate(1)*mHdSqScaleFactor;
+	  updatedSoln(2) = solEstimate(2)*mHuSqScaleFactor;
+	  updatedSoln(3) = solEstimate(3)*mSSqScaleFactor;
+	  updatedSoln(4) = solEstimate(4)*MsusyScaleFactor;
+
+	}
+
+    }
+  return hasProblem;
+
+}
+
+double ESSM_Msusy_Cond(genericE6SSM_soft_parameters r, double ms)
+{
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+
+  double v1 = r.get_vd();
+  double v2 = r.get_vu();
+  double s = r.get_vs();
+  double tb = v2/v1;
+
+  physical_ESSM(r, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  double f = (ms/sqrt(mstop(1)*mstop(2)))-1.0;
+
+  return f;
+}
+
+static genericE6SSM_soft_parameters *tempsoftessm;
+void ESSM_EWSB_Shooter_Functions(DoubleVector const & parVals, DoubleVector & f)
+{
+  genericE6SSM_soft_parameters s = *tempsoftessm;
+
+  s.set_mHd2(parVals(1)*mHdSqScaleFactor);
+  s.set_mHu2(parVals(2)*mHuSqScaleFactor);
+  s.set_ms2(parVals(3)*mSSqScaleFactor);
+
+  s.run_to(parVals(4)*MsusyScaleFactor);
+
+  f(1) = ESSM_EWSBCondition1(s)/mHdSqScaleFactor;
+  f(2) = ESSM_EWSBCondition2(s)/mHuSqScaleFactor;
+  f(3) = ESSM_EWSBCondition3(s)/mSSqScaleFactor;
+  f(4) = ESSM_Msusy_Cond(s, parVals(4)*MsusyScaleFactor);
+}
+
+bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVector & estimate, double tol)
+{
+  // Copy object to actually do the running on
+  genericE6SSM_soft_parameters w = r;
+
+  // Set initial guess values
+  double ms_guess = estimate(4)*MsusyScaleFactor;
+
+  w.set_mHd2(estimate(1)*mHdSqScaleFactor);
+  w.set_mHu2(estimate(2)*mHuSqScaleFactor);
+  w.set_ms2(estimate(3)*mSSqScaleFactor);
+
+  DoubleVector fVals(4);
+
+  tempsoftessm = &w;
+
+  // Now shoot to try to get solutions. Use globally convergent
+  // Newton's method as the root finder.
+  bool hasProblem = newt(estimate, ESSM_EWSB_Shooter_Functions);
+
+  w.set_mHd2(estimate(1)*mHdSqScaleFactor);
+  w.set_mHu2(estimate(2)*mHuSqScaleFactor);
+  w.set_ms2(estimate(3)*mSSqScaleFactor);
+
+  w.run_to(estimate(4)*MsusyScaleFactor);
+
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  double v1 = w.get_vd();
+  double v2 = w.get_vu();
+  double vs = w.get_vs();
+  double tb = v2/v1;
+  physical_ESSM(w, mstop, mstopsq, mD1sq, mD2sq, vs, tb);
+
+  // Have we actually converged or is newt just being ridiculous?
+  double f1 = ESSM_EWSBCondition1(w);
+  double f2 = ESSM_EWSBCondition2(w);
+  double f3 = ESSM_EWSBCondition3(w);
+  double f4 = estimate(4)*MsusyScaleFactor/sqrt(mstop(1)*mstop(2))-1.0;
+
+  // cout << "f1/mHdSq Scale Factor = " << f1/mHdSqScaleFactor << endl;
+  // cout << "f2/mHdSq Scale Factor = " << f1/mHuSqScaleFactor << endl;
+  // cout << "f3 = " << f3 << endl;
+
+  if (fabs(f1) > tol || fabs(f2) > tol || fabs(f3) > tol || fabs(f4) > tol)
+    {
+      hasProblem = true;
+    }
+
+  return hasProblem;
+
+}
 
 //Should be part of softsusy but you may not want to link to the file which
 // uses this.  If you do just comment this out.  

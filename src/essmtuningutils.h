@@ -44,15 +44,17 @@ double ESSM_EWSBCondition2(flexiblesusy::genericE6SSM_soft_parameters const & r)
 double ESSM_EWSBCondition3(flexiblesusy::genericE6SSM_soft_parameters const & r);
 
 // Implement the EWSB conditions by varying the values of m_Hu^2 and m_Hd^2 at MX.
-/* bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, double mx, double ms, bool useMxEqualsMs, */
-/* 					      DoubleVector & updatedSoln, double tol = TOLERANCE); */
+bool ESSM_ImplementEWSBConstraints_SoftMasses(flexiblesusy::genericE6SSM_soft_parameters r, double mx, double ms, 
+					      bool useMxEqualsMs,
+					      DoubleVector & updatedSoln, double tol = TOLERANCE);
 
 
-/* bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVector & estimate, double tol = TOLERANCE); */
+bool ESSM_EWSB_NewtonShooter(flexiblesusy::genericE6SSM_soft_parameters const & r, DoubleVector & estimate, 
+			     double tol = TOLERANCE);
 
-/* double ESSM_Msusy_Cond(SoftParsMssm r, double ms); */
+double ESSM_Msusy_Cond(flexiblesusy::genericE6SSM_soft_parameters r, double ms);
 
-/* void ESSM_EWSB_Shooter_Functions(DoubleVector const & parVals, DoubleVector & f); */
+void ESSM_EWSB_Shooter_Functions(DoubleVector const & parVals, DoubleVector & f);
 
 // The function needed in the Newton iteration used to implement the EWSB conditions.
 // Things are made slightly awkward by the fact that it should only take as arguments

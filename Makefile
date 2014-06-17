@@ -105,6 +105,7 @@ TUNING_HDR := \
 TUNING_SRC := \
 		$(SRCDIR)/essmScanner.cpp \
                 $(SRCDIR)/essmtuningutils.cpp \
+	        $(SRCDIR)/flags.cpp \
                 $(SRCDIR)/tuningnumerics.cpp
 
 TUNING_OBJ := \
@@ -141,8 +142,8 @@ ifneq (,$(findstring yes,$(ENABLE_LOOPTOOLS)$(ENABLE_FFLITE)))
 $(TUNING_DEP) $(TUNING_OBJ): CPPFLAGS += $(LOOPFUNCFLAGS)
 endif
 
-$(TUNING_EXE): $(TUNING_OBJ) $(TUNING_HDR) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
-		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS)
+$(TUNING_EXE): $(TUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),clean-dep)

@@ -37,7 +37,7 @@ DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, Double
       double sb = tb*cb;
       double c2b = (1.0-tb*tb)/(1.0+tb*tb);
 
-      genericE6SSM_input_parameters input = r.get_input();
+      genericE6SSM_input_parameters input = essmSusy.get_input();
       
       // Because we are neglecting U(1) mixing, 
       // we will for now approximate the effective charges
@@ -47,8 +47,8 @@ DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, Double
       double Qtilde_s = input.QSp;
       
       
-      double Tlambda = r.get_TLambdax();
-      double lambda = r.get_Lambdax();
+      double Tlambda = essmSusy.get_TLambdax();
+      double lambda = essmSusy.get_Lambdax();
       double Alambda;
       
       if (Abs(Tlambda) < EPSTOL) Alambda = 0.0;
@@ -366,7 +366,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
 {
   bool speak = false;
 
-  double yt = r.get_Yu(3, 3);
+  double yt = r.get_Yu(2, 2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -379,7 +379,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
   if(USEMTOFMT){
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3, 3, yt);
+    r.set_Yu(2,2, yt);
     
   }
 
@@ -396,14 +396,14 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
 
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
 
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
  
   DoubleVector Akappa(3);
@@ -415,7 +415,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
 
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
 
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -443,7 +443,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -452,7 +452,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
     }
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
 
   if (Abs(TYt) < EPSTOL)
     {
@@ -472,9 +472,9 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
 
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -487,12 +487,12 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
 
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -542,7 +542,7 @@ return;
 void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVector & mstopsq, DoubleVector & mD1sq, DoubleVector & mD2sq, double s, double tb){
 
   bool speak = false;
-  double yt = r.get_Yu(3, 3);
+  double yt = r.get_Yu(2, 2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -553,7 +553,7 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
   double mtop = yt*v2/(Sqrt(2.0));
   mtop = 165;
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3, 3, yt);
+  r.set_Yu(2,2, yt);
 
   if(speak){
     cout << "mtop = " << mtop << endl;
@@ -562,20 +562,20 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
   
   double oneO40 = 1.0/(40.0);
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -585,7 +585,7 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -613,7 +613,7 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -622,7 +622,7 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
     }
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
 
   if (Abs(TYt) < EPSTOL)
     {
@@ -642,9 +642,9 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
 
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -657,13 +657,13 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
 
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -699,7 +699,7 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   
   double oneO40 = 1.0/(40.0);
-  double yt = r.get_Yu(3, 3);
+  double yt = r.get_Yu(2, 2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -715,23 +715,23 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
     //    cout << "using mtop = " << mtop << endl; 
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3, 3, yt);
+    r.set_Yu(2,2, yt);
   }
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
 
   lambda(3) = r.get_Lambdax();
 
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
 
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
 
 
@@ -741,7 +741,7 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
 
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
 
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -769,7 +769,7 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -778,7 +778,7 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
     }
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
 
   if (Abs(TYt) < EPSTOL)
     {
@@ -798,9 +798,9 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
 
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -813,7 +813,7 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
@@ -821,8 +821,8 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
 
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -850,7 +850,7 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
   //cout <<"threeO32pisq = "<< threeO32pisq << endl;
   double oneO40 = 1.0/(40.0);
 
-  double yt = r.get_Yu(3, 3);
+  double yt = r.get_Yu(2, 2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -871,23 +871,23 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
   if(USEMTOFMT){
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3, 3, yt);    
+    r.set_Yu(2,2, yt);    
   }
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
 
   lambda(3) = r.get_Lambdax();
 
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
 
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
 
 
@@ -897,7 +897,7 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
 
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
 
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -925,7 +925,7 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -934,7 +934,7 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
     }
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
 
   if (Abs(TYt) < EPSTOL)
     {
@@ -954,9 +954,9 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
 
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -969,15 +969,15 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
 
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -1004,7 +1004,7 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   //cout <<"threeO32pisq = "<< threeO32pisq << endl;
   double oneO40 = 1.0/(40.0);
-  double yt = r.get_Yu(3, 3);
+  double yt = r.get_Yu(2, 2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -1015,25 +1015,25 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
   double mtop = yt*v2*oneOrt2;
   mtop = 165; 
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3, 3, yt);
+  r.set_Yu(2,2, yt);
 
   double q = r.get_scale();
   q = 165; //GeV. Fudgeing to match Romans code
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
 
   lambda(3) = r.get_Lambdax();
 
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
 
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
 
 
@@ -1043,7 +1043,7 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
 
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
 
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -1071,7 +1071,7 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -1080,7 +1080,7 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
     }
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
 
   if (Abs(TYt) < EPSTOL)
     {
@@ -1100,9 +1100,9 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
 
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -1115,14 +1115,14 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -1145,7 +1145,7 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   //cout <<"threeO32pisq = "<< threeO32pisq << endl;
   double oneO40 = 1.0/(40.0);
-  double yt = r.get_Yu(3, 3);
+  double yt = r.get_Yu(2, 2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -1156,31 +1156,31 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
   double mtop = yt*v2*oneOrt2;
   //mtop = 165; 
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3, 3, yt);
+  r.set_Yu(2,2, yt);
   
   if(USEMTOFMT){
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3, 3, yt);
+    r.set_Yu(2,2, yt);
   }
  
   double q = r.get_scale();
   //q = 165; //GeV. Fudgeing to match Romans code
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
 
   lambda(3) = r.get_Lambdax();
 
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
 
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
 
 
@@ -1190,7 +1190,7 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
 
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
 
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -1218,7 +1218,7 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -1227,7 +1227,7 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
     }
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
 
   if (Abs(TYt) < EPSTOL)
     {
@@ -1247,9 +1247,9 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
 
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -1262,14 +1262,14 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -1293,7 +1293,7 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
 //Now tadpoles for H2. The different versions are labled as for H1 tadpoles and contributions are matched with those
 double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb  ){
    bool speak =false;
-   double yt = r.get_Yu(3, 3);
+   double yt = r.get_Yu(2, 2);
    // cout << "yt = " << yt << endl;
 
    double v1 = r.get_vd();
@@ -1308,7 +1308,7 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
    if(USEMTOFMT){
      mtop = 165;
      yt = mtop/(v2*oneOrt2);
-     r.set_Yu(3, 3, yt);
+     r.set_Yu(2,2, yt);
    }
  
    double threeO32pisq = 3.0/(32.0*Sqr(PI));
@@ -1317,20 +1317,20 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
    double topPeter = - 6.0 * Sqr(yt) * a0Peter(Sqr(mtop), q)/ (16.0 * Sqr(PI));
    double oneO40 = 1.0/(40.0);
 
-   DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+   DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
    
    lambda(3) = r.get_Lambdax();
    
    for (int i = 1; i <= 2; i++)
      {
-       lambda(i) = r.get_Lambda12(i,i);
+       lambda(i) = r.get_Lambda12(i-1,i-1);
      }
    
    for (int i = 1; i <= 3; i++)
      {
-       kappa(i) = r.get_Kappa(i,i);
-       mDsq(i) = r.get_mDx2(i,i);
-       mDbarsq(i) = r.get_mDxbar2(i,i);
+       kappa(i) = r.get_Kappa(i-1,i-1);
+       mDsq(i) = r.get_mDx2(i-1,i-1);
+       mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
      }
    
    
@@ -1340,7 +1340,7 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
    
    for (int i = 1; i <= 2; i++)
      {
-       Tlambda(i) = r.get_TLambda12(i,i);
+       Tlambda(i) = r.get_TLambda12(i-1,i-1);
        
        if (Abs(Tlambda(i)) < EPSTOL) 
 	 {
@@ -1368,7 +1368,7 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
      {
        ostringstream ii;
        ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	 Abs(lambda) << endl;
+	 Abs(lambda(3)) << endl;
        throw ii.str();
      }
    else
@@ -1377,7 +1377,7 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
      }
    
    double At;
-   double TYt = r.get_TYu(3,3);
+   double TYt = r.get_TYu(2,2);
    
    if (Abs(TYt) < EPSTOL)
      {
@@ -1397,9 +1397,9 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
    
    for (int i = 1; i <= 3; i++)
      {
-       Tkappa(i) = r.get_Tkappa(i,i);
+       Tkappa(i) = r.get_TKappa(i-1,i-1);
        
-       if (AbsTkappa(i,i) < EPSTOL)
+       if (Abs(Tkappa(i)) < EPSTOL)
 	 {
 	   Akappa(i) = 0.0;
 	 }
@@ -1412,12 +1412,12 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
 	 }
        else
 	 {
-	   Akappa(i) = Tkappa(i,i)/kappa(i);
+	   Akappa(i) = Tkappa(i)/kappa(i);
 	 }
      }
    
-   double mQlsq = r.get_mq2(3,3);
-   double mUrsq =  r.get_mu2(3,3);
+   double mQlsq = r.get_mq2(2,2);
+   double mUrsq =  r.get_mu2(2,2);
    
    double g1 = r.get_g1();
    double g2 = r.get_g2();
@@ -1429,14 +1429,14 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
    DoubleVector mD1sq(3), mD2sq(3);//3 gens
    
    physical_ESSM(r,mstop, mstopsq, mD1sq,mD2sq, s, tb); 
-   Delmtop = Sqr(r.get_Yu(3,3));
+   Delmtop = Sqr(r.get_Yu(2,2));
  
-   Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(3,3))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
-		    +0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
+   Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(2,2))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
+		    +0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
  
  
-   Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(3,3))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
-		    -0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
+   Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(2,2))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
+		    -0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
   if(speak){
     cout << "Delmstop1 = " << Delmstop1 << endl;
     cout << "Delmstop2 = " << Delmstop2 << endl;
@@ -1451,7 +1451,7 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
  
 double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , double tb  ){
   bool speak = false;
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
   // cout << "yt = " << yt << endl; 
 
   double v1 = r.get_vd();
@@ -1476,27 +1476,27 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
     }
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3, 3, yt);
+    r.set_Yu(2,2, yt);
   }
   
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   //double oneOrt2 = 1/(Sqrt(2));			      
   double oneO40 = 1.0/(40.0);
   
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -1506,7 +1506,7 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -1534,7 +1534,7 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -1543,7 +1543,7 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -1563,9 +1563,9 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
   
   for (int i = 1; i <= 3; i++)
      {
-       Tkappa(i) = r.get_Tkappa(i,i);
+       Tkappa(i) = r.get_TKappa(i-1,i-1);
        
-       if (AbsTkappa(i,i) < EPSTOL)
+       if (Abs(Tkappa(i)) < EPSTOL)
 	 {
 	   Akappa(i) = 0.0;
 	 }
@@ -1578,14 +1578,14 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
 	 }
        else
 	 {
-	   Akappa(i) = Tkappa(i,i)/kappa(i);
+	   Akappa(i) = Tkappa(i)/kappa(i);
 	 }
      }
 
   double Delmtop, Delmstop1,Delmstop2; 
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
 
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -1594,13 +1594,13 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
   physical_ESSM(r,mstop, mstopsq, mD1sq,mD2sq, s, tb); 
-  Delmtop = Sqr(r.get_Yu(3,3));
+  Delmtop = Sqr(r.get_Yu(2,2));
   // cout << "Delmtop = " << Delmtop << endl; 
-  Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(3,3))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
-		   +0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
+  Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(2,2))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
+		   +0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
       
-  Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(3,3))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
-		   -0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
+  Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(2,2))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
+		   -0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g1)- Sqr(g2)) + 4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) );
   if(speak){
     cout << "Delmstop1 = " << Delmstop1 << endl;
     cout << "Delmstop2 = " << Delmstop2 << endl;
@@ -1616,10 +1616,10 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
 
 double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , double tb  ){
   bool speak = false;  
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
   // cout << "yt = " << yt << endl;
-  double v1 = r.get_vd()
-    double v2 = r.get_vu();
+  double v1 = r.get_vd();
+  double v2 = r.get_vu();
  
   double vev = Sqrt(v1*v1+v2*v2);
 
@@ -1627,28 +1627,28 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
   double mtop = yt*v2/(Sqrt(2.0));
   mtop = 165;
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3,3,yt);
+  r.set_Yu(2,2,yt);
   double q = r.get_scale();
-  q = 165; //GeV. Fi=udgeing to match Romans code
+  q = 165; //GeV. Fudgeing to match Romans code
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   //double oneOrt2 = 1/(Sqrt(2));			      
 
   double oneO40 = 1.0/(40.0);
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -1658,7 +1658,7 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -1686,7 +1686,7 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -1695,7 +1695,7 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -1715,9 +1715,9 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
   
   for (int i = 1; i <= 3; i++)
      {
-       Tkappa(i) = r.get_Tkappa(i,i);
+       Tkappa(i) = r.get_TKappa(i-1,i-1);
        
-       if (AbsTkappa(i,i) < EPSTOL)
+       if (Abs(Tkappa(i)) < EPSTOL)
 	 {
 	   Akappa(i) = 0.0;
 	 }
@@ -1730,12 +1730,12 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
 	 }
        else
 	 {
-	   Akappa(i) = Tkappa(i,i)/kappa(i);
+	   Akappa(i) = Tkappa(i)/kappa(i);
 	 }
      }
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -1747,13 +1747,13 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
   physical_ESSM_Roman(r,mstop, mstopsq, mD1sq,mD2sq, s, tb); 
-  Delmtop = Sqr(r.get_Yu(3,3));
+  Delmtop = Sqr(r.get_Yu(2,2));
   //cout << "Delmtop = " << Delmtop << endl; 
   
-  Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(3,3))  +0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3))+ 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )             ) /(   Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) ) ;
+  Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(2,2))  +0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2))+ 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )             ) /(   Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) ) ;
   
-  Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(3,3))
-		   -0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq)+ 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))       ));
+  Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(2,2))
+		   -0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq)+ 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))       ));
   
   
   //checked and debuugged to this point 28/6/07 
@@ -1763,7 +1763,7 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
 }
 
 double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , double tb  ){
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
   // cout << "yt = " << yt << endl; 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -1774,14 +1774,14 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
   double mtop = yt*v2/(Sqrt(2.0));
   //  mtop = 165;
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3,3,yt);
+  r.set_Yu(2,2,yt);
   double q = r.get_scale();
   
   if(USEMTOFMT){
     cout << "using mtop = " << mtop << endl; 
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3,3,yt);
+    r.set_Yu(2,2,yt);
     
   }
   
@@ -1790,20 +1790,20 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
 
   double oneO40 = 1.0/(40.0);
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -1813,7 +1813,7 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -1841,7 +1841,7 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -1850,7 +1850,7 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -1870,9 +1870,9 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
   
   for (int i = 1; i <= 3; i++)
      {
-       Tkappa(i) = r.get_Tkappa(i,i);
+       Tkappa(i) = r.get_TKappa(i-1,i-1);
        
-       if (AbsTkappa(i,i) < EPSTOL)
+       if (Abs(Tkappa(i)) < EPSTOL)
 	 {
 	   Akappa(i) = 0.0;
 	 }
@@ -1885,13 +1885,13 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
 	 }
        else
 	 {
-	   Akappa(i) = Tkappa(i,i)/kappa(i);
+	   Akappa(i) = Tkappa(i)/kappa(i);
 	 }
      }
 
   double Delmtop, Delmstop1,Delmstop2; 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -1903,13 +1903,13 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
   
   physical_ESSM_Roman(r,mstop, mstopsq, mD1sq,mD2sq, s, tb);
    
-  Delmtop = Sqr(r.get_Yu(3,3));
+  Delmtop = Sqr(r.get_Yu(2,2));
   //cout << "Delmtop = " << Delmtop << endl; 
   
-  Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(3,3))  +0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3))+ 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )             ) /(   Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) ) ;
+  Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(2,2))  +0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2))+ 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )             ) /(   Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) ) ;
   
-  Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(3,3))
-		   -0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(3,3)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq)+ 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))       ));
+  Delmstop2 = 0.5*(2.0*Sqr(r.get_Yu(2,2))
+		   -0.5*(  4.0*Sqr( At - lambda(3)*s*oneOrt2*v1/v2)* Sqr(r.get_Yu(2,2)) + 8.0*Sqr(mtop)*(At - lambda(3)*s*oneOrt2*v1/v2)*(lambda(3)*s*v1*oneOrt2/(v2*v2*v2) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq)+ 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))       ));
   
   
    //checked and debuugged to this point 28/6/07 
@@ -1924,7 +1924,7 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   double oneO40 = 1.0/(40.0);
   double oneOrt2 = 1/(Sqrt(2.0));
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -1939,23 +1939,23 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
     //cout << "using mtop = " << mtop << endl;
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3,3,yt);
+    r.set_Yu(2,2,yt);
   }
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -1965,7 +1965,7 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -1993,7 +1993,7 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -2002,7 +2002,7 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -2022,9 +2022,9 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
   
   for (int i = 1; i <= 3; i++)
      {
-       Tkappa(i) = r.get_Tkappa(i,i);
+       Tkappa(i) = r.get_TKappa(i-1,i-1);
        
-       if (AbsTkappa(i,i) < EPSTOL)
+       if (Abs(Tkappa(i)) < EPSTOL)
 	 {
 	   Akappa(i) = 0.0;
 	 }
@@ -2037,12 +2037,12 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
 	 }
        else
 	 {
-	   Akappa(i) = Tkappa(i,i)/kappa(i);
+	   Akappa(i) = Tkappa(i)/kappa(i);
 	 }
      }
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -2079,7 +2079,7 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   double oneO40 = 1.0/(40.0);
   double oneOrt2 = 1/(Sqrt(2.0));
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -2097,7 +2097,7 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
   if(USEMTOFMT){
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3,3,yt);
+    r.set_Yu(2,2,yt);
     
   }
 
@@ -2107,20 +2107,20 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
   }
 
 
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -2130,7 +2130,7 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -2158,7 +2158,7 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -2167,7 +2167,7 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -2187,9 +2187,9 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
   
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -2202,13 +2202,13 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
   
   
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
 
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -2243,7 +2243,7 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   double oneO40 = 1.0/(40.0);
   double oneOrt2 = 1/(Sqrt(2.0));
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -2255,26 +2255,26 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
   mtop = 165;
   
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3,3,yt);
+  r.set_Yu(2,2,yt);
   //cout << "mtop = " << mtop << endl;
   double q = r.get_scale();
   q = 165; //GeV. Fudgeing to match Romans code
   //cout << "q = " << q << endl;
   
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -2284,7 +2284,7 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -2312,7 +2312,7 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -2321,7 +2321,7 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -2341,9 +2341,9 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
   
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -2356,12 +2356,12 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -2389,7 +2389,7 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   double threeO32pisq = 3.0/(32.0*Sqr(PI));
   double oneO40 = 1.0/(40.0);
   double oneOrt2 = 1/(Sqrt(2.0));
-  double yt = r.get_Yu(3,3);
+  double yt = r.get_Yu(2,2);
 
   double v1 = r.get_vd();
   double v2 = r.get_vu();
@@ -2401,7 +2401,7 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   //mtop = 165;
   
   yt = mtop/(v2*oneOrt2);
-  r.set_Yu(3,3,yt);
+  r.set_Yu(2,2,yt);
   //cout << "mtop = " << mtop << endl;
   double q = r.get_scale();
   //q = 165; //GeV. Fudgeing to match Romans code
@@ -2411,23 +2411,23 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
     cout << "using mtop = " << mtop << endl; 
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    r.set_Yu(3,3,yt);
+    r.set_Yu(2,2,yt);
   }
   
-  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector lambda(3), kappa(3), Akappa(3), Alambda(3), mDsq(3), mDbarsq(3);
   
   lambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      lambda(i) = r.get_Lambda12(i,i);
+      lambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      kappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      kappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -2437,7 +2437,7 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -2465,7 +2465,7 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(lambda) << endl;
+	Abs(lambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -2474,7 +2474,7 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -2494,9 +2494,9 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  Akappa(i) = 0.0;
 	}
@@ -2509,12 +2509,12 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
 	}
       else
 	{
-	  Akappa(i) = Tkappa(i,i)/kappa(i);
+	  Akappa(i) = Tkappa(i)/kappa(i);
 	}
     }
 
-  double mQlsq = r.get_mq2(3,3);
-  double mUrsq =  r.get_mu2(3,3);
+  double mQlsq = r.get_mq2(2,2);
+  double mUrsq =  r.get_mu2(2,2);
   
   double g1 = r.get_g1();
   double g2 = r.get_g2();
@@ -2538,14 +2538,14 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
 
 void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVector & mstop, DoubleVector & mstopsq, int WhatCorrections, bool speak, bool Bugspeak, DoubleVector & bounds, int & ExpValid, DoubleVector & mhout, DoubleMatrix & mhmix, DoubleMatrix & msq, int & sing) {
 
-  double mQLsq = r.get_mq2(3,3);
-  double mURsq = r.get_mu2(3,3);
+  double mQLsq = r.get_mq2(2,2);
+  double mURsq = r.get_mu2(2,2);
   double g2 = r.get_g2();
   double g1 = r.get_g1();
 
-  double yt = r.get_Yu(3,3); //cout << "yt = " << yt << endl;
+  double yt = r.get_Yu(2,2); //cout << "yt = " << yt << endl;
   double g1p = r.get_gN();
-  double mu_eff = mylambda(3)*s/(Sqrt(2.0));
+
   double gbar = Sqrt(3.0*Sqr(g1)/5.0 + Sqr(g2)) ; 
 
 
@@ -2556,20 +2556,20 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
 
   double oneOrt2 = 1.0/Sqrt(2.0);
 
-  DoubleVector mylambda(3), mykappa(3), myAkappa(3), myAlambda(3), mDsq3(3), mDbarsq(3);
+  DoubleVector mylambda(3), mykappa(3), myAkappa(3), myAlambda(3), mDsq(3), mDbarsq(3);
   
   mylambda(3) = r.get_Lambdax();
   
   for (int i = 1; i <= 2; i++)
     {
-      mylambda(i) = r.get_Lambda12(i,i);
+      mylambda(i) = r.get_Lambda12(i-1,i-1);
     }
   
   for (int i = 1; i <= 3; i++)
     {
-      mykappa(i) = r.get_Kappa(i,i);
-      mDsq(i) = r.get_mDx2(i,i);
-      mDbarsq(i) = r.get_mDxbar2(i,i);
+      mykappa(i) = r.get_Kappa(i-1,i-1);
+      mDsq(i) = r.get_mDx2(i-1,i-1);
+      mDbarsq(i) = r.get_mDxbar2(i-1,i-1);
     }
   
   
@@ -2579,7 +2579,7 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
   
   for (int i = 1; i <= 2; i++)
     {
-      Tlambda(i) = r.get_TLambda12(i,i);
+      Tlambda(i) = r.get_TLambda12(i-1,i-1);
       
       if (Abs(Tlambda(i)) < EPSTOL) 
 	{
@@ -2607,7 +2607,7 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
-	Abs(mylambda) << endl;
+	Abs(mylambda(3)) << endl;
       throw ii.str();
     }
   else
@@ -2616,7 +2616,7 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = r.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -2636,9 +2636,9 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
   
   for (int i = 1; i <= 3; i++)
     {
-      Tkappa(i) = r.get_Tkappa(i,i);
+      Tkappa(i) = r.get_TKappa(i-1,i-1);
       
-      if (AbsTkappa(i,i) < EPSTOL)
+      if (Abs(Tkappa(i)) < EPSTOL)
 	{
 	  myAkappa(i) = 0.0;
 	}
@@ -2651,7 +2651,7 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
 	}
       else
 	{
-	  myAkappa(i) = Tkappa(i,i)/mykappa(i);
+	  myAkappa(i) = Tkappa(i)/mykappa(i);
 	}
     }
 
@@ -2659,6 +2659,8 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
   if( WhatCorrections ==2 || WhatCorrections == 4){
     r.set_scale(165);
   }
+
+  double mu_eff = mylambda(3)*s/(Sqrt(2.0));
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -2717,7 +2719,7 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
  double mtop = yt*v2*oneOrt2;
  mtop = 165;
  yt = mtop/(v2*oneOrt2);
- r.set_Yu(3,3, yt);
+ r.set_Yu(2,2, yt);
  //CP-Even Higgs 1 loop Corrections in the basis shown in Theory and penomenology paper.
  double DelMh11,  DelMh12,  DelMh22,  DelMh23,  DelMh13,  DelMh33;
  
@@ -2922,12 +2924,12 @@ if(WhatCorrections ==1){
      if(Bugspeak)
        { 
 	 cout << " Ut = " << Ut << endl;
-	 cout << "Should be like 1lp HE11 = " <<  HE11*(1 - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
+	 cout << "Should be like 1lp HE11 = " <<  HE11*(1 - 3*Sqr(r.get_Yu(2, 2))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
        }
   
-     if(Bugspeak) cout << "Should be likeDelMh11 = " <<  HE11*( - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l)/(8.0*Sqr(PI))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
+     if(Bugspeak) cout << "Should be likeDelMh11 = " <<  HE11*( - 3*Sqr(r.get_Yu( 2, 2))*l)/(8.0*Sqr(PI))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
      
-     HE11 = HE11*(1 - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l + 1/(16*Sqr(PI))*(1.5*Sqr(r.displayYukawaElement(YU, 3, 3)) - 8.0*Sqr(r.displayGaugeCoupling(3)))*(Ut + l)*l);
+     HE11 = HE11*(1 - 3*Sqr(r.get_Yu( 2, 2))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l + 1/(16*Sqr(PI))*(1.5*Sqr(r.get_Yu( 2, 2)) - 8.0*Sqr(r.get_g3()))*(Ut + l)*l);
      
      //if(speak) cout << "After 2lp HE11 = " << HE11 << endl; 
      
@@ -3052,11 +3054,11 @@ if(WhatCorrections ==1){
 double mAsq_TreeLevel(genericE6SSM_soft_parameters const & essmSusy, double s, double tb)
 {
 
-  double lambda = r.get_Lambdax();
+  double lambda = essmSusy.get_Lambdax();
   double Tlambda;
   double Alambda;
   
-  Tlambda = r.get_TLambdax();
+  Tlambda = essmSusy.get_TLambdax();
   
   if (Abs(Tlambda) < EPSTOL) 
     {
@@ -3102,13 +3104,13 @@ double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb)
   double Q = essmSusy.get_scale(); // Renormalisation scale
 
   // Get stop mass (note option to fix m_t(M_t) = 165 GeV)
-  double yt = essmSusy.get_Yu(3, 3);
+  double yt = essmSusy.get_Yu(2, 2);
   
-  double lambda = r.get_Lambdax();
+  double lambda = essmSusy.get_Lambdax();
   double Tlambda;
   double Alambda;
   
-  Tlambda = r.get_TLambdax();
+  Tlambda = essmSusy.get_TLambdax();
   
   if (Abs(Tlambda) < EPSTOL) 
     {
@@ -3127,7 +3129,7 @@ double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb)
     }
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3151,7 +3153,7 @@ double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb)
   if(USEMTOFMT){
     mtop = 165;
     yt = mtop/(v2*oneOrt2);
-    essmSusy.set_Yu(3, 3, yt);    
+    essmSusy.set_Yu(2,2, yt);    
   }
 
   // Get stop masses
@@ -3213,7 +3215,7 @@ double doCalcdmstop1sqdv1(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double g2 = essmSusy.get_g2();
   double gd1 = essmSusy.get_gN();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
 
   // Option to fix m_t(M_t) = 165 GeV
@@ -3221,14 +3223,14 @@ double doCalcdmstop1sqdv1(genericE6SSM_soft_parameters essmSusy, double s, doubl
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu( 2, 2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3246,8 +3248,8 @@ double doCalcdmstop1sqdv1(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3272,21 +3274,21 @@ double doCalcdmstop1sqdv2(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double g2 = essmSusy.get_g2();
   double gd1 = essmSusy.get_gN();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu( 2, 2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3304,8 +3306,8 @@ double doCalcdmstop1sqdv2(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3329,21 +3331,21 @@ double doCalcdmstop1sqdv3(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double g2 = essmSusy.get_g2();
   double gd1 = essmSusy.get_gN();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3361,8 +3363,8 @@ double doCalcdmstop1sqdv3(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3385,21 +3387,21 @@ double doCalcdmstop2sqdv1(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double g2 = essmSusy.get_g2();
   double gd1 = essmSusy.get_gN();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = 165;//yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
 
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3417,8 +3419,8 @@ double doCalcdmstop2sqdv1(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3442,21 +3444,21 @@ double doCalcdmstop2sqdv2(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double g2 = essmSusy.get_g2();
   double gd1 = essmSusy.get_gN();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3474,8 +3476,8 @@ double doCalcdmstop2sqdv2(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3499,21 +3501,21 @@ double doCalcdmstop2sqdv3(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double g2 = essmSusy.get_g2();
   double gd1 = essmSusy.get_gN();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3531,8 +3533,8 @@ double doCalcdmstop2sqdv3(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3568,21 +3570,21 @@ double calculateDeltaTadpole1(genericE6SSM_soft_parameters essmSusy, double s, d
 
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3600,8 +3602,8 @@ double calculateDeltaTadpole1(genericE6SSM_soft_parameters essmSusy, double s, d
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3676,21 +3678,21 @@ double calculateDeltaTadpole2(genericE6SSM_soft_parameters essmSusy, double s, d
 
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3708,8 +3710,8 @@ double calculateDeltaTadpole2(genericE6SSM_soft_parameters essmSusy, double s, d
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3783,21 +3785,21 @@ double calculateDeltaTadpole3(genericE6SSM_soft_parameters essmSusy, double s, d
 
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3815,8 +3817,8 @@ double calculateDeltaTadpole3(genericE6SSM_soft_parameters essmSusy, double s, d
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3898,21 +3900,21 @@ double doCalcDeltaPrime11(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -3930,8 +3932,8 @@ double doCalcDeltaPrime11(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
   double Xt = At - lambda*s/(Sqrt(2.0)*tb);
@@ -3984,21 +3986,21 @@ double doCalcDeltaPrime12(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4016,8 +4018,8 @@ double doCalcDeltaPrime12(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4069,21 +4071,21 @@ double doCalcDeltaPrime13(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4101,8 +4103,8 @@ double doCalcDeltaPrime13(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4154,21 +4156,21 @@ double doCalcDeltaPrime22(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4186,8 +4188,8 @@ double doCalcDeltaPrime22(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4244,21 +4246,21 @@ double doCalcDeltaPrime23(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4276,8 +4278,8 @@ double doCalcDeltaPrime23(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4328,21 +4330,21 @@ double doCalcDeltaPrime33(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4360,8 +4362,8 @@ double doCalcDeltaPrime33(genericE6SSM_soft_parameters essmSusy, double s, doubl
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4420,21 +4422,21 @@ double doCalcd2DeltaVdLambdadv1(genericE6SSM_soft_parameters essmSusy, double s,
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4452,8 +4454,8 @@ double doCalcd2DeltaVdLambdadv1(genericE6SSM_soft_parameters essmSusy, double s,
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4513,21 +4515,21 @@ double doCalcd2DeltaVdLambdadv2(genericE6SSM_soft_parameters essmSusy, double s,
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4545,8 +4547,8 @@ double doCalcd2DeltaVdLambdadv2(genericE6SSM_soft_parameters essmSusy, double s,
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4607,21 +4609,21 @@ double doCalcd2DeltaVdLambdadv3(genericE6SSM_soft_parameters essmSusy, double s,
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4639,8 +4641,8 @@ double doCalcd2DeltaVdLambdadv3(genericE6SSM_soft_parameters essmSusy, double s,
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4699,21 +4701,21 @@ double doCalcd2DeltaVdAtdv1(genericE6SSM_soft_parameters essmSusy, double s, dou
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4731,8 +4733,8 @@ double doCalcd2DeltaVdAtdv1(genericE6SSM_soft_parameters essmSusy, double s, dou
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4791,21 +4793,21 @@ double doCalcd2DeltaVdAtdv2(genericE6SSM_soft_parameters essmSusy, double s, dou
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4823,8 +4825,8 @@ double doCalcd2DeltaVdAtdv2(genericE6SSM_soft_parameters essmSusy, double s, dou
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4884,21 +4886,21 @@ double doCalcd2DeltaVdAtdv3(genericE6SSM_soft_parameters essmSusy, double s, dou
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -4916,8 +4918,8 @@ double doCalcd2DeltaVdAtdv3(genericE6SSM_soft_parameters essmSusy, double s, dou
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -4976,21 +4978,21 @@ double doCalcd2DeltaVdmQlsqdv1(genericE6SSM_soft_parameters essmSusy, double s, 
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -5008,8 +5010,8 @@ double doCalcd2DeltaVdmQlsqdv1(genericE6SSM_soft_parameters essmSusy, double s, 
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -5069,21 +5071,21 @@ double doCalcd2DeltaVdmQlsqdv2(genericE6SSM_soft_parameters essmSusy, double s, 
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -5101,8 +5103,8 @@ double doCalcd2DeltaVdmQlsqdv2(genericE6SSM_soft_parameters essmSusy, double s, 
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -5162,21 +5164,21 @@ double doCalcd2DeltaVdmQlsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -5194,8 +5196,8 @@ double doCalcd2DeltaVdmQlsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -5253,21 +5255,21 @@ double doCalcd2DeltaVdmUrsqdv1(genericE6SSM_soft_parameters essmSusy, double s, 
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -5285,8 +5287,8 @@ double doCalcd2DeltaVdmUrsqdv1(genericE6SSM_soft_parameters essmSusy, double s, 
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -5346,21 +5348,21 @@ double doCalcd2DeltaVdmUrsqdv2(genericE6SSM_soft_parameters essmSusy, double s, 
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu( 3, 3);
+  double yt = essmSusy.get_Yu( 2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
   
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -5378,8 +5380,8 @@ double doCalcd2DeltaVdmUrsqdv2(genericE6SSM_soft_parameters essmSusy, double s, 
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
@@ -5439,21 +5441,21 @@ double doCalcd2DeltaVdmUrsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
   // Logarithms are calculated at the given Q
   double q = essmSusy.get_scale();
 
-  double yt = essmSusy.get_Yu(3, 3);
+  double yt = essmSusy.get_Yu(2, 2);
   double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){
     mtop = 165;
     yt = Sqrt(2.0)*mtop/v2;
-    essmSusy.set_Yu( 3, 3, yt);
+    essmSusy.set_Yu(2,2, yt);
   }
 
   
   double lambda = essmSusy.get_Lambdax();
  
   double At;
-  double TYt = r.get_TYu(3,3);
+  double TYt = essmSusy.get_TYu(2,2);
   
   if (Abs(TYt) < EPSTOL)
     {
@@ -5471,8 +5473,8 @@ double doCalcd2DeltaVdmUrsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
       At = TYt/yt;
     }
 
-  double mQlsq = essmSusy.get_mq2(3,3);
-  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mQlsq = essmSusy.get_mq2(2,2);
+  double mUrsq =  essmSusy.get_mu2(2,2);
   double mueff = lambda*s/Sqrt(2.0);
 
   double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);

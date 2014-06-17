@@ -409,63 +409,63 @@ int main(int argc, const char* argv[])
   // Soft squared masses
   Eigen::Matrix<double,3,3> mQlSq, mUrSq, mDrSq, mLlSq, mErSq;
 
-  mLlSq(1,1) = sqr(meL);
-  mLlSq(2,2) = sqr(mmuL);
-  mLlSq(3,3) = sqr(mtauL);
+  mLlSq(0,0) = sqr(meL);
+  mLlSq(1,1) = sqr(mmuL);
+  mLlSq(2,2) = sqr(mtauL);
 
-  mErSq(1,1) = sqr(meR);
-  mErSq(2,2) = sqr(mmuR);
-  mErSq(3,3) = sqr(mtauR);
+  mErSq(0,0) = sqr(meR);
+  mErSq(1,1) = sqr(mmuR);
+  mErSq(2,2) = sqr(mtauR);
 
-  mQlSq(1,1) = sqr(mqL1);
-  mQlSq(2,2) = sqr(mqL2);
-  mQlSq(3,3) = sqr(mqL3);
+  mQlSq(0,0) = sqr(mqL1);
+  mQlSq(1,1) = sqr(mqL2);
+  mQlSq(2,2) = sqr(mqL3);
 
-  mUrSq(1,1) = sqr(muR);
-  mUrSq(2,2) = sqr(mcR);
-  mUrSq(3,3) = sqr(mtR);
+  mUrSq(0,0) = sqr(muR);
+  mUrSq(1,1) = sqr(mcR);
+  mUrSq(2,2) = sqr(mtR);
 
-  mDrSq(1,1) = sqr(mdR);
-  mDrSq(2,2) = sqr(msR);
-  mDrSq(3,3) = sqr(mbR);
+  mDrSq(0,0) = sqr(mdR);
+  mDrSq(1,1) = sqr(msR);
+  mDrSq(2,2) = sqr(mbR);
 
   // Make sure off-diagonals are zero, as is assumed
   // in the cE6SSM
 
+  mLlSq(0,1) = 0.0;
+  mLlSq(0,2) = 0.0;
+  mLlSq(1,0) = 0.0;
   mLlSq(1,2) = 0.0;
-  mLlSq(1,3) = 0.0;
+  mLlSq(2,0) = 0.0;
   mLlSq(2,1) = 0.0;
-  mLlSq(2,3) = 0.0;
-  mLlSq(3,1) = 0.0;
-  mLlSq(3,2) = 0.0;
 
+  mErSq(0,1) = 0.0;
+  mErSq(0,2) = 0.0;
+  mErSq(1,0) = 0.0;
   mErSq(1,2) = 0.0;
-  mErSq(1,3) = 0.0;
+  mErSq(2,0) = 0.0;
   mErSq(2,1) = 0.0;
-  mErSq(2,3) = 0.0;
-  mErSq(3,1) = 0.0;
-  mErSq(3,2) = 0.0;
 
+  mQlSq(0,1) = 0.0;
+  mQlSq(0,2) = 0.0;
+  mQlSq(1,0) = 0.0;
   mQlSq(1,2) = 0.0;
-  mQlSq(1,3) = 0.0;
+  mQlSq(2,0) = 0.0;
   mQlSq(2,1) = 0.0;
-  mQlSq(2,3) = 0.0;
-  mQlSq(3,1) = 0.0;
-  mQlSq(3,2) = 0.0;
 
+  mUrSq(0,1) = 0.0;
+  mUrSq(0,2) = 0.0;
+  mUrSq(1,0) = 0.0;
   mUrSq(1,2) = 0.0;
-  mUrSq(1,3) = 0.0;
+  mUrSq(2,0) = 0.0;
   mUrSq(2,1) = 0.0;
-  mUrSq(2,3) = 0.0;
-  mUrSq(3,1) = 0.0;
-  mUrSq(3,2) = 0.0;
 
+  mDrSq(0,1) = 0.0;
+  mDrSq(0,2) = 0.0;
+  mDrSq(1,0) = 0.0;
   mDrSq(1,2) = 0.0;
-  mDrSq(1,3) = 0.0;
+  mDrSq(2,0) = 0.0;
   mDrSq(2,1) = 0.0;
-  mDrSq(2,3) = 0.0;
-  mDrSq(3,1) = 0.0;
-  mDrSq(3,2) = 0.0;
 
   // Soft trilinears = y*A
   Eigen::Matrix<double,3,3> tu, td, te, tkappa;
@@ -480,20 +480,20 @@ int main(int argc, const char* argv[])
   double mSSq = 1.0e6;
 
   Eigen::Matrix<double,2,2> mHdISq, mHuISq, mSISq;
-  mHdISq(1,1) = mH11Sq;
-  mHdISq(2,2) = mH12Sq;
-  mHuISq(1,1) = mH21Sq;
-  mHuISq(2,2) = mH22Sq;
-  mSISq(1,1) = mS1Sq;
-  mSISq(2,2) = mS2Sq;
+  mHdISq(0,0) = mH11Sq;
+  mHdISq(1,1) = mH12Sq;
+  mHuISq(0,0) = mH21Sq;
+  mHuISq(1,1) = mH22Sq;
+  mSISq(0,0) = mS1Sq;
+  mSISq(1,1) = mS2Sq;
 
   // No mixing...
-  mHdISq(1,2) = 0.0;
-  mHdISq(2,1) = 0.0;
-  mHuISq(1,2) = 0.0;
-  mHuISq(2,1) = 0.0;
-  mSISq(1,2) = 0.0;
-  mSISq(2,1) = 0.0;
+  mHdISq(0,1) = 0.0;
+  mHdISq(1,0) = 0.0;
+  mHuISq(0,1) = 0.0;
+  mHuISq(1,0) = 0.0;
+  mSISq(0,1) = 0.0;
+  mSISq(1,0) = 0.0;
 
   // Gravitino mass
   double mGrav = 0.0;

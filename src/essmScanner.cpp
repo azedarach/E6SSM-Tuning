@@ -25,64 +25,63 @@
 void errorCall();
 string ToUpper(const string & s);
 
+/*
+  --------------------------------------------------------------
+  E6SSM U(1)_\psi and U(1)_\chi charges
+  --------------------------------------------------------------
+*/
+
+const double QQPsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QuPsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QdPsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QLPsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QePsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QNPsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QSPsi = 4.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QH1Psi = -1.0/flexiblesusy::Sqrt(6.0);
+const double QH2Psi = -1.0/flexiblesusy::Sqrt(6.0);
+const double QXPsi = -1.0/flexiblesusy::Sqrt(6.0);
+const double QXbarPsi = -1.0/flexiblesusy::Sqrt(6.0);
+const double QHPrPsi = 1.0/(2.0*flexiblesusy::Sqrt(6.0));
+const double QHbarPrPsi = -1.0/(2.0*flexiblesusy::Sqrt(6.0));
+
+const double QQChi = -1.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QuChi = -1.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QdChi = 3.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QLChi = 3.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QeChi = -1.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QNChi = -5.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QSChi = 0.0;
+const double QH1Chi = -1.0/flexiblesusy::Sqrt(10.0);
+const double QH2Chi = 1.0/flexiblesusy::Sqrt(10.0);
+const double QXChi = 1.0/flexiblesusy::Sqrt(10.0);
+const double QXbarChi = -1.0/flexiblesusy::Sqrt(10.0);
+const double QHPrChi = 3.0/(2.0*flexiblesusy::Sqrt(10.0));
+const double QHbarPrChi = -3.0/(2.0*flexiblesusy::Sqrt(10.0));
+
+const double QQY = flexiblesusy::Sqrt(0.6)*(1.0/6.0);
+const double QuY = flexiblesusy::Sqrt(0.6)*(-2.0/3.0);
+const double QdY = flexiblesusy::Sqrt(0.6)*(1.0/3.0);
+const double QLY = flexiblesusy::Sqrt(0.6)*(-1.0/2.0);
+const double QeY = flexiblesusy::Sqrt(0.6);
+const double QNY = 0.0;
+const double QSY = 0.0;
+const double QH1Y = flexiblesusy::Sqrt(0.6)*(-1.0/2.0);
+const double QH2Y = flexiblesusy::Sqrt(0.6)*(1.0/2.0);
+const double QXY = flexiblesusy::Sqrt(0.6)*(-1.0/3.0);
+const double QXbarY = flexiblesusy::Sqrt(0.6)*(1.0/3.0);
+const double QHPrY = flexiblesusy::Sqrt(0.6)*(-1.0/2.0);
+const double QHbarPrY = flexiblesusy::Sqrt(0.6)*(1.0/2.0);
+  
+  /*
+    --------------------------------------------------------------
+  */
 
 int main(int argc, const char* argv[])
 {
   using namespace flexiblesusy;
   using namespace softsusy;
   typedef Two_scale algorithm_type;
-
-  /*
-    --------------------------------------------------------------
-    E6SSM U(1)_\psi and U(1)_\chi charges
-    --------------------------------------------------------------
-   */
-
-  const double QQPsi = 1.0/(2.0*Sqrt(6.0));
-  const double QuPsi = 1.0/(2.0*Sqrt(6.0));
-  const double QdPsi = 1.0/(2.0*Sqrt(6.0));
-  const double QLPsi = 1.0/(2.0*Sqrt(6.0));
-  const double QePsi = 1.0/(2.0*Sqrt(6.0));
-  const double QNPsi = 1.0/(2.0*Sqrt(6.0));
-  const double QSPsi = 4.0/(2.0*Sqrt(6.0));
-  const double QH1Psi = -1.0/Sqrt(6.0);
-  const double QH2Psi = -1.0/Sqrt(6.0);
-  const double QXPsi = -1.0/Sqrt(6.0);
-  const double QXbarPsi = -1.0/Sqrt(6.0);
-  const double QHPrPsi = 1.0/(2.0*Sqrt(6.0));
-  const double QHbarPrPsi = -1.0/(2.0*Sqrt(6.0));
-  
-  const double QQChi = -1.0/(2.0*Sqrt(10.0));
-  const double QuChi = -1.0/(2.0*Sqrt(10.0));
-  const double QdChi = 3.0/(2.0*Sqrt(10.0));
-  const double QLChi = 3.0/(2.0*Sqrt(10.0));
-  const double QeChi = -1.0/(2.0*Sqrt(10.0));
-  const double QNChi = -5.0/(2.0*Sqrt(10.0));
-  const double QSChi = 0.0;
-  const double QH1Chi = -1.0/Sqrt(10.0);
-  const double QH2Chi = 1.0/Sqrt(10.0);
-  const double QXChi = 1.0/Sqrt(10.0);
-  const double QXbarChi = -1.0/Sqrt(10.0);
-  const double QHPrChi = 3.0/(2.0*Sqrt(10.0));
-  const double QHbarPrChi = -3.0/(2.0*Sqrt(10.0));
-  
-  const double QQY = Sqrt(0.6)*(1.0/6.0);
-  const double QuY = Sqrt(0.6)*(-2.0/3.0);
-  const double QdY = Sqrt(0.6)*(1.0/3.0);
-  const double QLY = Sqrt(0.6)*(-1.0/2.0);
-  const double QeY = Sqrt(0.6);
-  const double QNY = 0.0;
-  const double QSY = 0.0;
-  const double QH1Y = Sqrt(0.6)*(-1.0/2.0);
-  const double QH2Y = Sqrt(0.6)*(1.0/2.0);
-  const double QXY = Sqrt(0.6)*(-1.0/3.0);
-  const double QXbarY = Sqrt(0.6)*(1.0/3.0);
-  const double QHPrY = Sqrt(0.6)*(-1.0/2.0);
-  const double QHbarPrY = Sqrt(0.6)*(1.0/2.0);
-  
-  /*
-    --------------------------------------------------------------
-  */
 
   /*
     --------------------------------------------------------------
@@ -118,8 +117,8 @@ int main(int argc, const char* argv[])
     E6 mixing angle (used to select model)
     --------------------------------------------------------------
    */
-
-  double thetaE6 = atan(Sqrt(15.0));
+  // DH:: not varied at the moment
+  //double thetaE6 = atan(Sqrt(15.0));
 
   /*
     --------------------------------------------------------------
@@ -528,28 +527,6 @@ int main(int argc, const char* argv[])
 
   // Variables to store values of EWSB conditions
   double f1, f2, f3;
-
-  // U(1)' charges
-  double cE6 = cos(thetaE6);
-  double sE6 = sin(thetaE6);
-
-  double QQp, Qup, Qdp, QLp, Qep, QNp, QSp, QH1p, QH2p, QXp, QXbarp, QHpp, QHpbarp;
-  QQp = QQChi*cE6+QQPsi*sE6;
-  Qup = QuChi*cE6+QuPsi*sE6;
-  Qdp = QdChi*cE6+QdPsi*sE6;
-  QLp = QLChi*cE6+QLPsi*sE6;
-  Qep = QeChi*cE6+QePsi*sE6;
-  QNp = QNChi*cE6+QNPsi*sE6;
-  QSp = QSChi*cE6+QSPsi*sE6;
-  QH1p = QH1Chi*cE6+QH1Psi*sE6;
-  QH2p = QH2Chi*cE6+QH2Psi*sE6;
-  QXp = QXChi*cE6+QXPsi*sE6;
-  QXbarp = QXbarChi*cE6+QXbarPsi*sE6;
-  QHpp = QHPrChi*cE6+QHPrPsi*sE6;
-  QHpbarp = QHbarPrChi*cE6+QHbarPrPsi*sE6;
-
-  // E6 input parameters
-  genericE6SSM_input_parameters input;
 
   // Models that we will calculate the fine tuning for
   Spectrum_generator_settings spectrum_generator_settings;
@@ -1996,3 +1973,233 @@ string ToUpper(const string & s) {
 	
 	return result;
     }
+
+flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & yuin, DoubleMatrix const & ydin, 
+							   DoubleMatrix const & yein, DoubleVector const & gin, 
+							   DoubleVector const & lambdain, DoubleVector const & kappain, 
+							   double mupr, double tanb, double hvev, double svev,
+							   DoubleVector const & mGaugino, DoubleMatrix const & tuin, 
+							   DoubleMatrix const & tdin, DoubleMatrix const & tein, 
+							   DoubleVector const & tlambdain, DoubleVector const & tkappain,
+							   DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
+							   DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
+							   DoubleMatrix const & mErSq, double Bmupr,  double mx, 
+							   int l, int t, QedQcd const & dataset, 
+							   double tol, double & mHdSq, double & mHuSq, double & ms, 
+							   bool & hasEWSBProblem, bool & squarksTachyons, bool & higgsTachyons, 
+							   bool & tadpoleProblem, bool & poleHiggsTachyons, 
+							   bool & inaccurateHiggsMass, bool & hasSeriousProblem)
+{
+  using namespace flexiblesusy;
+
+  // While the expressions we have for the soft masses have hardcoded charges, we will
+  // fix the E6 mixing angle to give us the U(1)_N E6 model.
+  const double thetaE6 = ArcTan(Sqrt(15.0));
+
+  // U(1)' charges
+  double cE6 = cos(thetaE6);
+  double sE6 = sin(thetaE6);
+  
+  // E6 input parameters
+  genericE6SSM_input_parameters input = genericE6SSM_input_parameters();
+
+  input.QQp = QQChi*cE6+QQPsi*sE6;
+  input.Qup = QuChi*cE6+QuPsi*sE6;
+  input.Qdp = QdChi*cE6+QdPsi*sE6;
+  input.QLp = QLChi*cE6+QLPsi*sE6;
+  input.Qep = QeChi*cE6+QePsi*sE6;
+  input.QSp = QSChi*cE6+QSPsi*sE6;
+  input.QH1p = QH1Chi*cE6+QH1Psi*sE6;
+  input.QH2p = QH2Chi*cE6+QH2Psi*sE6;
+  input.QDxp = QXChi*cE6+QXPsi*sE6;
+  input.QDxbarp = QXbarChi*cE6+QXbarPsi*sE6;
+  input.QHpp = QHPrChi*cE6+QHPrPsi*sE6;
+  input.QHpbarp = QHbarPrChi*cE6+QHbarPrPsi*sE6;
+
+  Eigen::Matrix<double,3,3> Yu, Yd, Ye, Kappa, TYu, TYd, TYe, TKappa;
+  Eigen::Matrix<double,2,2> Lambda12, TLambda12, mH1I2, mH2I2; 
+
+  for (int i = 1; i <= 3; i++)
+    {
+      Kappa(i-1,i-1) = kappain.display(i);
+      TKappa(i-1,i-1) = tkappain.display();
+      for (int j = 1; j <= 3; j++)
+	{
+	  Yu(i-1,j-1) = yuin.display(i,j);
+	  Yd(i-1,j-1) = ydin.display(i,j);
+	  Ye(i-1,j-1) = yein.display(i,j);
+	  TYu(i-1,j-1) = tuin(i,j);
+	  TYd(i-1,j-1) = tdin(i,j);
+	  TYe(i-1,j-1) = tein(i,j);
+	}
+    }
+
+  double Lambdax = lambdain(3);
+  double TLambdax = tlambdain.display(3);
+
+  for (int i = 1; i <= 2; i++)
+    {
+      Lambda12(i-1,i-1) = lambdain(i);
+      TLambda12(i-1,i-1) = tlambdain(i);
+    }
+
+  // Off diagonals for kappa, T_kappa, and the inert lambdas should vanish
+  Kappa(0,1) = 0.0;
+  Kappa(0,2) = 0.0;
+  Kappa(1,0) = 0.0;
+  Kappa(1,2) = 0.0;
+  Kappa(2,0) = 0.0;
+  Kappa(2,1) = 0.0;
+
+  TKappa(0,1) = 0.0;
+  TKappa(0,2) = 0.0;
+  TKappa(1,0) = 0.0;
+  TKappa(1,2) = 0.0;
+  TKappa(2,0) = 0.0;
+  TKappa(2,1) = 0.0;
+
+  double v1 = hvev/Sqrt(1.0+tanb*tanb);
+  double v2 = v1*tanb;
+
+  // SUSY parameters
+  genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, Yd, Ye, Kappa, Lambda12, Lambdax, Yu, mupr, gin(1), gin(2), gin(3), gin(4), v1, v2, svev);
+  
+  // Soft SUSY breaking parameters
+  SoftParsMssm r_soft = SoftParsMssm(r_susy, mGaugino, au, ad, ae, mQlSq, mUrSq, mDrSq, mLlSq, mErSq,
+				     m3sq, mHdSq, mHuSq, mGrav, mx, l, t);
+
+  MssmSoftsusy r_approx = MssmSoftsusy(r_soft, physpars, mx, l, t, hvev);
+
+  QedQcd oneset = dataset;
+
+  oneset.toMz();
+
+  r_approx.setData(oneset);
+
+  // M_{SUSY}, m_Hd^2(MX) and m_Hu^2(MX) must be determined
+  // simultaneously using an iterative procedure. 
+
+  DoubleVector solnGuess(3);
+
+  solnGuess(1) = mHdSq;
+  solnGuess(2) = mHuSq;
+  solnGuess(3) = ms;
+
+  r_approx.setMh1Squared(solnGuess(1));
+  r_approx.setMh2Squared(solnGuess(2));
+  r_approx.setMsusy(ms);
+
+  // Try to determine the correct solution using Newton's method, 
+  // catch any numerical errors and flag as a problem point if they occur.
+  try
+    {
+      hasEWSBProblem = MSSM_ImplementEWSBConstraints_SoftMasses(r_approx, mx, ms, 
+  							false, solnGuess, tol);
+      
+      if (hasEWSBProblem)
+	{
+	  cerr << "WARNING: problem implementing EWSB conditions." << endl;
+	  MssmSoftsusy s = r_approx;
+	  s.setMh1Squared(solnGuess(1));
+	  s.setMh2Squared(solnGuess(2));
+	  s.setMsusy(solnGuess(3));
+	  s.runto(s.displayMsusy());
+	  cerr << "f1 = " << MSSM_EWSBCondition1(s) << endl;
+	  cerr << "f2 = " << MSSM_EWSBCondition2(s) << endl;
+	}
+      
+      mHdSq = solnGuess(1);
+      mHuSq = solnGuess(2);
+      ms = solnGuess(3);
+      
+      r_approx.setMsusy(solnGuess(3));
+      r_approx.setMh1Squared(solnGuess(1));
+      r_approx.setMh2Squared(solnGuess(2));
+      
+      // Try to get the spectrum. Catch any errors and flag as 
+      // problem if they occur.
+      // Get DR bar stop and sbottom masses.
+      r_approx.runto(r_approx.displayMsusy());
+      
+      r_approx.stops();
+      r_approx.sbottoms();
+
+      // Check for tachyonic squakrs      
+      if (r_approx.displayProblem().tachyon == stop || r_approx.displayProblem().tachyon == sbottom)
+	{
+	  squarksTachyons = true;
+	}
+      
+      // Values needed below, shouldn't be any problems here so long as tan(beta), v, and the gauge couplings
+      // are sensible when input
+      double sw = r_approx.calcSinthdrbar();
+      double mt = r_approx.displayYukawaElement(YU, 3, 3)*r_approx.displayHvev()*sin(atan(r_approx.displayTanb()))/sqrt(2.0);
+      double mb = r_approx.displayYukawaElement(YD, 3, 3)*r_approx.displayHvev()*cos(atan(r_approx.displayTanb()))/sqrt(2.0);
+      double mz2 = sqr(r_approx.displayMzRun());
+      double mw2 = sqr(r_approx.displayMwRun());
+      
+      drBarPars eg = r_approx.displayDrBarPars();
+      
+      // Calculate DR bar Higgs masses
+      r_approx.calcDrBarHiggs(atan(r_approx.displayTanb()), mz2, mw2, sw, eg);
+      
+      // Check if DR bar h0 or A0 are tachyons
+      if (r_approx.displayProblem().tachyon == h0 || r_approx.displayProblem().tachyon == A0)
+	{
+	  higgsTachyons = true;
+	}
+
+      // Calculate neutralino and chargino DR bar masses, there shouldn't be any problems here 
+      // (or if there are they will be serious numerical ones in diagonalisation)
+      r_approx.calcDrBarNeutralinos(atan(r_approx.displayTanb()), sqrt(mz2), sqrt(mw2), sw, eg);
+      r_approx.calcDrBarCharginos(atan(r_approx.displayTanb()), sqrt(mw2), eg);  
+      
+      // Set values
+      eg.mu(1,3) = r_approx.displayDrBarPars().mu(1,3);
+      eg.mu(2,3) = r_approx.displayDrBarPars().mu(2,3);
+      eg.md(1,3) = r_approx.displayDrBarPars().md(1,3);
+      eg.md(2,3) = r_approx.displayDrBarPars().md(2,3);
+      eg.mt = mt;
+      eg.mb = mb;
+      eg.mz = sqrt(mz2);
+      eg.mw = sqrt(mw2);
+      
+      r_approx.setDrBarPars(eg);
+      
+      // Tadpoles using only 1-loop stop and sbottom contributions
+      r_approx.calcTadpole1Ms1loopSimple(mt, sw);
+      r_approx.calcTadpole2Ms1loopSimple(mt, sw);
+      
+      // Check for problems with tadpole calculation. There shouldn't
+      // be any, but just in case...
+      tadpoleProblem = r_approx.displayProblem().noMuConvergence;
+
+      double piwwt = 0.0, pizzt = 0.0;//< unused in simplified routine
+      int accuracy = 1;//< number of loops = 0 or 1 as of SoftSUSY-3.3.10.
+      
+      // Calculate physical Higgs masses and flag if h0 or A0 tachyon
+      poleHiggsTachyons = r_approx.higgsSimple(accuracy, piwwt, pizzt);
+      
+      // Other problems that can occur in physical Higgs mass calculation:
+      // inaccurate result
+      inaccurateHiggsMass = r_approx.displayProblem().inaccurateHiggsMass;
+
+    }
+  catch(const string & a) 
+    { 
+      cerr << "WARNING: serious numerical problem at point." << endl; 
+      hasSeriousProblem = true;
+    }
+  catch(const char * a) 
+    { 
+      cerr << "WARNING: serious numerical problem at point." << endl; 
+      hasSeriousProblem = true; 
+    }
+  catch(...) 
+    { 
+      cerr << "WARNING: unknown type of exception caught: in doSimplifiedSpectrum." << endl; 
+      hasSeriousProblem = true; 
+    }
+  
+  return r_approx;
+}

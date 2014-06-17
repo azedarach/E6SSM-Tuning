@@ -75,59 +75,59 @@ double a0Peter(double, double);
 // in our tadpole contributions, the latter could be, but provide small contributions in comparison to 
 // errors due to threshold treatment.
 // Inputs:
-//    SoftParsEssm r = ESSM model
+//    genericE6SSM_soft_parameters r = ESSM model
 //    DoubleVector mstop = mass of stops
 //    DoubleVector mstopsq = squared masses of stops
 //    DoubleVector mD1sq = squared masses of exotic D quarks
 //    DoubleVector mD2sq = squared masses of exotic D quarks
 //    double s = singlet VEV
 //    double tb = tan(beta)
-void physical_ESSM(SoftParsEssm,DoubleVector &,DoubleVector &,DoubleVector &,DoubleVector &,double,double);
+void physical_ESSM(genericE6SSM_soft_parameters,DoubleVector &,DoubleVector &,DoubleVector &,DoubleVector &,double,double);
 
 //This version neglects U(1) D-terms and was written for comparison with Roman's program
-void physical_ESSM_Roman(SoftParsEssm,DoubleVector &,DoubleVector &,DoubleVector &,DoubleVector &,double,double);
+void physical_ESSM_Roman(genericE6SSM_soft_parameters,DoubleVector &,DoubleVector &,DoubleVector &,DoubleVector &,double,double);
 
 // Determines the dominant H1 tadpoles. There are a number of different versions of this depending on choice of
 // scale. The difference  should be higher order. Exotics can also be included in this version though by default
 // they switched off at the moment.   This version  includes U(1) D-terms and exotics, and evaluates the 
 // scale where RG evolution is halted.
 // Inputs:
-//    SoftParsEssm r = ESSM model
+//    genericE6SSM_soft_parameters r = ESSM model
 //    double s = singlet VEV
 //    double tb = tan(beta)
-double doCalcTadpoleESSMH1(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters,double,double);
 
 // Calculates tadpoles using logarithms at m_t. The assumption is coefficients do not substantially change 
 // between scale at which RG evolution is halted and m_t. 
-double doCalcTadpoleESSMH1_atMt(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters,double,double);
 
 // This version neglects U(1) D-terms and calculates at m_t. 
-double doCalcTadpoleESSMH1_Roman(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters,double,double);
 
 // Yet another option, performs calculation like Roman, but uses logarithms at scale at which RGE evolution is halted.
-double doCalcTadpoleESSMH1_Roman_atQ(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters,double,double);
 
 // Now tadpoles for H2. The different versions are labled as for H1 tadpoles and contributions are matched with those.
-double doCalcTadpoleESSMH2(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters,double,double);
 
-double doCalcTadpoleESSMH2_atMt(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters,double,double);
 
-double doCalcTadpoleESSMH2_Roman(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters,double,double);
 
-double doCalcTadpoleESSMH2_Roman_atQ(SoftParsEssm,double,double);
+double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters,double,double);
 
 // Tadpoles for S. Same labeling as above.
-double doCalcTadpolesESSMS(SoftParsEssm,double,double);
+double doCalcTadpolesESSMS(genericE6SSM_soft_parameters,double,double);
 
-double doCalcTadpolesESSMS_atMt(SoftParsEssm,double,double);
+double doCalcTadpolesESSMS_atMt(genericE6SSM_soft_parameters,double,double);
 
-double doCalcTadpolesESSMS_Roman(SoftParsEssm,double,double);
+double doCalcTadpolesESSMS_Roman(genericE6SSM_soft_parameters,double,double);
 
-double doCalcTadpolesESSMS_Roman_atQ(SoftParsEssm,double,double);
+double doCalcTadpolesESSMS_Roman_atQ(genericE6SSM_soft_parameters,double,double);
 
 // Calculate the Higgs masses in the model.
 // Inputs:
-//    SoftParsEssm & r = ESSM model
+//    genericE6SSM_soft_parameters & r = ESSM model
 //    double s = singlet VEV
 //    double tb = tan(beta)
 //    DoubleVector & mstop = stop masses
@@ -140,24 +140,24 @@ double doCalcTadpolesESSMS_Roman_atQ(SoftParsEssm,double,double);
 //    DoubleVector & mhout = Higgs masses
 //    DoubleMatrix & mhmix = mixing matrix for Higgs fields
 //    int & sing = flag to indicate poor accuracy in diagonalisation (non-zero if tolerance not met)
-void HiggsMasses(SoftParsEssm &,double,double,DoubleVector &,DoubleVector &,int,bool,bool,DoubleVector &,int &,DoubleVector &, DoubleMatrix &, DoubleMatrix &, int &);
+void HiggsMasses(genericE6SSM_soft_parameters &,double,double,DoubleVector &,DoubleVector &,int,bool,bool,DoubleVector &,int &,DoubleVector &, DoubleMatrix &, DoubleMatrix &, int &);
 
 // To the above we will add methods for calculating m_A^2 at tree level and one-loop order, and
 // methods for calculating chargino and neutralino masses (at tree level).
 
 // Calculate m_A^2 at tree level.
 // Inputs:
-//    SoftParsEssm const & essmSusy = the ESSM model to calculate m_A^2 for
+//    genericE6SSM_soft_parameters const & essmSusy = the ESSM model to calculate m_A^2 for
 //    double s = the value of the singlet VEV to use
 //    double tb = the value of tan(beta) to use
-double mAsq_TreeLevel(SoftParsEssm const &, double, double);
+double mAsq_TreeLevel(genericE6SSM_soft_parameters const &, double, double);
 
 // Calculate m_A^2 at one loop order.
 // Inputs:
-//    SoftParsEssm essmSusy = the ESSM model to calculate m_A^2 for
+//    genericE6SSM_soft_parameters essmSusy = the ESSM model to calculate m_A^2 for
 //    double s = the value of the singlet VEV to use
 //    double tb = the value of tan(beta) to use
-double mAsq_OneLoop(SoftParsEssm, double, double);
+double mAsq_OneLoop(genericE6SSM_soft_parameters, double, double);
 
 // A helper function used in calculating the mass m_A^2 at one loop order.
 // Inputs:
@@ -166,6 +166,77 @@ double mAsq_OneLoop(SoftParsEssm, double, double);
 //    double q = renormalisation scale
 double f(double,double,double);
 
+// The following are helper functions that are useful for constructing
+// the leading one-loop tuning measures.
+
+// dmstop1dvi calculates the derivative of m_stop_1^2 with respect to
+// v_i for the given ESSM model, i = 1, 2, 3 (i=3 is s). 
+// NB: m_stop_1^2 is taken to be the lighter stop in this method 
+// -i.e. minus sign applies.
+// Inputs:
+//     genericE6SSM_soft_parameters essmSusy = object to calculate derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use
+double doCalcdmstop1sqdv1(genericE6SSM_soft_parameters,double,double);
+double doCalcdmstop1sqdv2(genericE6SSM_soft_parameters,double,double);
+double doCalcdmstop1sqdv3(genericE6SSM_soft_parameters,double,double);
+
+// dmstop2dvi is as above but for m_stop_2^2.
+double doCalcdmstop2sqdv1(genericE6SSM_soft_parameters,double,double);
+double doCalcdmstop2sqdv2(genericE6SSM_soft_parameters,double,double);
+double doCalcdmstop2sqdv3(genericE6SSM_soft_parameters,double,double);
+
+// The three functions below are purely used for testing the first
+// derivatives of the stop squared masses. They calculate the 
+// stop/top tadpole correction to the effective potential, in the
+// form (1/v_i)\frac{\partial \Delta V}{\partial v_i}. The results
+// should be compared against those obtained using the functions
+// doCalcTadpolesESSMH<1,2,S> which are actually used in practical
+// calculations. In the notation used in my notes, these functions
+// calculate \Delta^{tadpole}_i for i = 1, 2, 3.
+// Inputs:
+//     genericE6SSM_soft_parameters essmSusy = object to calculate derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use
+double calculateDeltaTadpole1(genericE6SSM_soft_parameters,double,double);
+double calculateDeltaTadpole2(genericE6SSM_soft_parameters,double,double);
+double calculateDeltaTadpole3(genericE6SSM_soft_parameters,double,double);
+
+// These functions calculate the leading one-loop corrections
+// to the CP-even Higgs mass matrix in the basis (v_1, v_2, v_3=s),
+// given by \Delta_{ij}'=\frac{\partial^2\Delta V}{\partial v_i\partial v_j}.
+// Inputs:
+//     genericE6SSM_soft_parameters essmSusy = object to calculate derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use.
+// CHECK IF NEED TO SUBTRACT TADPOLES FROM THESE!!
+double doCalcDeltaPrime11(genericE6SSM_soft_parameters,double,double);
+double doCalcDeltaPrime12(genericE6SSM_soft_parameters,double,double);
+double doCalcDeltaPrime13(genericE6SSM_soft_parameters,double,double);
+double doCalcDeltaPrime22(genericE6SSM_soft_parameters,double,double);
+double doCalcDeltaPrime23(genericE6SSM_soft_parameters,double,double);
+double doCalcDeltaPrime33(genericE6SSM_soft_parameters,double,double);
+
+// These helper functions calculate the explicit derivatives
+// of the tadpole contributions wrt the input parameters, i.e. returns
+// the partial derivatives (1/v_i)*\frac{\partial^2 \Delta V}{\partial a\partial v_i}
+// where the VEVs v_i, i = 1, 2, 3, are treated as being fixed.
+// Inputs:
+//     genericE6SSM_soft_parameters essmSusy = the object to calculate the derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use
+double doCalcd2DeltaVdLambdadv1(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdLambdadv2(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdLambdadv3(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdAtdv1(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdAtdv2(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdAtdv3(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdmQlsqdv1(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdmQlsqdv2(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdmQlsqdv3(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdmUrsqdv1(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdmUrsqdv2(genericE6SSM_soft_parameters,double,double);
+double doCalcd2DeltaVdmUrsqdv3(genericE6SSM_soft_parameters,double,double);
 
 // Functions for getting approximate derivatives of low scale parameters w.r.t high
 // scale parameters. Returns the vector

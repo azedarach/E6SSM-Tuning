@@ -358,7 +358,7 @@ double ccbSqrt(double f){ return Sqrt(Abs(f)); }
 // appears with opposite sign below for some reason.
 double a0Peter(double mSq, double Q)
 {
-  return mSq*(log(mSq/(Q*Q))-1);
+  return mSq*(Log(mSq/(Q*Q))-1);
 }
 
 // Calculates the masses of the stops and exotic quarks for tadpoles.  the former are always included in our tadpole contributions, the latter could be, but provide small contributions in comparison to errors due to threshold treatment.  
@@ -508,7 +508,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
     }
   else
     {
-      mstop(1) = -sqrt(fabs(mstopsq(1)));
+      mstop(1) = -sqrt(Abs(mstopsq(1)));
     }
 
   mstopsq(2) = 0.5*(mQlsq + mUrsq + 2*mtop*mtop +0.125*sqr(g2)*(sqr(v1) - sqr(v2)) +0.125*3.0*sqr(g1)*(sqr(v1) - sqr(v2))/5.0 + oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  - sqrt(sqr(mQlsq- mUrsq+0.125*sqr(g2)*(sqr(v1) - sqr(v2)) - 0.125*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*mtop*mtop*sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
@@ -519,7 +519,7 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
     }
   else
     {
-      mstop(2) = -sqrt(fabs(mstopsq(2)));
+      mstop(2) = -sqrt(Abs(mstopsq(2)));
     }
  
   if(speak){								   
@@ -2839,18 +2839,18 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
  }
  
  
- DelMh11prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*log(mstop(1)/r.get_scale())*Sqr( mstop1derriv_1 )  + a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv11)   +2.0*(2.0*log(mstop(2)/r.get_scale())*Sqr( mstop2derriv_1 )  + a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv11));
+ DelMh11prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*Log(mstop(1)/r.get_scale())*Sqr( mstop1derriv_1 )  + a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv11)   +2.0*(2.0*Log(mstop(2)/r.get_scale())*Sqr( mstop2derriv_1 )  + a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv11));
  
- DelMh12prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*log(mstop(1)/r.get_scale())*(mstop1derriv_1*mstop1derriv_2)+  a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv12) + 2.0*( 2.0*log(mstop(2)/r.get_scale())*mstop2derriv_1*mstop2derriv_2 +  a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv12));
+ DelMh12prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*Log(mstop(1)/r.get_scale())*(mstop1derriv_1*mstop1derriv_2)+  a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv12) + 2.0*( 2.0*Log(mstop(2)/r.get_scale())*mstop2derriv_1*mstop2derriv_2 +  a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv12));
  
- DelMh13prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*log(mstop(1)/r.get_scale())*(mstop1derriv_1*mstop1derriv_s)+  a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv13) + 2.0*( 2.0*log(mstop(2)/r.get_scale())*mstop2derriv_1*mstop2derriv_s +  a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv13));
+ DelMh13prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*Log(mstop(1)/r.get_scale())*(mstop1derriv_1*mstop1derriv_s)+  a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv13) + 2.0*( 2.0*Log(mstop(2)/r.get_scale())*mstop2derriv_1*mstop2derriv_s +  a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv13));
  
- DelMh22prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*log(mstop(1)/r.get_scale())*Sqr( mstop1derriv_2 )  + a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv22)   +2.0*(2.0*log(mstop(2)/r.get_scale())*Sqr( mstop2derriv_2 )  + a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv22) - 4.0*(2.0*log(mtop/r.get_scale())*Sqr(Sqr(yt))*Sqr(v2) +a0Peter(Sqr(mtop),r.get_scale())*Sqr(yt)));
+ DelMh22prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*Log(mstop(1)/r.get_scale())*Sqr( mstop1derriv_2 )  + a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv22)   +2.0*(2.0*Log(mstop(2)/r.get_scale())*Sqr( mstop2derriv_2 )  + a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv22) - 4.0*(2.0*Log(mtop/r.get_scale())*Sqr(Sqr(yt))*Sqr(v2) +a0Peter(Sqr(mtop),r.get_scale())*Sqr(yt)));
  
- DelMh23prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*log(mstop(1)/r.get_scale())*(mstop1derriv_2*mstop1derriv_s) +  a0Peter(mstopsq(1), r.get_scale())* DoubleStop1derriv23) + 2.0*( 2.0*log(mstop(2)/r.get_scale())*mstop2derriv_2*mstop2derriv_s +  a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv23));
+ DelMh23prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*Log(mstop(1)/r.get_scale())*(mstop1derriv_2*mstop1derriv_s) +  a0Peter(mstopsq(1), r.get_scale())* DoubleStop1derriv23) + 2.0*( 2.0*Log(mstop(2)/r.get_scale())*mstop2derriv_2*mstop2derriv_s +  a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv23));
  
  //cout << " DelMh23prime = " <<  DelMh23prime  << endl;
- DelMh33prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*log(mstop(1)/r.get_scale())*Sqr( mstop1derriv_s )  + a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv33)   +2.0*(2.0*log(mstop(2)/r.get_scale())*Sqr( mstop2derriv_s )  + a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv33));
+ DelMh33prime = 3.0/(32.0*Sqr(PI))*(2.0*(2.0*Log(mstop(1)/r.get_scale())*Sqr( mstop1derriv_s )  + a0Peter(mstopsq(1),r.get_scale())* DoubleStop1derriv33)   +2.0*(2.0*Log(mstop(2)/r.get_scale())*Sqr( mstop2derriv_s )  + a0Peter(mstopsq(2),r.get_scale())* DoubleStop2derriv33));
  //cout << " DelMh33prime = " <<  DelMh33prime  << endl;
 
  // cout << "Del11prime = " << DelMh11prime << endl;
@@ -2898,15 +2898,15 @@ if(WhatCorrections ==1){
 
 
  //Rotate by beta
- DelMh11  = Sqr(cos(atan(tb))) * DelMh11prime + 2*tb/(1+tb*tb)*DelMh12prime + Sqr(sin(atan(tb)))* DelMh22prime;
- DelMh22  = Sqr(sin(atan(tb))) * DelMh11prime - 2*tb/(1+tb*tb)*DelMh12prime + Sqr(cos(atan(tb)))* DelMh22prime;
+ DelMh11  = Sqr(Cos(ArcTan(tb))) * DelMh11prime + 2*tb/(1+tb*tb)*DelMh12prime + Sqr(Sin(ArcTan(tb)))* DelMh22prime;
+ DelMh22  = Sqr(Sin(ArcTan(tb))) * DelMh11prime - 2*tb/(1+tb*tb)*DelMh12prime + Sqr(Cos(ArcTan(tb)))* DelMh22prime;
  DelMh33 = DelMh33prime;
- DelMh12  = (Sqr(cos(atan(tb))) -Sqr(sin(atan(tb)))) * DelMh12prime  + tb/(1+tb*tb)*( DelMh22prime - DelMh11prime);
- DelMh13 = cos(atan(tb))* DelMh13prime + sin(atan(tb))* DelMh23prime; 
- DelMh23 = cos(atan(tb))* DelMh23prime - sin(atan(tb))* DelMh13prime; 
+ DelMh12  = (Sqr(Cos(ArcTan(tb))) -Sqr(Sin(ArcTan(tb)))) * DelMh12prime  + tb/(1+tb*tb)*( DelMh22prime - DelMh11prime);
+ DelMh13 = Cos(ArcTan(tb))* DelMh13prime + Sin(ArcTan(tb))* DelMh23prime; 
+ DelMh23 = Cos(ArcTan(tb))* DelMh23prime - Sin(ArcTan(tb))* DelMh13prime; 
 
  //entries
- double HE11 = 2.0*Sqr(mylambda(3))*v1*v2*tb/(1 + tb*tb) + 0.25*Sqr(gbar)*(Sqr(v1) - Sqr(v2))*(1-tb*tb)/(1 + tb*tb) + Sqr(g1p)*Sqr(v1*Q1eff*cos(atan(tb)) + v2*sin(atan(tb))*Q2eff) + DelMh11;
+ double HE11 = 2.0*Sqr(mylambda(3))*v1*v2*tb/(1 + tb*tb) + 0.25*Sqr(gbar)*(Sqr(v1) - Sqr(v2))*(1-tb*tb)/(1 + tb*tb) + Sqr(g1p)*Sqr(v1*Q1eff*Cos(ArcTan(tb)) + v2*Sin(ArcTan(tb))*Q2eff) + DelMh11;
  
  const bool Includeleadtwoloop = true; // True = use two loop. Should use two loop in final results?
  if(Includeleadtwoloop)
@@ -2914,7 +2914,7 @@ if(WhatCorrections ==1){
      //Remove one loop because we will replace it with equivelent terms obtained from rge evolution
      HE11 = HE11 - DelMh11;
      //if(speak) cout << "Tree (hopefully!) HE11 = " << HE11 << endl;
-     double l = log(mstop(1)*mstop(2)/(Sqr(mtop)));
+     double l = Log(mstop(1)*mstop(2)/(Sqr(mtop)));
      //if(speak) cout << " l = " << l << endl;  
      double Xt = At - mu_eff/tb;
      //if(speak)cout << "Xt = " << Xt << endl;
@@ -2922,20 +2922,20 @@ if(WhatCorrections ==1){
      if(Bugspeak)
        { 
 	 cout << " Ut = " << Ut << endl;
-	 cout << "Should be like 1lp HE11 = " <<  HE11*(1 - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(sin(atan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
+	 cout << "Should be like 1lp HE11 = " <<  HE11*(1 - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
        }
   
-     if(Bugspeak) cout << "Should be likeDelMh11 = " <<  HE11*( - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l)/(8.0*Sqr(PI))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(sin(atan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
+     if(Bugspeak) cout << "Should be likeDelMh11 = " <<  HE11*( - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l)/(8.0*Sqr(PI))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
      
-     HE11 = HE11*(1 - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(sin(atan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l + 1/(16*Sqr(PI))*(1.5*Sqr(r.displayYukawaElement(YU, 3, 3)) - 8.0*Sqr(r.displayGaugeCoupling(3)))*(Ut + l)*l);
+     HE11 = HE11*(1 - 3*Sqr(r.displayYukawaElement(YU, 3, 3))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.displayYukawaElement(YU, 3, 3)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l + 1/(16*Sqr(PI))*(1.5*Sqr(r.displayYukawaElement(YU, 3, 3)) - 8.0*Sqr(r.displayGaugeCoupling(3)))*(Ut + l)*l);
      
      //if(speak) cout << "After 2lp HE11 = " << HE11 << endl; 
      
    }
  double HE12 = (0.25*Sqr(mylambda(3)) - 0.125*Sqr(gbar))*Sqr(vev)* 4.0*tb*(1 - Sqr(tb))/(Sqr(1.0+tb*tb)) +   Sqr(g1p)*( Sqr(v1)*Q1eff + Sqr(v2)*Q2eff)*(Q2eff - Q1eff)*tb/(1+tb*tb)  + DelMh12;
- double HE13 = -mylambda(3)*myAlambda(3)*v2*Sqrt(2)*cos(atan(tb)) + Sqr( mylambda(3))*s*vev +  Sqr(g1p)*( Sqr(v1)*Q1eff + Sqr(v2)*Q2eff)*QSeff*s/(vev) + DelMh13;
+ double HE13 = -mylambda(3)*myAlambda(3)*v2*Sqrt(2)*Cos(ArcTan(tb)) + Sqr( mylambda(3))*s*vev +  Sqr(g1p)*( Sqr(v1)*Q1eff + Sqr(v2)*Q2eff)*QSeff*s/(vev) + DelMh13;
  double HE22 = mylambda(3)*myAlambda(3)*Sqrt(2.0)*s*(1+tb*tb)/(2.0*tb) - (0.5*Sqr(mylambda(3)) - 0.25*Sqr(gbar))*Sqr(vev)* 4.0*tb*tb/(Sqr(1.0+tb*tb)) +Sqr(g1p)*Sqr(vev)*tb*tb/(Sqr(1.0+tb*tb))*Sqr(Q2eff - Q1eff) + DelMh22 ;
- double HE23 = - mylambda(3)*myAlambda(3)/(Sqrt(2))*vev*(1 - tb*tb)/(tb*tb +1.0) + Sqr(g1p)*(Q2eff - Q1eff)*QSeff*v2*s*cos(atan(tb)) + DelMh23;
+ double HE23 = - mylambda(3)*myAlambda(3)/(Sqrt(2))*vev*(1 - tb*tb)/(tb*tb +1.0) + Sqr(g1p)*(Q2eff - Q1eff)*QSeff*v2*s*Cos(ArcTan(tb)) + DelMh23;
  double HE33 = mylambda(3)*myAlambda(3)/(s*Sqrt(2))*v1*v2+ Sqr(g1p)*QSeff*QSeff*s*s + DelMh33;
  
  //Now do this with softsusy routines to replace NR routines
@@ -3185,9 +3185,2333 @@ double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb)
 //    double q = renormalisation scale
 double f(double m1Sq, double m2Sq, double Q)
 {
-  double fVal = (1.0/(m1Sq-m2Sq))*(m1Sq*log(m1Sq/(Q*Q))-m2Sq*log(m2Sq/(Q*Q))-m1Sq+m2Sq);
+  double fVal = (1.0/(m1Sq-m2Sq))*(m1Sq*Log(m1Sq/(Q*Q))-m2Sq*Log(m2Sq/(Q*Q))-m1Sq+m2Sq);
 
   return fVal;
 }
 
+// UP TO HERE
 
+// The following are helper functions that are useful for constructing
+// the the leading one-loop tuning measures.
+
+// doCalcdmstop1sqdvi calculates the derivative of m_stop_1^2 with respect to
+// v_i for the given ESSM model, i = 1, 2, 3 (i=3 is s). 
+// NB: m_stop_1^2 is taken to be the lighter stop in this method 
+// -i.e. minus sign applies.
+// Inputs:
+//     genericE6SSM_soft_parameters const & essmSusy = object to calculate derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use
+double doCalcdmstop1sqdv1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  double deriv = 0.25*g2*g2+0.6*0.25*g1*g1-0.15*gd1*gd1;
+  deriv = deriv-(1.0/Sqrt(rt))*(MQQsq*0.25*(g2*g2-g1*g1)
+				+4.0*mtop*mtop*Xt*(-lambda*s/(Sqrt(2.0)*v1*v2)));
+  deriv = deriv*(v1/2.0);
+
+  return deriv;
+
+}
+
+double doCalcdmstop1sqdv2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  double deriv = 2.0*yt*yt-0.25*g2*g2-0.6*0.25*g1*g1-0.1*gd1*gd1;
+  deriv = deriv-(1.0/Sqrt(rt))*(0.25*MQQsq*(g1*g1-g2*g2)+2.0*yt*yt*Xt*Xt
+				+4.0*mtop*mtop*Xt*(lambda*s*v1/(Sqrt(2.0)*v2*v2*v2)));
+  deriv = deriv*(v2/2.0);
+
+  return deriv;
+}
+
+double doCalcdmstop1sqdv3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  double deriv = 0.25*gd1*gd1-(4.0*mtop*mtop/Sqrt(rt))*Xt*(-lambda*v1/(Sqrt(2.0)*v2*s));
+  deriv = 0.5*s*deriv;
+
+  return deriv;
+}
+
+// doCalcdmstop2sqdvi is as above but for m_stop_2^2 (+ sign applies).
+double doCalcdmstop2sqdv1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = 165;//yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  double deriv = 0.25*g2*g2+0.6*0.25*g1*g1-0.15*gd1*gd1;
+  deriv = deriv+(1.0/Sqrt(rt))*(MQQsq*0.25*(g2*g2-g1*g1)
+				+4.0*mtop*mtop*Xt*(-lambda*s/(Sqrt(2.0)*v1*v2)));
+  deriv = deriv*(v1/2.0);
+
+  return deriv;
+}
+
+double doCalcdmstop2sqdv2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  double deriv = 2.0*yt*yt-0.25*g2*g2-0.6*0.25*g1*g1-0.1*gd1*gd1;
+  deriv = deriv+(1.0/Sqrt(rt))*(0.25*MQQsq*(g1*g1-g2*g2)+2.0*yt*yt*Xt*Xt
+				+4.0*mtop*mtop*Xt*(lambda*s*v1/(Sqrt(2.0)*v2*v2*v2)));
+  deriv = deriv*(v2/2.0);
+
+  return deriv;
+}
+
+double doCalcdmstop2sqdv3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  double deriv = 0.25*gd1*gd1+(4.0*mtop*mtop/Sqrt(rt))*Xt*(-lambda*v1/(Sqrt(2.0)*v2*s));
+  deriv = 0.5*s*deriv;
+
+  return deriv;
+}
+
+// The three functions below are purely used for testing the first
+// derivatives of the stop squared masses. They calculate the 
+// stop/top tadpole correction to the effective potential, in the
+// form (1/v_i)\frac{\partial \Delta V}{\partial v_i}. The results
+// should be compared against those obtained using the functions
+// doCalcTadpolesESSMH<1,2,S> which are actually used in practical
+// calculations. In the notation used in my notes, these functions
+// calculate \Delta^{tadpole}_i for i = 1, 2, 3.
+// Inputs:
+//     genericE6SSM_soft_parameters const & essmSusy = object to calculate derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use
+double calculateDeltaTadpole1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Contributions from auxiliary D-terms. Might in future
+  // want to use effective charges instead of U(1)_N charges.
+  double DeltaQ3 = (gd1*gd1/80.0)*(-3.0*v1*v1-2.0*v2*v2+5.0*s*s);
+  double Deltau3 = (gd1*gd1/80.0)*(-3.0*v1*v1-2.0*v2*v2+5.0*s*s);
+
+  // The stop squared masses, in the notation m_stop_1^2 has -ve
+  // sign contribution (is lighter).
+  double mstop1sq = 0.5*(mQlsq+mUrsq+0.125*(g2*g2+0.6*g1*g1)*(v1*v1-v2*v2)
+		     +DeltaQ3+Deltau3+2.0*mtop*mtop-Sqrt(rt));
+  double mstop2sq = 0.5*(mQlsq+mUrsq+0.125*(g2*g2+0.6*g1*g1)*(v1*v1-v2*v2)
+		     +DeltaQ3+Deltau3+2.0*mtop*mtop+Sqrt(rt));
+
+  bool speak = false;
+  if (speak)
+    {
+      cout << "Calculated stop masses: " << endl;
+      cout << "m_stop_1^2 = " << mstop1sq << ", ";
+      cout << "m_stop_1 = " << Sqrt(mstop1sq) << ", ";
+      cout << "m_stop_2^2 = " << mstop2sq << ", ";
+      cout << "m_stop_2 = " << Sqrt(mstop2sq) << endl;
+    }
+
+
+  // The derivatives of the stop masses wrt the VEVs.
+  double dmstop1sqdv1 = doCalcdmstop1sqdv1(essmSusy, s, tb);
+  double dmstop2sqdv1 = doCalcdmstop2sqdv1(essmSusy, s, tb);
+
+  // The derivative of the top mass wrt the VEVs. This is non-zero
+  // only for dm_top/dv2.
+  double dmtopsqdv1 = 0.0;
+
+  if (speak)
+    {
+      cout << "Calculated derivatives of stop/top masses: " << endl;
+      cout << "dm_stop_1^2/dv1 = " << dmstop1sqdv1 << ", ";
+      cout << "dm_stop_2^2/dv1 = " << dmstop2sqdv1 << ", ";
+      cout << "dm_top/dv1 = " << dmtopsqdv1 << endl;
+    }
+
+  // The tadpole contribution in the form (1/v_i)\frac{\partial \Delta V}{\partial v_i}.
+  double dDeltaVdv1 = (3.0/(32.0*PI*PI))*(2.0*a0Peter(mstop1sq, q)*dmstop1sqdv1
+					  +2.0*a0Peter(mstop2sq, q)*dmstop2sqdv1
+					  -4.0*a0Peter(mtop*mtop, q)*dmtopsqdv1);
+
+  double deltaTadpole1 = (1.0/v1)*dDeltaVdv1;
+
+  if (speak)
+    {
+      cout << "Calculated tadpole contributions: " << endl;
+      cout << "dDeltaV/dv1 = " << dDeltaVdv1 << ", ";
+      cout << "Delta^{tadpole}_1 = " << deltaTadpole1 << endl;
+    }
+
+  return deltaTadpole1;
+
+}
+
+double calculateDeltaTadpole2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Contributions from auxiliary D-terms. Might in future
+  // want to use effective charges instead of U(1)_N charges.
+  double DeltaQ3 = (gd1*gd1/80.0)*(-3.0*v1*v1-2.0*v2*v2+5.0*s*s);
+  double Deltau3 = (gd1*gd1/80.0)*(-3.0*v1*v1-2.0*v2*v2+5.0*s*s);
+
+  // The stop squared masses, in the notation m_stop_1^2 has -ve
+  // sign contribution (is lighter).
+  double mstop1sq = 0.5*(mQlsq+mUrsq+0.125*(g2*g2+0.6*g1*g1)*(v1*v1-v2*v2)
+		     +DeltaQ3+Deltau3+2.0*mtop*mtop-Sqrt(rt));
+  double mstop2sq = 0.5*(mQlsq+mUrsq+0.125*(g2*g2+0.6*g1*g1)*(v1*v1-v2*v2)
+		     +DeltaQ3+Deltau3+2.0*mtop*mtop+Sqrt(rt));
+
+  bool speak = false;
+  if (speak)
+    {
+      cout << "Calculated stop masses: " << endl;
+      cout << "m_stop_1^2 = " << mstop1sq << ", ";
+      cout << "m_stop_1 = " << Sqrt(mstop1sq) << ", ";
+      cout << "m_stop_2^2 = " << mstop2sq << ", ";
+      cout << "m_stop_2 = " << Sqrt(mstop2sq) << endl;
+    }
+
+  // The derivatives of the stop masses wrt the VEVs.
+  double dmstop1sqdv2 = doCalcdmstop1sqdv2(essmSusy, s, tb);
+  double dmstop2sqdv2 = doCalcdmstop2sqdv2(essmSusy, s, tb);
+
+  // The derivative of the top mass wrt the VEVs. This is non-zero
+  // only for dm_top/dv2.
+  double dmtopsqdv2 = yt*yt*v2;
+
+  if (speak)
+    {
+      cout << "Calculated derivatives of stop/top masses: " << endl;
+      cout << "dm_stop_1^2/dv2 = " << dmstop1sqdv2 << ", ";
+      cout << "dm_stop_2^2/dv2 = " << dmstop2sqdv2 << ", ";
+      cout << "dm_top/dv2 = " << dmtopsqdv2 << endl;
+    }
+
+  // The tadpole contribution in the form (1/v_i)\frac{\partial \Delta V}{\partial v_i}.
+  double dDeltaVdv2 = (3.0/(32.0*PI*PI))*(2.0*a0Peter(mstop1sq, q)*dmstop1sqdv2
+					  +2.0*a0Peter(mstop2sq, q)*dmstop2sqdv2
+					  -4.0*a0Peter(mtop*mtop, q)*dmtopsqdv2);
+
+  double deltaTadpole2 = (1.0/v2)*dDeltaVdv2;
+
+  if (speak)
+    {
+      cout << "Calculated tadpole contributions: " << endl;
+      cout << "dDeltaV/dv2 = " << dDeltaVdv2 << ", ";
+      cout << "Delta^{tadpole}_2 = " << deltaTadpole2 << endl;
+    }
+
+  return deltaTadpole2;
+
+}
+
+double calculateDeltaTadpole3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gd1 = essmSusy.get_gN();
+
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Contributions from auxiliary D-terms. Might in future
+  // want to use effective charges instead of U(1)_N charges.
+  double DeltaQ3 = (gd1*gd1/80.0)*(-3.0*v1*v1-2.0*v2*v2+5.0*s*s);
+  double Deltau3 = (gd1*gd1/80.0)*(-3.0*v1*v1-2.0*v2*v2+5.0*s*s);
+
+  // The stop squared masses, in the notation m_stop_1^2 has -ve
+  // sign contribution (is lighter).
+  double mstop1sq = 0.5*(mQlsq+mUrsq+0.125*(g2*g2+0.6*g1*g1)*(v1*v1-v2*v2)
+		     +DeltaQ3+Deltau3+2.0*mtop*mtop-Sqrt(rt));
+  double mstop2sq = 0.5*(mQlsq+mUrsq+0.125*(g2*g2+0.6*g1*g1)*(v1*v1-v2*v2)
+		     +DeltaQ3+Deltau3+2.0*mtop*mtop+Sqrt(rt));
+
+  bool speak = false;
+  if (speak)
+    {
+      cout << "Calculated stop masses: " << endl;
+      cout << "m_stop_1^2 = " << mstop1sq << ", ";
+      cout << "m_stop_1 = " << Sqrt(mstop1sq) << ", ";
+      cout << "m_stop_2^2 = " << mstop2sq << ", ";
+      cout << "m_stop_2 = " << Sqrt(mstop2sq) << endl;
+    }
+
+  // The derivatives of the stop masses wrt the VEVs.
+  double dmstop1sqdv3 = doCalcdmstop1sqdv3(essmSusy, s, tb);
+  double dmstop2sqdv3 = doCalcdmstop2sqdv3(essmSusy, s, tb);
+
+  // The derivative of the top mass wrt the VEVs. This is non-zero
+  // only for dm_top/dv2.
+  double dmtopsqdv3 = 0.0;
+
+  if (speak)
+    {
+      cout << "Calculated derivatives of stop/top masses: " << endl;
+      cout << "dm_stop_1^2/ds = " << dmstop1sqdv3 << ", ";
+      cout << "dm_stop_2^2/ds = " << dmstop2sqdv3 << ", ";
+      cout << "dm_top/ds = " << dmtopsqdv3 << endl;
+    }
+
+  // The tadpole contribution in the form (1/v_i)\frac{\partial \Delta V}{\partial v_i}.
+  double dDeltaVdv3 = (3.0/(32.0*PI*PI))*(2.0*a0Peter(mstop1sq, q)*dmstop1sqdv3
+					  +2.0*a0Peter(mstop2sq, q)*dmstop2sqdv3
+					  -4.0*a0Peter(mtop*mtop, q)*dmtopsqdv3);
+
+  double deltaTadpole3 = (1.0/s)*dDeltaVdv3;
+
+  if (speak)
+    {
+      cout << "Calculated tadpole contributions: " << endl;
+      cout << "dDeltaV/ds = " << dDeltaVdv3 << ", ";
+      cout << "Delta^{tadpole}_3 = " << deltaTadpole3 << endl;
+    }
+
+  return deltaTadpole3;
+}
+
+// These functions calculate the leading one-loop corrections
+// to the CP-even Higgs mass matrix in the basis (v_1, v_2, v_3=s),
+// given by \Delta_{ij}'=\frac{\partial^2\Delta V}{\partial v_i\partial v_j}.
+// Inputs:
+//     genericE6SSM_soft_parameters essmSusy = object to calculate derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use.
+double doCalcDeltaPrime11(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu();
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+  double RQQ = MQQsq*(g2*g2-g1*g1);
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite sign.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  double term1, term2, term3, term4;
+
+  term1 = v1*v1*Sqr(0.125*gbar*gbar-0.075*gd1*gd1)
+    +(1.0/rt)*Sqr(0.125*v1*RQQ-2.0*mtop*mtop*Xt*s*lambda/(Sqrt(2.0)*v2));
+  term1 = term1*Log(mstop1sq*mstop2sq/(q*q*q*q));
+
+  term2 = (v1/(32.0*Sqrt(rt)))*(gbar*gbar-0.6*gd1*gd1)
+    *(v1*RQQ-16.0*mtop*mtop*Xt*s*lambda/(Sqrt(2.0)*v2));
+  term2 = term2*Log(mstop2sq/mstop1sq);
+
+  term3 = (0.125*gbar*gbar-0.075*gd1*gd1)*(a0Peter(mstop1sq, q)+a0Peter(mstop2sq,q));
+
+  term4 = (1.0/Sqrt(rt))*(4.0*RQQ+Sqr(g2*g2-g1*g1)*v1*v1+16.0*yt*yt*s*s*lambda*lambda);
+  term4 = term4-(1.0/(rt*Sqrt(rt)))*Sqr(v1*RQQ-16.0*mtop*mtop*Xt*s*lambda/(Sqrt(2.0)*v2));
+  term4 = term4*(a0Peter(mstop2sq,q)-a0Peter(mstop1sq,q))/32.0;
+
+  double Del11prime = (3.0/(16.0*PI*PI))*(term1+term2+term3+term4);
+
+  return Del11prime;
+}
+
+double doCalcDeltaPrime12(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+  double RQQ = MQQsq*(g2*g2-g1*g1);
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite sign.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  double term1, term2, term3;
+
+  term1 = (0.125*gbar*gbar-0.075*gd1*gd1)*(yt*yt-0.125*gbar*gbar-0.05*gd1*gd1)
+    +(1.0/rt)*(0.125*RQQ-yt*yt*Xt*mueff*tb)*(yt*yt*Xt*At-0.125*RQQ);
+  term1 = term1*v1*v2*Log(mstop1sq*mstop2sq/(q*q*q*q));
+
+  term2 = (0.125*gbar*gbar-0.075*gd1*gd1)*(yt*yt*Xt*At-0.125*RQQ)
+    +(0.125*RQQ-yt*yt*Xt*mueff*tb)*(yt*yt-0.125*gbar*gbar-0.05*gd1*gd1);
+  term2 = term2*(v1*v2/Sqrt(rt))*Log(mstop2sq/mstop1sq);
+
+  term3 = (Sqr(g2*g2-g1*g1)*v1*v2/32.0+At*yt*yt*mueff)
+    +(0.125*RQQ-yt*yt*Xt*mueff*tb)*(2.0*yt*yt*Xt*At-0.25*RQQ)*(v1*v2/rt);
+  term3= term3*(1.0/Sqrt(rt))*(a0Peter(mstop2sq,q)-a0Peter(mstop1sq,q));
+
+  double Del12prime = (3.0/(16.0*PI*PI))*(term1+term2-term3);
+
+  return Del12prime;
+}
+
+double doCalcDeltaPrime13(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu();
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+  double RQQ = MQQsq*(g2*g2-g1*g1);
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite sign.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  double term1, term2, term3;
+
+  term1 = 0.125*s*v1*gd1*gd1*(0.125*gbar*gbar-0.075*gd1*gd1)
+    -(0.125*RQQ*v1-yt*yt*Xt*mueff*v2)*(2.0*mtop*mtop*Xt*lambda)/(rt*Sqrt(2.0)*tb);
+  term1 = term1*Log(mstop1sq*mstop2sq/(q*q*q*q));
+
+  term2 = (0.125*gbar*gbar-0.075*gd1*gd1)*(2.0*v1*mtop*mtop*Xt*lambda)/(tb*Sqrt(2.0*rt))
+    -(0.125*s*gd1*gd1/Sqrt(rt))*(0.125*RQQ*v1-2.0*mtop*mtop*Xt*s*lambda/(Sqrt(2.0)*v2));
+  term2 = term2*Log(mstop2sq/mstop1sq);
+
+  term3 = (yt*yt*v1*lambda*mueff/Sqrt(2.0*rt))
+    *(1.0-Xt*tb/mueff-4.0*Xt*Xt*mtop*mtop/rt+v1*v2*RQQ*Xt/(4.0*mueff*rt));
+  term3 = term3*(a0Peter(mstop2sq, q)-a0Peter(mstop1sq,q));
+
+  double Del13prime = (3.0/(16.0*PI*PI))*(term1-term2+term3);
+
+  return Del13prime;
+}
+
+double doCalcDeltaPrime22(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+  double RQQ = MQQsq*(g2*g2-g1*g1);
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite sign.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  double term1, term2, term3, term4, term5,term6;
+
+  term1 = Sqr(yt*yt-0.125*gbar*gbar-0.05*gd1*gd1)
+    +Sqr(8.0*Xt*At*yt*yt-RQQ)/(64.0*rt);
+  term1 = term1*v2*v2*Log(mstop1sq*mstop2sq/(q*q*q*q));
+
+  term2 = (v2*v2/(4.0*Sqrt(rt)))*(yt*yt-0.125*gbar*gbar-0.05*gd1*gd1)
+    *(8.0*yt*yt*Xt*At-RQQ)*Log(mstop2sq/mstop1sq);
+
+  term3 = (yt*yt-0.125*gbar*gbar-0.05*gd1*gd1)*(a0Peter(mstop1sq,q)+a0Peter(mstop2sq,q));
+
+  term4 = (1.0/Sqrt(rt))*(Sqr(g2*g2-g1*g1)*v2*v2/32.0-0.125*RQQ+yt*yt*At*At
+			  -(v2*v2*Sqr(8.0*Xt*At*yt*yt-RQQ))/(32.0*rt));
+  term4 = term4*(a0Peter(mstop2sq,q)-a0Peter(mstop1sq,q));
+
+  term5 = 2.0*yt*yt*yt*yt*v2*v2*Log(mtop*mtop/(q*q));
+
+  term6 = 2.0*yt*yt*a0Peter(mtop*mtop, q);
+
+  double Del22prime = (3.0/(16.0*PI*PI))*(term1+term2+term3+term4-term5-term6);
+
+  return Del22prime;
+}
+
+double doCalcDeltaPrime23(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+  double RQQ = MQQsq*(g2*g2-g1*g1);
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite sign.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  double term1, term2, term3;
+
+  term1 = 0.125*s*gd1*gd1*(yt*yt-0.125*gbar*gbar-0.05*gd1*gd1)
+    -(2.0*mtop*mtop*Xt*lambda)*(yt*yt*Xt*At-0.125*RQQ)/(Sqrt(2.0)*rt*tb);
+  term1 = term1*v2*Log(mstop1sq*mstop2sq/(q*q*q*q));
+ 
+  term2 = (1.0/Sqrt(rt))*(0.125*s*gd1*gd1*(yt*yt*Xt*At-0.125*RQQ)
+			  -(2.0*mtop*mtop*Xt*lambda)*(yt*yt-0.125*gbar*gbar-0.05*gd1*gd1)/(Sqrt(2.0)*tb));
+  term2 = term2*v2*Log(mstop2sq/mstop1sq);
+
+  term3 = ((yt*yt*lambda*v1*At)/Sqrt(2.0*rt))*(1.0-4.0*mtop*mtop*Xt*Xt/rt+v2*v2*Xt*RQQ/(4.0*At*rt));
+  term3 = term3*(a0Peter(mstop2sq,q)-a0Peter(mstop1sq,q));
+  
+  double Del23prime = (3.0/(16.0*PI*PI))*(term1+term2-term3);
+
+  return Del23prime;
+}
+
+double doCalcDeltaPrime33(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+  double RQQ = MQQsq*(g2*g2-g1*g1);
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite sign.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  double term1, term2, term3, term4;
+
+  term1 = Sqr(gd1*gd1*s)/64.0+(2.0*Sqr(mtop*mtop)*Xt*Xt*lambda*lambda)/(rt*tb*tb);
+  term1 = term1*Log(mstop1sq*mstop2sq/(q*q*q*q));
+
+  term2 = (gd1*gd1*mtop*mtop*Xt*mueff)/(2.0*Sqrt(rt)*tb);
+  term2 = term2*Log(mstop2sq/mstop1sq);
+
+  term3 = 0.125*gd1*gd1*(a0Peter(mstop1sq,q)+a0Peter(mstop2sq,q));
+
+  term4 = ((lambda*lambda*mtop*mtop)/(Sqrt(rt)*tb*tb))*(1.0-4.0*Xt*Xt*mtop*mtop/rt);
+  term4 = term4*(a0Peter(mstop2sq,q)-a0Peter(mstop1sq,q));
+
+  double Del33prime = (3.0/(16.0*PI*PI))*(term1-term2+term3+term4);
+
+  return Del33prime;
+}
+
+// These helper functions calculate the explicit derivatives
+// of the tadpole contributions wrt the input parameters, i.e. returns
+// the partial derivatives (1/v_i)*\frac{\partial^2 \Delta V}{\partial a\partial v_i}
+// where the VEVs v_i, i = 1, 2, 3, are treated as being fixed.
+// Inputs:
+//     genericE6SSM_soft_parameters essmSusy = the object to calculate the derivatives on
+//     double s = the value of the VEV s to use
+//     double tb = the value of tan(beta) to use
+double doCalcd2DeltaVdLambdadv1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdlambda = 0.5*(2.0*Sqrt(2.0)*mtop*mtop*Xt*s)/(Sqrt(rt)*tb);
+  double dmstop2sqdlambda = -0.5*(2.0*Sqrt(2.0)*mtop*mtop*Xt*s)/(Sqrt(rt)*tb);
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv1 = doCalcdmstop1sqdv1(essmSusy, s, tb);
+  double dmstop2sqdv1 = doCalcdmstop2sqdv1(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = ((4.0*mtop*mtop)/(Sqrt(rt)))*(lambda*s/(Sqrt(2.0)*v1*v2))*(s/(Sqrt(2.0)*tb));
+  coeff = coeff-(4.0*mtop*mtop*Xt*s)/(Sqrt(2.0*rt)*v1*v2);
+  coeff = coeff-(((4.0*mtop*mtop*Xt*s)/(Sqrt(2.0*rt)*rt*tb))*
+		 (0.25*MQQsq*(g1*g1-g2*g2)+4.0*mtop*mtop*Xt*lambda*s/(Sqrt(2.0)*v1*v2)));
+
+  double d2mstop1sqdldv1 = -0.5*v1*coeff;
+  double d2mstop2sqdldv1 = 0.5*v1*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdlambda*dmstop1sqdv1*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdldv1;
+  double term2 = dmstop2sqdlambda*dmstop2sqdv1*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdldv1;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v1)*d2DeltaV;
+
+  return d2DeltaV;
+}
+
+double doCalcd2DeltaVdLambdadv2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdlambda = 0.5*(2.0*Sqrt(2.0)*mtop*mtop*Xt*s)/(Sqrt(rt)*tb);
+  double dmstop2sqdlambda = -0.5*(2.0*Sqrt(2.0)*mtop*mtop*Xt*s)/(Sqrt(rt)*tb);
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv2 = doCalcdmstop1sqdv2(essmSusy, s, tb);
+  double dmstop2sqdv2 = doCalcdmstop2sqdv2(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = (1.0/Sqrt(rt))*(4.0*mtop*mtop*Xt*s*v1/(Sqrt(2.0)*v2*v2*v2)
+				 -4.0*mtop*mtop*s*lambda*s*v1/(2.0*tb*v2*v2*v2)
+				 -4.0*yt*yt*Xt*s/(Sqrt(2.0)*tb));
+  coeff = coeff-((4.0*mtop*mtop*Xt*s)/(Sqrt(2.0*rt)*rt*tb))*
+    (0.25*MQQsq*(g2*g2-g1*g1)-2.0*yt*yt*Xt*Xt-4.0*mtop*mtop*Xt*lambda*s*v1/(Sqrt(2.0)*v2*v2*v2));
+
+  double d2mstop1sqdldv2 = -0.5*v2*coeff;
+  double d2mstop2sqdldv2 = 0.5*v2*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdlambda*dmstop1sqdv2*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdldv2;
+  double term2 = dmstop2sqdlambda*dmstop2sqdv2*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdldv2;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v2)*d2DeltaV;
+
+  return d2DeltaV;
+}
+
+double doCalcd2DeltaVdLambdadv3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu();
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdlambda = 0.5*(2.0*Sqrt(2.0)*mtop*mtop*Xt*s)/(Sqrt(rt)*tb);
+  double dmstop2sqdlambda = -0.5*(2.0*Sqrt(2.0)*mtop*mtop*Xt*s)/(Sqrt(rt)*tb);
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv3 = doCalcdmstop1sqdv3(essmSusy, s, tb);
+  double dmstop2sqdv3 = doCalcdmstop2sqdv3(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = s*lambda*v1*mtop*mtop/(2.0*Sqrt(rt)*tb*v2*s);
+  coeff = coeff-mtop*mtop*Xt*v1/(Sqrt(2.0*rt)*v2*s);
+  coeff = coeff-4.0*Sqr(mtop*mtop)*Xt*Xt*s*lambda*v1/(2.0*Sqrt(rt)*rt*tb*v2*s);
+
+  double d2mstop1sqdldv3 = -2.0*s*coeff;
+  double d2mstop2sqdldv3 = 2.0*s*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdlambda*dmstop1sqdv3*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdldv3;
+  double term2 = dmstop2sqdlambda*dmstop2sqdv3*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdldv3;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/s)*d2DeltaV;
+
+  return d2DeltaV;
+}
+
+double doCalcd2DeltaVdAtdv1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdAt = -0.5*(4.0*mtop*mtop*Xt)/Sqrt(rt);
+  double dmstop2sqdAt = 0.5*(4.0*mtop*mtop*Xt)/Sqrt(rt);
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv1 = doCalcdmstop1sqdv1(essmSusy, s, tb);
+  double dmstop2sqdv1 = doCalcdmstop2sqdv1(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = (4.0*mtop*mtop*Xt/(Sqrt(rt)*rt))*(0.25*MQQsq*(g1*g1-g2*g2)
+						   +4.0*mtop*mtop*Xt*lambda*s/(Sqrt(2.0)*v1*v2));
+  coeff = coeff-(4.0*mtop*mtop*lambda*s/(Sqrt(2.0*rt)*v1*v2));
+
+  double d2mstop1sqdAtdv1 = -0.5*v1*coeff;
+  double d2mstop2sqdAtdv1 = 0.5*v1*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdAt*dmstop1sqdv1*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdAtdv1;
+  double term2 = dmstop2sqdAt*dmstop2sqdv1*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdAtdv1;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v1)*d2DeltaV;
+
+  return d2DeltaV;
+}
+
+double doCalcd2DeltaVdAtdv2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdAt = -0.5*(4.0*mtop*mtop*Xt)/Sqrt(rt);
+  double dmstop2sqdAt = 0.5*(4.0*mtop*mtop*Xt)/Sqrt(rt);
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv2 = doCalcdmstop1sqdv2(essmSusy, s, tb);
+  double dmstop2sqdv2 = doCalcdmstop2sqdv2(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = (1.0/Sqrt(rt))*(4.0*yt*yt*Xt+4.0*mtop*mtop*lambda*s*v1/(Sqrt(2.0)*v2*v2*v2));
+  coeff = coeff+((4.0*mtop*mtop*Xt)/(rt*Sqrt(rt)))*(0.25*MQQsq*(g2*g2-g1*g1)-2.0*yt*yt*Xt*Xt
+						    -4.0*mtop*mtop*Xt*lambda*s*v1/(Sqrt(2.0)*v2*v2*v2));
+
+  double d2mstop1sqdAtdv2 = -0.5*v2*coeff;
+  double d2mstop2sqdAtdv2 = 0.5*v2*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdAt*dmstop1sqdv2*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdAtdv2;
+  double term2 = dmstop2sqdAt*dmstop2sqdv2*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdAtdv2;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v2)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdAtdv3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdAt = -0.5*(4.0*mtop*mtop*Xt)/Sqrt(rt);
+  double dmstop2sqdAt = 0.5*(4.0*mtop*mtop*Xt)/Sqrt(rt);
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv3 = doCalcdmstop1sqdv3(essmSusy, s, tb);
+  double dmstop2sqdv3 = doCalcdmstop2sqdv3(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = 4.0*Sqr(mtop*mtop)*Xt*Xt*lambda*v1/(Sqrt(2.0*rt)*rt*v2*s);
+  coeff = coeff-mtop*mtop*lambda*v1/(Sqrt(2.0*rt)*v2*s);
+
+  double d2mstop1sqdAtdv3 = -2.0*s*coeff;
+  double d2mstop2sqdAtdv3 = 2.0*s*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdAt*dmstop1sqdv3*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdAtdv3;
+  double term2 = dmstop2sqdAt*dmstop2sqdv3*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdAtdv3;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/s)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdmQlsqdv1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdmQlsq = 0.5*(1.0-MQQsq/Sqrt(rt));
+  double dmstop2sqdmQlsq =0.5*(1.0+MQQsq/Sqrt(rt));
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv1 = doCalcdmstop1sqdv1(essmSusy, s, tb);
+  double dmstop2sqdv1 = doCalcdmstop2sqdv1(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = 0.25*(g2*g2-g1*g1)/Sqrt(rt);
+  coeff = coeff+(MQQsq/(rt*Sqrt(rt)))*(0.25*MQQsq*(g1*g1-g2*g2)
+				       +4.0*mtop*mtop*Xt*lambda*s/(Sqrt(2.0)*v1*v2));
+
+  double d2mstop1sqdmQlsqdv1 = -0.5*v1*coeff;
+  double d2mstop2sqdmQlsqdv1 = 0.5*v1*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdmQlsq*dmstop1sqdv1*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdmQlsqdv1;
+  double term2 = dmstop2sqdmQlsq*dmstop2sqdv1*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdmQlsqdv1;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v1)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdmQlsqdv2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd();
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+  
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdmQlsq = 0.5*(1.0-MQQsq/Sqrt(rt));
+  double dmstop2sqdmQlsq =0.5*(1.0+MQQsq/Sqrt(rt));
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv2 = doCalcdmstop1sqdv2(essmSusy, s, tb);
+  double dmstop2sqdv2 = doCalcdmstop2sqdv2(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = 0.25*(g1*g1-g2*g2)/Sqrt(rt);
+  coeff = coeff+(MQQsq/(rt*Sqrt(rt)))*(0.25*MQQsq*(g2*g2-g1*g1)-2.0*yt*yt*Xt*Xt
+				       -4.0*mtop*mtop*Xt*lambda*s*v1/(Sqrt(2.0)*v2*v2*v2));
+
+  double d2mstop1sqdmQlsqdv2 = -0.5*v2*coeff;
+  double d2mstop2sqdmQlsqdv2 = 0.5*v2*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdmQlsq*dmstop1sqdv2*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdmQlsqdv2;
+  double term2 = dmstop2sqdmQlsq*dmstop2sqdv2*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdmQlsqdv2;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v2)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdmQlsqdv3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdmQlsq = 0.5*(1.0-MQQsq/Sqrt(rt));
+  double dmstop2sqdmQlsq =0.5*(1.0+MQQsq/Sqrt(rt));
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv3 = doCalcdmstop1sqdv3(essmSusy, s, tb);
+  double dmstop2sqdv3 = doCalcdmstop2sqdv3(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = mtop*mtop*Xt*lambda*v1*MQQsq/(Sqrt(2.0*rt)*rt*v2*s);
+
+  double d2mstop1sqdmQlsqdv3 = -2.0*s*coeff;
+  double d2mstop2sqdmQlsqdv3 = 2.0*s*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdmQlsq*dmstop1sqdv3*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdmQlsqdv3;
+  double term2 = dmstop2sqdmQlsq*dmstop2sqdv3*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdmQlsqdv3;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/s)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdmUrsqdv1(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdmUrsq = 0.5*(1.0+MQQsq/Sqrt(rt));
+  double dmstop2sqdmUrsq =0.5*(1.0-MQQsq/Sqrt(rt));
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv1 = doCalcdmstop1sqdv1(essmSusy, s, tb);
+  double dmstop2sqdv1 = doCalcdmstop2sqdv1(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = 0.25*(g2*g2-g1*g1)/Sqrt(rt);
+  coeff = coeff+(MQQsq/(rt*Sqrt(rt)))*(0.25*MQQsq*(g1*g1-g2*g2)
+				       +4.0*mtop*mtop*Xt*lambda*s/(Sqrt(2.0)*v1*v2));
+
+  double d2mstop1sqdmUrsqdv1 = 0.5*v1*coeff;
+  double d2mstop2sqdmUrsqdv1 = -0.5*v1*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdmUrsq*dmstop1sqdv1*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdmUrsqdv1;
+  double term2 = dmstop2sqdmUrsq*dmstop2sqdv1*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdmUrsqdv1;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v1)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdmUrsqdv2(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu( 3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+  
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdmUrsq = 0.5*(1.0+MQQsq/Sqrt(rt));
+  double dmstop2sqdmUrsq =0.5*(1.0-MQQsq/Sqrt(rt));
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv2 = doCalcdmstop1sqdv2(essmSusy, s, tb);
+  double dmstop2sqdv2 = doCalcdmstop2sqdv2(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = 0.25*(g1*g1-g2*g2)/Sqrt(rt);
+  coeff = coeff+(MQQsq/(rt*Sqrt(rt)))*(0.25*MQQsq*(g2*g2-g1*g1)-2.0*yt*yt*Xt*Xt
+				       -4.0*mtop*mtop*Xt*lambda*s*v1/(Sqrt(2.0)*v2*v2*v2));
+
+  double d2mstop1sqdmUrsqdv2 = 0.5*v2*coeff;
+  double d2mstop2sqdmUrsqdv2 = -0.5*v2*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdmUrsq*dmstop1sqdv2*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdmUrsqdv2;
+  double term2 = dmstop2sqdmUrsq*dmstop2sqdv2*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdmUrsqdv2;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/v2)*d2DeltaV;
+
+  return d2DeltaV;
+
+}
+
+double doCalcd2DeltaVdmUrsqdv3(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+{
+  double v1 = essmSusy.get_vd(); 
+  double v2 = essmSusy.get_vu(); 
+  double v = Sqrt(v1*v1+v2*v2);
+
+  double g1 = essmSusy.get_g1();
+  double g2 = essmSusy.get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gd1 = essmSusy.get_gN();
+
+  // Logarithms are calculated at the given Q
+  double q = essmSusy.get_scale();
+
+  double yt = essmSusy.get_Yu(3, 3);
+  double mtop = yt*v2/Sqrt(2.0);
+  // Option to fix m_t(M_t) = 165 GeV
+  
+  if(USEMTOFMT){
+    mtop = 165;
+    yt = Sqrt(2.0)*mtop/v2;
+    essmSusy.set_Yu( 3, 3, yt);
+  }
+
+  
+  double lambda = essmSusy.get_Lambdax();
+ 
+  double At;
+  double TYt = r.get_TYu(3,3);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  double mQlsq = essmSusy.get_mq2(3,3);
+  double mUrsq =  essmSusy.get_mu2(3,3);
+  double mueff = lambda*s/Sqrt(2.0);
+
+  double MQQsq = mQlsq-mUrsq+0.125*(g2*g2-g1*g1)*(v1*v1-v2*v2);
+  double Xt = At - lambda*s/(Sqrt(2.0)*tb);
+  double rt = MQQsq*MQQsq+4.0*mtop*mtop*Xt*Xt;
+
+  // Squared stop masses are calculated using physical_ESSM to make sure
+  // auxiliary D-terms are included.
+  DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+  physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  // Have to swap the mass ordering of the stops, because
+  // physical_ESSM uses the opposite labelling.
+  double mstop1sq, mstop2sq;
+  mstop1sq = mstopsq(2);
+  mstop2sq = mstopsq(1);
+
+  // Calculate the explicit input parameter dependence of the stop masses
+  double dmstop1sqdmUrsq = 0.5*(1.0+MQQsq/Sqrt(rt));
+  double dmstop2sqdmUrsq =0.5*(1.0-MQQsq/Sqrt(rt));
+
+  // Calculate the derivative of the stop masses wrt the appropriate VEV
+  double dmstop1sqdv3 = doCalcdmstop1sqdv3(essmSusy, s, tb);
+  double dmstop2sqdv3 = doCalcdmstop2sqdv3(essmSusy, s, tb);
+
+  // Calculate the explicit input parameter dependence of the derivatives
+  // of the stop masses wrt the appropriate VEV
+  double coeff = mtop*mtop*Xt*lambda*v1*MQQsq/(Sqrt(2.0*rt)*rt*v2*s);
+
+  double d2mstop1sqdmUrsqdv3 = 2.0*s*coeff;
+  double d2mstop2sqdmUrsqdv3 = -2.0*s*coeff;
+
+  // Calculate the full second derivative of the tadpole contribution
+  double term1 = dmstop1sqdmUrsq*dmstop1sqdv3*Log(mstop1sq/(q*q))+a0Peter(mstop1sq,q)*d2mstop1sqdmUrsqdv3;
+  double term2 = dmstop2sqdmUrsq*dmstop2sqdv3*Log(mstop2sq/(q*q))+a0Peter(mstop2sq,q)*d2mstop2sqdmUrsqdv3;
+
+  double d2DeltaV = (3.0/(16.0*PI*PI))*(term1+term2);
+  d2DeltaV = (1.0/s)*d2DeltaV;
+
+  return d2DeltaV;
+
+}

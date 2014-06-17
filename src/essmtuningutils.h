@@ -240,6 +240,21 @@ double doCalcd2DeltaVdmUrsqdv1(flexiblesusy::genericE6SSM_soft_parameters,double
 double doCalcd2DeltaVdmUrsqdv2(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 double doCalcd2DeltaVdmUrsqdv3(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 
+double doCalcMh2SquaredBeta1(flexiblesusy::genericE6SSM_soft_parameters);
+double doCalcMh2SquaredBeta2(flexiblesusy::genericE6SSM_soft_parameters);
+double doCalcMh2SquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+double doCalcMh2SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+
+double doCalcMh1SquaredBeta1(flexiblesusy::genericE6SSM_soft_parameters);
+double doCalcMh1SquaredBeta2(flexiblesusy::genericE6SSM_soft_parameters);
+double doCalcMh1SquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcMh1SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+
+double doCalcMsSquaredBeta1(flexiblesusy::genericE6SSM_soft_parameters);
+double doCalcMsSquaredBeta2(flexiblesusy::genericE6SSM_soft_parameters);
+double doCalcMsSquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcMsSquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+
 // Functions for getting approximate derivatives of low scale parameters w.r.t high
 // scale parameters. Returns the vector
 // [ dmu/dp dB/dp dm_Hd^2/dp dm_Hu^2/dp dm_Ql^2/dp dm_uR^2/dp dA_t/dp]^T. The vector auxPars

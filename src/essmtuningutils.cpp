@@ -5885,3 +5885,294 @@ double doCalcd2DeltaVdmUrsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
   return d2DeltaV;
 
 }
+
+double doCalcMh2SquaredLogCoeff(genericE6SSM_soft_parameters r, int nLps)
+{
+
+  if (nLps == 1 || nLps == 2)
+    {
+      r.set_loops(nLps);    
+    }
+  else
+    {
+      cerr << "WARNING: can only do 1 or 2 loops: returning nLps = 1 loop result." << endl;
+      r.set_loops(1);      
+    }
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  return w.get_mHu2();
+
+}
+
+double doCalcMh2SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
+{
+  // Assumes first and second generation Yukawas vanish, 
+  // consistent with the previous pMSSM study
+  r.set_Yu(0,0,0.0);
+  r.set_Yu(1,1,0.0);
+
+  r.set_Yd(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  r.set_Ye(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  // For consistency the correspond A terms should also vanish
+  r.set_TYu(0,0,0.0);
+  r.set_TYu(1,1,0.0);
+
+  r.set_TYd(0,0,0.0);
+  r.set_TYd(1,1,0.0);
+
+  r.set_TYe(0,0,0.0);
+  r.set_TYe(1,1,0.0);
+
+  if (nLogs != 1)
+    {
+      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
+    }
+
+  r.set_loops(1);
+
+  double QQp = r.get_input().QQp;
+  double Qup = r.get_input().Qup;
+  double Qdp = r.get_input().Qdp;
+  double QLp = r.get_input().QLp;
+  double Qep = r.get_input().Qep;
+  double QH1p = r.get_input().QH1p;
+  double QH2p = r.get_input().QH2p;
+  double QSp = r.get_input().QSp;
+  double QHpp = r.get_input().QHpp;
+  double QHpbarp = r.get_input().QHpbarp;
+  double QDxp = r.get_input().QDxp;
+  double QDxbarp = r.get_input().QDxbarp;
+
+  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
+    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
+    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
+
+  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
+    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
+    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
+    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
+    +3.0*Qup*r.get_mu2().trace();
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
+    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
+    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+
+  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
+    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
+    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
+    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
+    +3.0*Qup*w.get_mu2().trace();
+
+  double coeff = -2.4 * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
+  coeff = coeff - 16.0 * Sqr(QH2p) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
+  coeff = coeff - 12.0 * (r.get_g2()*w.get_g2()*Sqr(r.get_MassWB()) + Sqr(r.get_g2())*r.get_MassWB()*w.get_MassWB());
+  coeff = coeff + 4.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
+  coeff = coeff + 2.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 4.0 * r.get_TLambdax()*w.get_TLambdax();
+  coeff = coeff + 12.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2()+r.get_mq2(2,2)+r.get_mu2(2,2));
+  coeff = coeff + 6.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2()+w.get_mq2(2,2)+w.get_mu2(2,2)) + 12.0*r.get_TYu(2,2)*w.get_TYu(2,2);
+  coeff = coeff + 1.2 * r.get_g1()*w.get_g1()*sigma11 + 0.6 * Sqr(r.get_g1())*beta_sigma11;
+  coeff = coeff + 4.0 * QH2p * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QH2p * Sqr(r.get_gN()) * beta_sigma14;
+
+  coeff = 0.5*oneOver16PiSqr*coeff;
+
+  return coeff;
+}
+
+double doCalcMh1SquaredLogCoeff(genericE6SSM_soft_parameters r, int nLps)
+{
+  if (nLps == 1 || nLps == 2)
+    {
+      r.set_loops(nLps);    
+    }
+  else
+    {
+      cerr << "WARNING: can only do 1 or 2 loops: returning nLps = 1 loop result." << endl;
+      r.set_loops(1);      
+    }
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  return w.get_mHd2();
+}
+
+double doCalcMh1SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
+{
+  // Assumes first and second generation Yukawas vanish, 
+  // consistent with the previous pMSSM study
+  r.set_Yu(0,0,0.0);
+  r.set_Yu(1,1,0.0);
+
+  r.set_Yd(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  r.set_Ye(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  // For consistency the correspond A terms should also vanish
+  r.set_TYu(0,0,0.0);
+  r.set_TYu(1,1,0.0);
+
+  r.set_TYd(0,0,0.0);
+  r.set_TYd(1,1,0.0);
+
+  r.set_TYe(0,0,0.0);
+  r.set_TYe(1,1,0.0);
+
+  if (nLogs != 1)
+    {
+      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
+    }
+
+  r.set_loops(1);
+
+  double QQp = r.get_input().QQp;
+  double Qup = r.get_input().Qup;
+  double Qdp = r.get_input().Qdp;
+  double QLp = r.get_input().QLp;
+  double Qep = r.get_input().Qep;
+  double QH1p = r.get_input().QH1p;
+  double QH2p = r.get_input().QH2p;
+  double QSp = r.get_input().QSp;
+  double QHpp = r.get_input().QHpp;
+  double QHpbarp = r.get_input().QHpbarp;
+  double QDxp = r.get_input().QDxp;
+  double QDxbarp = r.get_input().QDxbarp;
+
+  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
+    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
+    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
+
+  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
+    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
+    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
+    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
+    +3.0*Qup*r.get_mu2().trace();
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
+    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
+    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+
+  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
+    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
+    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
+    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
+    +3.0*Qup*w.get_mu2().trace();
+
+  double coeff = -2.4 * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
+  coeff = coeff - 16.0 * Sqr(QH1p) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
+  coeff = coeff - 12.0 * (r.get_g2()*w.get_g2()*Sqr(r.get_MassWB()) + Sqr(r.get_g2())*r.get_MassWB()*w.get_MassWB());
+  coeff = coeff + 4.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
+  coeff = coeff + 2.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 4.0 * r.get_TLambdax()*w.get_TLambdax();
+  coeff = coeff + 12.0 * r.get_Yd(2,2)*w.get_Yd(2,2)*(r.get_mHd2()+r.get_mq2(2,2)+r.get_md2(2,2));
+  coeff = coeff + 6.0 * Sqr(r.get_Yd(2,2))*(w.get_mHd2()+w.get_mq2(2,2)+w.get_md2(2,2)) + 12.0*r.get_TYd(2,2)*w.get_TYd(2,2);
+  coeff = coeff + 4.0 * r.get_Ye(2,2)*w.get_Ye(2,2)*(r.get_mHd2()+r.get_ml2(2,2)+r.get_me2(2,2));
+  coeff = coeff + 2.0 * Sqr(r.get_Ye(2,2))*(w.get_mHd2()+w.get_ml2(2,2)+w.get_me2(2,2)) + 4.0*r.get_TYe(2,2)*w.get_TYe(2,2);
+  coeff = coeff - 1.2 * r.get_g1()*w.get_g1()*sigma11 - 0.6 * Sqr(r.get_g1())*beta_sigma11;
+  coeff = coeff + 4.0 * QH1p * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QH1p * Sqr(r.get_gN()) * beta_sigma14;
+
+  coeff = 0.5*oneOver16PiSqr*coeff;
+
+  return coeff;
+}
+
+double doCalcMsSquaredLogCoeff(genericE6SSM_soft_parameters r, int nLps)
+{
+  if (nLps == 1 || nLps == 2)
+    {
+      r.set_loops(nLps);    
+    }
+  else
+    {
+      cerr << "WARNING: can only do 1 or 2 loops: returning nLps = 1 loop result." << endl;
+      r.set_loops(1);      
+    }
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  return w.get_ms2();
+}
+
+double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
+{
+  // Assumes first and second generation Yukawas vanish, 
+  // consistent with the previous pMSSM study
+  r.set_Yu(0,0,0.0);
+  r.set_Yu(1,1,0.0);
+
+  r.set_Yd(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  r.set_Ye(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  // For consistency the correspond A terms should also vanish
+  r.set_TYu(0,0,0.0);
+  r.set_TYu(1,1,0.0);
+
+  r.set_TYd(0,0,0.0);
+  r.set_TYd(1,1,0.0);
+
+  r.set_TYe(0,0,0.0);
+  r.set_TYe(1,1,0.0);
+
+  if (nLogs != 1)
+    {
+      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
+    }
+
+  r.set_loops(1);
+
+  double QQp = r.get_input().QQp;
+  double Qup = r.get_input().Qup;
+  double Qdp = r.get_input().Qdp;
+  double QLp = r.get_input().QLp;
+  double Qep = r.get_input().Qep;
+  double QH1p = r.get_input().QH1p;
+  double QH2p = r.get_input().QH2p;
+  double QSp = r.get_input().QSp;
+  double QHpp = r.get_input().QHpp;
+  double QHpbarp = r.get_input().QHpbarp;
+  double QDxp = r.get_input().QDxp;
+  double QDxbarp = r.get_input().QDxbarp;
+
+  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
+    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
+    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
+    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
+    +3.0*Qup*r.get_mu2().trace();
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
+    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
+    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
+    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
+    +3.0*Qup*w.get_mu2().trace();
+
+
+  double coeff = -16.0 * Sqr(QSp) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
+  coeff = coeff + 8.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
+  coeff = coeff + 4.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 8.0 * r.get_TLambdax()*w.get_TLambdax();
+  coeff = coeff + 6.0*w.get_ms2()*(r.get_TKappa()*(r.get_TKappa().adjoint())).trace() + 6.0 * r.get_ms2()*(w.get_TKappa()*(r.get_TKappa().adjoint())).trace() + 6.0*r.get_ms2()*(r.get_TKappa()*(w.get_TKappa().adjoint())).trace();
+  coeff = coeff + 4.0*w.get_ms2()*(r.get_Lambda12()*(r.get_Lambda12().adjoint())).trace()+4.0*r.get_ms2()*(w.get_Lambda12()*(r.get_Lambda12().adjoint())).trace()+4.0*r.get_ms2()*(r.get_Lambda12()*(w.get_Lambda12().adjoint())).trace();
+  coeff = coeff + 6.0*(w.get_TKappa()*(r.get_TKappa().adjoint())).trace()+6.0*(r.get_TKappa()*(w.get_TKappa().adjoint())).trace();
+  coeff = coeff + 4.0*(w.get_TLambda12()*(r.get_TLambda12().adjoint())).trace()+4.0*(r.get_TLambda12()*(w.get_TLambda12().adjoint())).trace();
+  coeff = coeff + 4.0*(w.get_mH1I2()*(r.get_Lambda12().adjoint())*r.get_Lambda12() + r.get_mH1I2()*(w.get_Lambda12().adjoint())*r.get_Lambda12() + r.get_mH1I2()*(r.get_Lambda12().adjoint())*w.get_Lambda12()).trace();
+  coeff = coeff + 6.0*(w.get_Kappa()*(r.get_Kappa().adjoint())*r.get_mDx2() + r.get_Kappa()*(w.get_Kappa().adjoint())*r.get_mDx2() + r.get_Kappa()*(r.get_Kappa().adjoint())*w.get_mDx2()).trace();
+  coeff = coeff + 6.0*(w.get_Kappa()*r.get_mDxbar2()*(r.get_Kappa().adjoint()) + r.get_Kappa()*w.get_mDxbar2()*(r.get_Kappa().adjoint()) + r.get_Kappa()*r.get_mDxbar2()*(w.get_Kappa().adjoint())).trace();
+  coeff = coeff + 4.0*(w.get_Lambda12()*(r.get_Lambda12().adjoint())*r.get_mH2I2() + r.get_Lambda12()*(w.get_Lambda12().adjoint())*r.get_mH2I2() + r.get_Lambda12()*(r.get_Lambda12().adjoint())*w.get_mH2I2()).trace();
+  coeff = coeff + 4.0 * QSp * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QSp * Sqr(r.get_gN()) * beta_sigma14;
+
+  coeff = 0.5*oneOver16PiSqr*coeff;
+
+  return coeff;
+}

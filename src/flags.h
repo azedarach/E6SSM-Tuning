@@ -10,6 +10,9 @@
 // Default is true.
 extern bool INCLUDE1LPTADPOLES;
 
+// Use m_t(m_t) as scale in calculations
+extern bool USEMTOFMT;
+
 // Number of parameters in the pMSSM as defined by Rizzo et al,
 // see hep-ph/1206.5800v2
 const int NUMPMSSMPARS = 20;

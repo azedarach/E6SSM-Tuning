@@ -17,7 +17,7 @@
 // of the derivatives of the VEVs wrt the parameters in the MSSM. Note that this
 // assumes that the SoftParsMssm object is already set to have its renormalisation
 // scale set at M_SUSY.
-//DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, DoubleVector const & vevs);
+DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, DoubleVector const & vevs);
 
 //double rgeDerivCalc(double x);
 
@@ -32,7 +32,7 @@
 
 // A function to calculate d log(M_Z^2)/d log(p) using the value of the parameter p
 // and the already calculated derivatives d v_i/ d p_j. 
-//double doCalcdLogMzSqdLogParam(genericE6SSM_soft_parameters r, double p, DoubleVector const & vevs, DoubleVector const & dVevsdp);
+double doCalcdLogMzSqdLogParam(genericE6SSM_soft_parameters r, double p, DoubleVector const & vevs, DoubleVector const & dVevsdp);
 
 // ESSM_EWSBConditioni, i = 1, 2, calculates the value of the 
 // EWSB condition for m_H_i^2 and m_S^2.

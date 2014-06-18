@@ -7,12 +7,14 @@
 
 #include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_input_parameters.hpp"
 #include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_spectrum_generator.hpp"
-
+#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_info.hpp"
+#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_two_scale_model.hpp"
 #include "./E6SSM_Spectrum_Generators/src/error.hpp"
 #include "./E6SSM_Spectrum_Generators/src/spectrum_generator_settings.hpp"
 #include "./E6SSM_Spectrum_Generators/src/lowe.h"
 #include "./E6SSM_Spectrum_Generators/src/command_line_options.hpp"
 #include "./E6SSM_Spectrum_Generators/src/wrappers.hpp"
+#include "./E6SSM_Spectrum_Generators/src/problems.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -24,6 +26,27 @@
 
 void errorCall();
 string ToUpper(const string & s);
+
+flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleMatrix const & yuin, DoubleMatrix const & ydin, 
+									 DoubleMatrix const & yein, DoubleVector const & gin, 
+									 DoubleVector const & lambdain, DoubleVector const & kappain, 
+									 double mupr, double tanb, double hvev, double svev,
+									 DoubleVector const & mGaugino, DoubleMatrix const & tuin, 
+									 DoubleMatrix const & tdin, DoubleMatrix const & tein, 
+									 DoubleVector const & tlambdain, DoubleVector const & tkappain,
+									 DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
+									 DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
+									 DoubleMatrix const & mErSq, DoubleMatrix const & mDxSq,
+									 DoubleMatrix const & mDxbarSq, DoubleVector const & mHdISq, 
+									 DoubleVector const & mHuISq, DoubleVector const & mSISq,
+									 double Bmupr,  double mHpSq, double mHpbarSq, double mx, 
+									 int l, int t, 
+									 double tol, double & mHdSq, double & mHuSq, double & mSSq, 
+									 double & ms, 
+									 bool & hasEWSBProblem, bool & squarksTachyons, 
+									 bool & vectorBosonsTachyons, bool & higgsTachyons, 
+									 bool & tadpoleProblem, bool & poleHiggsTachyons, 
+									 bool & inaccurateHiggsMass, bool & hasSeriousProblem);
 
 /*
   --------------------------------------------------------------
@@ -1944,26 +1967,26 @@ string ToUpper(const string & s) {
 	return result;
     }
 
-flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & yuin, DoubleMatrix const & ydin, 
-							   DoubleMatrix const & yein, DoubleVector const & gin, 
-							   DoubleVector const & lambdain, DoubleVector const & kappain, 
-							   double mupr, double tanb, double hvev, double svev,
-							   DoubleVector const & mGaugino, DoubleMatrix const & tuin, 
-							   DoubleMatrix const & tdin, DoubleMatrix const & tein, 
-							   DoubleVector const & tlambdain, DoubleVector const & tkappain,
-							   DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
-							   DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
-							   DoubleMatrix const & mErSq, DoubleMatrix const & mDxSq,
-							   DoubleMatrix const & mDxbarSq, DoubleVector const & mHdISq, 
-							   DoubleVector const & mHuISq, DoubleVector const & mSISq,
-							   double Bmupr,  double mHpSq, double mHpbarSq, double mx, 
-							   int l, int t, QedQcd const & dataset, 
-							   double tol, double & mHdSq, double & mHuSq, double & mSSq, 
-							   double & ms, 
-							   bool & hasEWSBProblem, bool & squarksTachyons, 
-							   bool & vectorBosonsTachyons, bool & higgsTachyons, 
-							   bool & tadpoleProblem, bool & poleHiggsTachyons, 
-							   bool & inaccurateHiggsMass, bool & hasSeriousProblem)
+flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleMatrix const & yuin, DoubleMatrix const & ydin, 
+									 DoubleMatrix const & yein, DoubleVector const & gin, 
+									 DoubleVector const & lambdain, DoubleVector const & kappain, 
+									 double mupr, double tanb, double hvev, double svev,
+									 DoubleVector const & mGaugino, DoubleMatrix const & tuin, 
+									 DoubleMatrix const & tdin, DoubleMatrix const & tein, 
+									 DoubleVector const & tlambdain, DoubleVector const & tkappain,
+									 DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
+									 DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
+									 DoubleMatrix const & mErSq, DoubleMatrix const & mDxSq,
+									 DoubleMatrix const & mDxbarSq, DoubleVector const & mHdISq, 
+									 DoubleVector const & mHuISq, DoubleVector const & mSISq,
+									 double Bmupr,  double mHpSq, double mHpbarSq, double mx, 
+									 int l, int t, 
+									 double tol, double & mHdSq, double & mHuSq, double & mSSq, 
+									 double & ms, 
+									 bool & hasEWSBProblem, bool & squarksTachyons, 
+									 bool & vectorBosonsTachyons, bool & higgsTachyons, 
+									 bool & tadpoleProblem, bool & poleHiggsTachyons, 
+									 bool & inaccurateHiggsMass, bool & hasSeriousProblem)
 {
   using namespace flexiblesusy;
 
@@ -1992,12 +2015,12 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
   input.QHpbarp = QHbarPrChi*cE6+QHbarPrPsi*sE6;
 
   Eigen::Matrix<double,3,3> Yu, Yd, Ye, Kappa, TYu, TYd, TYe, TKappa;
-  Eigen::Matrix<double,2,2> Lambda12, TLambda12, mH1I2, mH2I2; 
+  Eigen::Matrix<double,2,2> Lambda12, TLambda12, mH1I2, mH2I2, msI2; 
 
   for (int i = 1; i <= 3; i++)
     {
       Kappa(i-1,i-1) = kappain.display(i);
-      TKappa(i-1,i-1) = tkappain.display();
+      TKappa(i-1,i-1) = tkappain.display(i);
       for (int j = 1; j <= 3; j++)
 	{
 	  Yu(i-1,j-1) = yuin.display(i,j);
@@ -2054,8 +2077,6 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
 	  mDxbar2(i-1,j-1) = mDxbarSq(i,j);
 	}
     }
-  
-  Eigen::Matrix<double,2,2> mH1I2, mH2I2, msI2;
 
   for (int i = 1; i <= 2; i++)
     {
@@ -2114,7 +2135,7 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
       
       mHdSq = solnGuess(1);
       mHuSq = solnGuess(2);
-      mSSq = solnGuess(3)
+      mSSq = solnGuess(3);
       ms = solnGuess(4);
       
       r_approx.set_mHd2(solnGuess(1));
@@ -2124,13 +2145,13 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
       // Try to get the spectrum. Catch any errors and flag as 
       // problem if they occur.
       // Get DR bar stop and sbottom masses.
-      r_approx.runto(solnGuess(4));
+      r_approx.run_to(solnGuess(4));
       
       r_approx.calculate_MSu();
       r_approx.calculate_MSd();
 
       // Check for tachyonic squakrs      
-      if (r_approx.get_problems().is_tachyon(Su) || r_approx.get_problem().is_tachyon(Sd))
+      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::Su) || r_approx.get_problems().is_tachyon(genericE6SSM_info::Sd))
 	{
 	  squarksTachyons = true;
 	}
@@ -2147,17 +2168,15 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
       double sw = Sin(r_approx.ThetaW());
       double mt = r_approx.get_Yu(3, 3)*v*Sin(ArcTan(tb))/Sqrt(2.0);
       double mb = r_approx.get_Yd(3, 3)*v*Cos(ArcTan(tb))/Sqrt(2.0);
-      double mz2 = Sqr(r_approx.calculate_MVZ());
-      double mw2 = Sqr(r_approx.calculate_MVWm());
-      double mzp2 = Sqr(r_approx.calculate_MVZp());
+      r_approx.calculate_MVZ();
+      r_approx.calculate_MVWm();
+      r_approx.calculate_MVZp();
 
-      if (r_approx.get_problems().is_tachyon(VZ) || r_approx.get_problems().is_tachyon(VZp) 
-	  || r_approx.get_problems().is_tachyon(VWm) )
+      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::VZ) || r_approx.get_problems().is_tachyon(genericE6SSM_info::VZp) 
+	  || r_approx.get_problems().is_tachyon(genericE6SSM_info::VWm) )
 	{
 	  vectorBosonsTachyons = true;
 	}
-      
-      drBarPars eg = r_approx.displayDrBarPars();
       
       // Calculate neutralino and chargino DR bar masses, there shouldn't be any problems here 
       // (or if there are they will be serious numerical ones in diagonalisation)
@@ -2165,12 +2184,13 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
       r_approx.calculate_MCha();  
 
       // Calculate DR bar Higgs masses using FlexibleSUSY routines...
-      r_approx.calculate_mhh();
-      r_approx.calculate_mAh();
-      r_approx.calculate_mHpm();
+      r_approx.calculate_Mhh();
+      r_approx.calculate_MAh();
+      r_approx.calculate_MHpm();
       
       // Check if DR bar h0 or A0 are tachyons
-      if (r_approx.displayProblem().tachyon == h0 || r_approx.displayProblem().tachyon == A0)
+      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::hh) || r_approx.get_problems().is_tachyon(genericE6SSM_info::Ah) || 
+	  r_approx.get_problems().is_tachyon(genericE6SSM_info::Hpm))
 	{
 	  higgsTachyons = true;
 	}
@@ -2227,8 +2247,13 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
 	}
 
       // Update the object at M_{SUSY} with the new values for the pole masses.
-      // (add in a method to do this directly)
+      // (added in a method to do this directly). Later consider just using
+      // the FlexibleSUSY routines to get the pole masses.
+      r_approx.set_Mhh_pole(mh(1), mh(2), mh(3));
+      r_approx.set_MAh_pole(ZeroSqrt(mAsq));
+
     }
+  // DH::Check that there are no other possible failure conditions that may occur
   catch(const string & a) 
     { 
       cerr << "WARNING: serious numerical problem at point." << endl; 

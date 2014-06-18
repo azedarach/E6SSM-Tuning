@@ -1173,6 +1173,11 @@ public:
    double v() const;
    double ThetaWp() const;
 
+  // DH:: just for now I am adding a method to set
+  // the pole mass of the Higgses explicitly, can come
+  // back later for a better approach
+  void set_Mhh_pole(double,double,double);
+  void set_MAh_pole(double);
 
 private:
    struct Ewsb_parameters {

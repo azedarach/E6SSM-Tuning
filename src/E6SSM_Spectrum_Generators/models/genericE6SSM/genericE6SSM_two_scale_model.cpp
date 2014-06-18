@@ -44848,6 +44848,23 @@ double CLASSNAME::ThetaWp() const
 }
 
 
+// DH:: just for now I am adding a method to set
+// the pole mass of the Higgses explicitly, can come
+// back later for a better approach.
+// Assumes first entry is light CP-even or massive
+// CP-odd Higgs, respectively
+void CLASSNAME::set_Mhh_pole(double val1, double val2, double val3)
+{
+  PHYSICAL(Mhh(0)) = val1;
+  PHYSICAL(Mhh(1)) = val2;
+  PHYSICAL(Mhh(2)) = val3;
+}
+
+void CLASSNAME::set_MAh_pole(double val)
+{
+  PHYSICAL(MAh(0)) = val;
+}
+
 std::ostream& operator<<(std::ostream& ostr, const genericE6SSM<Two_scale>& model)
 {
    model.print(ostr);

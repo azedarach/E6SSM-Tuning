@@ -2994,7 +2994,7 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
 
 bool HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVector & mstop, DoubleVector & mstopsq, int WhatCorrections, bool speak, bool Bugspeak, DoubleVector & bounds, int & ExpValid, DoubleVector & mhout, DoubleMatrix & mhmix, DoubleMatrix & msq, int & sing) {
 
-  bool higgsTachyons = false;
+  bool higgsTachyon = false;
   ExpValid = 0; //< assumes no problems initially
 
   double mQLsq = r.get_mq2(2,2);
@@ -3157,7 +3157,7 @@ bool HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
      mhout.set(2, -1.0);
      mhout.set(3, -1.0);
      ExpValid = TADPOLESPROBLEM;
-     return higgsTachyons;
+     return higgsTachyon;
    }  
 
  //The stops from physical have the opposite mass ordering
@@ -3449,11 +3449,11 @@ if(WhatCorrections ==1){
 	 
 	 ExpValid = POLEHIGGSTACHYON;
 
-	 higgsTachyons = true;	 
+	 higgsTachyon = true;	 
 
 	 if (mhphysq(1) < 0.0)
 	   {
-	     mhphy.set(1, -Sqrt(-mhphysq(1)));
+	     mhphy.set(1, ZeroSqrt(mhphysq(1)));
 	   }
 	 else
 	   {
@@ -3462,7 +3462,7 @@ if(WhatCorrections ==1){
 	 
 	 if (mhphysq(2) < 0.0)
 	   {
-	     mhphy.set(2, -Sqrt(-mhphysq(2)));
+	     mhphy.set(2, ZeroSqrt(mhphysq(2)));
 	   }
 	 else
 	   {
@@ -3471,7 +3471,7 @@ if(WhatCorrections ==1){
 	 
 	 if (mhphysq(3) < 0.0)
 	   {
-	     mhphy.set(3, -Sqrt(-mhphysq(3)));
+	     mhphy.set(3, ZeroSqrt(mhphysq(3)));
 	   }
 	 else
 	   {
@@ -6384,4 +6384,140 @@ double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   coeff = 0.5*oneOver16PiSqr*coeff;
 
   return coeff;
+}
+
+// Functions for getting approximate derivatives of low scale parameters w.r.t high
+// scale parameters. Returns the vector
+// [ dlambda/dp dAlambda/dp dm_Hd^2/dp dm_Hu^2/dp dm_s^2/dp dm_Ql^2/dp dm_uR^2/dp dA_t/dp]^T. The vector auxPars
+// is assumed to contain the values of the gauge and Yukawa couplings at MX, in the order
+// [ g1 g2 g3 yt yb ytau]^T. All of these still need to be checked for correctness.
+DoubleVector doCalcAlambdaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichAlambda,
+				 bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMh1Sq,
+				      bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMh2Sq,
+				      bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMsSq,
+				      bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcLambdaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichLambda,
+				bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcKappaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichKappa,
+			       bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichGaugino,
+				 bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
+				bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcSoftAdDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
+				bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcSoftAeDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
+				bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
+				     bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcSoftAkappaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
+				    bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+// To save time in writing out the analytic expressions, take advantage of the fact that
+// the derivatives w.r.t. the soft masses are non-zero only for the other soft mass
+// squared parameters. Furthermore, they must depend at most linearly on the requested
+// high energy soft mass squared, so the derivative can be calculated trivially as a finite
+// difference.
+DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMu2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMd2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMl2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMe2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMDx2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMDxbar2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			     bool & hasError, DoubleVector const & auxPars, int m, int n)
+{
+
+}
+
+DoubleVector doCalcMHpSqDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+			       bool & hasError, DoubleVector const & auxPars)
+{
+
+}
+
+DoubleVector doCalcMHpbarSqDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
+				  bool & hasError, DoubleVector const & auxPars)
+{
+
 }

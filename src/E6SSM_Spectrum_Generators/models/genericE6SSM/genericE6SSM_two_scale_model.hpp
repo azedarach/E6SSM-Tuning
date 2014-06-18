@@ -47,7 +47,12 @@ class Two_scale;
 template<>
 class genericE6SSM<Two_scale> : public Two_scale_model, public genericE6SSM_soft_parameters {
 public:
-   explicit genericE6SSM(const genericE6SSM_input_parameters& input_ = genericE6SSM_input_parameters());
+  explicit genericE6SSM(const genericE6SSM_input_parameters& input_ = genericE6SSM_input_parameters());
+
+  // DH:: added an additional constructor that allows one to set the soft
+  // parameters explicitly, useful for the fine tuning scan
+  explicit genericE6SSM(const genericE6SSM_soft_parameters& params_);
+
    virtual ~genericE6SSM();
 
    void calculate_DRbar_parameters();

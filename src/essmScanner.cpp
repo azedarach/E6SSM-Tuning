@@ -308,36 +308,6 @@ int main(int argc, const char* argv[])
     ----------------------------------------------------
    */
 
-  int const LOOPS = 2; //< number of loops to use in RG running
-  int const THRESH = 0; //< threshold accuracy
-  int const NUMLOOPSHIGGS = 2; //< number of loops in Higgs pole mass calculation
-  int const NUMLOOPSREWSB = 2; //< number of loops in FlexibleSUSY EWSB conditions
-
-  double const TOLEWSB = 50.0; //< tolerance to impose on minimisation conditions, GeV^2
-
-  int const UFBPROBLEM = 1; //< unbounded from below flag
-  int const CCBPROBLEM = 2; //< charge/colour breaking minimum flag
-
-  int const EWSBPROBLEM = 3; //< problem with iteration
-
-  int const WRONGVACUUM = 4; //< problem with unphysical vacuum
-
-  int const SQUARKTACHYON = 5; //< stop/sbottom tachyon
-
-  int const TADPOLESPROBLEM = 15; //< problem calculating 1-loop tadpoles
-
-  int const HIGGSPROBLEM = 10; //< problems with calculating the Higgs mass
-  int const NOTEXPVALID = 30; //< point not experimentally valid
-  int const HIGGSTACHYON = 31; //< ruled out because tachyonic
-  int const POLEHIGGSTACHYON = 32; //< ruled out because physical Higgs is tachyon
-
-  int const NUMERICALPROBLEM = 666; //< for serious numerical problems
-
-  int const TUNINGERROR = 35;
-
-  double const HIGGSCENT = 125.0; //< rough central value for Higgs mass, GeV
-  double const HIGGSERROR = 7.0; //< theory error in Higgs calculation, GeV
-
   bool const USEAPPROXSOLNS = true; //< use approximate solutions to RGEs
 
   bool uselogscanAt = false; //< use a symmetric log-scan over A_t
@@ -1983,10 +1953,15 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
 							   DoubleVector const & tlambdain, DoubleVector const & tkappain,
 							   DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
 							   DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
-							   DoubleMatrix const & mErSq, double Bmupr,  double mx, 
+							   DoubleMatrix const & mErSq, DoubleMatrix const & mDxSq,
+							   DoubleMatrix const & mDxbarSq, DoubleVector const & mHdISq, 
+							   DoubleVector const & mHuISq, DoubleVector const & mSISq,
+							   double Bmupr,  double mHpSq, double mHpbarSq, double mx, 
 							   int l, int t, QedQcd const & dataset, 
-							   double tol, double & mHdSq, double & mHuSq, double & ms, 
-							   bool & hasEWSBProblem, bool & squarksTachyons, bool & higgsTachyons, 
+							   double tol, double & mHdSq, double & mHuSq, double & mSSq, 
+							   double & ms, 
+							   bool & hasEWSBProblem, bool & squarksTachyons, 
+							   bool & vectorBosonsTachyons, bool & higgsTachyons, 
 							   bool & tadpoleProblem, bool & poleHiggsTachyons, 
 							   bool & inaccurateHiggsMass, bool & hasSeriousProblem)
 {
@@ -2063,84 +2038,133 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
 
   // SUSY parameters
   genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, Yd, Ye, Kappa, Lambda12, Lambdax, Yu, mupr, gin(1), gin(2), gin(3), gin(4), v1, v2, svev);
+
+  // Soft masses
+  Eigen::Matrix<double,3,3> mq2, mu2, md2, ml2, me2, mDx2, mDxbar2;
+  for (int i = 1; i <= 3; i++)
+    {
+      for (int j = 1; j <= 3; j++)
+	{
+	  mq2(i-1,j-1) = mQlSq(i,j);
+	  mu2(i-1,j-1) = mUrSq(i,j);
+	  md2(i-1,j-1) = mDrSq(i,j);
+	  ml2(i-1,j-1) = mLlSq(i,j);
+	  me2(i-1,j-1) = mErSq(i,j);
+	  mDx2(i-1,j-1) = mDxSq(i,j);
+	  mDxbar2(i-1,j-1) = mDxbarSq(i,j);
+	}
+    }
   
-  // Soft SUSY breaking parameters
-  SoftParsMssm r_soft = SoftParsMssm(r_susy, mGaugino, au, ad, ae, mQlSq, mUrSq, mDrSq, mLlSq, mErSq,
-				     m3sq, mHdSq, mHuSq, mGrav, mx, l, t);
+  Eigen::Matrix<double,2,2> mH1I2, mH2I2, msI2;
 
-  MssmSoftsusy r_approx = MssmSoftsusy(r_soft, physpars, mx, l, t, hvev);
+  for (int i = 1; i <= 2; i++)
+    {
+      mH1I2(i-1,i-1) = mHdISq.display(i);
+      mH2I2(i-1,i-1) = mHuISq.display(i);
+      msI2(i-1,i-1) = mSISq.display(i);
+    }
 
-  QedQcd oneset = dataset;
+  mH1I2(0,1) = 0.0; mH1I2(1,0) = 0.0;
+  mH2I2(0,1) = 0.0; mH2I2(1,0) = 0.0;
+  msI2(0,1) = 0.0; msI2(1,0) = 0.0;
 
-  oneset.toMz();
+  // Soft SUSY breaking parameters. Note ordering of gauginos is 1 = M_1,
+  // 2 = M_2, 3 = M_3 and 4 = M_1'
+  genericE6SSM_soft_parameters r_soft = genericE6SSM_soft_parameters(r_susy, TYd, TYe, TKappa, TLambda12, TLambdax, 
+								     TYu, Bmupr, mq2, ml2, mHdSq, mHuSq, md2, mu2, me2,
+								     mSSq, mH1I2, mH2I2, msI2, mDx2, mDxbar2, mHpSq, 
+								     mHpbarSq, mGaugino(1), mGaugino(2), mGaugino(3), 
+								     mGaugino(4));
 
-  r_approx.setData(oneset);
+  // Somehow need to construct the full model here
+  genericE6SSM<Two_scale> r_approx = genericE6SSM<Two_scale>(r_soft);
 
-  // M_{SUSY}, m_Hd^2(MX) and m_Hu^2(MX) must be determined
+  // M_{SUSY}, m_Hd^2(MX), m_s^2(MX) and m_Hu^2(MX) must be determined
   // simultaneously using an iterative procedure. 
 
-  DoubleVector solnGuess(3);
+  DoubleVector solnGuess(4);
 
   solnGuess(1) = mHdSq;
   solnGuess(2) = mHuSq;
-  solnGuess(3) = ms;
+  solnGuess(3) = mSSq;
+  solnGuess(4) = ms;
 
-  r_approx.setMh1Squared(solnGuess(1));
-  r_approx.setMh2Squared(solnGuess(2));
-  r_approx.setMsusy(ms);
+  r_approx.set_mHd2(solnGuess(1));
+  r_approx.set_mHu2(solnGuess(2));
+  r_approx.set_ms2(solnGuess(3));
 
   // Try to determine the correct solution using Newton's method, 
   // catch any numerical errors and flag as a problem point if they occur.
   try
     {
-      hasEWSBProblem = MSSM_ImplementEWSBConstraints_SoftMasses(r_approx, mx, ms, 
-  							false, solnGuess, tol);
+      hasEWSBProblem = ESSM_ImplementEWSBConstraints_SoftMasses(r_approx, mx, ms, 
+								false, solnGuess, tol);
       
       if (hasEWSBProblem)
 	{
 	  cerr << "WARNING: problem implementing EWSB conditions." << endl;
-	  MssmSoftsusy s = r_approx;
-	  s.setMh1Squared(solnGuess(1));
-	  s.setMh2Squared(solnGuess(2));
-	  s.setMsusy(solnGuess(3));
-	  s.runto(s.displayMsusy());
-	  cerr << "f1 = " << MSSM_EWSBCondition1(s) << endl;
-	  cerr << "f2 = " << MSSM_EWSBCondition2(s) << endl;
+	  genericE6SSM<Two_scale> w = r_approx;
+	  w.set_mHd2(solnGuess(1));
+	  w.set_mHu2(solnGuess(2));
+	  w.set_ms2(solnGuess(3));
+	  w.run_to(solnGuess(4));
+	  cerr << "f1 = " << ESSM_EWSBCondition1(w) << endl;
+	  cerr << "f2 = " << ESSM_EWSBCondition2(w) << endl;
 	}
       
       mHdSq = solnGuess(1);
       mHuSq = solnGuess(2);
-      ms = solnGuess(3);
+      mSSq = solnGuess(3)
+      ms = solnGuess(4);
       
-      r_approx.setMsusy(solnGuess(3));
-      r_approx.setMh1Squared(solnGuess(1));
-      r_approx.setMh2Squared(solnGuess(2));
+      r_approx.set_mHd2(solnGuess(1));
+      r_approx.set_mHu2(solnGuess(2));
+      r_approx.set_ms2(solnGuess(3));
       
       // Try to get the spectrum. Catch any errors and flag as 
       // problem if they occur.
       // Get DR bar stop and sbottom masses.
-      r_approx.runto(r_approx.displayMsusy());
+      r_approx.runto(solnGuess(4));
       
-      r_approx.stops();
-      r_approx.sbottoms();
+      r_approx.calculate_MSu();
+      r_approx.calculate_MSd();
 
       // Check for tachyonic squakrs      
-      if (r_approx.displayProblem().tachyon == stop || r_approx.displayProblem().tachyon == sbottom)
+      if (r_approx.get_problems().is_tachyon(Su) || r_approx.get_problem().is_tachyon(Sd))
 	{
 	  squarksTachyons = true;
 	}
       
       // Values needed below, shouldn't be any problems here so long as tan(beta), v, and the gauge couplings
       // are sensible when input
-      double sw = r_approx.calcSinthdrbar();
-      double mt = r_approx.displayYukawaElement(YU, 3, 3)*r_approx.displayHvev()*sin(atan(r_approx.displayTanb()))/sqrt(2.0);
-      double mb = r_approx.displayYukawaElement(YD, 3, 3)*r_approx.displayHvev()*cos(atan(r_approx.displayTanb()))/sqrt(2.0);
-      double mz2 = sqr(r_approx.displayMzRun());
-      double mw2 = sqr(r_approx.displayMwRun());
+      double v1 = r_approx.get_vd();
+      double v2 = r_approx.get_vu();
+      double s = r_approx.get_vs();
+
+      double v = Sqrt(v1*v1+v2*v2);
+      double tb = v2/v1;
+
+      double sw = Sin(r_approx.ThetaW());
+      double mt = r_approx.get_Yu(3, 3)*v*Sin(ArcTan(tb))/Sqrt(2.0);
+      double mb = r_approx.get_Yd(3, 3)*v*Cos(ArcTan(tb))/Sqrt(2.0);
+      double mz2 = Sqr(r_approx.calculate_MVZ());
+      double mw2 = Sqr(r_approx.calculate_MVWm());
+      double mzp2 = Sqr(r_approx.calculate_MVZp());
+
+      if (r_approx.get_problems().is_tachyon(VZ) || r_approx.get_problems().is_tachyon(VZp) 
+	  || r_approx.get_problems().is_tachyon(VWm) )
+	{
+	  vectorBosonsTachyons = true;
+	}
       
       drBarPars eg = r_approx.displayDrBarPars();
       
-      // Calculate DR bar Higgs masses
+      // Calculate neutralino and chargino DR bar masses, there shouldn't be any problems here 
+      // (or if there are they will be serious numerical ones in diagonalisation)
+      r_approx.calculate_MChi();
+      r_approx.calculate_MCha();  
+
+      // Calculate DR bar Higgs masses using FlexibleSUSY routines...
       r_approx.calcDrBarHiggs(atan(r_approx.displayTanb()), mz2, mw2, sw, eg);
       
       // Check if DR bar h0 or A0 are tachyons
@@ -2148,41 +2172,44 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
 	{
 	  higgsTachyons = true;
 	}
+      
+      // ... but use approximate expressions here for loop corrected Higgs masses
+      DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+      physical_ESSM(r_approx, mstop, mstopsq, mD1sq, mD2sq, s, tb);      
 
-      // Calculate neutralino and chargino DR bar masses, there shouldn't be any problems here 
-      // (or if there are they will be serious numerical ones in diagonalisation)
-      r_approx.calcDrBarNeutralinos(atan(r_approx.displayTanb()), sqrt(mz2), sqrt(mw2), sw, eg);
-      r_approx.calcDrBarCharginos(atan(r_approx.displayTanb()), sqrt(mw2), eg);  
-      
-      // Set values
-      eg.mu(1,3) = r_approx.displayDrBarPars().mu(1,3);
-      eg.mu(2,3) = r_approx.displayDrBarPars().mu(2,3);
-      eg.md(1,3) = r_approx.displayDrBarPars().md(1,3);
-      eg.md(2,3) = r_approx.displayDrBarPars().md(2,3);
-      eg.mt = mt;
-      eg.mb = mb;
-      eg.mz = sqrt(mz2);
-      eg.mw = sqrt(mw2);
-      
-      r_approx.setDrBarPars(eg);
-      
-      // Tadpoles using only 1-loop stop and sbottom contributions
-      r_approx.calcTadpole1Ms1loopSimple(mt, sw);
-      r_approx.calcTadpole2Ms1loopSimple(mt, sw);
-      
-      // Check for problems with tadpole calculation. There shouldn't
-      // be any, but just in case...
-      tadpoleProblem = r_approx.displayProblem().noMuConvergence;
+      // In HiggsMasses, sing = 1 indicates inaccurate Higgs mass.
+      // ExpValid = 15 indicates TADPOLEPROBLEM.
+      // ExpValid = 30 indicates not experimentally valid, but otherwise no problems
+      // WhatCorrections selects which version to use (use 1)
+      int sing = 0;
+      int ExpValid = 0;
+      const int WhatCorrections = 1;
+      DoubleVector expBounds(2);
 
-      double piwwt = 0.0, pizzt = 0.0;//< unused in simplified routine
-      int accuracy = 1;//< number of loops = 0 or 1 as of SoftSUSY-3.3.10.
-      
-      // Calculate physical Higgs masses and flag if h0 or A0 tachyon
-      poleHiggsTachyons = r_approx.higgsSimple(accuracy, piwwt, pizzt);
-      
+      expBounds(1) = HIGGSCENT - HIGGSERROR;
+      expBounds(2) = HIGGSCENT + HIGGSERROR;
+
+      DoubleVector mh(3);
+      DoubleMatrix mhmix(3,3), msq(3,3);
+
+      poleHiggsTachyons = HiggsMasses(r_approx, s, tb, mstop, mstopsq, WhatCorrections, 
+				      false, false, expBounds, ExpValid, mh, mhmix, msq, sing);
+
       // Other problems that can occur in physical Higgs mass calculation:
       // inaccurate result
-      inaccurateHiggsMass = r_approx.displayProblem().inaccurateHiggsMass;
+      if (ExpValid == HIGGSPROBLEM || sing == 1)
+	{
+	  inaccurateHiggsMass = true;
+	}
+      if (ExpValid == TADPOLESPROBLEM)
+	{
+	  tadpoleProblem = true;
+	}
+      if (ExpValid == POLEHIGGSTACHYON)
+	{
+	  poleHiggsTachyons = true;
+	}
+
 
     }
   catch(const string & a) 

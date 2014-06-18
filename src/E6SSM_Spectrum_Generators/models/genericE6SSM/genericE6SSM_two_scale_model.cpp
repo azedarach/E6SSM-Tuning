@@ -114,6 +114,62 @@ CLASSNAME::genericE6SSM(const genericE6SSM_input_parameters& input_)
 {
 }
 
+// DH:: added an additional constructor that allows one to set the soft
+// parameters explicitly, useful for the fine tuning scan
+CLASSNAME::genericE6SSM(const genericE6SSM_soft_parameters& params_)
+   : Two_scale_model()
+   , genericE6SSM_soft_parameters(params_)
+   , number_of_ewsb_iterations(100)
+   , number_of_mass_iterations(20)
+   , ewsb_loop_order(2)
+   , pole_mass_loop_order(2)
+   , calculate_sm_pole_masses(false)
+   , precision(1.0e-3)
+   , ewsb_iteration_precision(1.0e-5)
+   , physical()
+   , problems(genericE6SSM_info::particle_names)
+   , thread_exception()
+   , MVG(0), MGlu(0), MFv(Eigen::Array<double,3,1>::Zero()), MChaP(0), MVP(0),
+      MVZ(0), MVZp(0), MSd(Eigen::Array<double,6,1>::Zero()), MSv(Eigen::Array<
+      double,3,1>::Zero()), MSu(Eigen::Array<double,6,1>::Zero()), MSe(
+      Eigen::Array<double,6,1>::Zero()), MSDX(Eigen::Array<double,6,1>::Zero()),
+      Mhh(Eigen::Array<double,3,1>::Zero()), MAh(Eigen::Array<double,3,1>::Zero())
+      , MHpm(Eigen::Array<double,2,1>::Zero()), MChi(Eigen::Array<double,6,1>
+      ::Zero()), MCha(Eigen::Array<double,2,1>::Zero()), MFe(Eigen::Array<double,3
+      ,1>::Zero()), MFd(Eigen::Array<double,3,1>::Zero()), MFu(Eigen::Array<double
+      ,3,1>::Zero()), MFDX(Eigen::Array<double,3,1>::Zero()), MSHI0(Eigen::Array<
+      double,4,1>::Zero()), MSHIp(Eigen::Array<double,4,1>::Zero()), MChaI(
+      Eigen::Array<double,2,1>::Zero()), MChiI(Eigen::Array<double,4,1>::Zero()),
+      MSSI0(Eigen::Array<double,2,1>::Zero()), MFSI(Eigen::Array<double,2,1>::Zero
+      ()), MSHp0(Eigen::Array<double,2,1>::Zero()), MSHpp(Eigen::Array<double,2,1>
+      ::Zero()), MChiP(Eigen::Array<double,2,1>::Zero()), MVWm(0)
+
+   , ZD(Eigen::Matrix<double,6,6>::Zero()), ZV(Eigen::Matrix<double,3,3>::Zero(
+      )), ZU(Eigen::Matrix<double,6,6>::Zero()), ZE(Eigen::Matrix<double,6,6>
+      ::Zero()), ZDX(Eigen::Matrix<double,6,6>::Zero()), ZH(Eigen::Matrix<double,3
+      ,3>::Zero()), ZA(Eigen::Matrix<double,3,3>::Zero()), ZP(Eigen::Matrix<double
+      ,2,2>::Zero()), ZN(Eigen::Matrix<std::complex<double>,6,6>::Zero()), UM(
+      Eigen::Matrix<std::complex<double>,2,2>::Zero()), UP(Eigen::Matrix<
+      std::complex<double>,2,2>::Zero()), ZEL(Eigen::Matrix<std::complex<double>,3
+      ,3>::Zero()), ZER(Eigen::Matrix<std::complex<double>,3,3>::Zero()), ZDL(
+      Eigen::Matrix<std::complex<double>,3,3>::Zero()), ZDR(Eigen::Matrix<
+      std::complex<double>,3,3>::Zero()), ZUL(Eigen::Matrix<std::complex<double>,3
+      ,3>::Zero()), ZUR(Eigen::Matrix<std::complex<double>,3,3>::Zero()), ZDXL(
+      Eigen::Matrix<std::complex<double>,3,3>::Zero()), ZDXR(Eigen::Matrix<
+      std::complex<double>,3,3>::Zero()), UHI0(Eigen::Matrix<double,4,4>::Zero()),
+      UHIp(Eigen::Matrix<double,4,4>::Zero()), ZMI(Eigen::Matrix<std::complex<
+      double>,2,2>::Zero()), ZPI(Eigen::Matrix<std::complex<double>,2,2>::Zero()),
+      ZNI(Eigen::Matrix<std::complex<double>,4,4>::Zero()), ZSSI(Eigen::Matrix<
+      double,2,2>::Zero()), ZFSI(Eigen::Matrix<std::complex<double>,2,2>::Zero()),
+      UHp0(Eigen::Matrix<double,2,2>::Zero()), UHpp(Eigen::Matrix<double,2,2>
+      ::Zero()), ZNp(Eigen::Matrix<std::complex<double>,2,2>::Zero())
+
+   , PhaseGlu(1,0), PhaseFHpup(1,0)
+{
+  
+}
+
+
 CLASSNAME::~genericE6SSM()
 {
 }

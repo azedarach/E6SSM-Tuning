@@ -127,7 +127,7 @@ double doCalcTadpolesESSMS_Roman(flexiblesusy::genericE6SSM_soft_parameters,doub
 
 double doCalcTadpolesESSMS_Roman_atQ(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 
-// Calculate the Higgs masses in the model.
+// Calculate the Higgs masses in the model. Returns true if tachyons problem.
 // Inputs:
 //    flexiblesusy::genericE6SSM_soft_parameters & r = ESSM model
 //    double s = singlet VEV
@@ -142,7 +142,7 @@ double doCalcTadpolesESSMS_Roman_atQ(flexiblesusy::genericE6SSM_soft_parameters,
 //    DoubleVector & mhout = Higgs masses
 //    DoubleMatrix & mhmix = mixing matrix for Higgs fields
 //    int & sing = flag to indicate poor accuracy in diagonalisation (non-zero if tolerance not met)
-void HiggsMasses(flexiblesusy::genericE6SSM_soft_parameters &,double,double,DoubleVector &,DoubleVector &,int,bool,bool,DoubleVector &,int &,DoubleVector &, DoubleMatrix &, DoubleMatrix &, int &);
+bool HiggsMasses(flexiblesusy::genericE6SSM_soft_parameters &,double,double,DoubleVector &,DoubleVector &,int,bool,bool,DoubleVector &,int &,DoubleVector &, DoubleMatrix &, DoubleMatrix &, int &);
 
 // To the above we will add methods for calculating m_A^2 at tree level and one-loop order, and
 // methods for calculating chargino and neutralino masses (at tree level).

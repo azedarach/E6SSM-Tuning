@@ -33,7 +33,7 @@ DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, Double
       double gbar = Sqrt(g2*g2+0.6*g1*g1);
       double gdash_1 = essmSusy.get_gN();
 
-      double cb = 1.0/sqrt(1.0+tb*tb);
+      double cb = 1.0/Sqrt(1.0+tb*tb);
       double sb = tb*cb;
       double c2b = (1.0-tb*tb)/(1.0+tb*tb);
 
@@ -126,12 +126,12 @@ double doCalcdLogMzSqdLogParam(genericE6SSM_soft_parameters r, double p, DoubleV
     {
       double g1 = r.get_g1();
       double g2 = r.get_g2();
-      double gbar = sqrt(g2*g2+0.6*g1*g1);
+      double gbar = Sqrt(g2*g2+0.6*g1*g1);
       
       double v1 = vevs(vevs.displayStart());
       double v2 = vevs(vevs.displayStart()+1);
 
-      double v = sqrt(v1*v1+v2*v2);
+      double v = Sqrt(v1*v1+v2*v2);
 
       // Neglect any neutral mixing for now, but later may want to include contribution from it.      
       deriv = (2.0*p/(v*v))*(v1*dVevsdp(dVevsdp.displayStart())+v2*dVevsdp(dVevsdp.displayEnd()));
@@ -201,13 +201,13 @@ double ESSM_EWSBCondition1(genericE6SSM_soft_parameters const & r)
 
   if (!INCLUDE1LPTADPOLES)
     {
-      f1 = m1Sq + 0.5*lambda*lambda*(v2Sq+s*s)-lambda*Alambda*s*tb/sqrt(2.0)
+      f1 = m1Sq + 0.5*lambda*lambda*(v2Sq+s*s)-lambda*Alambda*s*tb/Sqrt(2.0)
 	+gbar*gbar*v*v*c2b/8.0 + (0.5*Qtilde_1*gdash_1*gdash_1*
 				  (Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s));
     }
   else
     {
-      f1 = m1Sq + 0.5*lambda*lambda*(v2Sq+s*s)-lambda*Alambda*s*tb/sqrt(2.0)
+      f1 = m1Sq + 0.5*lambda*lambda*(v2Sq+s*s)-lambda*Alambda*s*tb/Sqrt(2.0)
 	+gbar*gbar*v*v*c2b/8.0 + (0.5*Qtilde_1*gdash_1*gdash_1*
 				  (Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s))
 	-doCalcTadpoleESSMH1(r, s, tb);
@@ -272,13 +272,13 @@ double ESSM_EWSBCondition2(genericE6SSM_soft_parameters const & r)
   
   if (!INCLUDE1LPTADPOLES)
     {
-      f2 = m2Sq + 0.5*lambda*lambda*(v1Sq+s*s)-lambda*Alambda*s/(sqrt(2.0)*tb)
+      f2 = m2Sq + 0.5*lambda*lambda*(v1Sq+s*s)-lambda*Alambda*s/(Sqrt(2.0)*tb)
 	-gbar*gbar*v*v*c2b/8.0 + (0.5*Qtilde_2*gdash_1*gdash_1*
 				  (Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s));
     }
   else
     {
-      f2 = m2Sq + 0.5*lambda*lambda*(v1Sq+s*s)-lambda*Alambda*s/(sqrt(2.0)*tb)
+      f2 = m2Sq + 0.5*lambda*lambda*(v1Sq+s*s)-lambda*Alambda*s/(Sqrt(2.0)*tb)
 	-gbar*gbar*v*v*c2b/8.0 + (0.5*Qtilde_2*gdash_1*gdash_1*
 				  (Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s))
 	-doCalcTadpoleESSMH2(r, s, tb);
@@ -342,12 +342,12 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
 
   if (!INCLUDE1LPTADPOLES)
     {
-      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v*v*s2b/(2.0*sqrt(2.0)*s)
+      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0)*s)
 	+0.5*Qtilde_s*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s);
     }
   else
     {
-      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v*v*s2b/(2.0*sqrt(2.0)*s)
+      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0)*s)
 	+0.5*Qtilde_s*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s)
 	-doCalcTadpolesESSMS(r, s, tb);
     }
@@ -643,7 +643,7 @@ double ESSM_Msusy_Cond(genericE6SSM_soft_parameters r, double ms)
 
   physical_ESSM(r, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
-  double f = (ms/sqrt(mstop(1)*mstop(2)))-1.0;
+  double f = (ms/Sqrt(mstop(1)*mstop(2)))-1.0;
 
   return f;
 }
@@ -702,7 +702,7 @@ bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVecto
   double f1 = ESSM_EWSBCondition1(w);
   double f2 = ESSM_EWSBCondition2(w);
   double f3 = ESSM_EWSBCondition3(w);
-  double f4 = estimate(4)*MsusyScaleFactor/sqrt(mstop(1)*mstop(2))-1.0;
+  double f4 = estimate(4)*MsusyScaleFactor/Sqrt(mstop(1)*mstop(2))-1.0;
 
   // cout << "f1/mHdSq Scale Factor = " << f1/mHdSqScaleFactor << endl;
   // cout << "f2/mHdSq Scale Factor = " << f1/mHuSqScaleFactor << endl;
@@ -752,8 +752,8 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
   }
 
   if(speak){
-    cout << " yt*v2/(sqrt(2.0)) = " <<  yt*v2/(sqrt(2.0)) << endl;
-    cout << "mtop = " << mtop << endl;
+    cerr << " yt*v2/(sqrt(2.0)) = " <<  yt*v2/(Sqrt(2.0)) << endl;
+    cerr << "mtop = " << mtop << endl;
   }
   
   double oneO40 = 1.0/(40.0);
@@ -868,40 +868,48 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
 
   //Note that the heavier stop is stop1 this matches Roman's notation.
 
-  mstopsq(1) = 0.5*(mQlsq +  mUrsq + 2*mtop*mtop +0.125*sqr(g2)*(sqr(v1) - sqr(v2)) +0.125*3.0*sqr(g1)*(sqr(v1) - sqr(v2))/5.0 + oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  + sqrt(sqr(mQlsq- mUrsq+0.125*sqr(g2)*(sqr(v1) - sqr(v2)) - 0.125*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*mtop*mtop*sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
+  mstopsq(1) = 0.5*(mQlsq +  mUrsq + 2*mtop*mtop +0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) +0.125*3.0*Sqr(g1)*(Sqr(v1) - Sqr(v2))/5.0 + oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  + Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
 
   if (mstopsq(1) >= 0.0)
     {
-  mstop(1) = sqrt(0.5*(mQlsq + mUrsq + 2*mtop*mtop + 0.125*sqr(g2)*(sqr(v1) - sqr(v2)) + 0.125*3.0*sqr(g1)*(sqr(v1) - sqr(v2))/5.0 + oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  + sqrt(sqr(mQlsq- mUrsq+0.125*sqr(g2)*(sqr(v1) - sqr(v2)) - 0.125*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*mtop*mtop*sqr(At - lambda(3)*s*oneOrt2*v1/v2))));
+  mstop(1) = Sqrt(0.5*(mQlsq + mUrsq + 2*mtop*mtop + 0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) + 0.125*3.0*Sqr(g1)*(Sqr(v1) - Sqr(v2))/5.0 + oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  + Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))));
     }
   else
     {
-      mstop(1) = -sqrt(Abs(mstopsq(1)));
+      mstop(1) = -Sqrt(Abs(mstopsq(1)));
     }
 
-  mstopsq(2) = 0.5*(mQlsq + mUrsq + 2*mtop*mtop +0.125*sqr(g2)*(sqr(v1) - sqr(v2)) +0.125*3.0*sqr(g1)*(sqr(v1) - sqr(v2))/5.0 + oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  - sqrt(sqr(mQlsq- mUrsq+0.125*sqr(g2)*(sqr(v1) - sqr(v2)) - 0.125*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*mtop*mtop*sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
+  mstopsq(2) = 0.5*(mQlsq + mUrsq + 2*mtop*mtop +0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) +0.125*3.0*Sqr(g1)*(Sqr(v1) - Sqr(v2))/5.0 + oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  - Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
 
   if (mstopsq(2) >= 0.0)
     { 
-  mstop(2) = sqrt(0.5*(mQlsq + mUrsq + 2*mtop*mtop +0.125*sqr(g2)*(sqr(v1) - sqr(v2)) +0.125*3.0*sqr(g1)*(sqr(v1) - sqr(v2))/5.0 + oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  - sqrt(sqr(mQlsq- mUrsq+0.125*sqr(g2)*(sqr(v1) - sqr(v2)) - 0.125*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*mtop*mtop*sqr(At - lambda(3)*s*oneOrt2*v1/v2))));
+  mstop(2) = Sqrt(0.5*(mQlsq + mUrsq + 2*mtop*mtop +0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) +0.125*3.0*Sqr(g1)*(Sqr(v1) - Sqr(v2))/5.0 + oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  - Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))));
     }
   else
     {
-      mstop(2) = -sqrt(Abs(mstopsq(2)));
+      mstop(2) = -Sqrt(Abs(mstopsq(2)));
     }
  
   if(speak){								   
-    cout << " mstop(1) = " << mstop(1) << endl;
-    cout << " mstop(2) = " << mstop(2) << endl;
+    cerr << " mstop(1) = " << mstop(1) << endl;
+    cerr << " mstop(2) = " << mstop(2) << endl;
   }
  
+  // DH:: warn if stops are found to be tachyonic
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      cerr << "Warning: tachyonic stop masses." << endl;
+      cerr << "m_stop_1^2 = " << mstopsq(1) << " GeV^2." << endl;
+      cerr << "m_stop_2^2 = " << mstopsq(2) << " GeV^2." << endl;
+    }  
+
   int gen=1;
   for(gen=1; gen< 4; gen++){
-    mD1sq(gen) = 0.5*(mDsq(gen) + mDbarsq(gen) + kappa(gen)*kappa(gen)*s*s - 2.5*oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  
-		      - sqrt(sqr(mDsq(gen)- mDbarsq(gen) + 0.5*oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))   + 0.1*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*sqr(Akappa(gen)*kappa(gen)*s*oneOrt2 - 0.5*kappa(gen)*lambda(3)*v1*v2)));
+    mD1sq(gen) = 0.5*(mDsq(gen) + mDbarsq(gen) + kappa(gen)*kappa(gen)*s*s - 2.5*oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  
+		      - Sqrt(Sqr(mDsq(gen)- mDbarsq(gen) + 0.5*oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))   + 0.1*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*Sqr(Akappa(gen)*kappa(gen)*s*oneOrt2 - 0.5*kappa(gen)*lambda(3)*v1*v2)));
 
-    mD2sq(gen) = 0.5*(mDsq(gen) + mDbarsq(gen) + kappa(gen)*kappa(gen)*s*s - 2.5*oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))  
-		      + sqrt(sqr(mDsq(gen)- mDbarsq(gen) + 0.5*oneO40*sqr(g1p)*(-3.0*sqr(v1) - 2.0*sqr(v2) + 5.0*sqr(s))   + 0.1*sqr(g1)*(sqr(v1) - sqr(v2))) + 4.0*sqr(Akappa(gen)*kappa(gen)*s*oneOrt2 - 0.5*kappa(gen)*lambda(3)*v1*v2)));
+    mD2sq(gen) = 0.5*(mDsq(gen) + mDbarsq(gen) + kappa(gen)*kappa(gen)*s*s - 2.5*oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  
+		      + Sqrt(Sqr(mDsq(gen)- mDbarsq(gen) + 0.5*oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))   + 0.1*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*Sqr(Akappa(gen)*kappa(gen)*s*oneOrt2 - 0.5*kappa(gen)*lambda(3)*v1*v2)));
 }
 return;
 }
@@ -1046,6 +1054,14 @@ void physical_ESSM_Roman(genericE6SSM_soft_parameters r,DoubleVector & mstop, Do
   
   mstopsq(2) = 0.5*(mQlsq +  mUrsq + 2*mtop*mtop  - Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2)));									
   
+  // DH:: warn if stops are found to be tachyonic
+   if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      cerr << "Warning: tachyonic stop masses." << endl;
+      cerr << "m_stop_1^2 = " << mstopsq(1) << " GeV^2." << endl;
+      cerr << "m_stop_2^2 = " << mstopsq(2) << " GeV^2." << endl;
+    }
+
   int gen=1;
   for(gen=1; gen< 4; gen++){
     mD1sq(gen) = 0.5*(mDsq(gen) + mDbarsq(gen) + kappa(gen)*kappa(gen)*s*s - 2.5*oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  
@@ -1198,6 +1214,12 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
 
   physical_ESSM(r,mstop,mstopsq, mD1sq,mD2sq, s, tb);
    
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   double  Delmtop = 0;
   double  Delmstop1 = 0.5*(0.6*0.25*Sqr(g1) + 0.25*Sqr(g2) - 6.0/(40.0) *Sqr(g1p) + 0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g2)- Sqr(g1)) + 8.0*Sqr(mtop)*(At  - lambda(3)*s*oneOrt2*v1/v2)*(-lambda(3)*s*oneOrt2/(v2*v1) ) ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  )     );
 
@@ -1351,7 +1373,11 @@ double doCalcTadpoleESSMH1_atMt(genericE6SSM_soft_parameters r,  double s , doub
   double g2 = r.get_g2();
   double g1p = r.get_gN();
   physical_ESSM(r,mstop,mstopsq, mD1sq,mD2sq, s, tb);
- 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
   double  Delmtop = 0;
   double  Delmstop1 = 0.5*(0.6*0.25*Sqr(g1) + 0.25*Sqr(g2) - 6.0/(40.0) *Sqr(g1p)
 			  +0.5*( 2.0*(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2)))*0.25*(Sqr(g2)- Sqr(g1)) + 8.0*Sqr(mtop)*(At  - lambda(3)*s*oneOrt2*v1/v2)*(-lambda(3)*s*oneOrt2/(v2*v1) )              ) /(   Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  )     );
@@ -1497,7 +1523,11 @@ double doCalcTadpoleESSMH1_Roman(genericE6SSM_soft_parameters r,  double s , dou
   double g1p = r.get_gN();
 
   physical_ESSM_Roman(r,mstop,mstopsq, mD1sq,mD2sq, s, tb);
-  
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
   double  Delmtop = 0;
   double  Delmstop1 =  0.5*( 0.5* 8.0*Sqr(mtop)*(At  - lambda(3)*s*oneOrt2*v1/v2)*(-lambda(3)*s*oneOrt2/(v2*v1) ) ) /( Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) ;
   
@@ -1644,7 +1674,11 @@ double doCalcTadpoleESSMH1_Roman_atQ(genericE6SSM_soft_parameters r,  double s ,
   double g1p = r.get_gN();
 
   physical_ESSM_Roman(r,mstop,mstopsq, mD1sq,mD2sq, s, tb);
-  
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
   double  Delmtop = 0;
   double  Delmstop1 =  0.5*( 0.5* 8.0*Sqr(mtop)*(At  - lambda(3)*s*oneOrt2*v1/v2)*(-lambda(3)*s*oneOrt2/(v2*v1) ) ) /( Sqrt(Sqr(mQlsq- mUrsq) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2))  ) ;
   
@@ -1797,6 +1831,13 @@ double doCalcTadpoleESSMH2(genericE6SSM_soft_parameters r, double s , double tb 
    DoubleVector mD1sq(3), mD2sq(3);//3 gens
    
    physical_ESSM(r,mstop, mstopsq, mD1sq,mD2sq, s, tb); 
+
+   if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+     {
+       mstopsq(1) = Abs(mstopsq(1));
+       mstopsq(2) = Abs(mstopsq(2));
+     }
+
    Delmtop = Sqr(r.get_Yu(2,2));
  
    Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(2,2))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
@@ -1962,6 +2003,13 @@ double doCalcTadpoleESSMH2_atMt(genericE6SSM_soft_parameters r, double s , doubl
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
   physical_ESSM(r,mstop, mstopsq, mD1sq,mD2sq, s, tb); 
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   Delmtop = Sqr(r.get_Yu(2,2));
   // cout << "Delmtop = " << Delmtop << endl; 
   Delmstop1 = 0.5*(2.0*Sqr(r.get_Yu(2,2))- 0.6*0.25*Sqr(g1) -  0.25*Sqr(g2) - 0.1*Sqr(g1p)
@@ -2115,6 +2163,13 @@ double doCalcTadpoleESSMH2_Roman(genericE6SSM_soft_parameters r, double s , doub
   DoubleVector mstop(2), mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3), mD2sq(3);//3 gens
   physical_ESSM_Roman(r,mstop, mstopsq, mD1sq,mD2sq, s, tb); 
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   Delmtop = Sqr(r.get_Yu(2,2));
   //cout << "Delmtop = " << Delmtop << endl; 
   
@@ -2271,6 +2326,12 @@ double doCalcTadpoleESSMH2_Roman_atQ(genericE6SSM_soft_parameters r, double s , 
   
   physical_ESSM_Roman(r,mstop, mstopsq, mD1sq,mD2sq, s, tb);
    
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   Delmtop = Sqr(r.get_Yu(2,2));
   //cout << "Delmtop = " << Delmtop << endl; 
   
@@ -2420,6 +2481,13 @@ double doCalcTadpolesESSMS( genericE6SSM_soft_parameters r, double s , double tb
   DoubleVector mD1sq(3),mD2sq(3);//3 gens
 
   physical_ESSM(r, mstop,  mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   DoubleVector DelmuDsq(3), DelmD1sq(3),DelmD2sq(3);
   double Delmtop,Delmstop1,Delmstop2;  
 
@@ -2585,6 +2653,13 @@ double doCalcTadpolesESSMS_atMt( genericE6SSM_soft_parameters r, double s , doub
   DoubleVector mD1sq(3),mD2sq(3);//3 gens
 
   physical_ESSM(r, mstop,  mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   double Delmtop,Delmstop1,Delmstop2;  
   Delmtop = 0;
   Delmstop1 = 0.5*(0.25*Sqr(g1p)
@@ -2738,6 +2813,12 @@ double doCalcTadpolesESSMS_Roman( genericE6SSM_soft_parameters r, double s , dou
   DoubleVector mD1sq(3),mD2sq(3);//3 gens
   physical_ESSM_Roman(r, mstop,  mstopsq, mD1sq, mD2sq, s, tb);
   
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   DoubleVector DelmuDsq(3), DelmD1sq(3),DelmD2sq(3);
   double Delmtop,Delmstop1,Delmstop2;  
   
@@ -2890,6 +2971,13 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   DoubleVector mstop(2),  mstopsq(2);//stop1,stop2
   DoubleVector mD1sq(3),mD2sq(3);//3 gens
   physical_ESSM_Roman(r, mstop,  mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   double Delmtop,Delmstop1,Delmstop2;  
   Delmtop = 0;
   
@@ -2904,7 +2992,10 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   return delta;
 }
 
-void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVector & mstop, DoubleVector & mstopsq, int WhatCorrections, bool speak, bool Bugspeak, DoubleVector & bounds, int & ExpValid, DoubleVector & mhout, DoubleMatrix & mhmix, DoubleMatrix & msq, int & sing) {
+bool HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVector & mstop, DoubleVector & mstopsq, int WhatCorrections, bool speak, bool Bugspeak, DoubleVector & bounds, int & ExpValid, DoubleVector & mhout, DoubleMatrix & mhmix, DoubleMatrix & msq, int & sing) {
+
+  bool higgsTachyons = false;
+  ExpValid = 0; //< assumes no problems initially
 
   double mQLsq = r.get_mq2(2,2);
   double mURsq = r.get_mu2(2,2);
@@ -3058,15 +3149,15 @@ void HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
  }
 
  if((mstopsq(2) < 0)|| (mstopsq(1) < 0)){
-   if(speak) cout << "tachyonics stop masses so i'm not going to bother doing higgs mass corrections.  Point already ruled out. " << endl;
+   if(speak) cerr << "tachyonics stop masses so i'm not going to bother doing higgs mass corrections.  Point already ruled out. " << endl;
 
      // Dylan:: I have modified this so that in the event of tachyonic stops, the returned Higgs masses are negative
-     // as a flag.
+     // as a flag. Count it as a tadpole problem.
      mhout.set(1, -1.0);
      mhout.set(2, -1.0);
      mhout.set(3, -1.0);
-     ExpValid = 30;
-     return;
+     ExpValid = TADPOLESPROBLEM;
+     return higgsTachyons;
    }  
 
  //The stops from physical have the opposite mass ordering
@@ -3291,11 +3382,11 @@ if(WhatCorrections ==1){
      double Ut = 2.0*Sqr(Xt)/(mstop(1)*mstop(2))*(1 - Sqr(Xt)/(12.0*mstop(1)*mstop(2)));
      if(Bugspeak)
        { 
-	 cout << " Ut = " << Ut << endl;
-	 cout << "Should be like 1lp HE11 = " <<  HE11*(1 - 3*Sqr(r.get_Yu(2, 2))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
+	 cerr << " Ut = " << Ut << endl;
+	 cerr << "Should be like 1lp HE11 = " <<  HE11*(1 - 3*Sqr(r.get_Yu(2, 2))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
        }
   
-     if(Bugspeak) cout << "Should be likeDelMh11 = " <<  HE11*( - 3*Sqr(r.get_Yu( 2, 2))*l)/(8.0*Sqr(PI))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
+     if(Bugspeak) cerr << "Should be likeDelMh11 = " <<  HE11*( - 3*Sqr(r.get_Yu( 2, 2))*l)/(8.0*Sqr(PI))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l) << endl;
      
      HE11 = HE11*(1 - 3*Sqr(r.get_Yu( 2, 2))*l/(8.0*Sqr(PI)))+ 3.0 * Sqr(Sqr(r.get_Yu( 2, 2)) )*Sqr(vev)*Sqr(Sqr(Sin(ArcTan(tb))))/(8.0*Sqr(PI))*(0.5*Ut + l + 1/(16*Sqr(PI))*(1.5*Sqr(r.get_Yu( 2, 2)) - 8.0*Sqr(r.get_g3()))*(Ut + l)*l);
      
@@ -3331,14 +3422,14 @@ if(WhatCorrections ==1){
    {
      if(speak)
        { 
-	 cout << "tachyonics stop masses so i'm not going to bother doing higgs mass corrections.  Point already ruled out. " << endl;
+	 cerr << "tachyonics stop masses so i'm not going to bother doing higgs mass corrections.  Point already ruled out. " << endl;
 	 
 	 // Dylan:: I have modified this so that in the event of tachyonic stops, the returned Higgs masses are negative
 	 // as a flag.
 	 mhout.set(1, -1.0);
 	 mhout.set(2, -1.0);
 	 mhout.set(3, -1.0);
-	 ExpValid = 30;
+	 ExpValid = TADPOLESPROBLEM;
        }  
    }
  else
@@ -3346,17 +3437,20 @@ if(WhatCorrections ==1){
 
      if (MH_even.diagonaliseSym(mixMH, mhphysq) >  TOLERANCE * 1.0e-3) 
        { 
-	 cout << "Warning:  accuracy bad in CP-even Higgs diagonalisation" << endl;
+	 cerr << "Warning:  accuracy bad in CP-even Higgs diagonalisation" << endl;
 	 // Flag to indicate poor accuracy
 	 sing = 1;
+	 ExpValid = HIGGSPROBLEM;
        }
      DoubleVector mhphy(3);
      
      if (mhphysq(1) < 0. || mhphysq(2) < 0. || mhphysq(3) < 0.) 
        {
 	 
-	 ExpValid = 30;
-	 
+	 ExpValid = POLEHIGGSTACHYON;
+
+	 higgsTachyons = true;	 
+
 	 if (mhphysq(1) < 0.0)
 	   {
 	     mhphy.set(1, -Sqrt(-mhphysq(1)));
@@ -3397,19 +3491,20 @@ if(WhatCorrections ==1){
      mhmix = mixMH; // NOTE ADDITIONAL OUTPUT TO SAVE MIXING AS WELL
      msq = MH_even;
      
-     if(speak)cout <<  "2lp light_higgs = " <<mhphy(1) << endl;
-     if(speak)cout <<  "higgs = " <<mhphy << endl;
+     if(speak)cerr <<  "2lp light_higgs = " <<mhphy(1) << endl;
+     if(speak)cerr <<  "higgs = " <<mhphy << endl;
      
    }
  
  
  // Have been using 120 GeV and 130 GeV as limits. Note additional check to make sure 
  // not already flagged as tachyonic
- if (mhout.display(1) >= bounds.display(1) && mhout.display(1) <= bounds.display(2) && ExpValid != 30)
+ if (mhout.display(1) >= bounds.display(1) && mhout.display(1) <= bounds.display(2) && ExpValid != POLEHIGGSTACHYON)
    {
      ExpValid = 0;
    }
  
+ return higgsTachyon;
  
 }
 
@@ -3461,8 +3556,9 @@ double mAsq_TreeLevel(genericE6SSM_soft_parameters const & essmSusy, double s, d
 //    SoftParsEssm essmSusy = the ESSM model to calculate m_A^2 for
 //    double s = the value of the singlet VEV to use
 //    double tb = the value of tan(beta) to use
-double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb)
+double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb, int & problem)
 {
+  problem = 0;
 
   double v1 = essmSusy.get_vd();
   double v2 = essmSusy.get_vu();
@@ -3528,6 +3624,11 @@ double mAsq_OneLoop(genericE6SSM_soft_parameters essmSusy, double s, double tb)
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
 
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      problem = TADPOLESPROBLEM;
+    }
 
   double mstop1 = mstop.display(1); // mstop1 is heavier
   double mstop2 = mstop.display(2);
@@ -4313,6 +4414,12 @@ double doCalcDeltaPrime11(genericE6SSM_soft_parameters essmSusy, double s, doubl
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite sign.
   double mstop1sq, mstop2sq;
@@ -4400,6 +4507,12 @@ double doCalcDeltaPrime12(genericE6SSM_soft_parameters essmSusy, double s, doubl
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite sign.
   double mstop1sq, mstop2sq;
@@ -4485,6 +4598,12 @@ double doCalcDeltaPrime13(genericE6SSM_soft_parameters essmSusy, double s, doubl
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite sign.
   double mstop1sq, mstop2sq;
@@ -4569,6 +4688,12 @@ double doCalcDeltaPrime22(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite sign.
@@ -4660,6 +4785,12 @@ double doCalcDeltaPrime23(genericE6SSM_soft_parameters essmSusy, double s, doubl
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite sign.
   double mstop1sq, mstop2sq;
@@ -4743,6 +4874,12 @@ double doCalcDeltaPrime33(genericE6SSM_soft_parameters essmSusy, double s, doubl
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite sign.
@@ -4834,6 +4971,12 @@ double doCalcd2DeltaVdLambdadv1(genericE6SSM_soft_parameters essmSusy, double s,
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
@@ -4927,6 +5070,12 @@ double doCalcd2DeltaVdLambdadv2(genericE6SSM_soft_parameters essmSusy, double s,
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
@@ -5022,6 +5171,12 @@ double doCalcd2DeltaVdLambdadv3(genericE6SSM_soft_parameters essmSusy, double s,
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
   double mstop1sq, mstop2sq;
@@ -5114,6 +5269,12 @@ double doCalcd2DeltaVdAtdv1(genericE6SSM_soft_parameters essmSusy, double s, dou
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
   double mstop1sq, mstop2sq;
@@ -5205,6 +5366,12 @@ double doCalcd2DeltaVdAtdv2(genericE6SSM_soft_parameters essmSusy, double s, dou
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
@@ -5299,6 +5466,12 @@ double doCalcd2DeltaVdAtdv3(genericE6SSM_soft_parameters essmSusy, double s, dou
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
   double mstop1sq, mstop2sq;
@@ -5390,6 +5563,12 @@ double doCalcd2DeltaVdmQlsqdv1(genericE6SSM_soft_parameters essmSusy, double s, 
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
@@ -5484,6 +5663,12 @@ double doCalcd2DeltaVdmQlsqdv2(genericE6SSM_soft_parameters essmSusy, double s, 
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
   double mstop1sq, mstop2sq;
@@ -5577,6 +5762,12 @@ double doCalcd2DeltaVdmQlsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
   double mstop1sq, mstop2sq;
@@ -5667,6 +5858,12 @@ double doCalcd2DeltaVdmUrsqdv1(genericE6SSM_soft_parameters essmSusy, double s, 
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
@@ -5761,6 +5958,12 @@ double doCalcd2DeltaVdmUrsqdv2(genericE6SSM_soft_parameters essmSusy, double s, 
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
 
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
+
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.
   double mstop1sq, mstop2sq;
@@ -5853,6 +6056,12 @@ double doCalcd2DeltaVdmUrsqdv3(genericE6SSM_soft_parameters essmSusy, double s, 
   // auxiliary D-terms are included.
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   physical_ESSM(essmSusy, mstop, mstopsq, mD1sq, mD2sq, s, tb);
+
+  if (mstopsq(1) < 0.0 || mstopsq(2) < 0.0)
+    {
+      mstopsq(1) = Abs(mstopsq(1));
+      mstopsq(2) = Abs(mstopsq(2));
+    }
 
   // Have to swap the mass ordering of the stops, because
   // physical_ESSM uses the opposite labelling.

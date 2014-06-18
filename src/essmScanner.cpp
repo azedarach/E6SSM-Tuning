@@ -2165,7 +2165,9 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
       r_approx.calculate_MCha();  
 
       // Calculate DR bar Higgs masses using FlexibleSUSY routines...
-      r_approx.calcDrBarHiggs(atan(r_approx.displayTanb()), mz2, mw2, sw, eg);
+      r_approx.calculate_mhh();
+      r_approx.calculate_mAh();
+      r_approx.calculate_mHpm();
       
       // Check if DR bar h0 or A0 are tachyons
       if (r_approx.displayProblem().tachyon == h0 || r_approx.displayProblem().tachyon == A0)
@@ -2210,7 +2212,22 @@ flexiblesusy::genericE6SSM<Two_scale> doSimplifiedSpectrum(DoubleMatrix const & 
 	  poleHiggsTachyons = true;
 	}
 
+      // Also calculate the 1-loop mass of the CP-odd Higgs, which seems
+      // to be an important constraint on parameter space. Use approximate
+      // expression for speed.
+      int cpOddproblem = 0;
+      double mAsq = mAsq_OneLoop(r_approx, s, tb, cpOddproblem);
+      if (mAsq < 0.0)
+	{
+	  poleHiggsTachyons = true;
+	}
+      if (cpOddproblem == TADPOLESPROBLEM)
+	{
+	  tadpoleProblem = true;
+	}
 
+      // Update the object at M_{SUSY} with the new values for the pole masses.
+      // (add in a method to do this directly)
     }
   catch(const string & a) 
     { 

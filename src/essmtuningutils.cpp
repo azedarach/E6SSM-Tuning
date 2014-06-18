@@ -7036,10 +7036,11 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
   double mHu2 = r.get_mHu2();
   double ms2 = r.get_ms2();
 
-  Eigen::Matrix<double,3,3> Yd, Yu, Ye;  
+  Eigen::Matrix<double,3,3> Yd, Yu, Ye, TYd, TYu, TYe;  
 
   Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
-  
+  TYd = r.get_TYd(); TYu = r.get_TYu(); TYe = r.get_TYe();  
+
   double M1 = r.get_MassB();
   double M2 = r.get_MassWB();
   double M3 = r.get_MassG();
@@ -7049,6 +7050,8 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
 
   switch(whichGaugino)
     {
+      // For M1 and M2 we will (for now) only include the 1-loop contributions to
+      // the derivatives.
     case 1:
       {
 	// Calculate each of the remaining non-zero derivatives:
@@ -7061,41 +7064,23 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
 	// for mHd^2
 	// 1-loop contribution
 	double dbeta_1loop_mHdSqdp = -2.4 * Sqr(g1)*M1;
-	
-	// 2-loop contribution
-	
-	
-	// (1-loop)^2 contribution
-	
+
 	// total 
 	
 	// for mHu^2
 	// 1-loop contribution
 	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
 	
 	// for mS^2
 	// 1-loop contribution
 	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
 	// for mQl^2
 	// 1-loop contribution
 	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
 	
 	// for mUr^2
 	// 1-loop contribution
 	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
       }
     case 2:
       {
@@ -7110,40 +7095,18 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
 	// 1-loop contribution
 	double dbeta_1loop_mHdSqdp = -12.0 * Sqr(g2) * M2;
 	
-	// 2-loop contribution
-	
-	
-	// (1-loop)^2 contribution
-	
-	// total 
-	
 	// for mHu^2
 	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
+
 	// for mS^2
 	// 1-loop contribution
 	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
 	
 	// for mQl^2
 	// 1-loop contribution
 	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
 	// for mUr^2
 	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
       }
     case 3:
       {

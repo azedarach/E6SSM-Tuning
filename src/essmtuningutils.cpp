@@ -6323,7 +6323,7 @@ double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   r.set_Ye(0,0,0.0);
   r.set_Ye(1,1,0.0);
 
-  // For consistency the correspond A terms should also vanish
+  // For consistency the corresponding A terms should also vanish
   r.set_TYu(0,0,0.0);
   r.set_TYu(1,1,0.0);
 
@@ -6386,138 +6386,1270 @@ double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   return coeff;
 }
 
+double doCalcmtRSquaredLogCoeff(genericE6SSM_soft_parameters r, int nLps)
+{
+  if (nLps == 1 || nLps == 2)
+    {
+      r.set_loops(nLps);    
+    }
+  else
+    {
+      cerr << "WARNING: can only do 1 or 2 loops: returning nLps = 1 loop result." << endl;
+      r.set_loops(1);      
+    }
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  return w.get_mu2(2,2);
+}
+
+double doCalcmtRSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
+{
+  // Assumes first and second generation Yukawas vanish, 
+  // consistent with the previous pMSSM study
+  r.set_Yu(0,0,0.0);
+  r.set_Yu(1,1,0.0);
+
+  r.set_Yd(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  r.set_Ye(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  // For consistency the corresponding A terms should also vanish
+  r.set_TYu(0,0,0.0);
+  r.set_TYu(1,1,0.0);
+
+  r.set_TYd(0,0,0.0);
+  r.set_TYd(1,1,0.0);
+
+  r.set_TYe(0,0,0.0);
+  r.set_TYe(1,1,0.0);
+
+  if (nLogs != 1)
+    {
+      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
+    }
+
+  r.set_loops(1);
+
+  double QQp = r.get_input().QQp;
+  double Qup = r.get_input().Qup;
+  double Qdp = r.get_input().Qdp;
+  double QLp = r.get_input().QLp;
+  double Qep = r.get_input().Qep;
+  double QH1p = r.get_input().QH1p;
+  double QH2p = r.get_input().QH2p;
+  double QSp = r.get_input().QSp;
+  double QHpp = r.get_input().QHpp;
+  double QHpbarp = r.get_input().QHpbarp;
+  double QDxp = r.get_input().QDxp;
+  double QDxbarp = r.get_input().QDxbarp;
+
+  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
+    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
+    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
+
+  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
+    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
+    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
+    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
+    +3.0*Qup*r.get_mu2().trace();
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
+    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
+    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+
+  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
+    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
+    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
+    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
+    +3.0*Qup*w.get_mu2().trace();
+
+
+  double coeff = -16.0 * Sqr(Qup) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
+  coeff = coeff - (64.0/15.0) * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
+  coeff = coeff - (64.0/3.0) * (r.get_g3()*w.get_g3()*Sqr(r.get_MassG()) + Sqr(r.get_g3())*r.get_MassG()*w.get_MassG());
+  coeff = coeff + 8.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2() + r.get_mu2(2,2) + r.get_mq2(2,2));
+  coeff = coeff + 4.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2() + w.get_mu2(2,2) + w.get_mq2(2,2)) + 8.0*r.get_TYu(2,2)*w.get_TYu(2,2);
+  coeff = coeff - 1.6 * r.get_g1()*w.get_g1()*sigma11 - 0.8 * Sqr(r.get_g1()) * beta_sigma11;
+  coeff = coeff + 4.0 * Qup * r.get_gN()*w.get_gN()*sigma14 + 2.0 * Qup * Sqr(r.get_gN()) * beta_sigma14;
+
+  coeff = 0.5*oneOver16PiSqr*coeff;
+
+  return coeff;
+}
+
+double doCalcmqL3SquaredLogCoeff(genericE6SSM_soft_parameters r, int nLps)
+{
+  if (nLps == 1 || nLps == 2)
+    {
+      r.set_loops(nLps);    
+    }
+  else
+    {
+      cerr << "WARNING: can only do 1 or 2 loops: returning nLps = 1 loop result." << endl;
+      r.set_loops(1);      
+    }
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  return w.get_mq2(2,2);
+}
+
+double doCalcmqL3SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
+{
+  // Assumes first and second generation Yukawas vanish, 
+  // consistent with the previous pMSSM study
+  r.set_Yu(0,0,0.0);
+  r.set_Yu(1,1,0.0);
+
+  r.set_Yd(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  r.set_Ye(0,0,0.0);
+  r.set_Ye(1,1,0.0);
+
+  // For consistency the corresponding A terms should also vanish
+  r.set_TYu(0,0,0.0);
+  r.set_TYu(1,1,0.0);
+
+  r.set_TYd(0,0,0.0);
+  r.set_TYd(1,1,0.0);
+
+  r.set_TYe(0,0,0.0);
+  r.set_TYe(1,1,0.0);
+
+  if (nLogs != 1)
+    {
+      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
+    }
+
+  r.set_loops(1);
+
+  double QQp = r.get_input().QQp;
+  double Qup = r.get_input().Qup;
+  double Qdp = r.get_input().Qdp;
+  double QLp = r.get_input().QLp;
+  double Qep = r.get_input().Qep;
+  double QH1p = r.get_input().QH1p;
+  double QH2p = r.get_input().QH2p;
+  double QSp = r.get_input().QSp;
+  double QHpp = r.get_input().QHpp;
+  double QHpbarp = r.get_input().QHpbarp;
+  double QDxp = r.get_input().QDxp;
+  double QDxbarp = r.get_input().QDxbarp;
+
+  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
+    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
+    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
+
+  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
+    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
+    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
+    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
+    +3.0*Qup*r.get_mu2().trace();
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
+    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
+    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+
+  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
+    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
+    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
+    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
+    +3.0*Qup*w.get_mu2().trace();
+
+
+  double coeff = -16.0 * Sqr(QQp) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
+  coeff = coeff - (4.0/15.0) * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
+  coeff = coeff - (64.0/3.0) * (r.get_g3()*w.get_g3()*Sqr(r.get_MassG()) + Sqr(r.get_g3())*r.get_MassG()*w.get_MassG());
+  coeff = coeff + 4.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2() + r.get_mu2(2,2) + r.get_mq2(2,2));
+  coeff = coeff + 2.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2() + w.get_mu2(2,2) + w.get_mq2(2,2)) + 4.0*r.get_TYu(2,2)*w.get_TYu(2,2);
+  coeff = coeff + 4.0 * r.get_Yd(2,2)*w.get_Yd(2,2)*(r.get_mHd2() + r.get_md2(2,2) + r.get_mq2(2,2));
+  coeff = coeff + 2.0 * Sqr(r.get_Yd(2,2))*(w.get_mHd2() + w.get_md2(2,2) + w.get_mq2(2,2)) + 4.0*r.get_TYd(2,2)*w.get_TYd(2,2);
+  coeff = coeff + 0.4 * r.get_g1()*w.get_g1()*sigma11 + 0.2 * Sqr(r.get_g1()) * beta_sigma11;
+  coeff = coeff + 4.0 * QQp * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QQp * Sqr(r.get_gN()) * beta_sigma14;
+
+  coeff = 0.5*oneOver16PiSqr*coeff;
+
+  return coeff;
+}
+
 // Functions for getting approximate derivatives of low scale parameters w.r.t high
 // scale parameters. Returns the vector
-// [ dlambda/dp dAlambda/dp dm_Hd^2/dp dm_Hu^2/dp dm_s^2/dp dm_Ql^2/dp dm_uR^2/dp dA_t/dp]^T. The vector auxPars
-// is assumed to contain the values of the gauge and Yukawa couplings at MX, in the order
-// [ g1 g2 g3 yt yb ytau]^T. All of these still need to be checked for correctness.
-DoubleVector doCalcAlambdaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichAlambda,
-				 bool & hasError, DoubleVector const & auxPars)
+// [ dlambda/dp dAlambda/dp dm_Hd^2/dp dm_Hu^2/dp dm_s^2/dp dm_Ql^2/dp dm_uR^2/dp dA_t/dp]^T. 
+// Since there is a very large number of couplings in the E6SSM, it it not very practical
+// to pass everything in as a vector of parameters, so we pass the object at MX instead.
+// Because only a small subset of the high scale parameters have a significant contribution to
+// the tuning, and to save time, for now we only calculate fine tuning for the third generation parameters
+// listed below.
+DoubleVector doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+				      bool & hasError)
 {
+  if (gen < 1 || gen > 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for m_{H1i}^2, i = 1, 2, 3, not m_{H1" << gen << "}^2" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+  // These are zero for all soft squared masses
+  dAlambdadp = 0.0;
+  dAtdp = 0.0;
+  dlambdadp = 0.0;
+
+  // Calculate each of the remaining non-zero derivatives:
+  // For derivatives of soft masses w.r.t. soft masses, take advantage
+  // of the fact that beta functions are linear in the soft masses,
+  // so can calculate derivatives by simple rise/run formula.
+  int nLps = 2;
+  int nLogs = 1;
+  double shift = 1.0;
+
+  double firstmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double firstmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double firstmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double firstmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double firstmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double firstmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double firstmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double firstmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double firstmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double firstmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  if (gen == 3)
+    {
+      r.set_mHd2(r.get_mHd2()+shift);
+    }
+  else
+    {
+      r.set_mH1I2(gen-1,gen-1, r.get_mH1I2(gen-1,gen-1)+shift);
+    }
+
+  double secondmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double secondmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double secondmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double secondmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double secondmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double secondmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double secondmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double secondmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double secondmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double secondmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  double dmHdSqOtCoeffdp = (secondmHdSqLogCoeff-firstmHdSqLogCoeff)/shift;
+  double dmHdSqOt2Coeffdp = (secondmHdSqLogSqCoeff-firstmHdSqLogSqCoeff)/shift;
+
+  double dmHuSqOtCoeffdp = (secondmHuSqLogCoeff-firstmHuSqLogCoeff)/shift;
+  double dmHuSqOt2Coeffdp = (secondmHuSqLogSqCoeff-firstmHuSqLogSqCoeff)/shift;
+
+  double dmSSqOtCoeffdp = (secondmSSqLogCoeff-firstmSSqLogCoeff)/shift;
+  double dmSSqOt2Coeffdp = (secondmSSqLogSqCoeff-firstmSSqLogSqCoeff)/shift;
+
+  double dmQlSqOtCoeffdp = (secondmQlSqLogCoeff-firstmQlSqLogCoeff)/shift;
+  double dmQlSqOt2Coeffdp = (secondmQlSqLogSqCoeff-firstmQlSqLogSqCoeff)/shift;
+
+  double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
+  double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
+
+  derivs(1) = dlambdadp;
+  derivs(2) = dAlambdadp;
+  derivs(3) = KroneckerDelta(gen, 3) + t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(8) = dAtdp;
+
+  return derivs;
 
 }
 
-DoubleVector doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMh1Sq,
-				      bool & hasError, DoubleVector const & auxPars)
+DoubleVector doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+				      bool & hasError)
 {
+  if (gen < 1 || gen > 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for m_{H2i}^2, i = 1, 2, 3, not m_{H2" << gen << "}^2" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+  
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+  // These are zero for all soft squared masses
+  dAlambdadp = 0.0;
+  dAtdp = 0.0;
+  dlambdadp = 0.0;
+
+  // Calculate each of the remaining non-zero derivatives:
+  // For derivatives of soft masses w.r.t. soft masses, take advantage
+  // of the fact that beta functions are linear in the soft masses,
+  // so can calculate derivatives by simple rise/run formula.
+  int nLps = 2;
+  int nLogs = 1;
+  double shift = 1.0;
+
+  double firstmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double firstmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double firstmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double firstmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double firstmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double firstmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double firstmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double firstmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double firstmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double firstmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  if (gen == 3)
+    {
+      r.set_mHu2(r.get_mHu2()+shift);
+    }
+  else
+    {
+      r.set_mH2I2(gen-1,gen-1, r.get_mH2I2(gen-1,gen-1)+shift);
+    }
+
+  double secondmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double secondmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double secondmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double secondmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double secondmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double secondmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double secondmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double secondmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double secondmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double secondmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  double dmHdSqOtCoeffdp = (secondmHdSqLogCoeff-firstmHdSqLogCoeff)/shift;
+  double dmHdSqOt2Coeffdp = (secondmHdSqLogSqCoeff-firstmHdSqLogSqCoeff)/shift;
+
+  double dmHuSqOtCoeffdp = (secondmHuSqLogCoeff-firstmHuSqLogCoeff)/shift;
+  double dmHuSqOt2Coeffdp = (secondmHuSqLogSqCoeff-firstmHuSqLogSqCoeff)/shift;
+
+  double dmSSqOtCoeffdp = (secondmSSqLogCoeff-firstmSSqLogCoeff)/shift;
+  double dmSSqOt2Coeffdp = (secondmSSqLogSqCoeff-firstmSSqLogSqCoeff)/shift;
+
+  double dmQlSqOtCoeffdp = (secondmQlSqLogCoeff-firstmQlSqLogCoeff)/shift;
+  double dmQlSqOt2Coeffdp = (secondmQlSqLogSqCoeff-firstmQlSqLogSqCoeff)/shift;
+
+  double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
+  double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
+
+  derivs(1) = dlambdadp;
+  derivs(2) = dAlambdadp;
+  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(4) = KroneckerDelta(gen, 3) + t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(8) = dAtdp;
+
+  return derivs;
+
 
 }
 
-DoubleVector doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMh2Sq,
-				      bool & hasError, DoubleVector const & auxPars)
+DoubleVector doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+				      bool & hasError)
 {
+  if (gen < 1 || gen > 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for m_{si}^2, i = 1, 2, 3, not m_{s" << gen << "}^2" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+  // These are zero for all soft squared masses
+  dAlambdadp = 0.0;
+  dAtdp = 0.0;
+  dlambdadp = 0.0;
+
+  // Calculate each of the remaining non-zero derivatives:
+  // For derivatives of soft masses w.r.t. soft masses, take advantage
+  // of the fact that beta functions are linear in the soft masses,
+  // so can calculate derivatives by simple rise/run formula.
+  int nLps = 2;
+  int nLogs = 1;
+  double shift = 1.0;
+
+  double firstmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double firstmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double firstmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double firstmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double firstmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double firstmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double firstmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double firstmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double firstmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double firstmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  if (gen == 3)
+    {
+      r.set_ms2(r.get_ms2()+shift);
+    }
+  else
+    {
+      r.set_msI2(gen-1,gen-1, r.get_msI2(gen-1,gen-1)+shift);
+    }
+
+  double secondmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double secondmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double secondmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double secondmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double secondmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double secondmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double secondmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double secondmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double secondmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double secondmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  double dmHdSqOtCoeffdp = (secondmHdSqLogCoeff-firstmHdSqLogCoeff)/shift;
+  double dmHdSqOt2Coeffdp = (secondmHdSqLogSqCoeff-firstmHdSqLogSqCoeff)/shift;
+
+  double dmHuSqOtCoeffdp = (secondmHuSqLogCoeff-firstmHuSqLogCoeff)/shift;
+  double dmHuSqOt2Coeffdp = (secondmHuSqLogSqCoeff-firstmHuSqLogSqCoeff)/shift;
+
+  double dmSSqOtCoeffdp = (secondmSSqLogCoeff-firstmSSqLogCoeff)/shift;
+  double dmSSqOt2Coeffdp = (secondmSSqLogSqCoeff-firstmSSqLogSqCoeff)/shift;
+
+  double dmQlSqOtCoeffdp = (secondmQlSqLogCoeff-firstmQlSqLogCoeff)/shift;
+  double dmQlSqOt2Coeffdp = (secondmQlSqLogSqCoeff-firstmQlSqLogSqCoeff)/shift;
+
+  double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
+  double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
+
+  derivs(1) = dlambdadp;
+  derivs(2) = dAlambdadp;
+  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(5) = KroneckerDelta(gen,3) + t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(8) = dAtdp;
+
+  return derivs;
 
 }
 
-DoubleVector doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMsSq,
-				      bool & hasError, DoubleVector const & auxPars)
+DoubleVector doCalcLambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+				bool & hasError)
 {
+  if (gen != 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for lambda(3), not lambda(" << gen << ")" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  genericE6SSM_input_parameters input = r.get_input();
+
+  double g1 = r.get_g1();
+  double g2 = r.get_g2();
+  double g3 = r.get_g3();
+  double gN = r.get_gN();
+
+  double Tlambda = r.get_TLambdax();
+  double lambda = r.get_Lambdax();
+  double Alambda;
+  
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda = Tlambda/lambda;
+    }
+  
+  double mHd2 = r.get_mHd2();
+  double mHu2 = r.get_mHu2();
+  double ms2 = r.get_ms2();
+
+  Eigen::Matrix<double,3,3> Yd, Yu, Ye;  
+
+  Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
+  
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+
+  // Calculate each of the remaining non-zero derivatives:
+  // for lambda
+
+  // for Alambda
+
+  // for At
+
+  // for mHd^2
+  // 1-loop contribution
+  double dbeta_1loop_mHdSqdp = 4.0 * lambda * (mHd2 + mHu2 + ms2 + Sqr(Alambda) );
+
+  // 2-loop contribution
+
+
+  // (1-loop)^2 contribution
+
+  // total 
+
+  // for mHu^2
+  // 1-loop contribution
+
+  // 2-loop contribution
+
+  // (1-loop)^2 contribution
+
+  // for mS^2
+  // 1-loop contribution
+
+  // 2-loop contribution
+
+  // (1-loop)^2 contribution
+
+  // for mQl^2
+  // 1-loop contribution
+
+  // 2-loop contribution
+
+  // (1-loop)^2 contribution
+
+  // for mUr^2
+  // 1-loop contribution
+
+  // 2-loop contribution
+
+  // (1-loop)^2 contribution
+}
+
+DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int whichGaugino,
+				 bool & hasError)
+{
+  if (whichGaugino < 1 || whichGaugino > 4)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for M_1, M_2, M_3 and M_1'" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  genericE6SSM_input_parameters input = r.get_input();
+
+  double g1 = r.get_g1();
+  double g2 = r.get_g2();
+  double g3 = r.get_g3();
+  double gN = r.get_gN();
+
+  double Tlambda = r.get_TLambdax();
+  double lambda = r.get_Lambdax();
+  double Alambda;
+  
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda = Tlambda/lambda;
+    }
+  
+  double mHd2 = r.get_mHd2();
+  double mHu2 = r.get_mHu2();
+  double ms2 = r.get_ms2();
+
+  Eigen::Matrix<double,3,3> Yd, Yu, Ye;  
+
+  Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
+  
+  double M1 = r.get_MassB();
+  double M2 = r.get_MassWB();
+  double M3 = r.get_MassG();
+  double M1p = r.get_MassBp();
+
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+  switch(whichGaugino)
+    {
+    case 1:
+      {
+	// Calculate each of the remaining non-zero derivatives:
+	// for lambda
+	
+	// for Alambda
+	
+	// for At
+	
+	// for mHd^2
+	// 1-loop contribution
+	double dbeta_1loop_mHdSqdp = -2.4 * Sqr(g1)*M1;
+	
+	// 2-loop contribution
+	
+	
+	// (1-loop)^2 contribution
+	
+	// total 
+	
+	// for mHu^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mS^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mQl^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mUr^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+      }
+    case 2:
+      {
+	// Calculate each of the remaining non-zero derivatives:
+	// for lambda
+	
+	// for Alambda
+	
+	// for At
+	
+	// for mHd^2
+	// 1-loop contribution
+	double dbeta_1loop_mHdSqdp = -12.0 * Sqr(g2) * M2;
+	
+	// 2-loop contribution
+	
+	
+	// (1-loop)^2 contribution
+	
+	// total 
+	
+	// for mHu^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mS^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mQl^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mUr^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+      }
+    case 3:
+      {
+	// Calculate each of the remaining non-zero derivatives:
+	// for lambda
+	
+	// for Alambda
+	
+	// for At
+	
+	// for mHd^2
+	// 1-loop contribution
+	double dbeta_1loop_mHdSqdp = 0.0;
+	
+	// 2-loop contribution
+	
+	
+	// (1-loop)^2 contribution
+	
+	// total 
+	
+	// for mHu^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mS^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mQl^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mUr^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+      }
+    case 4:
+      {
+	// Calculate each of the remaining non-zero derivatives:
+	// for lambda
+	
+	// for Alambda
+	
+	// for At
+	
+	// for mHd^2
+	// 1-loop contribution
+	double dbeta_1loop_mHdSqdp = -16.0 * Sqr(gN*input.QH1p) * M1p;
+	
+	// 2-loop contribution
+	
+	
+	// (1-loop)^2 contribution
+	
+	// total 
+	
+	// for mHu^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mS^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mQl^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+	
+	// for mUr^2
+	// 1-loop contribution
+	
+	// 2-loop contribution
+	
+	// (1-loop)^2 contribution
+      }
+    default:
+      {
+	ostringstream ii;
+	ii << "ERROR: unrecognised soft gaugino mass M_" << whichGaugino << " requested" << endl;
+	throw ii.str();
+      }
+    }
+}
+
+DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
+				bool & hasError)
+{
+  if (m != 3 || n != 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for Au(2,2), not Au(" << m-1 << ", " << n-1 << ")" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  genericE6SSM_input_parameters input = r.get_input();
+
+  double g1 = r.get_g1();
+  double g2 = r.get_g2();
+  double g3 = r.get_g3();
+  double gN = r.get_gN();
+
+  double Tlambda = r.get_TLambdax();
+  double lambda = r.get_Lambdax();
+  double Alambda;
+  
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda = Tlambda/lambda;
+    }
+  
+  double mHd2 = r.get_mHd2();
+  double mHu2 = r.get_mHu2();
+  double ms2 = r.get_ms2();
+
+  Eigen::Matrix<double,3,3> Yd, Yu, Ye, TYu;  
+
+  Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
+
+  TYu = r.get_TYu();  
+
+  double M1 = r.get_MassB();
+  double M2 = r.get_MassWB();
+  double M3 = r.get_MassG();
+  double M1p = r.get_MassBp();
+
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+
+  // Calculate each of the remaining non-zero derivatives:
+  // for lambda
+  
+  // for Alambda
+  
+  // for At
+  
+  // for mHd^2
+  // 1-loop contribution
+  double dbeta_1loop_mHdSqdp = 0.0;
+  
+  // 2-loop contribution
+  
+  
+  // (1-loop)^2 contribution
+  
+  // total 
+  
+  // for mHu^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
+  
+  // for mS^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
+  
+  // for mQl^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
+  
+  // for mUr^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
 
 }
 
-DoubleVector doCalcLambdaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichLambda,
-				bool & hasError, DoubleVector const & auxPars)
+DoubleVector doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+				     bool & hasError)
 {
+  if (gen != 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for Alambda(3), not lambda(" << gen << ")" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  genericE6SSM_input_parameters input = r.get_input();
+
+  double g1 = r.get_g1();
+  double g2 = r.get_g2();
+  double g3 = r.get_g3();
+  double gN = r.get_gN();
+
+  double Tlambda = r.get_TLambdax();
+  double lambda = r.get_Lambdax();
+  double Alambda;
+  
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda = Tlambda/lambda;
+    }
+  
+  double mHd2 = r.get_mHd2();
+  double mHu2 = r.get_mHu2();
+  double ms2 = r.get_ms2();
+
+  Eigen::Matrix<double,3,3> Yd, Yu, Ye, TYu;  
+
+  Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
+
+  TYu = r.get_TYu();  
+
+  double M1 = r.get_MassB();
+  double M2 = r.get_MassWB();
+  double M3 = r.get_MassG();
+  double M1p = r.get_MassBp();
+
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+
+  // Calculate each of the remaining non-zero derivatives:
+  // for lambda
+  double dbeta_1loop_lambdadp = 0.0;
+
+  // for Alambda
+  
+  // for At
+  
+  // for mHd^2
+  // 1-loop contribution
+  double dbeta_1loop_mHdSqdp = 4.0 * lambda * Tlambda;
+  
+  // 2-loop contribution
+  
+  
+  // (1-loop)^2 contribution
+  
+  // total 
+  
+  // for mHu^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
+  
+  // for mS^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
+  
+  // for mQl^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
+  
+  // for mUr^2
+  // 1-loop contribution
+  
+  // 2-loop contribution
+  
+  // (1-loop)^2 contribution
 
 }
 
-DoubleVector doCalcKappaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichKappa,
-			       bool & hasError, DoubleVector const & auxPars)
+DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
+			     bool & hasError)
 {
+  if (m < 1 || m > 3 || n < 1 || n > 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for mq2(i,j), i, j = 1, 2, 3, not mq2(" << m << ", " << n << ")" << endl;
+      throw ii.str(); 
+    }
+
+  double mx = r.get_scale();
+
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
+
+  DoubleVector derivs(8);
+
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
+
+  // These are zero for all soft squared masses
+  dAlambdadp = 0.0;
+  dAtdp = 0.0;
+  dlambdadp = 0.0;
+
+  // Calculate each of the remaining non-zero derivatives:
+  // For derivatives of soft masses w.r.t. soft masses, take advantage
+  // of the fact that beta functions are linear in the soft masses,
+  // so can calculate derivatives by simple rise/run formula.
+  int nLps = 2;
+  int nLogs = 1;
+  double shift = 1.0;
+
+  double firstmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double firstmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double firstmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double firstmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double firstmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double firstmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double firstmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double firstmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double firstmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double firstmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  r.set_mq2(m-1,n-1, r.get_mq2(m-1,n-1)+shift);
+
+  double secondmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double secondmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double secondmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double secondmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double secondmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double secondmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double secondmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double secondmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double secondmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double secondmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  double dmHdSqOtCoeffdp = (secondmHdSqLogCoeff-firstmHdSqLogCoeff)/shift;
+  double dmHdSqOt2Coeffdp = (secondmHdSqLogSqCoeff-firstmHdSqLogSqCoeff)/shift;
+
+  double dmHuSqOtCoeffdp = (secondmHuSqLogCoeff-firstmHuSqLogCoeff)/shift;
+  double dmHuSqOt2Coeffdp = (secondmHuSqLogSqCoeff-firstmHuSqLogSqCoeff)/shift;
+
+  double dmSSqOtCoeffdp = (secondmSSqLogCoeff-firstmSSqLogCoeff)/shift;
+  double dmSSqOt2Coeffdp = (secondmSSqLogSqCoeff-firstmSSqLogSqCoeff)/shift;
+
+  double dmQlSqOtCoeffdp = (secondmQlSqLogCoeff-firstmQlSqLogCoeff)/shift;
+  double dmQlSqOt2Coeffdp = (secondmQlSqLogSqCoeff-firstmQlSqLogSqCoeff)/shift;
+
+  double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
+  double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
+
+  derivs(1) = dlambdadp;
+  derivs(2) = dAlambdadp;
+  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(8) = dAtdp;
+
+  return derivs;
 
 }
 
-DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichGaugino,
-				 bool & hasError, DoubleVector const & auxPars)
+DoubleVector doCalcMu2Derivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
+			     bool & hasError)
 {
+  if (m < 1 || m > 3 || n < 1 || n > 3)
+    {
+      ostringstream ii;
+      ii << "WARNING: can only do calculation of derivatives for mu2(i,j), i, j = 1, 2, 3, not mu2(" << m << ", " << n << ")" << endl;
+      throw ii.str(); 
+    }
 
-}
+  double mx = r.get_scale();
 
-DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				bool & hasError, DoubleVector const & auxPars)
-{
+  // Taylor approximation to the RGE solution is assumed to be about the values at MX.
+  double t = log(ms/mx);
 
-}
+  DoubleVector derivs(8);
 
-DoubleVector doCalcSoftAdDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				bool & hasError, DoubleVector const & auxPars)
-{
+  double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
-}
+  // These are zero for all soft squared masses
+  dAlambdadp = 0.0;
+  dAtdp = 0.0;
+  dlambdadp = 0.0;
 
-DoubleVector doCalcSoftAeDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				bool & hasError, DoubleVector const & auxPars)
-{
+  // Calculate each of the remaining non-zero derivatives:
+  // For derivatives of soft masses w.r.t. soft masses, take advantage
+  // of the fact that beta functions are linear in the soft masses,
+  // so can calculate derivatives by simple rise/run formula.
+  int nLps = 2;
+  int nLogs = 1;
+  double shift = 1.0;
 
-}
+  double firstmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double firstmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
 
-DoubleVector doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				     bool & hasError, DoubleVector const & auxPars)
-{
+  double firstmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double firstmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
 
-}
+  double firstmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double firstmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
 
-DoubleVector doCalcSoftAkappaDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				    bool & hasError, DoubleVector const & auxPars)
-{
+  double firstmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double firstmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
 
-}
+  double firstmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double firstmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
 
-// To save time in writing out the analytic expressions, take advantage of the fact that
-// the derivatives w.r.t. the soft masses are non-zero only for the other soft mass
-// squared parameters. Furthermore, they must depend at most linearly on the requested
-// high energy soft mass squared, so the derivative can be calculated trivially as a finite
-// difference.
-DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
+  r.set_mu2(m-1,n-1, r.get_mu2(m-1,n-1)+shift);
 
-}
+  double secondmHdSqLogCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double secondmHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
 
-DoubleVector doCalcMu2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
+  double secondmHuSqLogCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double secondmHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
 
-}
+  double secondmSSqLogCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double secondmSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
 
-DoubleVector doCalcMd2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
+  double secondmQlSqLogCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double secondmQlSqLogSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
 
-}
+  double secondmUrSqLogCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double secondmUrSqLogSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
 
-DoubleVector doCalcMl2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
+  double dmHdSqOtCoeffdp = (secondmHdSqLogCoeff-firstmHdSqLogCoeff)/shift;
+  double dmHdSqOt2Coeffdp = (secondmHdSqLogSqCoeff-firstmHdSqLogSqCoeff)/shift;
 
-}
+  double dmHuSqOtCoeffdp = (secondmHuSqLogCoeff-firstmHuSqLogCoeff)/shift;
+  double dmHuSqOt2Coeffdp = (secondmHuSqLogSqCoeff-firstmHuSqLogSqCoeff)/shift;
 
-DoubleVector doCalcMe2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
+  double dmSSqOtCoeffdp = (secondmSSqLogCoeff-firstmSSqLogCoeff)/shift;
+  double dmSSqOt2Coeffdp = (secondmSSqLogSqCoeff-firstmSSqLogSqCoeff)/shift;
 
-}
+  double dmQlSqOtCoeffdp = (secondmQlSqLogCoeff-firstmQlSqLogCoeff)/shift;
+  double dmQlSqOt2Coeffdp = (secondmQlSqLogSqCoeff-firstmQlSqLogSqCoeff)/shift;
 
-DoubleVector doCalcMDx2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
+  double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
+  double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
 
-}
+  derivs(1) = dlambdadp;
+  derivs(2) = dAlambdadp;
+  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(8) = dAtdp;
 
-DoubleVector doCalcMDxbar2Derivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n)
-{
-
-}
-
-DoubleVector doCalcMHpSqDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			       bool & hasError, DoubleVector const & auxPars)
-{
-
-}
-
-DoubleVector doCalcMHpbarSqDerivs(genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-				  bool & hasError, DoubleVector const & auxPars)
-{
-
+  return derivs;
 }

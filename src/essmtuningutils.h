@@ -240,68 +240,41 @@ double doCalcd2DeltaVdmUrsqdv1(flexiblesusy::genericE6SSM_soft_parameters,double
 double doCalcd2DeltaVdmUrsqdv2(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 double doCalcd2DeltaVdmUrsqdv3(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 
-double doCalcMh2SquaredBeta1(flexiblesusy::genericE6SSM_soft_parameters);
-double doCalcMh2SquaredBeta2(flexiblesusy::genericE6SSM_soft_parameters);
 double doCalcMh2SquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 double doCalcMh2SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 
-double doCalcMh1SquaredBeta1(flexiblesusy::genericE6SSM_soft_parameters);
-double doCalcMh1SquaredBeta2(flexiblesusy::genericE6SSM_soft_parameters);
 double doCalcMh1SquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
 double doCalcMh1SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 
-double doCalcMsSquaredBeta1(flexiblesusy::genericE6SSM_soft_parameters);
-double doCalcMsSquaredBeta2(flexiblesusy::genericE6SSM_soft_parameters);
 double doCalcMsSquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
 double doCalcMsSquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 
-// Functions for getting approximate derivatives of low scale parameters w.r.t high
-// scale parameters. Returns the vector
-// [ dlambda/dp dAlambda/dp dm_Hd^2/dp dm_Hu^2/dp dm_s^2/dp dm_Ql^2/dp dm_uR^2/dp dA_t/dp]^T. The vector auxPars
-// is assumed to contain the values of the gauge and Yukawa couplings at MX, in the order
-// [ g1 g2 g3 yt yb ytau]^T. All of these still need to be checked for correctness.
-DoubleVector doCalcAlambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichAlambda,
-				 bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcMh1SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMh1Sq,
-				      bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcMh2SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMh2Sq,
-				      bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcMsSquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichMsSq,
-				      bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcLambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichLambda,
-				bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcKappaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichKappa,
-			       bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcGauginoDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int whichGaugino,
-				 bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcSoftAuDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcSoftAdDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcSoftAeDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcSoftAlambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				     bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcSoftAkappaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx, int gen,
-				    bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcMq2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMu2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMd2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMl2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMe2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMDx2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMDxbar2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			     bool & hasError, DoubleVector const & auxPars, int m, int n);
-DoubleVector doCalcMHpSqDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-			       bool & hasError, DoubleVector const & auxPars);
-DoubleVector doCalcMHpbarSqDerivs(flexiblesusy::genericE6SSM_soft_parameters r, DoubleVector pars, double mx,
-				  bool & hasError, DoubleVector const & auxPars);
+double doCalcmtRSquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcmtRSquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+
+double doCalcmqL3SquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcmqL3SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+
+
+
+DoubleVector doCalcMh1SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+				      bool & hasError);
+DoubleVector doCalcMh2SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+				      bool & hasError);
+DoubleVector doCalcMsSquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+				      bool & hasError);
+DoubleVector doCalcLambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+				bool & hasError);
+DoubleVector doCalcGauginoDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int whichGaugino,
+				 bool & hasError);
+DoubleVector doCalcSoftAuDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
+				bool & hasError);
+DoubleVector doCalcSoftAlambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+				     bool & hasError);
+DoubleVector doCalcMq2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
+			     bool & hasError);
+DoubleVector doCalcMu2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
+			     bool & hasError);
 
 /* DoubleVector doCalcRHSTuningVector_pESSM_Approx(flexiblesusy::genericE6SSM_soft_parameters r, void (*ftBCatMX)(flexiblesusy::genericE6SSM_soft_parameters &, DoubleVector &),  */
 /* 						DoubleVector pars, DoubleVector const & vevs, int i, double mx,  */

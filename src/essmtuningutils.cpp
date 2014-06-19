@@ -8012,6 +8012,305 @@ Eigen::Matrix<double,8,1> doCalcMu2Derivs(genericE6SSM_soft_parameters r, double
 void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & model, Eigen::ArrayXd & tuningPars)
 {
 
+  // Set all first and second generation Yukawas and A terms to
+  // zero, consistent with the approach taken in the pMSSM
+  model.set_Yu(0,0,0.0);
+  model.set_Yu(1,1,0.0);
+  model.set_Yd(0,0,0.0);
+  model.set_Yd(1,1,0.0);
+  model.set_Ye(0,0,0.0);
+  model.set_Ye(1,1,0.0);
+
+  model.set_TYu(0,0,0.0);
+  model.set_TYu(1,1,0.0);
+  model.set_TYd(0,0,0.0);
+  model.set_TYd(1,1,0.0);
+  model.set_TYe(0,0,0.0);
+  model.set_TYe(1,1,0.0);
+
+  // Make sure off-diagonal elements vanish
+  model.set_Yu(0,1,0.0); model.set_Yu(0,2,0.0);
+  model.set_Yu(1,0,0.0); model.set_Yu(1,2,0.0);
+  model.set_Yu(2,0,0.0); model.set_Yu(2,1,0.0);
+
+  model.set_Yd(0,1,0.0); model.set_Yd(0,2,0.0);
+  model.set_Yd(1,0,0.0); model.set_Yd(1,2,0.0);
+  model.set_Yd(2,0,0.0); model.set_Yd(2,1,0.0);
+
+  model.set_Ye(0,1,0.0); model.set_Ye(0,2,0.0);
+  model.set_Ye(1,0,0.0); model.set_Ye(1,2,0.0);
+  model.set_Ye(2,0,0.0); model.set_Ye(2,1,0.0);
+
+  model.set_TYu(0,1,0.0); model.set_TYu(0,2,0.0);
+  model.set_TYu(1,0,0.0); model.set_TYu(1,2,0.0);
+  model.set_TYu(2,0,0.0); model.set_TYu(2,1,0.0);
+
+  model.set_TYd(0,1,0.0); model.set_TYd(0,2,0.0);
+  model.set_TYd(1,0,0.0); model.set_TYd(1,2,0.0);
+  model.set_TYd(2,0,0.0); model.set_TYd(2,1,0.0);
+
+  model.set_TYe(0,1,0.0); model.set_TYe(0,2,0.0);
+  model.set_TYe(1,0,0.0); model.set_TYe(1,2,0.0);
+  model.set_TYe(2,0,0.0); model.set_TYe(2,1,0.0);
+
+
+  // Set the remaining parameters
+  model.set_Lambdax(tuningPars(tuning_parameters::lam3));
+  model.set_MassB(tuningPars(tuning_parameters::M1));
+  model.set_MassWB(tuningPars(tuning_parameters::M2));
+  model.set_MassG(tuningPars(tuning_parameters::M3));
+  model.set_MassBp(tuningPars(tuning_parameters::M1p));
+  model.set_TYu(2,2,model.get_Yu(2,2)*tuningPars(tuning_parameters::Au3));
+  model.set_TLambdax(tuningPars(tuning_parameters::Alam3)*tuningPars(tuning_parameters::lam3));
+  model.set_mHd2(tuningPars(tuning_parameters::mH13Sq));
+  model.set_mHu2(tuningPars(tuning_parameters::mH23Sq));
+  model.set_ms2(tuningPars(tuning_parameters::mS3Sq));
+  model.set_mq2(2,2,tuningPars(tuning_parameters::mqL3Sq));
+  model.set_mu2(2,2,tuningPars(tuning_parameters::mtRSq));
+}
+
+// Variables used for getting information to the functions used in numerically calculating the
+// fine tuning.
+static genericE6SSM_soft_parameters *tempsoftTuning; // < a SoftParsMssm object given at the input scale MX
+static double ftMsusy; // < the value of M_{SUSY} for the above object
+static int ftParChoice; // < index labelling the current parameter we are varying
+static Eigen::ArrayXd ftPars(3); // < vector containing the parameters varied as part of the fine tuning
+static void (*currentftBC)(genericE6SSM_soft_parameters & , Eigen::ArrayXd &);
+
+
+// A function for getting the predicted running value of M_Z^2, including 1-loop top and
+// stop tadpole contributions. Used for numerically calculating the fine tuning in the
+// E6SSM. Passed to SOFTSUSY's calcDerivative routine as part of the fine tuning calculation.
+double predpE6SSMMzSqRun(double parVal)
+{
+
+  // Save copies of all initial values
+  genericE6SSM_soft_parameters savedObject(*tempsoftTuning);
+  Eigen::ArrayXd savedPars = ftPars;
+  double saved_scale = tempsoftTuning->get_scale();
+
+  // Update parameter values
+  ftPars(ftParChoice) = parVal;
+  currentftBC(*tempsoftTuning, ftPars);
+
+  // Recalculate VEVs at M_{SUSY} using Newton's method. 
+  // Solve iteratively using routines provided in the GSL
+  // library instead of writing our own like in the MSSM,
+  // as they are likely to be more reliable.
+  bool ALLOWVARYINGMSUSY = false; // < this needs to be false to get exact agreement with our analytics
+
+  int maxIters = 100;
+  double tol = 1.0e-5;
+
+  double ms = ftMsusy; // < guess for M_{SUSY}.
+  Eigen::Matrix<double,3,1> vevs(3);
+
+  int sing = 0;
+
+  // TODO:: solve the EWSB conditions numerically, as below for the MSSM, but using
+  // GSL routines.
+  // if (ALLOWVARYINGMSUSY)
+  //   {
+  //     // Here we need to iterate to get the new M_{SUSY}
+  //     // when we recalculate the VEVs.
+  //     DoubleVector mstop(2), mstopsq(2);
+
+  //     for (int i = 1; i <= maxIters; i++)
+  // 	{
+  // 	  tempsoftTuning->runto(ms);
+
+  // 	  vevs = MSSM_EWSBNewtonSolver(*tempsoftTuning, tol, maxIters, sing);
+  // 	  if (sing != 0)
+  // 	    {
+  // 	      cerr << "WARNING: error encountered in solving MSSM EWSB conditions." << endl;
+  // 	    }
+
+  // 	  tempsoftTuning->setHvev(sqrt(vevs(1)*vevs(1)+vevs(2)*vevs(2)));
+  // 	  tempsoftTuning->setTanb(vevs(2)/vevs(1));
+
+  // 	  // Recalculate M_{SUSY} using the updated VEVs
+  // 	  physical_MSSM(*tempsoftTuning, mstop, mstopsq, vevs(2)/vevs(1));
+
+  // 	  if (fabs(ms-sqrt(mstop(1)*mstop(2))) < tol)
+  // 	    {
+  // 	      // Since we have converged, running to ms again is probably unnecessary.
+  // 	      ms = sqrt(mstop(1)*mstop(2));
+  // 	      break;
+  // 	    }
+  // 	  ms = sqrt(mstop(1)*mstop(2));
+
+  // 	  if (i == maxIters)
+  // 	    {
+  // 	      cerr << "WARNING: maximum iterations reached before estimate for M_{SUSY} converged." << endl;
+  // 	      sing = 1;
+  // 	    }
+
+  // 	}
+  //   }
+  // else
+  //   {
+
+  //     tempsoftTuning->runto(ms);
+
+  //     // If we don't vary M_{SUSY}, we just need to run down
+  //     // and recalculate the VEVs.
+  //     vevs = MSSM_EWSBNewtonSolver(*tempsoftTuning, tol, maxIters, sing);
+  //     if (sing != 0)
+  // 	{
+  // 	  cerr << "WARNING: error encountered in solving MSSM EWSB conditions." << endl;
+  // 	}
+  //   }
+
+  // tempsoftTuning->setHvev(sqrt(vevs(1)*vevs(1)+vevs(2)*vevs(2)));
+  // tempsoftTuning->setTanb(vevs(2)/vevs(1));
+
+  // Calculate the new M_Z^2
+  double t1Ov1 = 0.0;
+  double t2Ov2 = 0.0;
+
+  if (INCLUDE1LPTADPOLES)
+    {
+      t1Ov1 = doCalcTadpoleESSMH1(*tempsoftTuning, s, tb);
+      t2Ov2 = doCalcTadpoleESSMH2(*tempsoftTuning, s, tb);
+    }
+
+  double mHdSq = tempsoftTuning->get_mHd2();
+  double mHuSq = tempsoftTuning->get_mHu2();
+  double mSSq = tempsoftTuning->get_ms2();
+  double lambda = tempsoftTuning->get_Lambdax();
+  
+  double g1 = tempsoftTuning->get_g1();
+  double g2 = tempsoftTuning->get_g2();
+  double gbar = Sqrt(g2*g2+0.6*g1*g1);
+  double gdash_1 = tempsoftTuning->get_gN();
+  
+  genericE6SSM_input_parameters input = tempsoftTuning->get_input();      
+  
+  // We neglect U(1) mixing for now.
+  double Qtilde_1 = input.QH1p;
+  double Qtilde_2 = input.QH2p;
+  double Qtilde_s = input.QSp;
+  
+  double MzSq = -Sqr(lambda*s)+(2.0*(mHdSq+t1Ov1-tb*tb*(mHuSq+t2Ov2)))/(tb*tb-1.0)
+    + Sqr(gdash_1)*Sqr(Qtilde_1*v1*v1+Qtilde_2*v2*v2+Qtilde_s*s*s)*(Qtilde_1-Qtilde_2*tb*tb)/(tb*tb-1);
+  
+
+  // Reset objects
+  *tempsoftTuning = savedObject;
+  tempsoftTuning->set_scale(saved_scale);
+  ftPars = savedPars;
+
+  return MzSq;
+
+}
+
+// Calculates the fine tuning in the E6SSM numerically.
+// The object r is assumed to be provided at MX. The fine tuning is calculated
+// as p / M_Z^2 \frac{\partial M_Z^2}{\partial p} where p is a set of parameters. M_Z^2
+// is calculated using the tree level EWSB conditions + one-loop stop and top tadpole contributions
+// at the scale M_SUSY. The function BCatMX is used to set the parameters at the high input scale MX.
+ Eigen::VectorXd doCalcESSMTuningNumerically(genericE6SSM_soft_parameters r, double ms, double mx, 
+					  Eigen::ArrayXd pars,
+					  void (*BCatMX)(genericE6SSM_soft_parameters & , Eigen::ArrayXd &))
+ {
+
+   int nPars = pars.size();
+
+   Eigen::VectorXd tunings;
+
+   tunings.resize(nPars);
+
+   // Check that we are at the right scale
+   if (fabs(r.get_scale()-mx) > TOLERANCE)
+    {
+      cerr << "WARNING: object provided to doCalcMSSMTuningNumerically should be at scale MX = " << mx
+	   << ", not Q = " << r.get_scale() << ": skipping calculation." << endl;
+      for (int i = 0; i < nPars; i++)
+	{
+	  tunings(i) = -numberOfTheBeast; // negative values indicate error, since tunings are positive by definition
+	}
+    }
+  else
+    {
+      // Now for each parameter, estimate the numerical derivative by varying its
+      // value at the input scale MX, running down to M_SUSY and recalculating M_Z.
+
+      ftMsusy = ms;
+      currentftBC = BCatMX;
+      ftPars = pars;
+      tempsoftTuning = &r;
+
+      double epsilon = 1.0e-5;
+      double temp;
+      double h;
+      double deriv;
+      double err;
+
+      // Initial value of M_Z^2
+      genericE6SSM_soft_parameters w = r;
+      w.run_to(ms);
+
+      double v1 = w.get_vd();
+      double v2 = w.get_vu();
+      double s = w.get_vs();
+      double tb = v2/v1;
+
+      double t1Ov1 = 0.0;
+      double t2Ov2 = 0.0;
+
+      if (INCLUDE1LPTADPOLES)
+	{
+	  t1Ov1 = doCalcTadpoleESSMH1(w, s, tb);
+	  t2Ov2 = doCalcTadpoleESSMH2(w, s, tb);
+	}
+      
+      double mHdSq = w.get_mHd2();
+      double mHuSq = w.get_mHu2();
+      double mSSq = w.get_ms2();
+      double lambda = w.get_Lambdax();
+      
+      double g1 = w.get_g1();
+      double g2 = w.get_g2();
+      double gbar = Sqrt(g2*g2+0.6*g1*g1);
+      double gdash_1 = w.get_gN();
+
+      genericE6SSM_input_parameters input = w.get_input();      
+
+      // We neglect U(1) mixing for now.
+      double Qtilde_1 = input.QH1p;
+      double Qtilde_2 = input.QH2p;
+      double Qtilde_s = input.QSp;
+
+      double refMzSq = -Sqr(lambda*s)+(2.0*(mHdSq+t1Ov1-tb*tb*(mHuSq+t2Ov2)))/(tb*tb-1.0)
+	+ Sqr(gdash_1)*Sqr(Qtilde_1*v1*v1+Qtilde_2*v2*v2+Qtilde_s*s*s)*(Qtilde_1-Qtilde_2*tb*tb)/(tb*tb-1);
+
+      // Loop over the provided parameters and calculate the fine tuning for each
+      for (int i = 0; i < nPars; i++)
+	{
+	  ftParChoice = i;
+
+	  // Initial estimate for step size h.
+	  h = epsilon*Abs(pars(i));
+	  if (h == 0.0) h = epsilon;
+	  temp = pars(i);
+	  pars(i) = temp + h;
+	  h = pars(i) - temp;
+
+	  deriv = calcDerivative(predpE6SSMMzSqRun, temp, h, &err);
+
+	  if (pars(i) > TOLERANCE && fabs(err / deriv) > 1.0) 
+	    {
+	      tunings(i) = -numberOfTheBeast; // tuning is inaccurate, so flag using negative value
+	    }
+	  else
+	    {
+	      tunings(i) = fabs((temp/refMzSq)*deriv);
+	    }
+
+	}
+
+    }
+  return tunings;
 }
 
 } // namespace essm_tuning_utils

@@ -705,7 +705,7 @@ void writeScanBoundsFile(ofstream & boundsfout, double tb_lb, double tb_ub, int 
   boundsfout << "G1=" << g1 << endl;
   boundsfout << "G2=" << g2 << endl;
   boundsfout << "G3=" << g3 << endl;
-  boundsfout << "G1P=" << g1p << endl;
+  boundsfout << "GN=" << g1p << endl;
 
   boundsfout << "HVEV=" << v << endl;
   boundsfout << "SVEV=" << s << endl;

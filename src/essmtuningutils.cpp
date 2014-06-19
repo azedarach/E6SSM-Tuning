@@ -8069,6 +8069,92 @@ void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & model, Eigen::Arra
   model.set_mu2(2,2,tuningPars(tuning_parameters::mtRSq));
 }
 
+  // Functions for numerically solving the EWSB conditions using GSL routines. 
+  // They are basically identical to there equivalents in the FlexibleSUSY
+  // generated spectrum generator, but using the simplified tadpole equations.
+  // Note, however, that those routines solve for the soft masses, whereas
+  // these solve for the VEVs.
+// int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f)
+// {
+//   const int number_of_ewsb_equations = 3;
+
+//    if (contains_nan(x, number_of_ewsb_equations)) {
+//       for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+//          gsl_vector_set(f, i, std::numeric_limits<double>::max());
+//       return GSL_EDOM;
+//    }
+
+//    const genericE6SSM_soft_parameters* model
+//       = static_cast<genericE6SSM_soft_parameters*>(params);
+
+//    double tadpole[number_of_ewsb_equations];
+
+//    model->set_vd(gsl_vector_get(x, 0));
+//    model->set_vu(gsl_vector_get(x, 1));
+//    model->set_vs(gsl_vector_get(x, 2));
+
+//    tadpole[0] = ESSM_EWSBCondition1(*model);
+//    tadpole[1] = ESSM_EWSBCondition2(*model);
+//    tadpole[2] = ESSM_EWSBCondition3(*model);
+
+//    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+//       gsl_vector_set(f, i, tadpole[i]);
+
+//    return GSL_SUCCESS;
+// }
+
+//   int solve_for_vevs_iteratively(genericE6SSM_soft_parameters const & model, int nints, double intprecis)
+// {
+//    const gsl_multiroot_fsolver_type* solvers[] = {
+//       gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids,
+//          gsl_multiroot_fsolver_broyden
+
+//    };
+
+//    double x_init[3];
+//    vevs_initial_guess(x_init);
+
+//    int status;
+//    for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
+//      status = solve_for_vevs_iteratively_with(solvers[i], x_init, model, nints, intprecis);
+//       if (status == GSL_SUCCESS) {
+//          break;
+//       }
+//    }
+
+//    if (status != GSL_SUCCESS) {
+//      cerr << "WARNING: problem solving EWSB conditions: tunings may be unreliable" << endl;
+//    } 
+//    return status;
+// }
+
+
+//   void vevs_initial_guess(genericE6SSM_soft_parameters const & model, double x_init[3])
+// {
+//   x_init[0] = model.get_vd();
+//   x_init[1] = model.get_vu();
+//   x_init[2] = model.get_vs();
+
+// }
+
+//   int solve_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
+// 				      const double x_init[3],
+// 				      const genericE6SSM_soft_parameters & model, 
+// 				      int number_of_ewsb_iterations, 
+// 				      double ewsb_iteration_precision)
+// {
+//    genericE6SSM_soft_parameters params = model;
+//    Root_finder<number_of_ewsb_equations> root_finder(ewsb_conditions,
+//                               &params,
+//                               number_of_ewsb_iterations,
+//                               ewsb_iteration_precision);
+//    root_finder.set_solver_type(solver);
+//    const int status = root_finder.find_root(x_init);
+
+//    return status;
+// }
+
+
 // Variables used for getting information to the functions used in numerically calculating the
 // fine tuning.
 static genericE6SSM_soft_parameters *tempsoftTuning; // < a SoftParsMssm object given at the input scale MX

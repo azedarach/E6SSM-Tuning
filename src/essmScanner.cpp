@@ -27,18 +27,33 @@
 void errorCall();
 string ToUpper(const string & s);
 
-flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleMatrix const & yuin, DoubleMatrix const & ydin, 
-									 DoubleMatrix const & yein, DoubleVector const & gin, 
-									 DoubleVector const & lambdain, DoubleVector const & kappain, 
+double get_softAu(flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> const & m, int i, int j);
+double get_softAd(flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> const & m, int i, int j);
+double get_softAe(flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> const & m, int i, int j);
+
+flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::Matrix<double,3,3> yuin, 
+									 Eigen::Matrix<double,3,3> ydin, 
+									 Eigen::Matrix<double,3,3> yein, 
+									 double g1in, double g2in, double g3in, double gNin,
+									 double lambda3in, Eigen::Matrix<double,2,2> lambda12in,
+									 Eigen::Matrix<double,3,3> kappain, 
 									 double mupr, double tanb, double hvev, double svev,
-									 DoubleVector const & mGaugino, DoubleMatrix const & tuin, 
-									 DoubleMatrix const & tdin, DoubleMatrix const & tein, 
-									 DoubleVector const & tlambdain, DoubleVector const & tkappain,
-									 DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
-									 DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
-									 DoubleMatrix const & mErSq, DoubleMatrix const & mDxSq,
-									 DoubleMatrix const & mDxbarSq, DoubleVector const & mHdISq, 
-									 DoubleVector const & mHuISq, DoubleVector const & mSISq,
+									 double MBin, double MWBin, double MGin, double MBpin,
+									 Eigen::Matrix<double,3,3> tuin, 
+									 Eigen::Matrix<double,3,3> tdin, 
+									 Eigen::Matrix<double,3,3> tein, 
+									 double tlambda3in, Eigen::Matrix<double,2,2> tlambdain, 
+									 Eigen::Matrix<double,3,3> tkappain,
+									 Eigen::Matrix<double,3,3> mQlSq, 
+									 Eigen::Matrix<double,3,3> mUrSq, 
+									 Eigen::Matrix<double,3,3> mDrSq, 
+									 Eigen::Matrix<double,3,3> mLlSq, 
+									 Eigen::Matrix<double,3,3> mErSq, 
+									 Eigen::Matrix<double,3,3> mDxSq,
+									 Eigen::Matrix<double,3,3> mDxbarSq, 
+									 Eigen::Matrix<double,2,2> mHdISq, 
+									 Eigen::Matrix<double,2,2> mHuISq, 
+									 Eigen::Matrix<double,2,2> mSISq,
 									 double Bmupr,  double mHpSq, double mHpbarSq, double mx, 
 									 int l, int t, 
 									 double tol, double & mHdSq, double & mHuSq, double & mSSq, 
@@ -217,20 +232,20 @@ int main(int argc, const char* argv[])
   double Alambda1 = 0.0; // GeV 
   double Alambda2 = 0.0; // GeV 
 
-  double mupr = 5000.0; // GeV DH:: check
-  double Bmupr = 5000.0; // GeV^2 DH:: check
+  double mupr = 5000.0; // GeV 
+  double Bmupr = 5000.0; // GeV^2 
 
-  double mH11Sq = Sqr(5000.0); // GeV^2 DH:: check
-  double mH12Sq = Sqr(5000.0); // GeV^2 DH:: check
+  double mH11Sq = Sqr(5000.0); // GeV^2 
+  double mH12Sq = Sqr(5000.0); // GeV^2 
 
-  double mH21Sq = Sqr(5000.0); // GeV^2 DH:: check
-  double mH22Sq = Sqr(5000.0); // GeV^2 DH:: check
+  double mH21Sq = Sqr(5000.0); // GeV^2 
+  double mH22Sq = Sqr(5000.0); // GeV^2 
 
-  double mS1Sq = Sqr(5000.0); // GeV^2 DH:: check
-  double mS2Sq = Sqr(5000.0); // GeV^2 DH:: check
+  double mS1Sq = Sqr(5000.0); // GeV^2 
+  double mS2Sq = Sqr(5000.0); // GeV^2 
 
-  double mHpSq = Sqr(5000.0); // GeV^2 DH:: check
-  double mHpbarSq = Sqr(5000.0); // GeV^2 DH:: check
+  double mHpSq = Sqr(5000.0); // GeV^2 
+  double mHpbarSq = Sqr(5000.0); // GeV^2 
 
   double mDSq = Sqr(5000.0); // GeV^2
   double mDbarSq = Sqr(5000.0); // GeV^2
@@ -341,6 +356,7 @@ int main(int argc, const char* argv[])
   bool hasEWSBProblem = false; //< problem implementing EWSB conditions to requested tolerance
   bool hasSeriousProblem = false; //< serious numerical problem in spectrum calculation
   bool squarksTachyons = false; //< tachyonic DR bar stops or sbottoms
+  bool vectorBosonsTachyons = false; //< tachyonic DR bar Z, W or Z'
   bool higgsTachyons = false; //< DR bar m_h0 or m_A0 tachyon
   bool poleHiggsTachyons = false; //< physical m_h0 or m_A0 tachyon
   bool inaccurateHiggsMass = false; //< inaccurate Higgs mass calculation
@@ -370,13 +386,12 @@ int main(int argc, const char* argv[])
     Saved couplings and Higgs VEV
     ----------------------------------------------------
    */
-  DoubleMatrix yuin(3,3), ydin(3,3), yein(3,3); //< Yukawas
-  DoubleVector gin(3); //< gauge couplings
-  double gNin = 0.0;
+  Eigen::Matrix<double,3,3> yuin, ydin, yein; //< Yukawas
+  double g1in = 0.4, g2in = 0.45, g3in = 0.9, gNin = 0.4;
   double vin = 246.0; //< Higgs vev, GeV
 
   // Need M_Z' at least 2.5 TeV
-  double vsin = 5000.0; //< singlet vev, GeV
+  double vsin = 6700.0; //< singlet vev, GeV
 
   /*
     ----------------------------------------------------
@@ -393,11 +408,22 @@ int main(int argc, const char* argv[])
     ----------------------------------------------------
    */
 
-  DoubleVector mGaugino(4);
-  mGaugino(1) = M1;
-  mGaugino(2) = M2;
-  mGaugino(3) = M3;
-  mGaugino(4) = M1p;
+  double lambda3in;
+  Eigen::Matrix<double,2,2> lambda12in;
+  lambda12in(0,0) = lambda1;
+  lambda12in(1,1) = lambda2;
+  lambda3in = lambda3;
+
+  lambda12in(0,1) = 0.0; lambda12in(1,0) = 0.0;
+
+  Eigen::Matrix<double,3,3> kappain;
+  kappain(0,0) = kappa1;
+  kappain(1,1) = kappa2;
+  kappain(2,2) = kappa3;
+
+  kappain(0,1) = 0.0; kappain(0,2) = 0.0;
+  kappain(1,0) = 0.0; kappain(1,2) = 0.0;
+  kappain(2,0) = 0.0; kappain(2,1) = 0.0;
 
   // Soft squared masses
   Eigen::Matrix<double,3,3> mQlSq, mUrSq, mDrSq, mLlSq, mErSq;
@@ -461,11 +487,64 @@ int main(int argc, const char* argv[])
   mDrSq(2,1) = 0.0;
 
   // Soft trilinears = y*A
-  Eigen::Matrix<double,3,3> tu, td, te, tkappa;
-  Eigen::Matrix<double,2,2> tlambdaI;
+  Eigen::Matrix<double,3,3> tuin, tdin, tein, tkappain;
+  Eigen::Matrix<double,2,2> tlambda12in;
+  double tlambda3in;
+
+  tuin(0,0) = 0.0; tuin(1,1) = 0.0; tuin(2,2) = yuin(2,2) * At;
+  tdin(0,0) = 0.0; tdin(1,1) = 0.0; tdin(2,2) = ydin(2,2) * Ab;
+  tein(0,0) = 0.0; tein(1,1) = 0.0; tuin(2,2) = yein(2,2) * Atau;
+
+  tuin(0,1) = 0.0; tuin(0,2) = 0.0;
+  tuin(1,0) = 0.0; tuin(1,2) = 0.0;
+  tuin(2,0) = 0.0; tuin(2,1) = 0.0;
+
+  tdin(0,1) = 0.0; tdin(0,2) = 0.0;
+  tdin(1,0) = 0.0; tdin(1,2) = 0.0;
+  tdin(2,0) = 0.0; tdin(2,1) = 0.0;
+
+  tein(0,1) = 0.0; tein(0,2) = 0.0;
+  tein(1,0) = 0.0; tein(1,2) = 0.0;
+  tein(2,0) = 0.0; tein(2,1) = 0.0;
+
+  tkappain(0,0) = kappa1 * Akappa1;
+  tkappain(1,1) = kappa2 * Akappa2;
+  tkappain(2,2) = kappa3 * Akappa3;
+
+  tkappain(0,1) = 0.0; tkappain(0,2) = 0.0;
+  tkappain(1,0) = 0.0; tkappain(1,2) = 0.0;
+  tkappain(2,0) = 0.0; tkappain(2,1) = 0.0;
+
+  tlambda12in(0,0) = lambda1 * Alambda1;
+  tlambda12in(1,1) = lambda2 * Alambda2;
+  tlambda12in(0,1) = 0.0; tlambda12in(1,0) = 0.0;
+
+  tlambda3in = lambda3 * Alambda3;
 
   // Exotic soft scalar masses
-  Eigen::Matrix<double,3,3> mXSq, mXbarSq;
+  Eigen::Matrix<double,3,3> mDxSq, mDxbarSq;
+
+  mDxSq(0,0) = mDSq;
+  mDxSq(1,1) = mDSq;
+  mDxSq(2,2) = mDSq;
+
+  mDxbarSq(0,0) = mDbarSq;
+  mDxbarSq(1,1) = mDbarSq;
+  mDxbarSq(2,2) = mDbarSq;
+
+  mDxSq(0,1) = 0.0;
+  mDxSq(0,2) = 0.0;
+  mDxSq(1,0) = 0.0;
+  mDxSq(1,2) = 0.0;
+  mDxSq(2,0) = 0.0;
+  mDxSq(2,1) = 0.0;
+
+  mDxbarSq(0,1) = 0.0;
+  mDxbarSq(0,2) = 0.0;
+  mDxbarSq(1,0) = 0.0;
+  mDxbarSq(1,2) = 0.0;
+  mDxbarSq(2,0) = 0.0;
+  mDxbarSq(2,1) = 0.0;
 
   // Soft Higgs and singlet masses
   double mHdSq = 1.0e6;
@@ -488,9 +567,6 @@ int main(int argc, const char* argv[])
   mSISq(0,1) = 0.0;
   mSISq(1,0) = 0.0;
 
-  // Gravitino mass
-  double mGrav = 0.0;
-
   // M_{SUSY} = \sqrt{m_{~t_1}^DRbar(M_{SUSY})*m_{~t_2}^DRbar(M_{SUSY})}
   double MS = 1.0e3;
 
@@ -511,20 +587,19 @@ int main(int argc, const char* argv[])
   oneset.toMz();
 
   // Vectors for storing values of scanned variables
-  DoubleVector tb_vals(1), lambda3_vals(1), Alambda3_vals(1), mqL3sq_vals(1), mtRsq_vals(1), At_vals(1), M2_vals(1);
+  Eigen::VectorXd tb_vals(1), lambda3_vals(1), Alambda3_vals(1), mqL3sq_vals(1), mtRsq_vals(1), At_vals(1), M2_vals(1);
 
   // Variables to store values of couplings at M_{SUSY}
   double lambda3AtMsusy, kappa3AtMsusy;
 
   // Vector for storing fine tunings
-  DoubleVector tunings(NUMPMSSMPARS);
+  Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> tunings;
 
   // Variables to store values of EWSB conditions
   double f1, f2, f3;
 
   // Models that we will calculate the fine tuning for
-  Spectrum_generator_settings spectrum_generator_settings;
-  genericE6SSM_spectrum_generator<algorithm_type> spectrum_generator;
+  genericE6SSM<Two_scale> m;
 
   /*
     ----------------------------------------------------
@@ -885,52 +960,52 @@ int main(int argc, const char* argv[])
 		    }
 		  else if (word1 == "YU")
 		    {
-		      kk >> yuin(1,1);
+		      kk >> yuin(0,0);
 		      hasyu = true;
 		    }
 		  else if (word1 == "YC")
 		    {
-		      kk >> yuin(2,2);
+		      kk >> yuin(1,1);
 		      hasyc = true;
 		    }
 		  else if (word1 == "YT")
 		    {
-		      kk >> yuin(3,3);
+		      kk >> yuin(2,2);
 		      hasyt = true;
 		    }
 		  else if (word1 == "YD")
 		    {
-		      kk >> ydin(1,1);
+		      kk >> ydin(0,0);
 		      hasyd = true;
 		    }
 		  else if (word1 == "YS")
 		    {
-		      kk >> ydin(2,2);
+		      kk >> ydin(1,1);
 		      hasys = true;
 		    }
 		  else if (word1 == "YB")
 		    {
-		      kk >> ydin(3,3);
+		      kk >> ydin(2,2);
 		      hasyb = true;
 		    }
 		  else if (word1 == "YE")
 		    {
-		      kk >> yein(1,1);
+		      kk >> yein(0,0);
 		      hasye = true;
 		    }
 		  else if (word1 == "YMU")
 		    {
-		      kk >> yein(2,2);
+		      kk >> yein(1,1);
 		      hasymu = true;
 		    }
 		  else if (word1 == "YTAU")
 		    {
-		      kk >> yein(3,3);
+		      kk >> yein(2,2);
 		      hasytau = true;
 		    }
 		  else if (word1 == "G1")
 		    {
-		      kk >> gin(1);
+		      kk >> g1in;
 		      hasg1 = true;
 		    }
 		  else if (word1 == "GN")
@@ -940,12 +1015,12 @@ int main(int argc, const char* argv[])
 		    }
 		  else if (word1 == "G2")
 		    {
-		      kk >> gin(2);
+		      kk >> g2in;
 		      hasg2 = true;
 		    }
 		  else if (word1 == "G3")
 		    {
-		      kk >> gin(3);
+		      kk >> g3in;
 		      hasg3 = true;
 		    }
 		  else if (word1 == "HVEV")
@@ -973,52 +1048,52 @@ int main(int argc, const char* argv[])
 
       if (!hasyu)
 	{
-	  cerr << "WARNING: y_u value not found: default value is " << yuin(1,1) << "." << endl;
+	  cerr << "WARNING: y_u value not found: default value is " << yuin(0,0) << "." << endl;
 	}
 
       if (!hasyc)
 	{
-	  cerr << "WARNING: y_c value not found: default value is " << yuin(2,2) << "." << endl;
+	  cerr << "WARNING: y_c value not found: default value is " << yuin(1,1) << "." << endl;
 	}
 
       if (!hasyt)
 	{
-	  cerr << "WARNING: y_t value not found: default value is " << yuin(3,3) << "." << endl;
+	  cerr << "WARNING: y_t value not found: default value is " << yuin(2,2) << "." << endl;
 	}
 
       if (!hasyd)
 	{
-	  cerr << "WARNING: y_d value not found: default value is " << ydin(1,1) << "." << endl;
+	  cerr << "WARNING: y_d value not found: default value is " << ydin(0,0) << "." << endl;
 	}
 
       if (!hasys)
 	{
-	  cerr << "WARNING: y_s value not found: default value is " << ydin(2,2) << "." << endl;
+	  cerr << "WARNING: y_s value not found: default value is " << ydin(1,1) << "." << endl;
 	}
 
       if (!hasyb)
 	{
-	  cerr << "WARNING: y_b value not found: default value is " << ydin(3,3) << "." << endl;
+	  cerr << "WARNING: y_b value not found: default value is " << ydin(2,2) << "." << endl;
 	}
 
       if (!hasye)
 	{
-	  cerr << "WARNING: y_e value not found: default value is " << yein(1,1) << "." << endl;
+	  cerr << "WARNING: y_e value not found: default value is " << yein(0,0) << "." << endl;
 	}
 
       if (!hasymu)
 	{
-	  cerr << "WARNING: y_mu value not found: default value is " << yein(2,2) << "." << endl;
+	  cerr << "WARNING: y_mu value not found: default value is " << yein(1,1) << "." << endl;
 	}
 
       if (!hasytau)
 	{
-	  cerr << "WARNING: y_tau value not found: default value is " << yein(3,3) << "." << endl;
+	  cerr << "WARNING: y_tau value not found: default value is " << yein(2,2) << "." << endl;
 	}
 
       if (!hasg1)
 	{
-	  cerr << "WARNING: g_1 value not found: default value is " << gin(1) << "." << endl;
+	  cerr << "WARNING: g_1 value not found: default value is " << g1in << "." << endl;
 	}
 
       if (!hasgN)
@@ -1028,12 +1103,12 @@ int main(int argc, const char* argv[])
 
       if (!hasg2)
 	{
-	  cerr << "WARNING: g_2 value not found: default value is " << gin(2) << "." << endl;
+	  cerr << "WARNING: g_2 value not found: default value is " << g2in << "." << endl;
 	}
 
       if (!hasg3)
 	{
-	  cerr << "WARNING: g_3 value not found: default value is " << gin(3) << "." << endl;
+	  cerr << "WARNING: g_3 value not found: default value is " << g3in << "." << endl;
 	}
 
       if (!hasv)
@@ -1328,30 +1403,30 @@ int main(int argc, const char* argv[])
 
       // Get values for all of the scanned variables
 
-      if (tb_npts > 1) tb_vals.setEnd(tb_npts);
-      if (lambda3_npts > 1) lambda3_vals.setEnd(lambda3_npts);
-      if (mqL3sq_npts > 1) mqL3sq_vals.setEnd(mqL3sq_npts);
-      if (mtRsq_npts > 1) mtRsq_vals.setEnd(mtRsq_npts);
+      if (tb_npts > 1) tb_vals.resize(tb_npts);
+      if (lambda3_npts > 1) lambda3_vals.resize(lambda3_npts);
+      if (mqL3sq_npts > 1) mqL3sq_vals.resize(mqL3sq_npts);
+      if (mtRsq_npts > 1) mtRsq_vals.resize(mtRsq_npts);
 
       if (uselogscanAt)
 	{
-	  At_vals.setEnd(2*At_npts); //< symmetric scan about the origin
+	  At_vals.resize(2*At_npts); //< symmetric scan about the origin
 	}
       else
 	{
-	  if (At_npts > 1) At_vals.setEnd(At_npts);
+	  if (At_npts > 1) At_vals.resize(At_npts);
 	}
 
       if (uselogscanAlambda3)
 	{
-	  Alambda3_vals.setEnd(2*Alambda3_npts); //< symmetric scan about the origin
+	  Alambda3_vals.resize(2*Alambda3_npts); //< symmetric scan about the origin
 	}
       else
 	{
-	  if (Alambda3_npts > 1) Alambda3_vals.setEnd(Alambda3_npts);
+	  if (Alambda3_npts > 1) Alambda3_vals.resize(Alambda3_npts);
 	}
 
-      if (M2_npts > 1) M2_vals.setEnd(M2_npts);
+      if (M2_npts > 1) M2_vals.resize(M2_npts);
 
       // Work out increments
       if (tb_npts != 1)
@@ -1380,29 +1455,33 @@ int main(int argc, const char* argv[])
 	}
 
       // Get values
+      tuin(0,0) = 0.0; tuin(1,1) = 0.0; tuin(2,2) = yuin(2,2) * At;
+      tdin(0,0) = 0.0; tdin(1,1) = 0.0; tdin(2,2) = ydin(2,2) * Ab;
+      tein(0,0) = 0.0; tein(1,1) = 0.0; tuin(2,2) = yein(2,2) * Atau;
+
       for (int i = 1; i <= tb_npts; i++)
 	{
-	  tb_vals(i) = tb_low + (((double)i)-1.0)*tb_incr;
+	  tb_vals(i-1) = tb_low + (((double)i)-1.0)*tb_incr;
 	}
 
       for (int i = 1; i <= lambda3_npts; i++)
 	{
-	  lambda3_vals(i) = lambda3_low + (((double)i)-1.0)*lambda3_incr;
+	  lambda3_vals(i-1) = lambda3_low + (((double)i)-1.0)*lambda3_incr;
 	}
 
       for (int i = 1; i <= mqL3sq_npts; i++)
 	{
-	  mqL3sq_vals(i) = mqL3sq_low + (((double)i)-1.0)*mqL3sq_incr;
+	  mqL3sq_vals(i-1) = mqL3sq_low + (((double)i)-1.0)*mqL3sq_incr;
 	}
 
       for (int i = 1; i <= mtRsq_npts; i++)
 	{
-	  mtRsq_vals(i) = mtRsq_low + (((double)i)-1.0)*mtRsq_incr;
+	  mtRsq_vals(i-1) = mtRsq_low + (((double)i)-1.0)*mtRsq_incr;
 	}
 
       for (int i = 1; i <= M2_npts; i++)
 	{
-	  M2_vals(i) = M2_low + (((double)i)-1.0)*M2_incr;
+	  M2_vals(i-1) = M2_low + (((double)i)-1.0)*M2_incr;
 	}
 
       // Do the same for A_t and A_lambda3, taking into account whether log scan or not
@@ -1415,7 +1494,7 @@ int main(int argc, const char* argv[])
 
 	  for (int i = 1; i <= At_npts; i++)
 	    {
-	      At_vals(i) = At_low + (((double)i)-1.0)*At_incr;
+	      At_vals(i-1) = At_low + (((double)i)-1.0)*At_incr;
 	    }
 
 	}
@@ -1430,8 +1509,8 @@ int main(int argc, const char* argv[])
 
 	  for (int i = 1; i <= At_npts; i++)
 	    {
-	      At_vals(At_npts+i) = exp(At_low+(((double)i)-1.0)*At_incr);
-	      At_vals(At_npts+1-i) = -At_vals(At_npts+i);
+	      At_vals((At_npts+i)-1) = exp(At_low+(((double)i)-1.0)*At_incr);
+	      At_vals((At_npts+1-i)-1) = -At_vals((At_npts+i)-1);
 	    }
 
 	}
@@ -1446,7 +1525,7 @@ int main(int argc, const char* argv[])
 
 	  for (int i = 1; i <= Alambda3_npts; i++)
 	    {
-	      Alambda3_vals(i) = Alambda3_low + (((double)i)-1.0)*Alambda3_incr;
+	      Alambda3_vals(i-1) = Alambda3_low + (((double)i)-1.0)*Alambda3_incr;
 	    }
 
 	}
@@ -1461,8 +1540,8 @@ int main(int argc, const char* argv[])
 
 	  for (int i = 1; i <= Alambda3_npts; i++)
 	    {
-	      Alambda3_vals(Alambda3_npts+i) = exp(Alambda3_low+(((double)i)-1.0)*Alambda3_incr);
-	      Alambda3_vals(Alambda3_npts+1-i) = -Alambda3_vals(Alambda3_npts+i);
+	      Alambda3_vals((Alambda3_npts+i)-1) = exp(Alambda3_low+(((double)i)-1.0)*Alambda3_incr);
+	      Alambda3_vals((Alambda3_npts+1-i)-1) = -Alambda3_vals((Alambda3_npts+i)-1);
 	    }
 
 	}
@@ -1477,274 +1556,279 @@ int main(int argc, const char* argv[])
 	----------------------------------------------------
       */
       
-      for (int i = 1; i <= tb_vals.displayEnd(); i++)
+      for (int i = 0; i < tb_vals.size(); i++)
 	{
-      for (int j = 1; j <= lambda3_vals.displayEnd(); j++)
+      for (int j = 0; j < lambda3_vals.size(); j++)
 	{
-      for (int k = 1; k <= Alambda3_vals.displayEnd(); k++)
+      for (int k = 0; k < Alambda3_vals.size(); k++)
 	{
-      for (int l = 1; l <= mqL3sq_vals.displayEnd(); l++)
+      for (int l = 0; l <= mqL3sq_vals.size(); l++)
 	{
-      for (int p = 1; p <= mtRsq_vals.displayEnd(); p++)
+      for (int p = 0; p <= mtRsq_vals.size(); p++)
 	{
-      for (int q = 1; q <= At_vals.displayEnd(); q++)
+      for (int q = 0; q <= At_vals.size(); q++)
 	{
-      for (int s = 1; s <= M2_vals.displayEnd(); s++)
+      for (int s = 0; s <= M2_vals.size(); s++)
 	{
 
-	  // // Update variable values
-	  // mQlSq(3,3) = mqL3sq_vals(l);
-	  // mUrSq(3,3) = mtRsq_vals(p);
-	  // tu(3,3) = yuin(3,3)*At_vals(q);
-	  // mGaugino(2) = M2_vals(s);
+	  // Update variable values
+	  mQlSq(2,2) = mqL3sq_vals(l);
+	  mUrSq(2,2) = mtRsq_vals(p);
+	  tuin(2,2) = yuin(2,2)*At_vals(q);
+	  tlambda3in = lambda3_vals(j)*Alambda3_vals(k);
+	  // Default guesses for values determined by iteration
+	  mHdSq = 1.0e6;
+	  mHuSq = 1.0e6;
+	  mSSq = 1.0e6;
+	  MS = 1.0e3;
 
-	  // // Default guesses for values determined by iteration
-	  // mHdSq = 1.0e6;
-	  // mHuSq = 1.0e6;
-	  // mSSq = 1.0e6;
-	  // MS = 1.0e3;
+	  // Define model, first reset problem flags
+	  hasEWSBProblem = false;
+	  squarksTachyons = false;
+	  vectorBosonsTachyons = false;
+	  higgsTachyons = false;
+	  tadpoleProblem = false;
+	  poleHiggsTachyons = false;
+	  inaccurateHiggsMass = false;
+	  hasSeriousProblem = false;
 
-	  // // Define model, first reset problem flags
-	  // hasEWSBProblem = false;
-	  // squarksTachyons = false;
-	  // higgsTachyons = false;
-	  // tadpoleProblem = false;
-	  // poleHiggsTachyons = false;
-	  // inaccurateHiggsMass = false;
-	  // hasSeriousProblem = false;
+	  // m is returned at M_{SUSY}
+	  m = doSimplifiedSpectrum(yuin, ydin, yein, g1in, g2in, g3in, gNin, lambda3_vals(j), lambda12in,
+				   kappain, mupr, tb_vals(i), vin, vsin,
+				   M1, M2_vals(s), M3, M1p, tuin, tdin, tein, 
+				   tlambda3in, tlambda12in, tkappain, mQlSq, mUrSq, mDrSq, 
+				   mLlSq, mErSq, mDxSq, mDxbarSq, mHdISq, mHuISq, mSISq,
+				   Bmupr, mHpSq, mHpbarSq, MX, LOOPS, THRESH, 
+				   TOLEWSB, mHdSq, mHuSq, mSSq, MS, 
+				   hasEWSBProblem, squarksTachyons, vectorBosonsTachyons, higgsTachyons, 
+				   tadpoleProblem, poleHiggsTachyons, inaccurateHiggsMass, hasSeriousProblem);
 
-	  // // m is returned at M_{SUSY}
-	  // m = doSimplifiedSpectrum(yuin, ydin, yein, gin, gNin, lambda3_vals(j), tb_vals(i), vin, sin,
-	  // 			   mGaugino, tu, td, te, mQlSq, mUrSq, mDrSq, mLlSq, mErSq, 
-	  // 			   B_vals(k)*mu_vals(j), mGrav, MX, LOOPS, THRESH, oneset, 
-	  // 			   physpars, TOLEWSB, mHdSq, mHuSq, mSSq, MS, 
-	  // 			   hasEWSBProblem, squarksTachyons, higgsTachyons, 
-	  // 			   tadpoleProblem, poleHiggsTachyons, 
-	  // 			   inaccurateHiggsMass, hasSeriousProblem);
+	  lambda3AtMsusy = m.get_Lambdax(); kappa3AtMsusy = m.get_Kappa(2,2);
 
-	  // f1 = ESSM_EWSBCondition1(m);
-	  // f2 = ESSM_EWSBCondition2(m);
-	  // f3 = ESSM_EWSBCondition3(m);
+	  f1 = ESSM_EWSBCondition1(m);
+	  f2 = ESSM_EWSBCondition2(m);
+	  f3 = ESSM_EWSBCondition3(m);
 
-	  // // While at M_{SUSY}, check that we are not in a point where the
-	  // // unphysical vacuum v_1 = v_2 = 0 is stable.
-	  // hasWrongVacuum = false;
+	  // While at M_{SUSY}, check that we are not in a point where the
+	  // unphysical vacuum v_1 = v_2 = 0 is stable.
+	  hasWrongVacuum = false;
 
-	  // double wrongVacuumTest = (m.displayTanb()/(1.0-sqr(m.displayTanb())))*
-	  //   (m.displayMh2Squared()*m.displayTanb()-m.displayMh1Squared()/m.displayTanb())-0.5*sqr(m.displayMzRun());
+	  double v1AtMsusy = m.get_vd();
+	  if (v1AtMsusy < 1.0e-100)
+	    {
+	      hasSeriousProblem = true;
+	    }
+	  double v2AtMsusy = m.get_vu();
 
-	  // if (wrongVacuumTest < 0.0)
-	  //   {
-	  //     hasWrongVacuum = true;
-	  //   }
+	  double tbAtMsusy = v2AtMsusy/v1AtMsusy;
 
-	  // // Check for UFB or CCB problems. Because I'm not sure where
-	  // // exactly is the best scale to do this, do it at both and
-	  // // if it fails at either one flag it (we can always go back
-	  // // and check the points later in more detail, anyway).
+	  double wrongVacuumTest = (tbAtMsusy/(1.0-sqr(tbAtMsusy)))*
+	    (m.get_mHu2()*tbAtMsusy-m.get_mHd2()/tbAtMsusy)-0.5*sqr(m.get_MVZ());
 
-	  // hasUFBProblem = false; hasCCBProblem = false;
+	  if (wrongVacuumTest < 0.0)
+	    {
+	      hasWrongVacuum = true;
+	    }
 
-	  // // Test at M_{SUSY}
+	  // Check for UFB or CCB problems. Because I'm not sure where
+	  // exactly is the best scale to do this, do it at both and
+	  // if it fails at either one flag it (we can always go back
+	  // and check the points later in more detail, anyway).
 
-	  // // According to hep-ph/9507294v3, to avoid UFB problems
-	  // // the constrain m_1^2+m_2^2 >= 2|m_3^2| should hold at all
-	  // // scales greater than M_{SUSY}, and supposedly in particular at MX.
-	  // double ufbTest = m.displayMh1Squared() + m.displayMh2Squared() +2.0*sqr(m.displaySusyMu())
-	  //   -2.0*fabs(m.displayM3Squared());
+	  hasUFBProblem = false; hasCCBProblem = false;
 
-	  // if (ufbTest < 0)
-	  //   {
-	  //     hasUFBProblem = true;
-	  //   }
+	  // Test at M_{SUSY}
 
-	  // // For simplicity, apply the CCB criterion of hep-ph/9604417v3 Eq. (2a)
-	  // // and Eq. (5) of hep-ph/9507294v3 at M_{SUSY} (this might not be
-	  // // the optimum scale though).
+	  // According to hep-ph/9507294v3, to avoid UFB problems
+	  // the constraint m_1^2+m_2^2 >= 2|m_3^2| should hold at all
+	  // scales greater than M_{SUSY}, and supposedly in particular at MX.
+	  double ufbTest = m.get_mHd2() + m.get_mHu2() +2.0*sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))
+	    -2.0*fabs(m.get_Lambdax()*m.get_TLambdax()*m.get_vs()/Sqrt(2.0));
 
-	  // double ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-	  // 			+m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mUr, 3, 3))
-	  //   -sqr(m.displaySoftA(UA, 3, 3));
+	  if (ufbTest < 0)
+	    {
+	      hasUFBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  // For simplicity, apply the CCB criterion of hep-ph/9604417v3 Eq. (2a)
+	  // and Eq. (5) of hep-ph/9507294v3 at M_{SUSY} (this might not be
+	  // the optimum scale though).
 
-	  // // Check the other CCB conditions as well, even though the chance
-	  // // of them being a problem is small.
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mUr, 2, 2))
-	  //   -sqr(m.displaySoftA(UA, 2, 2));
+	  double ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
+	  			+m.get_mq2( 2, 2)+m.get_mu2(2, 2))
+	    -sqr(get_softAu(m, 2, 2));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mUr, 1, 1))
-	  //   -sqr(m.displaySoftA(UA, 1, 1));
+	  // Check the other CCB conditions as well, even though the chance
+	  // of them being a problem is small.
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
+	  		 +m.get_mq2(1, 1)+m.get_mu2(1, 1))
+	    -sqr(get_softAu(m, 1, 1));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // // A_b CCB tests
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mDr, 3, 3))
-	  //   -sqr(m.displaySoftA(DA, 3, 3));
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
+	  		 +m.get_mq2(0, 0)+m.get_mu2(0, 0))
+	    -sqr(get_softAu(m, 0, 0));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mDr, 2, 2))
-	  //   -sqr(m.displaySoftA(DA, 2, 2));
+	  // A_b CCB tests
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  			+m.get_mq2( 2, 2)+m.get_md2(2, 2))
+	    -sqr(get_softAd(m, 2, 2));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mDr, 1, 1))
-	  //   -sqr(m.displaySoftA(DA, 1, 1));
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_mq2(1, 1)+m.get_md2(1, 1))
+	    -sqr(get_softAd(m, 1, 1));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // // A_tau test
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mLl, 3, 3)+m.displaySoftMassSquared(mEr, 3, 3))
-	  //   -sqr(m.displaySoftA(EA, 3, 3));
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_mq2(0, 0)+m.get_md2(0, 0))
+	    -sqr(get_softAd(m, 0, 0));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mLl, 2, 2)+m.displaySoftMassSquared(mEr, 2, 2))
-	  //   -sqr(m.displaySoftA(EA, 2, 2));
+	  // A_tau test
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  			+m.get_ml2( 2, 2)+m.get_me2(2, 2))
+	    -sqr(get_softAe(m, 2, 2));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mLl, 1, 1)+m.displaySoftMassSquared(mEr, 1, 1))
-	  //   -sqr(m.displaySoftA(EA, 1, 1));
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_ml2(1, 1)+m.get_me2(1, 1))
+	    -sqr(get_softAe(m, 1, 1));
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // m.runto(MX);
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_ml2(0, 0)+m.get_me2(0, 0))
+	    -sqr(get_softAe(m, 0, 0));
 
-	  // // Test at MX
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // ufbTest = m.displayMh1Squared() + m.displayMh2Squared() +2.0*sqr(m.displaySusyMu())
-	  //   -2.0*fabs(m.displayM3Squared());
+	  m.run_to(MX);
 
-	  // if (ufbTest < 0)
-	  //   {
-	  //     hasUFBProblem = true;
-	  //   }
+	  // Test at MX
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
+	  			+m.get_mq2( 2, 2)+m.get_mu2(2, 2))
+	    -sqr(get_softAu(m, 2, 2));
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mUr, 3, 3))
-	  //   -sqr(m.displaySoftA(UA, 3, 3));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  // Check the other CCB conditions as well, even though the chance
+	  // of them being a problem is small.
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
+	  		 +m.get_mq2(1, 1)+m.get_mu2(1, 1))
+	    -sqr(get_softAu(m, 1, 1));
 
-	  // // Check the other CCB conditions as well, even though the chance
-	  // // of them being a problem is small.
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mUr, 2, 2))
-	  //   -sqr(m.displaySoftA(UA, 2, 2));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
+	  		 +m.get_mq2(0, 0)+m.get_mu2(0, 0))
+	    -sqr(get_softAu(m, 0, 0));
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh2Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mUr, 1, 1))
-	  //   -sqr(m.displaySoftA(UA, 1, 1));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  // A_b CCB tests
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  			+m.get_mq2( 2, 2)+m.get_md2(2, 2))
+	    -sqr(get_softAd(m, 2, 2));
 
-	  // // A_b CCB tests
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 3, 3)+m.displaySoftMassSquared(mDr, 3, 3))
-	  //   -sqr(m.displaySoftA(DA, 3, 3));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_mq2(1, 1)+m.get_md2(1, 1))
+	    -sqr(get_softAd(m, 1, 1));
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 2, 2)+m.displaySoftMassSquared(mDr, 2, 2))
-	  //   -sqr(m.displaySoftA(DA, 2, 2));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_mq2(0, 0)+m.get_md2(0, 0))
+	    -sqr(get_softAd(m, 0, 0));
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mQl, 1, 1)+m.displaySoftMassSquared(mDr, 1, 1))
-	  //   -sqr(m.displaySoftA(DA, 1, 1));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  // A_tau test
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  			+m.get_ml2( 2, 2)+m.get_me2(2, 2))
+	    -sqr(get_softAe(m, 2, 2));
 
-	  // // A_tau test
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mLl, 3, 3)+m.displaySoftMassSquared(mEr, 3, 3))
-	  //   -sqr(m.displaySoftA(EA, 3, 3));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_ml2(1, 1)+m.get_me2(1, 1))
+	    -sqr(get_softAe(m, 1, 1));
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mLl, 2, 2)+m.displaySoftMassSquared(mEr, 2, 2))
-	  //   -sqr(m.displaySoftA(EA, 2, 2));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
+	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHd2()
+	  		 +m.get_ml2(0, 0)+m.get_me2(0, 0))
+	    -sqr(get_softAe(m, 0, 0));
 
-	  // ccbTest = 3.0*(sqr(m.displaySusyMu())+m.displayMh1Squared()
-	  // 		 +m.displaySoftMassSquared(mLl, 1, 1)+m.displaySoftMassSquared(mEr, 1, 1))
-	  //   -sqr(m.displaySoftA(EA, 1, 1));
+	  if (ccbTest < 0.0)
+	    {
+	      hasCCBProblem = true;
+	    }
 
-	  // if (ccbTest < 0.0)
-	  //   {
-	  //     hasCCBProblem = true;
-	  //   }
-
-	  // // Calculate fine tuning
+	  
+	  // Calculate fine tuning
 	  // hasTuningError = false;
 
 	  // bool tuningEWSBProblem = false;
@@ -1777,141 +1861,168 @@ int main(int argc, const char* argv[])
 	  //     hasSeriousProblem = true; 
 	  //   }
 
+	  if (!hasSeriousProblem)
+	    {
+	      // Display output
+	      cout << tb_vals(i) << " ";
+	      cout << lambda3_vals(j) << " ";
+	      cout << Alambda3_vals(k) << " ";
+	      cout << mqL3sq_vals(l) << " ";
+	      cout << mtRsq_vals(p) << " ";
+	      cout << At_vals(q) << " ";
+	      cout << M2_vals(s) << " "; 
+	      cout << lambda3AtMsusy << " ";
+	      cout << kappa3AtMsusy << " ";
+	      cout << m.get_physical().Mhh(0) << " ";
+	      cout << m.get_physical().MAh(2) << " ";
+	      cout << mHdSq << " ";
+	      cout << mHuSq << " ";
+	      cout << f1 << " ";
+	      cout << f2 << " ";
+	      cout << f3 << " ";
+	      cout << MS << " ";
+	      cout << m.get_MSu()(0) << " ";
+	      cout << m.get_MSu()(1) << " ";
+	      cout << m.get_MSu()(2) << " ";
+	      cout << m.get_MSu()(3) << " ";
+	      cout << m.get_MSu()(4) << " ";
+	      cout << m.get_MSu()(5) << " ";
+	      cout << m.get_MSd()(0) << " ";
+	      cout << m.get_MSd()(1) << " ";
+	      cout << m.get_MSd()(2) << " ";
+	      cout << m.get_MSd()(3) << " ";
+	      cout << m.get_MSd()(4) << " ";
+	      cout << m.get_MSd()(5) << " ";
+	      cout << m.get_MCha()(0) << " ";
+	      cout << m.get_MCha()(1) << " ";
+	      cout << m.get_MChi()(0)<< " ";
+	      cout << m.get_MChi()(1)<< " ";
+	      cout << m.get_MChi()(2)<< " ";
+	      cout << m.get_MChi()(3)<< " ";
+	      cout << m.get_MChi()(4)<< " ";
+	      cout << m.get_MChi()(5)<< " ";
+	      cout << m.get_Mhh()(0) << " ";
+	      cout << m.get_Mhh()(1) << " ";
+	      cout << m.get_Mhh()(2) << " ";
+	      cout << m.get_MAh()(0) << " ";
+	      cout << m.get_MAh()(1) << " ";
+	      cout << m.get_MAh()(2) << " ";
 
-	  // // Display output
-	  // cout << tb_vals(i) << " ";
-	  // cout << mu_vals(j) << " ";
-	  // cout << B_vals(k) << " ";
-	  // cout << mqL3sq_vals(l) << " ";
-	  // cout << mtRsq_vals(p) << " ";
-	  // cout << At_vals(q) << " ";
-	  // cout << M2_vals(s) << " "; 
-	  // cout << m.displayPhys().mh0 << " ";
-	  // cout << m.displayPhys().mA0 << " ";
-	  // cout << mHdSq << " ";
-	  // cout << mHuSq << " ";
-	  // cout << f1 << " ";
-	  // cout << f2 << " ";
-	  // cout << m.displayMsusy() << " ";
-	  // cout << m.displayDrBarPars().mu(1,3) << " ";
-	  // cout << m.displayDrBarPars().mu(2,3) << " ";
-	  // cout << m.displayDrBarPars().md(1,3) << " ";
-	  // cout << m.displayDrBarPars().md(2,3) << " ";
-	  // cout << m.displayDrBarPars().mchBpmz(1) << " ";
-	  // cout << m.displayDrBarPars().mchBpmz(2) << " ";
-	  // cout << m.displayDrBarPars().mnBpmz(1) << " ";
-	  // cout << m.displayDrBarPars().mnBpmz(2) << " ";
-	  // cout << m.displayDrBarPars().mnBpmz(3) << " ";
-	  // cout << m.displayDrBarPars().mnBpmz(4) << " ";
-	  // cout << m.displayDrBarPars().mh0 << " ";
-	  // cout << m.displayDrBarPars().mA0 << " ";
-	  // cout << tunings.max() << " ";
-	  // for (int i = 1; i <= tunings.displayEnd(); i++)
-	  //   {
-	  //     cout << tunings(i) << " ";
-	  //   }
-	  // if (hasUFBProblem)
-	  //   {
-	  //     cout << UFBPROBLEM << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-	  // if (hasCCBProblem)
-	  //   {
-	  //     cout << CCBPROBLEM << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-
-	  // if (hasEWSBProblem)
-	  //   {
-	  //     cout << EWSBPROBLEM << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-
-	  // if (hasWrongVacuum)
-	  //   {
-	  //     cout << WRONGVACUUM << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-
-	  // if (squarksTachyons)
-	  //   {
-	  //     cout << SQUARKTACHYON << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-	  // if (higgsTachyons)
-	  //   {
-	  //     cout << HIGGSTACHYON << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-	  // if (tadpoleProblem)
-	  //   {
-	  //     cout << TADPOLESPROBLEM << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-	  // if (m.displayPhys().mh0 < HIGGSCENT-HIGGSERROR || m.displayPhys().mh0 > HIGGSCENT+HIGGSERROR)
-	  //   {
-	  //     cout << NOTEXPVALID << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-	  // if (poleHiggsTachyons)
-	  //   {
-	  //     cout << POLEHIGGSTACHYON << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-	  // if (inaccurateHiggsMass)
-	  //   {
-	  //     cout << HIGGSPROBLEM << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-
-	  // if (hasTuningError)
-	  //   {
-	  //     cout << TUNINGERROR << " ";
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0 ";
-	  //   }
-
-	  // if (hasSeriousProblem)
-	  //   {
-	  //     cout << NUMERICALPROBLEM << endl;
-	  //   }
-	  // else
-	  //   {
-	  //     cout << "0" << endl;
-	  //   }
-
+	      // cout << tunings.max() << " ";
+	      // for (int i = 1; i <= tunings.displayEnd(); i++)
+	      // 	{
+	      // 	  cout << tunings(i) << " ";
+	      // 	}
+	      if (hasUFBProblem)
+		{
+		  cout << UFBPROBLEM << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (hasCCBProblem)
+		{
+		  cout << CCBPROBLEM << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      
+	      if (hasEWSBProblem)
+		{
+		  cout << EWSBPROBLEM << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      
+	      if (hasWrongVacuum)
+		{
+		  cout << WRONGVACUUM << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      
+	      if (squarksTachyons)
+		{
+		  cout << SQUARKTACHYON << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (vectorBosonsTachyons)
+		{
+		  cout << VECTORBOSONTACHYON << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (higgsTachyons)
+		{
+		  cout << HIGGSTACHYON << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (tadpoleProblem)
+		{
+		  cout << TADPOLESPROBLEM << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (m.get_physical().Mhh(0) < HIGGSCENT-HIGGSERROR || m.get_physical().Mhh(0) > HIGGSCENT+HIGGSERROR)
+		{
+		  cout << NOTEXPVALID << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (poleHiggsTachyons)
+		{
+		  cout << POLEHIGGSTACHYON << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      if (inaccurateHiggsMass)
+		{
+		  cout << HIGGSPROBLEM << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      
+	      if (hasTuningError)
+		{
+		  cout << TUNINGERROR << " ";
+		}
+	      else
+		{
+		  cout << "0 ";
+		}
+	      
+	      if (hasSeriousProblem)
+		{
+		  cout << NUMERICALPROBLEM << endl;
+		}
+	      else
+		{
+		  cout << "0" << endl;
+		}
+	    }
 	} //< M_2 scan
 	}//< A_t scan
 	} //< m_u3^2 scan 
@@ -1948,10 +2059,10 @@ int main(int argc, const char* argv[])
 void errorCall()
 {
   ostringstream ii;
-  ii << "pmssmScanner called with incorrect arguments.\n";
+  ii << "essmScanner.x called with incorrect arguments.\n";
   ii << "To run, you must provide as a file containing\n";
   ii << "the scan parameters you wish to use. Usage is:\n";
-  ii << "./pmssmScanner < input_file.params\n";
+  ii << "./essmScanner.x < input_file.params\n";
   throw ii.str();
 }
 
@@ -1968,18 +2079,29 @@ string ToUpper(const string & s) {
 	return result;
     }
 
-flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleMatrix const & yuin, DoubleMatrix const & ydin, 
-									 DoubleMatrix const & yein, DoubleVector const & gin, 
-									 DoubleVector const & lambdain, DoubleVector const & kappain, 
+flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::Matrix<double,3,3> yuin, 
+									 Eigen::Matrix<double,3,3> ydin, 
+									 Eigen::Matrix<double,3,3> yein, 
+									 double g1in, double g2in, double g3in, double gNin,
+									 double lambda3in, Eigen::Matrix<double,2,2> lambda12in,
+									 Eigen::Matrix<double,3,3> kappain, 
 									 double mupr, double tanb, double hvev, double svev,
-									 DoubleVector const & mGaugino, DoubleMatrix const & tuin, 
-									 DoubleMatrix const & tdin, DoubleMatrix const & tein, 
-									 DoubleVector const & tlambdain, DoubleVector const & tkappain,
-									 DoubleMatrix const & mQlSq, DoubleMatrix const & mUrSq, 
-									 DoubleMatrix const & mDrSq, DoubleMatrix const & mLlSq, 
-									 DoubleMatrix const & mErSq, DoubleMatrix const & mDxSq,
-									 DoubleMatrix const & mDxbarSq, DoubleVector const & mHdISq, 
-									 DoubleVector const & mHuISq, DoubleVector const & mSISq,
+									 double MBin, double MWBin, double MGin, double MBpin,
+									 Eigen::Matrix<double,3,3> tuin, 
+									 Eigen::Matrix<double,3,3> tdin, 
+									 Eigen::Matrix<double,3,3> tein, 
+									 double tlambda3in, Eigen::Matrix<double,2,2> tlambda12in, 
+									 Eigen::Matrix<double,3,3> tkappain,
+									 Eigen::Matrix<double,3,3> mQlSq, 
+									 Eigen::Matrix<double,3,3> mUrSq, 
+									 Eigen::Matrix<double,3,3> mDrSq, 
+									 Eigen::Matrix<double,3,3> mLlSq, 
+									 Eigen::Matrix<double,3,3> mErSq, 
+									 Eigen::Matrix<double,3,3> mDxSq,
+									 Eigen::Matrix<double,3,3> mDxbarSq, 
+									 Eigen::Matrix<double,2,2> mHdISq, 
+									 Eigen::Matrix<double,2,2> mHuISq, 
+									 Eigen::Matrix<double,2,2>  mSISq,
 									 double Bmupr,  double mHpSq, double mHpbarSq, double mx, 
 									 int l, int t, 
 									 double tol, double & mHdSq, double & mHuSq, double & mSSq, 
@@ -2016,88 +2138,112 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleM
   input.QHpp = QHPrChi*cE6+QHPrPsi*sE6;
   input.QHpbarp = QHbarPrChi*cE6+QHbarPrPsi*sE6;
 
-  Eigen::Matrix<double,3,3> Yu, Yd, Ye, Kappa, TYu, TYd, TYe, TKappa;
-  Eigen::Matrix<double,2,2> Lambda12, TLambda12, mH1I2, mH2I2, msI2; 
+  // In the pE6SSM, first and second generation Yukawas are assumed to vanish,
+  // and there is no mixing.
+  yuin(0,0) = 0.0;
+  yuin(1,1) = 0.0;
+  ydin(0,0) = 0.0;
+  ydin(1,1) = 0.0;
+  yein(0,0) = 0.0;
+  yein(1,1) = 0.0;
 
-  for (int i = 1; i <= 3; i++)
-    {
-      Kappa(i-1,i-1) = kappain.display(i);
-      TKappa(i-1,i-1) = tkappain.display(i);
-      for (int j = 1; j <= 3; j++)
-	{
-	  Yu(i-1,j-1) = yuin.display(i,j);
-	  Yd(i-1,j-1) = ydin.display(i,j);
-	  Ye(i-1,j-1) = yein.display(i,j);
-	  TYu(i-1,j-1) = tuin(i,j);
-	  TYd(i-1,j-1) = tdin(i,j);
-	  TYe(i-1,j-1) = tein(i,j);
-	}
-    }
+  yuin(0,1) = 0.0; yuin(0,2) = 0.0;
+  yuin(1,0) = 0.0; yuin(1,2) = 0.0;
+  yuin(2,0) = 0.0; yuin(2,1) = 0.0;
 
-  double Lambdax = lambdain(3);
-  double TLambdax = tlambdain.display(3);
+  ydin(0,1) = 0.0; ydin(0,2) = 0.0;
+  ydin(1,0) = 0.0; ydin(1,2) = 0.0;
+  ydin(2,0) = 0.0; ydin(2,1) = 0.0;
 
-  for (int i = 1; i <= 2; i++)
-    {
-      Lambda12(i-1,i-1) = lambdain(i);
-      TLambda12(i-1,i-1) = tlambdain(i);
-    }
+  yein(0,1) = 0.0; yein(0,2) = 0.0;
+  yein(1,0) = 0.0; yein(1,2) = 0.0;
+  yein(2,0) = 0.0; yein(2,1) = 0.0;
 
-  // Off diagonals for kappa, T_kappa, and the inert lambdas should vanish
-  Kappa(0,1) = 0.0;
-  Kappa(0,2) = 0.0;
-  Kappa(1,0) = 0.0;
-  Kappa(1,2) = 0.0;
-  Kappa(2,0) = 0.0;
-  Kappa(2,1) = 0.0;
+  // Make sure off diagonals for kappa, T_kappa, and the inert lambdas should vanish
+  kappain(0,1) = 0.0;
+  kappain(0,2) = 0.0;
+  kappain(1,0) = 0.0;
+  kappain(1,2) = 0.0;
+  kappain(2,0) = 0.0;
+  kappain(2,1) = 0.0;
 
-  TKappa(0,1) = 0.0;
-  TKappa(0,2) = 0.0;
-  TKappa(1,0) = 0.0;
-  TKappa(1,2) = 0.0;
-  TKappa(2,0) = 0.0;
-  TKappa(2,1) = 0.0;
+  lambda12in(0,1) = 0.0;
+  lambda12in(1,0) = 0.0;
 
   double v1 = hvev/Sqrt(1.0+tanb*tanb);
   double v2 = v1*tanb;
 
   // SUSY parameters
-  genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, Yd, Ye, Kappa, Lambda12, Lambdax, Yu, mupr, gin(1), gin(2), gin(3), gin(4), v1, v2, svev);
+  genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, ydin, yein, kappain, lambda12in, lambda3in, yuin, mupr, g1in, g2in, g3in, gNin, v1, v2, svev);
 
-  // Soft masses
-  Eigen::Matrix<double,3,3> mq2, mu2, md2, ml2, me2, mDx2, mDxbar2;
-  for (int i = 1; i <= 3; i++)
-    {
-      for (int j = 1; j <= 3; j++)
-	{
-	  mq2(i-1,j-1) = mQlSq(i,j);
-	  mu2(i-1,j-1) = mUrSq(i,j);
-	  md2(i-1,j-1) = mDrSq(i,j);
-	  ml2(i-1,j-1) = mLlSq(i,j);
-	  me2(i-1,j-1) = mErSq(i,j);
-	  mDx2(i-1,j-1) = mDxSq(i,j);
-	  mDxbar2(i-1,j-1) = mDxbarSq(i,j);
-	}
-    }
+  // In the pE6SSM, the first and second generation A terms should vanish, as
+  // should the off-diagonal mixings.
+  tuin(0,0) = 0.0; tuin(1,1) = 0.0;
+  tdin(0,0) = 0.0; tdin(1,1) = 0.0;
+  tein(0,0) = 0.0; tein(1,1) = 0.0;
 
-  for (int i = 1; i <= 2; i++)
-    {
-      mH1I2(i-1,i-1) = mHdISq.display(i);
-      mH2I2(i-1,i-1) = mHuISq.display(i);
-      msI2(i-1,i-1) = mSISq.display(i);
-    }
+  tuin(0,1) = 0.0; tuin(0,2) = 0.0;
+  tuin(1,0) = 0.0; tuin(1,2) = 0.0;
+  tuin(2,0) = 0.0; tuin(2,1) = 0.0;
 
-  mH1I2(0,1) = 0.0; mH1I2(1,0) = 0.0;
-  mH2I2(0,1) = 0.0; mH2I2(1,0) = 0.0;
-  msI2(0,1) = 0.0; msI2(1,0) = 0.0;
+  tdin(0,1) = 0.0; tdin(0,2) = 0.0;
+  tdin(1,0) = 0.0; tdin(1,2) = 0.0;
+  tdin(2,0) = 0.0; tdin(2,1) = 0.0;
+
+  tein(0,1) = 0.0; tein(0,2) = 0.0;
+  tein(1,0) = 0.0; tein(1,2) = 0.0;
+  tein(2,0) = 0.0; tein(2,1) = 0.0;
+
+  tlambda12in(0,1) = 0.0;
+  tlambda12in(1,0) = 0.0;
+
+  tkappain(0,1) = 0.0;
+  tkappain(0,2) = 0.0;
+  tkappain(1,0) = 0.0;
+  tkappain(1,2) = 0.0;
+  tkappain(2,0) = 0.0;
+  tkappain(2,1) = 0.0;
+
+  // Make sure flavour non-diagonal masses are zero
+  mHdISq(0,1) = 0.0; mHdISq(1,0) = 0.0;
+  mHuISq(0,1) = 0.0; mHuISq(1,0) = 0.0;
+  mSISq(0,1) = 0.0; mSISq(1,0) = 0.0;
+
+  mQlSq(0,1) = 0.0; mQlSq(0,2) = 0.0;
+  mQlSq(1,0) = 0.0; mQlSq(1,2) = 0.0;
+  mQlSq(2,0) = 0.0; mQlSq(2,1) = 0.0;
+
+  mLlSq(0,1) = 0.0; mLlSq(0,2) = 0.0;
+  mLlSq(1,0) = 0.0; mLlSq(1,2) = 0.0;
+  mLlSq(2,0) = 0.0; mLlSq(2,1) = 0.0;
+
+  mUrSq(0,1) = 0.0; mUrSq(0,2) = 0.0;
+  mUrSq(1,0) = 0.0; mUrSq(1,2) = 0.0;
+  mUrSq(2,0) = 0.0; mUrSq(2,1) = 0.0;
+
+  mDrSq(0,1) = 0.0; mDrSq(0,2) = 0.0;
+  mDrSq(1,0) = 0.0; mDrSq(1,2) = 0.0;
+  mDrSq(2,0) = 0.0; mDrSq(2,1) = 0.0;
+
+  mErSq(0,1) = 0.0; mErSq(0,2) = 0.0;
+  mErSq(1,0) = 0.0; mErSq(1,2) = 0.0;
+  mErSq(2,0) = 0.0; mErSq(2,1) = 0.0;
+
+  mDxSq(0,1) = 0.0; mDxSq(0,2) = 0.0;
+  mDxSq(1,0) = 0.0; mDxSq(1,2) = 0.0;
+  mDxSq(2,0) = 0.0; mDxSq(2,1) = 0.0;
+
+  mDxbarSq(0,1) = 0.0; mDxbarSq(0,2) = 0.0;
+  mDxbarSq(1,0) = 0.0; mDxbarSq(1,2) = 0.0;
+  mDxbarSq(2,0) = 0.0; mDxbarSq(2,1) = 0.0;
 
   // Soft SUSY breaking parameters. Note ordering of gauginos is 1 = M_1,
   // 2 = M_2, 3 = M_3 and 4 = M_1'
-  genericE6SSM_soft_parameters r_soft = genericE6SSM_soft_parameters(r_susy, TYd, TYe, TKappa, TLambda12, TLambdax, 
-								     TYu, Bmupr, mq2, ml2, mHdSq, mHuSq, md2, mu2, me2,
-								     mSSq, mH1I2, mH2I2, msI2, mDx2, mDxbar2, mHpSq, 
-								     mHpbarSq, mGaugino(1), mGaugino(2), mGaugino(3), 
-								     mGaugino(4));
+  genericE6SSM_soft_parameters r_soft = genericE6SSM_soft_parameters(r_susy, tdin, tein, tkappain, tlambda12in, tlambda3in, 
+								     tuin, Bmupr, mQlSq, mLlSq, mHdSq, mHuSq, mDrSq, mUrSq, mErSq,
+								     mSSq, mHdISq, mHdISq, mSISq, mDxSq, mDxbarSq, mHpSq, 
+								     mHpbarSq, MBin, MWBin, MGin, 
+								     MBpin);
 
   // Somehow need to construct the full model here
   genericE6SSM<Two_scale> r_approx = genericE6SSM<Two_scale>(r_soft);
@@ -2273,4 +2419,93 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleM
     }
   
   return r_approx;
+}
+
+double get_softAu(flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> const & m, int i, int j)
+{
+  using namespace flexiblesusy;
+
+  double tu = m.get_TYu(i,j);
+  double yu = m.get_Yu(i,j);
+  double au;
+  
+  if (Abs(tu) < EPSTOL) 
+    {
+      au = 0.0;
+      return au;
+    }
+  
+  if (Abs(yu) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_u(" << i << ", " << j << ") where Y_u(" << i << ", " << j << ") coupling is " <<
+	Abs(yu) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      au = tu/yu;
+    }
+
+  return au;
+  
+}
+
+double get_softAd(flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> const & m, int i, int j)
+{
+  using namespace flexiblesusy;
+
+  double td = m.get_TYd(i,j);
+  double yd = m.get_Yd(i,j);
+  double ad;
+  
+  if (Abs(td) < EPSTOL) 
+    {
+      ad = 0.0;
+      return ad;
+    }
+  
+  if (Abs(yd) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_d(" << i << ", " << j << ") where Y_d(" << i << ", " << j << ") coupling is " <<
+	Abs(yd) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      ad = td/yd;
+    }
+
+  return ad;
+
+}
+
+double get_softAe(flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> const & m, int i, int j)
+{
+  using namespace flexiblesusy;
+
+  double te = m.get_TYe(i,j);
+  double ye = m.get_Ye(i,j);
+  double ae;
+  
+  if (Abs(te) < EPSTOL) 
+    {
+      ae = 0.0;
+      return ae;
+    }
+  
+  if (Abs(ye) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_e(" << i << ", " << j << ") where Y_e(" << i << ", " << j << ") coupling is " <<
+	Abs(ye) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      ae = te/ye;
+    }
+
+  return ae;
 }

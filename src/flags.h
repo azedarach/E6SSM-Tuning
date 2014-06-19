@@ -33,7 +33,7 @@ int const EWSBPROBLEM = 3; //< problem with iteration
 int const WRONGVACUUM = 4; //< problem with unphysical vacuum
 
 int const SQUARKTACHYON = 5; //< stop/sbottom tachyon
-
+int const VECTORBOSONTACHYON = 6; //< vector boson tachyon
 int const TADPOLESPROBLEM = 15; //< problem calculating 1-loop tadpoles
 
 int const HIGGSPROBLEM = 10; //< problems with calculating the Higgs mass

@@ -283,10 +283,10 @@ void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & m, Eigen::ArrayXd 
 // A function for getting the predicted running value of M_Z^2, including 1-loop top and
 // stop tadpole contributions. Used for numerically calculating the fine tuning in the
 // E6SSM. Passed to SOFTSUSY's calcDerivative routine as part of the fine tuning calculation.
- double predpE6SSMMzSqRun(double parVal);
+double predpE6SSMMzSqRun(double parVal);
 
 
- Eigen::VectorXd doCalcESSMTuningNumerically(flexiblesusy::genericE6SSM_soft_parameters r, double ms, double mx, 
+Eigen::VectorXd doCalcESSMTuningNumerically(flexiblesusy::genericE6SSM_soft_parameters r, double ms, double mx, 
 					     Eigen::ArrayXd pars,
 					     void (*BCatMX)(flexiblesusy::genericE6SSM_soft_parameters & , Eigen::ArrayXd &));
  

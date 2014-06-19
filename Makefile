@@ -118,6 +118,18 @@ TUNING_DEP := \
 TUNING_EXE := \
 		essmScanner.x
 
+GENERATOR_SRC := \
+	           $(SRCDIR)/essmScanInputsGenerator.cpp
+
+GENERATOR_OBJ := \
+	        $(patsubst %.cpp, %.o, $(filter %.cpp, $(GENERATOR_SRC))) 
+
+GENERATOR_DEP := \
+               $(GENERATOR_OBJ:.o=.d)
+
+GENERATOR_EXE := \
+	        essmScanInputsGenerator.x
+
 # returns file name with absolute path, taking whitespace in directory
 # names into account
 abspathx        = $(foreach name,$(1),\
@@ -125,7 +137,7 @@ abspathx        = $(foreach name,$(1),\
 
 .PHONY:         all clean clean-dep clean-obj showbuild
 
-all: $(TUNING_EXE)
+all: $(TUNING_EXE) $(GENERATOR_EXE)
 
 clean-dep:
 		-rm -f $(TUNING_DEP)
@@ -144,6 +156,9 @@ endif
 
 $(TUNING_EXE): $(TUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
+
+$(GENERATOR_EXE): $(GENERATOR_OBJ) $(LIBFLEXI)
+		$(CXX) -o $@ $(call abspathx,$^) $(FLIBS) $(CPPFLAGS)
 
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(MAKECMDGOALS),clean-dep)

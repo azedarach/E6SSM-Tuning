@@ -13,11 +13,19 @@
 #include "tuningnumerics.h"
 #include "tuningutils.h"
 
+// To make including more parameters easier later and to avoid name clashes
+// (may be even better for encapsulation later on if we define a class
+// with a model as a member variable):
+namespace essm_tuning_utils {
+
+  enum tuning_parameters : unsigned { lam3, M1, M2, M3, M1p, 
+	       Au3, Alam3, mH13Sq, mH23Sq, mS3Sq, mqL3Sq, mtRSq, NUMESSMTUNINGPARS };
+
 // A function to calculate the 2x2 matrix appearing on the LHS of the calculation
 // of the derivatives of the VEVs wrt the parameters in the MSSM. Note that this
 // assumes that the SoftParsMssm object is already set to have its renormalisation
 // scale set at M_SUSY.
-DoubleMatrix doCalcLHSTuningMatrix(flexiblesusy::genericE6SSM_soft_parameters essmSusy, DoubleVector const & vevs);
+ Eigen::Matrix<double,3,3> doCalcLHSTuningMatrix(flexiblesusy::genericE6SSM_soft_parameters essmSusy, Eigen::VectorXd const & vevs);
 
 //double rgeDerivCalc(double x);
 
@@ -32,7 +40,8 @@ DoubleMatrix doCalcLHSTuningMatrix(flexiblesusy::genericE6SSM_soft_parameters es
 
 // A function to calculate d log(M_Z^2)/d log(p) using the value of the parameter p
 // and the already calculated derivatives d v_i/ d p_j. 
-double doCalcdLogMzSqdLogParam(flexiblesusy::genericE6SSM_soft_parameters r, double p, DoubleVector const & vevs, DoubleVector const & dVevsdp);
+ double doCalcdLogMzSqdLogParam(flexiblesusy::genericE6SSM_soft_parameters r, double p, Eigen::VectorXd const & vevs, 
+				Eigen::VectorXd const & dVevsdp);
 
 // ESSM_EWSBConditioni, i = 1, 2, calculates the value of the 
 // EWSB condition for m_H_i^2 and m_S^2.
@@ -55,18 +64,6 @@ bool ESSM_EWSB_NewtonShooter(flexiblesusy::genericE6SSM_soft_parameters const & 
 double ESSM_Msusy_Cond(flexiblesusy::genericE6SSM_soft_parameters r, double ms);
 
 void ESSM_EWSB_Shooter_Functions(DoubleVector const & parVals, DoubleVector & f);
-
-// The function needed in the Newton iteration used to implement the EWSB conditions.
-// Things are made slightly awkward by the fact that it should only take as arguments
-// the values of the parameters and a vector to store the function values.  To get around
-// it I have overloaded the SOFTSUSY numerics.h to allow an extra vector of 
-// auxiliary data to be passed to define the function (see new definitions in tuningnumerics.h).
-// In this case, guess contains the values of m_Hd^2(MX) and m_Hu^2(MX), 
-// auxData contains all of the other parameters needed to define a SUSY model object,
-// and on output the length 2 vector fVals contains the function values.
-/* void ESSM_EWSBCondition_NewtonFunc(DoubleVector const & guess, DoubleVector & fVals); */
-
-/* DoubleVector ESSM_EWSBNewtonSolver(flexiblesusy::genericE6SSM_soft_parameters, double, int, int &); */
 
 double ccbSqrt(double);
 
@@ -257,31 +254,31 @@ double doCalcmqL3SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, i
 
 
 
-DoubleVector doCalcMh1SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcMh1SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError);
-DoubleVector doCalcMh2SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcMh2SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError);
-DoubleVector doCalcMsSquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcMsSquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError);
-DoubleVector doCalcLambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcLambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
 				bool & hasError);
-DoubleVector doCalcGauginoDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int whichGaugino,
+Eigen::Matrix<double,8,1> doCalcGauginoDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int whichGaugino,
 				 bool & hasError);
-DoubleVector doCalcSoftAuDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
+Eigen::Matrix<double,8,1> doCalcSoftAuDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
 				bool & hasError);
-DoubleVector doCalcSoftAlambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcSoftAlambdaDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
 				     bool & hasError);
-DoubleVector doCalcMq2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
+Eigen::Matrix<double,8,1> doCalcMq2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
 			     bool & hasError);
-DoubleVector doCalcMu2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
+Eigen::Matrix<double,8,1> doCalcMu2Derivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int m, int n,
 			     bool & hasError);
 
-/* DoubleVector doCalcRHSTuningVector_pESSM_Approx(flexiblesusy::genericE6SSM_soft_parameters r, void (*ftBCatMX)(flexiblesusy::genericE6SSM_soft_parameters &, DoubleVector &),  */
-/* 						DoubleVector pars, DoubleVector const & vevs, int i, double mx,  */
-/* 						bool & hasError, DoubleVector const & auxPars); */
+Eigen::Matrix<double,8,1> doCalcRHSTuningVector_ESSM_Approx(flexiblesusy::genericE6SSM_soft_parameters modelAtMsusy, 
+					       void (*ftBCatMX)(flexiblesusy::genericE6SSM_soft_parameters &, const Eigen::ArrayXd &), 
+					       Eigen::ArrayXd const & vevs, tuning_parameters i, double mx, 
+					       bool & hasError, Eigen::ArrayXd const & modelParsAtMx);
 
-/* void pESSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & m, DoubleVector & tuningPars); */
+void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & m, Eigen::ArrayXd & tuningPars);
 
-
-
+} // namespace essm_tuning_utils
 #endif

@@ -4,27 +4,29 @@
 
 #include "essmtuningutils.h"
 
+namespace essm_tuning_utils {
+
 using namespace flexiblesusy;
 
 // A function to calculate the 3x3 matrix appearing on the LHS of the calculation
 // of the derivatives of the VEVs wrt the parameters in the E6SSM. Note that this
 // assumes that the E6SSM object is already set to have its renormalisation
 // scale set at M_SUSY.
-DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, DoubleVector const & vevs)
+  Eigen::Matrix<double,3,3> doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, Eigen::VectorXd const & vevs)
 {
   
-  DoubleMatrix lhsMat(3,3);
+  Eigen::Matrix<double,3,3> lhsMat;
   
-  if (vevs.displayEnd()-vevs.displayStart()+1 < 3)
+  if (vevs.size() != 3)
     {
       cerr << "WARNING: incorrect number of VEVs supplied to function: skipping calculating LHS matrix." << endl;
     }
   else
     {
       
-      double v1 = vevs(vevs.displayStart());
-      double v2 = vevs(vevs.displayStart()+1);
-      double s = vevs(vevs.displayEnd());
+      double v1 = vevs(0);
+      double v2 = vevs(1);
+      double s = vevs(3);
       double tb = v2/v1;
       double v = Sqrt(v1*v1+v2*v2);
 
@@ -113,12 +115,13 @@ DoubleMatrix doCalcLHSTuningMatrix(genericE6SSM_soft_parameters essmSusy, Double
 
 // A function to calculate d log(M_Z^2)/d log(p) using the value of the parameter p
 // and the already calculated derivatives d v_i/ d p_j. For the 
-double doCalcdLogMzSqdLogParam(genericE6SSM_soft_parameters r, double p, DoubleVector const & vevs, DoubleVector const & dVevsdp)
+  double doCalcdLogMzSqdLogParam(genericE6SSM_soft_parameters r, double p, Eigen::VectorXd const & vevs, 
+			       Eigen::VectorXd const & dVevsdp)
 {
 
   double deriv = 0.0;
 
-  if ((vevs.displayEnd()-vevs.displayStart()+1 < 3) || (dVevsdp.displayEnd()-dVevsdp.displayStart()+1 < 3))
+  if ((vevs.size() != 3) || (dVevsdp.size() != 3))
     {
       cerr << "WARNING: incorrect number of VEVs supplied to function: skipping calculating derivative." << endl;
     }
@@ -128,13 +131,13 @@ double doCalcdLogMzSqdLogParam(genericE6SSM_soft_parameters r, double p, DoubleV
       double g2 = r.get_g2();
       double gbar = Sqrt(g2*g2+0.6*g1*g1);
       
-      double v1 = vevs(vevs.displayStart());
-      double v2 = vevs(vevs.displayStart()+1);
+      double v1 = vevs(1);
+      double v2 = vevs(2);
 
       double v = Sqrt(v1*v1+v2*v2);
 
       // Neglect any neutral mixing for now, but later may want to include contribution from it.      
-      deriv = (2.0*p/(v*v))*(v1*dVevsdp(dVevsdp.displayStart())+v2*dVevsdp(dVevsdp.displayEnd()));
+      deriv = (2.0*p/(v*v))*(v1*dVevsdp(0)+v2*dVevsdp(1));
     }
 
   return deriv;
@@ -6588,7 +6591,7 @@ double doCalcmqL3SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 // Because only a small subset of the high scale parameters have a significant contribution to
 // the tuning, and to save time, for now we only calculate fine tuning for the third generation parameters
 // listed below.
-DoubleVector doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError)
 {
   if (gen < 1 || gen > 3)
@@ -6603,7 +6606,7 @@ DoubleVector doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, double ms, i
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -6687,7 +6690,7 @@ DoubleVector doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r, double ms, i
 
 }
 
-DoubleVector doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError)
 {
   if (gen < 1 || gen > 3)
@@ -6702,7 +6705,7 @@ DoubleVector doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, double ms, i
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
   
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -6787,7 +6790,7 @@ DoubleVector doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r, double ms, i
 
 }
 
-DoubleVector doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError)
 {
   if (gen < 1 || gen > 3)
@@ -6802,7 +6805,7 @@ DoubleVector doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, double ms, in
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -6886,7 +6889,10 @@ DoubleVector doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, double ms, in
 
 }
 
-DoubleVector doCalcLambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+// Note for derivatives of beta_Alambda, we will use
+// the simplified expressions in which the charges are hard-coded,
+// until there is time to work out the proper expressions.
+Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
 				bool & hasError)
 {
   if (gen != 3)
@@ -6901,7 +6907,7 @@ DoubleVector doCalcLambdaDerivs(genericE6SSM_soft_parameters r, double ms, int g
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -6934,61 +6940,70 @@ DoubleVector doCalcLambdaDerivs(genericE6SSM_soft_parameters r, double ms, int g
   double mHu2 = r.get_mHu2();
   double ms2 = r.get_ms2();
 
-  Eigen::Matrix<double,3,3> Yd, Yu, Ye;  
+  Eigen::Matrix<double,3,3> Yd, Yu, Ye, kappa;  
+  Eigen::Matrix<double,2,2> lambda12;
 
   Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
-  
+
+  kappa = r.get_Kappa();
+  lambda12 = r.get_Lambda12();
+
+  double M1 = r.get_MassB();
+  double M2 = r.get_MassWB();
+  double M3 = r.get_MassG();
+  double M1p = r.get_MassBp();  
+
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
 
   // Calculate each of the remaining non-zero derivatives:
-  // for lambda
 
-  // for Alambda
-
-  // for At
-
-  // for mHd^2
-  // 1-loop contribution
+  // 1-loop betas
+  double dbeta_1loop_lambdadp = -0.6 * Sqr(g1) - 3.0 * Sqr(g2) - 2.0 * Sqr(gN)*(Sqr(input.QH1p)+Sqr(input.QH2p) + Sqr(input.QSp))
+    + 12.0 * Sqr(lambda) + 3.0 * (Yd*(Yd.adjoint())).trace() + 3.0 * (Yu*(Yu.adjoint())).trace()
+    + (Ye*(Ye.adjoint())).trace() + 3.0 * (kappa*(kappa.adjoint())).trace() + 2.0 * (lambda12*(lambda12.adjoint())).trace();
+  double dbeta_1loop_Alambdadp = 16.0*lambda*Alambda;
   double dbeta_1loop_mHdSqdp = 4.0 * lambda * (mHd2 + mHu2 + ms2 + Sqr(Alambda) );
+  double dbeta_1loop_mHuSqdp = 4.0 * lambda * (mHd2 + mHu2 + ms2 + Sqr(Alambda) );
+  double dbeta_1loop_mSSqdp = 8.0 * lambda * (mHd2 + mHu2 + ms2 + Sqr(Alambda) );
+  double dbeta_1loop_mQlSqdp = 0.0;
+  double dbeta_1loop_mUrSqdp = 0.0;
+  // Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+  double dbeta_1loop_Atdp = 4.0*lambda*Alambda;
 
-  // 2-loop contribution
-
-
-  // (1-loop)^2 contribution
-
-  // total 
-
-  // for mHu^2
-  // 1-loop contribution
-
-  // 2-loop contribution
-
-  // (1-loop)^2 contribution
-
-  // for mS^2
-  // 1-loop contribution
-
-  // 2-loop contribution
-
-  // (1-loop)^2 contribution
-
-  // for mQl^2
-  // 1-loop contribution
-
-  // 2-loop contribution
-
-  // (1-loop)^2 contribution
-
-  // for mUr^2
-  // 1-loop contribution
-
-  // 2-loop contribution
-
-  // (1-loop)^2 contribution
+  // TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+  double dbeta_1loop2_lambdadp = 0.0;
+  double dbeta_1loop2_Alambdadp = 0.0;
+  double dbeta_1loop2_mHdSqdp = 0.0;
+  double dbeta_1loop2_mHuSqdp = 0.0;
+  double dbeta_1loop2_mSSqdp = 0.0;
+  double dbeta_1loop2_mQlSqdp = 0.0;
+  double dbeta_1loop2_mUrSqdp = 0.0;
+  double dbeta_1loop2_Atdp = 0.0;  
+  
+  // TODO:: 2-loop derivatives
+  double dbeta_2loop_lambdadp = 0.0;
+  double dbeta_2loop_Alambdadp = 0.0;
+  double dbeta_2loop_mHdSqdp = 0.0;
+  double dbeta_2loop_mHuSqdp = 0.0;
+  double dbeta_2loop_mSSqdp = 0.0;
+  double dbeta_2loop_mQlSqdp = 0.0;
+  double dbeta_2loop_mUrSqdp = 0.0;
+  double dbeta_2loop_Atdp = 0.0;  
+  
+  derivs(1) = 1.0 + t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+  derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+  derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+  derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+  derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+  derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+  derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+  derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
+  
+  return derivs;
 }
 
-DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int whichGaugino,
+Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int whichGaugino,
 				 bool & hasError)
 {
   if (whichGaugino < 1 || whichGaugino > 4)
@@ -7003,7 +7018,7 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7050,159 +7065,179 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
 
   switch(whichGaugino)
     {
-      // For M1 and M2 we will (for now) only include the 1-loop contributions to
-      // the derivatives.
+
     case 1:
       {
-	// Calculate each of the remaining non-zero derivatives:
-	// for lambda
-	
-	// for Alambda
-	
-	// for At
-	
-	// for mHd^2
-	// 1-loop contribution
-	double dbeta_1loop_mHdSqdp = -2.4 * Sqr(g1)*M1;
 
-	// total 
+	// 1-loop betas
+	double dbeta_1loop_lambdadp = 0.0;
+	double dbeta_1loop_Alambdadp = 1.2 * Sqr(g1);
+	double dbeta_1loop_mHdSqdp = -2.4 * Sqr(g1)*M1;
+	double dbeta_1loop_mHuSqdp = -2.4 * Sqr(g1)*M1;
+	double dbeta_1loop_mSSqdp = 0.0;
+	double dbeta_1loop_mQlSqdp = -(4.0/15.0)*Sqr(g1)*M1;
+	double dbeta_1loop_mUrSqdp = -(64.0/15.0)*Sqr(g1)*M1;
+	// Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+	double dbeta_1loop_Atdp = (26.0/15.0)*Sqr(g1);
 	
-	// for mHu^2
-	// 1-loop contribution
+	// TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+	double dbeta_1loop2_lambdadp = 0.0;
+	double dbeta_1loop2_Alambdadp = 0.0;
+	double dbeta_1loop2_mHdSqdp = 0.0;
+	double dbeta_1loop2_mHuSqdp = 0.0;
+	double dbeta_1loop2_mSSqdp = 0.0;
+	double dbeta_1loop2_mQlSqdp = 0.0;
+	double dbeta_1loop2_mUrSqdp = 0.0;
+	double dbeta_1loop2_Atdp = 0.0;  
 	
+	// TODO:: 2-loop derivatives
+	double dbeta_2loop_lambdadp = 0.0;
+	double dbeta_2loop_Alambdadp = 0.0;
+	double dbeta_2loop_mHdSqdp = 0.0;
+	double dbeta_2loop_mHuSqdp = 0.0;
+	double dbeta_2loop_mSSqdp = 0.0;
+	double dbeta_2loop_mQlSqdp = 0.0;
+	double dbeta_2loop_mUrSqdp = 0.0;
+	double dbeta_2loop_Atdp = 0.0;  
 	
-	// for mS^2
-	// 1-loop contribution
-	
-	// for mQl^2
-	// 1-loop contribution
-	
-	
-	// for mUr^2
-	// 1-loop contribution
-	
+	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
+		
       }
     case 2:
       {
-	// Calculate each of the remaining non-zero derivatives:
-	// for lambda
-	
-	// for Alambda
-	
-	// for At
-	
-	// for mHd^2
-	// 1-loop contribution
+	// 1-loop betas
+	double dbeta_1loop_lambdadp = 0.0;
+	double dbeta_1loop_Alambdadp = 6.0 * Sqr(g2);
 	double dbeta_1loop_mHdSqdp = -12.0 * Sqr(g2) * M2;
-	
-	// for mHu^2
-	// 1-loop contribution
+	double dbeta_1loop_mHuSqdp = -12.0 * Sqr(g2) * M2;
+	double dbeta_1loop_mSSqdp = 0.0;
+	double dbeta_1loop_mQlSqdp = -12.0 * Sqr(g2) * M2;
+	double dbeta_1loop_mUrSqdp = -12.0 * Sqr(g2) * M2;
+	// Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+	double dbeta_1loop_Atdp = 6.0 * Sqr(g2);
 
-	// for mS^2
-	// 1-loop contribution
+	// TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+	double dbeta_1loop2_lambdadp = 0.0;
+	double dbeta_1loop2_Alambdadp = 0.0;
+	double dbeta_1loop2_mHdSqdp = 0.0;
+	double dbeta_1loop2_mHuSqdp = 0.0;
+	double dbeta_1loop2_mSSqdp = 0.0;
+	double dbeta_1loop2_mQlSqdp = 0.0;
+	double dbeta_1loop2_mUrSqdp = 0.0;
+	double dbeta_1loop2_Atdp = 0.0;  
 	
+	// TODO:: 2-loop derivatives
+	double dbeta_2loop_lambdadp = 0.0;
+	double dbeta_2loop_Alambdadp = 0.0;
+	double dbeta_2loop_mHdSqdp = 0.0;
+	double dbeta_2loop_mHuSqdp = 0.0;
+	double dbeta_2loop_mSSqdp = 0.0;
+	double dbeta_2loop_mQlSqdp = 0.0;
+	double dbeta_2loop_mUrSqdp = 0.0;
+	double dbeta_2loop_Atdp = 0.0;  
 	
-	// for mQl^2
-	// 1-loop contribution
-	
-	// for mUr^2
-	// 1-loop contribution
+	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+
       }
     case 3:
       {
-	// Calculate each of the remaining non-zero derivatives:
-	// for lambda
-	
-	// for Alambda
-	
-	// for At
-	
-	// for mHd^2
-	// 1-loop contribution
+	// 1-loop betas
+	double dbeta_1loop_lambdadp = 0.0;
+	double dbeta_1loop_Alambdadp = 0.0;
 	double dbeta_1loop_mHdSqdp = 0.0;
+	double dbeta_1loop_mHuSqdp = 0.0;
+	double dbeta_1loop_mSSqdp = 0.0;
+	double dbeta_1loop_mQlSqdp = -(64.0/3.0)*Sqr(g3)*M3;
+	double dbeta_1loop_mUrSqdp = -(64.0/3.0)*Sqr(g3)*M3;
+	// Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+	double dbeta_1loop_Atdp =  (32.0/3.0) * Sqr(g3);
 	
-	// 2-loop contribution
+	// TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+	double dbeta_1loop2_lambdadp = 0.0;
+	double dbeta_1loop2_Alambdadp = 0.0;
+	double dbeta_1loop2_mHdSqdp = 0.0;
+	double dbeta_1loop2_mHuSqdp = 0.0;
+	double dbeta_1loop2_mSSqdp = 0.0;
+	double dbeta_1loop2_mQlSqdp = 0.0;
+	double dbeta_1loop2_mUrSqdp = 0.0;
+	double dbeta_1loop2_Atdp = 0.0;  
 	
+	// TODO:: 2-loop derivatives
+	double dbeta_2loop_lambdadp = 0.0;
+	double dbeta_2loop_Alambdadp = 0.0;
+	double dbeta_2loop_mHdSqdp = 0.0;
+	double dbeta_2loop_mHuSqdp = 0.0;
+	double dbeta_2loop_mSSqdp = 0.0;
+	double dbeta_2loop_mQlSqdp = 0.0;
+	double dbeta_2loop_mUrSqdp = 0.0;
+	double dbeta_2loop_Atdp = 0.0;  
 	
-	// (1-loop)^2 contribution
-	
-	// total 
-	
-	// for mHu^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
-	// for mS^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
-	// for mQl^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
-	// for mUr^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
+	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+
       }
     case 4:
       {
-	// Calculate each of the remaining non-zero derivatives:
-	// for lambda
-	
-	// for Alambda
-	
-	// for At
-	
-	// for mHd^2
-	// 1-loop contribution
+	// 1-loop betas
+	double dbeta_1loop_lambdadp = 0.0;
+	double dbeta_1loop_Alambdadp = 4.0 * Sqr(gN) * (Sqr(input.QH1p) + Sqr(input.QH2p) + Sqr(input.QSp));
 	double dbeta_1loop_mHdSqdp = -16.0 * Sqr(gN*input.QH1p) * M1p;
+	double dbeta_1loop_mHuSqdp = -16.0 * Sqr(gN*input.QH2p) * M1p;
+	double dbeta_1loop_mSSqdp = -16.0 * Sqr(gN*input.QSp) * M1p;
+	double dbeta_1loop_mQlSqdp = -16.0 * Sqr(gN*input.QQp) * M1p;
+	double dbeta_1loop_mUrSqdp = -16.0 * Sqr(gN*input.Qup) * M1p;
+	// Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+	double dbeta_1loop_Atdp =  4.0 * Sqr(gN) * (Sqr(input.QQp) + Sqr(input.QH2p) + Sqr(input.Qup));
 	
-	// 2-loop contribution
+	// TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+	double dbeta_1loop2_lambdadp = 0.0;
+	double dbeta_1loop2_Alambdadp = 0.0;
+	double dbeta_1loop2_mHdSqdp = 0.0;
+	double dbeta_1loop2_mHuSqdp = 0.0;
+	double dbeta_1loop2_mSSqdp = 0.0;
+	double dbeta_1loop2_mQlSqdp = 0.0;
+	double dbeta_1loop2_mUrSqdp = 0.0;
+	double dbeta_1loop2_Atdp = 0.0;  
 	
+	// TODO:: 2-loop derivatives
+	double dbeta_2loop_lambdadp = 0.0;
+	double dbeta_2loop_Alambdadp = 0.0;
+	double dbeta_2loop_mHdSqdp = 0.0;
+	double dbeta_2loop_mHuSqdp = 0.0;
+	double dbeta_2loop_mSSqdp = 0.0;
+	double dbeta_2loop_mQlSqdp = 0.0;
+	double dbeta_2loop_mUrSqdp = 0.0;
+	double dbeta_2loop_Atdp = 0.0;  
 	
-	// (1-loop)^2 contribution
-	
-	// total 
-	
-	// for mHu^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
-	// for mS^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
-	// for mQl^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
-	
-	// for mUr^2
-	// 1-loop contribution
-	
-	// 2-loop contribution
-	
-	// (1-loop)^2 contribution
+	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+
       }
     default:
       {
@@ -7211,9 +7246,11 @@ DoubleVector doCalcGauginoDerivs(genericE6SSM_soft_parameters r, double ms, int 
 	throw ii.str();
       }
     }
+
+  return derivs;
 }
 
-DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
+Eigen::Matrix<double,8,1> doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
 				bool & hasError)
 {
   if (m != 3 || n != 3)
@@ -7228,7 +7265,7 @@ DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, double ms, int m
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7256,16 +7293,35 @@ DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, double ms, int m
     {
       Alambda = Tlambda/lambda;
     }
-  
-  double mHd2 = r.get_mHd2();
-  double mHu2 = r.get_mHu2();
-  double ms2 = r.get_ms2();
 
   Eigen::Matrix<double,3,3> Yd, Yu, Ye, TYu;  
 
   Yd = r.get_Yd(); Yu = r.get_Yu(); Ye = r.get_Ye();
 
-  TYu = r.get_TYu();  
+  TYu = r.get_TYu();
+  
+  double At;
+  double TYt = r.get_TYu(2,2);
+  
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(Yu(2,2)) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(Yu(2,2)) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/Yu(2,2);
+    }  
+
+  double mHd2 = r.get_mHd2();
+  double mHu2 = r.get_mHu2();
+  double ms2 = r.get_ms2();
 
   double M1 = r.get_MassB();
   double M2 = r.get_MassWB();
@@ -7274,56 +7330,61 @@ DoubleVector doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, double ms, int m
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
-
-  // Calculate each of the remaining non-zero derivatives:
-  // for lambda
-  
-  // for Alambda
-  
-  // for At
-  
-  // for mHd^2
-  // 1-loop contribution
+  // 1-loop betas
+  double dbeta_1loop_lambdadp = 0.0;
+  double dbeta_1loop_Alambdadp = 6.0 * Sqr (Yu(2,2));
   double dbeta_1loop_mHdSqdp = 0.0;
+  double dbeta_1loop_mHuSqdp = 12.0 * Sqr(Yu(2,2)) * At;
+  double dbeta_1loop_mSSqdp = 0.0;
+  double dbeta_1loop_mQlSqdp = 4.0 * Sqr(Yu(2,2)) * At;
+  double dbeta_1loop_mUrSqdp = 8.0 * Sqr(Yu(2,2)) * At;
+  // Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+  double dbeta_1loop_Atdp =  12.0 * Sqr(Yu(2,2));
   
-  // 2-loop contribution
+  // extra 1-loop betas needed below
+  double dbeta_1loop_g1dp = 0.0;
+  double dbeta_1loop_g2dp = 0.0;
+  double dbeta_1loop_g3dp = 0.0;
+  double dbeta_1loop_gNdp = 0.0;
+  double dbeta_1loop_ytdp = 0.0;
+  double dbeta_1loop_ybdp = 0.0;
+  double dbeta_1loop_ytaudp = 0.0;
+  double dbeta_1loop_kappadp = 0.0;
   
+  // TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+  double dbeta_1loop2_lambdadp = 0.0;
+  double dbeta_1loop2_Alambdadp = 0.0;
+  double dbeta_1loop2_mHdSqdp = 0.0;
+  double dbeta_1loop2_mHuSqdp = 0.0;
+  double dbeta_1loop2_mSSqdp = 0.0;
+  double dbeta_1loop2_mQlSqdp = 0.0;
+  double dbeta_1loop2_mUrSqdp = 0.0;
+  double dbeta_1loop2_Atdp = 0.0;  
   
-  // (1-loop)^2 contribution
-  
-  // total 
-  
-  // for mHu^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
-  
-  // for mS^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
-  
-  // for mQl^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
-  
-  // for mUr^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
+  // TODO:: 2-loop derivatives
+  double dbeta_2loop_lambdadp = 0.0;
+  double dbeta_2loop_Alambdadp = 0.0;
+  double dbeta_2loop_mHdSqdp = 0.0;
+  double dbeta_2loop_mHuSqdp = 0.0;
+  double dbeta_2loop_mSSqdp = 0.0;
+  double dbeta_2loop_mQlSqdp = 0.0;
+  double dbeta_2loop_mUrSqdp = 0.0;
+  double dbeta_2loop_Atdp = 0.0;  
+
+  derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+  derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+  derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+  derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+  derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+  derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+  derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+  derivs(8) = 1.0 + t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+
+  return derivs;
 
 }
 
-DoubleVector doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
+Eigen::Matrix<double,8,1> doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
 				     bool & hasError)
 {
   if (gen != 3)
@@ -7338,7 +7399,7 @@ DoubleVector doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, double ms, 
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7384,57 +7445,60 @@ DoubleVector doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r, double ms, 
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
-
-  // Calculate each of the remaining non-zero derivatives:
-  // for lambda
+  // 1-loop betas
   double dbeta_1loop_lambdadp = 0.0;
-
-  // for Alambda
-  
-  // for At
-  
-  // for mHd^2
-  // 1-loop contribution
+  double dbeta_1loop_Alambdadp = 8.0 * Sqr(lambda);
   double dbeta_1loop_mHdSqdp = 4.0 * lambda * Tlambda;
+  double dbeta_1loop_mHuSqdp = 4.0 * lambda * Tlambda;
+  double dbeta_1loop_mSSqdp = 8.0 * lambda * Tlambda;
+  double dbeta_1loop_mQlSqdp = 0.0;
+  double dbeta_1loop_mUrSqdp = 0.0;
+  // Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
+  double dbeta_1loop_Atdp =  2.0 * Sqr(lambda);
   
-  // 2-loop contribution
+  // extra 1-loop betas needed below
+  double dbeta_1loop_g1dp = 0.0;
+  double dbeta_1loop_g2dp = 0.0;
+  double dbeta_1loop_g3dp = 0.0;
+  double dbeta_1loop_gNdp = 0.0;
+  double dbeta_1loop_ytdp = 0.0;
+  double dbeta_1loop_ybdp = 0.0;
+  double dbeta_1loop_ytaudp = 0.0;
+  double dbeta_1loop_kappadp = 0.0;
   
+  // TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
+  double dbeta_1loop2_lambdadp = 0.0;
+  double dbeta_1loop2_Alambdadp = 0.0;
+  double dbeta_1loop2_mHdSqdp = 0.0;
+  double dbeta_1loop2_mHuSqdp = 0.0;
+  double dbeta_1loop2_mSSqdp = 0.0;
+  double dbeta_1loop2_mQlSqdp = 0.0;
+  double dbeta_1loop2_mUrSqdp = 0.0;
+  double dbeta_1loop2_Atdp = 0.0;  
   
-  // (1-loop)^2 contribution
-  
-  // total 
-  
-  // for mHu^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
-  
-  // for mS^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
-  
-  // for mQl^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
-  
-  // for mUr^2
-  // 1-loop contribution
-  
-  // 2-loop contribution
-  
-  // (1-loop)^2 contribution
+  // TODO:: 2-loop derivatives
+  double dbeta_2loop_lambdadp = 0.0;
+  double dbeta_2loop_Alambdadp = 0.0;
+  double dbeta_2loop_mHdSqdp = 0.0;
+  double dbeta_2loop_mHuSqdp = 0.0;
+  double dbeta_2loop_mSSqdp = 0.0;
+  double dbeta_2loop_mQlSqdp = 0.0;
+  double dbeta_2loop_mUrSqdp = 0.0;
+  double dbeta_2loop_Atdp = 0.0;  
 
+  derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+  derivs(2) = 1.0 + t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+  derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+  derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+  derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+  derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+  derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+  derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+
+  return derivs;
 }
 
-DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
+Eigen::Matrix<double,8,1> doCalcMq2Derivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
 			     bool & hasError)
 {
   if (m < 1 || m > 3 || n < 1 || n > 3)
@@ -7449,7 +7513,7 @@ DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, double ms, int m, i
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -7518,7 +7582,7 @@ DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, double ms, int m, i
   derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
   derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
   derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
-  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(6) = KroneckerDelta(m,3)*KroneckerDelta(n,3) + t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
   derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
   derivs(8) = dAtdp;
 
@@ -7526,7 +7590,7 @@ DoubleVector doCalcMq2Derivs(genericE6SSM_soft_parameters r, double ms, int m, i
 
 }
 
-DoubleVector doCalcMu2Derivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
+Eigen::Matrix<double,8,1> doCalcMu2Derivs(genericE6SSM_soft_parameters r, double ms, int m, int n,
 			     bool & hasError)
 {
   if (m < 1 || m > 3 || n < 1 || n > 3)
@@ -7541,7 +7605,7 @@ DoubleVector doCalcMu2Derivs(genericE6SSM_soft_parameters r, double ms, int m, i
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  DoubleVector derivs(8);
+  Eigen::Matrix<double,8,1> derivs(8);
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -7611,8 +7675,343 @@ DoubleVector doCalcMu2Derivs(genericE6SSM_soft_parameters r, double ms, int m, i
   derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
   derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
   derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
-  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(7) = KroneckerDelta(m,3)*KroneckerDelta(n,3) + t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
   derivs(8) = dAtdp;
 
   return derivs;
 }
+
+// Parameters that we calculate the fine tuning for are stored in vectors
+// in the order /{lambda, M1, M2, M3, M1', At, Alambda, mHd2, mHu2, ms2, mq3Sq, mtRSq\}
+  Eigen::Matrix<double,3,1> doCalcRHSTuningVector_ESSM_Approx(flexiblesusy::genericE6SSM_soft_parameters modelAtMsusy, 
+							  void (*ftBCatMX)(flexiblesusy::genericE6SSM_soft_parameters &, Eigen::ArrayXd &), 
+							  Eigen::VectorXd const & vevs, tuning_parameters i, double mx, 
+							  bool & hasError, Eigen::ArrayXd const & modelParsAtMx)
+{
+  Eigen::VectorXd rhsVec = vevs;
+
+  if (vevs.size() != 3)
+    {
+      ostringstream kk;
+      kk << "# WARNING: incorrect number of VEVs provided to doCalcRHSTuningVector_ESSM_Approx: exiting." << endl;
+      throw kk.str();
+    }
+  else
+    {
+      double v1 = vevs(0);
+      double v2 = vevs(1);
+      double tb = v2/v1;
+      double v = Sqrt(v1*v1+v2*v2);
+
+      double s = vevs(2);
+      
+      genericE6SSM_input_parameters input = modelAtMsusy.get_input();
+      
+      double g1 = modelAtMsusy.get_g1();
+      double g2 = modelAtMsusy.get_g2();
+      double g3 = modelAtMsusy.get_g3();
+      double gN = modelAtMsusy.get_gN();
+      
+      double Tlambda = modelAtMsusy.get_TLambdax();
+      double lambda = modelAtMsusy.get_Lambdax();
+      double Alambda;
+      
+      if (Abs(Tlambda) < EPSTOL) 
+	{
+	  Alambda = 0.0;
+	}
+      else if (Abs(lambda) < 1.0e-100)
+	{
+	  ostringstream ii;
+	  ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	    Abs(lambda) << endl;
+	  throw ii.str();
+	}
+      else
+	{
+	  Alambda = Tlambda/lambda;
+	}
+      
+      
+      
+      // First calculate the elements of the matrix that appears on the RHS in general, being derivatives of the EWSB
+      // conditions wrt the EW scale parameters. For the EWSB conditions used in our study, this matrix has the form:
+      // 
+      //     [ df1/dlambda df1/dAlambda df1/dm_Hd^2 df1/dm_Hu^2 df1/dm_s^2 df1/dm_Ql^2 df1/dm_uR^2 df1/dA_t ]
+      //     [ df2/dlambda df2/dAlambda df2/dm_Hd^2 df2/dm_Hu^2 df2/dm_2^2 df2/dm_Ql^2 df2/dm_uR^2 df2/dA_t ]
+      //     [ df3/dlambda df3/dAlambda df3/dm_Hd^2 df3/dm_Hu^2 df3/dm_2^2 df3/dm_Ql^2 df3/dm_uR^2 df3/dA_t ]
+      Eigen::Matrix<double,3,8> EWderivs;
+      
+      EWderivs(0,0) = lambda*(v2*v2+s*s)-Alambda*s*tb/Sqrt(2.0);
+      EWderivs(1,0) = lambda*(v1*v1+s*s)-Alambda*s/(Sqrt(2.0)*tb);
+      EWderivs(2,0) = lambda*v*v-Alambda*v1*v2/(Sqrt(2.0)*s);
+
+      EWderivs(0,1) = -lambda*s*tb/Sqrt(2.0);
+      EWderivs(1,1) = -lambda*s/(Sqrt(2.0)*tb);
+      EWderivs(2,1) = -lambda*v1*v2/(Sqrt(2.0)*s);
+      
+      EWderivs(0,2) = 1.0;
+      EWderivs(1,2) = 0.0;
+      EWderivs(2,2) = 0.0;
+      
+      EWderivs(0,3) = 0.0;
+      EWderivs(1,3) = 1.0;
+      EWderivs(2,3) = 0.0;
+      
+      EWderivs(0,4) = 0.0;
+      EWderivs(1,4) = 0.0;
+      EWderivs(2,4) = 1.0;
+      
+      EWderivs(0,5) = 0.0;
+      EWderivs(1,5) = 0.0;
+      EWderivs(2,5) = 0.0;
+      
+      EWderivs(0,6) = 0.0;
+      EWderivs(1,6) = 0.0;
+      EWderivs(2,6) = 0.0;
+      
+      EWderivs(0,7) = 0.0;
+      EWderivs(1,7) = 0.0;
+      EWderivs(2,7) = 0.0;
+      
+      
+      if (INCLUDE1LPTADPOLES)
+	{
+
+	  EWderivs(0,0) += doCalcd2DeltaVdLambdadv1(modelAtMsusy, s, tb);
+	  EWderivs(1,0) += doCalcd2DeltaVdLambdadv2(modelAtMsusy, s, tb);
+	  EWderivs(2,0) += doCalcd2DeltaVdLambdadv3(modelAtMsusy, s, tb);
+	  
+	  EWderivs(0,5) += doCalcd2DeltaVdmQlsqdv1(modelAtMsusy, s, tb);
+	  EWderivs(1,5) += doCalcd2DeltaVdmQlsqdv2(modelAtMsusy, s, tb);
+	  EWderivs(2,5) += doCalcd2DeltaVdmQlsqdv3(modelAtMsusy, s, tb);
+	  
+	  EWderivs(0,6) += doCalcd2DeltaVdmUrsqdv1(modelAtMsusy, s, tb);
+	  EWderivs(1,6) += doCalcd2DeltaVdmUrsqdv2(modelAtMsusy, s, tb);
+	  EWderivs(2,6) += doCalcd2DeltaVdmUrsqdv3(modelAtMsusy, s, tb);
+	  
+	  EWderivs(0,7) += doCalcd2DeltaVdAtdv1(modelAtMsusy, s, tb);
+	  EWderivs(1,7) += doCalcd2DeltaVdAtdv2(modelAtMsusy, s, tb);
+	  EWderivs(2,7) += doCalcd2DeltaVdAtdv3(modelAtMsusy, s, tb);
+
+
+	}    
+
+      // Then calculate the vector that stores the derivatives of the EW scale parameters wrt the high scale parameter
+      // of interest. In our study this has the form
+      // [ dlambda/dp dAlambda/dp dm_Hd^2/dp dm_Hu^2/dp dm_s^2/dp dm_Ql^2/dp dm_uR^2/dp dA_t/dp]^T.
+
+      // Get the scale M_SUSY - note that the model is assumed to be provided at this scale
+      double ms = modelAtMsusy.get_scale();      
+
+      Eigen::Matrix<double,8,1> paramDerivs;
+
+      if (fabs(ms-mx) < TOLERANCE)
+	{
+	  switch(i)
+	    {
+	    case Au3: 
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = -1.0;
+		break;
+	      }
+	    case mH13Sq:
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = -1.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    case mH23Sq: 
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = -1.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    case mS3Sq:
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = -1.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    case lam3: 
+	      {
+		paramDerivs(0) = -1.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    case Alam3:
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = -1.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    case mqL3Sq: 
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = -1.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    case mtRSq:
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = -1.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    default:
+	      {
+		paramDerivs(0) = 0.0;
+		paramDerivs(1) = 0.0;
+		paramDerivs(2) = 0.0;
+		paramDerivs(3) = 0.0;
+		paramDerivs(4) = 0.0;
+		paramDerivs(5) = 0.0;
+		paramDerivs(6) = 0.0;
+		paramDerivs(7) = 0.0;
+		break;
+	      }
+	    }
+	}
+      else
+	{
+	  // Here we use the approximate expression for each of the derivatives
+	  // of the low scale parameters w.r.t the high scale parameter of interest.
+
+	  genericE6SSM_soft_parameters r = genericE6SSM_soft_parameters(modelAtMsusy.get_input());
+	  r.set(modelParsAtMx);
+
+	  switch(i)
+	    {
+	    case lam3:
+	      {
+		paramDerivs = doCalcLambdaDerivs(r, ms, 3, hasError);
+		break;
+	      }
+	    case M1:
+	      {
+		paramDerivs = doCalcGauginoDerivs(r, ms, 1, hasError);
+		break;
+	      }
+	    case M2:
+	      {
+		paramDerivs = doCalcGauginoDerivs(r, ms, 2, hasError);
+		break;
+	      }
+	    case M3:
+	      {
+		paramDerivs = doCalcGauginoDerivs(r, ms, 3, hasError);
+		break;
+	      }
+	    case M1p:
+	      {
+		paramDerivs = doCalcGauginoDerivs(r, ms, 4, hasError);
+		break;
+	      }
+	    case Au3:
+	      {
+		paramDerivs = doCalcSoftAuDerivs(r, ms, 3, 3, hasError);
+		break;
+	      }
+	    case Alam3:
+	      {
+		paramDerivs = doCalcSoftAlambdaDerivs(r, ms, 3, hasError);
+		break;
+	      }
+	    case mH13Sq:
+	      {
+		paramDerivs = doCalcMh1SquaredDerivs(r, ms, 3, hasError);
+		break;
+	      }
+	    case mH23Sq:
+	      {
+		paramDerivs = doCalcMh2SquaredDerivs(r, ms, 3, hasError);
+		break;
+	      }
+	    case mS3Sq:
+	      {
+		paramDerivs = doCalcMsSquaredDerivs(r, ms, 3, hasError);
+		break;
+	      }
+	    case mqL3Sq:
+	      {
+		paramDerivs = doCalcMq2Derivs(r, ms, 3, 3, hasError);
+		break;
+	      }
+	    case mtRSq:
+	      {
+		paramDerivs = doCalcMu2Derivs(r, ms, 3, 3, hasError);
+		break;
+	      }
+	    default:
+	      {
+		cerr << "WARNING: unrecognised ESSM parameter " << i << " requested: ignoring it." << endl;
+		hasError = true;
+		break;
+	      }
+	    }
+	  // Note additional minus sign needed
+	  paramDerivs *= -1.0;
+	}
+      
+   
+      // Multiply the two together and return the result (note the additional minus sign!).
+      rhsVec = EWderivs*paramDerivs; 
+    }
+
+  return rhsVec;
+}
+
+void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & model, Eigen::ArrayXd & tuningPars)
+{
+
+}
+
+} // namespace essm_tuning_utils

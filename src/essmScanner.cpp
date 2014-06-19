@@ -104,6 +104,7 @@ int main(int argc, const char* argv[])
 {
   using namespace flexiblesusy;
   using namespace softsusy;
+  using namespace essm_tuning_utils;
   typedef Two_scale algorithm_type;
 
   /*
@@ -1989,6 +1990,7 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(DoubleM
 									 bool & inaccurateHiggsMass, bool & hasSeriousProblem)
 {
   using namespace flexiblesusy;
+  using namespace essm_tuning_utils;
 
   // While the expressions we have for the soft masses have hardcoded charges, we will
   // fix the E6 mixing angle to give us the U(1)_N E6 model.

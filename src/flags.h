@@ -13,10 +13,14 @@ extern bool INCLUDE1LPTADPOLES;
 // Use m_t(m_t) as scale in calculations
 extern bool USEMTOFMT;
 
+// Turn trace printing on and off.
+extern bool ENABLE_DEBUG;
+
 // Number of parameters in the pMSSM as defined by Rizzo et al,
 // see hep-ph/1206.5800v2
 const int NUMPMSSMPARS = 20;
 
+double const PRECISION = 1.0e-3; //< precision to use in RG running
 
 int const LOOPS = 2; //< number of loops to use in RG running
 int const THRESH = 0; //< threshold accuracy

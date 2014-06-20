@@ -13,3 +13,6 @@ bool INCLUDE1LPTADPOLES = true;
 // (except in 2-loop Higgs corrections), but can be changed at run
 // time.
 bool USEMTOFMT = false;
+
+// Set to true for trace printing
+bool ENABLE_DEBUG = true;

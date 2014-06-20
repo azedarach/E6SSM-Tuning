@@ -88,6 +88,7 @@ CLASSNAME::genericE6SSM(const genericE6SSM_input_parameters& input_)
       MSSI0(Eigen::Array<double,2,1>::Zero()), MFSI(Eigen::Array<double,2,1>::Zero
       ()), MSHp0(Eigen::Array<double,2,1>::Zero()), MSHpp(Eigen::Array<double,2,1>
       ::Zero()), MChiP(Eigen::Array<double,2,1>::Zero()), MVWm(0)
+, MStop(Eigen::Array<double,2,1>::Zero()), MSbot(Eigen::Array<double,2,1>::Zero()) 
 
    , ZD(Eigen::Matrix<double,6,6>::Zero()), ZV(Eigen::Matrix<double,3,3>::Zero(
       )), ZU(Eigen::Matrix<double,6,6>::Zero()), ZE(Eigen::Matrix<double,6,6>
@@ -108,7 +109,7 @@ CLASSNAME::genericE6SSM(const genericE6SSM_input_parameters& input_)
       double,2,2>::Zero()), ZFSI(Eigen::Matrix<std::complex<double>,2,2>::Zero()),
       UHp0(Eigen::Matrix<double,2,2>::Zero()), UHpp(Eigen::Matrix<double,2,2>
       ::Zero()), ZNp(Eigen::Matrix<std::complex<double>,2,2>::Zero())
-
+  , ZSTOP(Eigen::Matrix<double,2,2>::Zero()), ZSBOT(Eigen::Matrix<double,2,2>::Zero())
    , PhaseGlu(1,0), PhaseFHpup(1,0)
 
 {
@@ -143,6 +144,7 @@ CLASSNAME::genericE6SSM(const genericE6SSM_soft_parameters& params_)
       MSSI0(Eigen::Array<double,2,1>::Zero()), MFSI(Eigen::Array<double,2,1>::Zero
       ()), MSHp0(Eigen::Array<double,2,1>::Zero()), MSHpp(Eigen::Array<double,2,1>
       ::Zero()), MChiP(Eigen::Array<double,2,1>::Zero()), MVWm(0)
+  , MStop(Eigen::Array<double,2,1>::Zero()), MSbot(Eigen::Array<double,2,1>::Zero()) 
 
    , ZD(Eigen::Matrix<double,6,6>::Zero()), ZV(Eigen::Matrix<double,3,3>::Zero(
       )), ZU(Eigen::Matrix<double,6,6>::Zero()), ZE(Eigen::Matrix<double,6,6>
@@ -163,7 +165,7 @@ CLASSNAME::genericE6SSM(const genericE6SSM_soft_parameters& params_)
       double,2,2>::Zero()), ZFSI(Eigen::Matrix<std::complex<double>,2,2>::Zero()),
       UHp0(Eigen::Matrix<double,2,2>::Zero()), UHpp(Eigen::Matrix<double,2,2>
       ::Zero()), ZNp(Eigen::Matrix<std::complex<double>,2,2>::Zero())
-
+  , ZSTOP(Eigen::Matrix<double,2,2>::Zero()), ZSBOT(Eigen::Matrix<double,2,2>::Zero())
    , PhaseGlu(1,0), PhaseFHpup(1,0)
 {
   
@@ -239,6 +241,7 @@ Problems<genericE6SSM_info::NUMBER_OF_PARTICLES>& CLASSNAME::get_problems()
 {
    return problems;
 }
+
 
 int CLASSNAME::tadpole_equations(const gsl_vector* x, void* params, gsl_vector* f)
 {

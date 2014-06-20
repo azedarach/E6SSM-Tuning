@@ -20,7 +20,7 @@ extern bool ENABLE_DEBUG;
 // see hep-ph/1206.5800v2
 const int NUMPMSSMPARS = 20;
 
-double const PRECISION = 1.0e-3; //< precision to use in RG running
+extern double PRECISION; //< precision to use in RG running
 
 int const LOOPS = 2; //< number of loops to use in RG running
 int const THRESH = 0; //< threshold accuracy

@@ -1123,6 +1123,31 @@ Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_Sd() const
    return mass_matrix_Sd;
 }
 
+  // DH:: calculate only the sbottom mass matrix
+Eigen::Matrix<double,2,2> CLASSNAME::get_mass_matrix_Sbot() const
+{
+   const auto QH1p = LOCALINPUT(QH1p);
+   const auto QQp = LOCALINPUT(QQp);
+   const auto QSp = LOCALINPUT(QSp);
+   const auto QH2p = LOCALINPUT(QH2p);
+   const auto Qdp = LOCALINPUT(Qdp);
+
+   Eigen::Matrix<double,2,2> mass_matrix_sbots;
+
+   mass_matrix_sbots(0,0) = mq2(2,2) + 0.5*AbsSqr(Yd(2,2))*Sqr(vd) - 0.025*
+      Sqr(g1)*Sqr(vd) - 0.125*Sqr(g2)*Sqr(vd) + 0.5*QH1p*QQp*Sqr(gN)*Sqr(vd) +
+      0.5*QQp*QSp*Sqr(gN)*Sqr(vs) + 0.025*Sqr(g1)*Sqr(vu) + 0.125*Sqr(g2)*Sqr(
+      vu) + 0.5*QH2p*QQp*Sqr(gN)*Sqr(vu);
+   mass_matrix_sbots(0,1) = 0.7071067811865475*vd*Conj(TYd(2,2)) - 0.5*vs*vu
+      *Conj(Yd(2,2))*Lambdax;
+   mass_matrix_sbots(1,1) = md2(2,2) + 0.5*AbsSqr(Yd(2,2))*Sqr(vd) - 0.05*
+      Sqr(g1)*Sqr(vd) + 0.5*Qdp*QH1p*Sqr(gN)*Sqr(vd) + 0.5*Qdp*QSp*Sqr(gN)*Sqr(
+      vs) + 0.05*Sqr(g1)*Sqr(vu) + 0.5*Qdp*QH2p*Sqr(gN)*Sqr(vu);
+   mass_matrix_sbots(1,0) = Conj(mass_matrix_sbots(0,1));
+
+   return mass_matrix_sbots;
+}
+
 void CLASSNAME::calculate_MSd()
 {
    const auto mass_matrix_Sd(get_mass_matrix_Sd());
@@ -1134,6 +1159,20 @@ void CLASSNAME::calculate_MSd()
       problems.unflag_tachyon(Sd);
 
    MSd = AbsSqrt(MSd);
+}
+
+  // DH:: routine to calculate sbottom masses only
+void CLASSNAME::calculate_MSbot()
+{
+   const auto mass_matrix_sbots(get_mass_matrix_Sbot());
+   fs_diagonalize_hermitian(mass_matrix_sbots, MSbot, ZSBOT);
+
+   if (MSbot.minCoeff() < 0.)
+      problems.flag_tachyon(Sd);
+   else
+      problems.unflag_tachyon(Sd);
+
+   MSbot = AbsSqrt(MSbot);
 }
 
 Eigen::Matrix<double,3,3> CLASSNAME::get_mass_matrix_Sv() const
@@ -1246,6 +1285,31 @@ Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_Su() const
    return mass_matrix_Su;
 }
 
+  // DH:: routine to calculate only the stop masses
+  Eigen::Matrix<double,2,2> CLASSNAME::get_mass_matrix_Stop() const
+  {
+   const auto QH1p = LOCALINPUT(QH1p);
+   const auto QQp = LOCALINPUT(QQp);
+   const auto QSp = LOCALINPUT(QSp);
+   const auto QH2p = LOCALINPUT(QH2p);
+   const auto Qup = LOCALINPUT(Qup);
+
+   Eigen::Matrix<double,2,2> mass_matrix_stops;
+
+   mass_matrix_stops(0,0) = mq2(2,2) - 0.025*Sqr(g1)*Sqr(vd) + 0.125*Sqr(g2)
+      *Sqr(vd) + 0.5*QH1p*QQp*Sqr(gN)*Sqr(vd) + 0.5*QQp*QSp*Sqr(gN)*Sqr(vs) +
+      0.5*AbsSqr(Yu(2,2))*Sqr(vu) + 0.025*Sqr(g1)*Sqr(vu) - 0.125*Sqr(g2)*Sqr(
+      vu) + 0.5*QH2p*QQp*Sqr(gN)*Sqr(vu);
+   mass_matrix_stops(0,1) = 0.7071067811865475*vu*Conj(TYu(2,2)) - 0.5*vd*vs
+      *Conj(Yu(2,2))*Lambdax;
+   mass_matrix_stops(1,1) = mu2(2,2) + 0.1*Sqr(g1)*Sqr(vd) + 0.5*QH1p*Qup*
+     Sqr(gN)*Sqr(vd) + 0.5*QSp*Qup*Sqr(gN)*Sqr(vs) + 0.5*AbsSqr(Yu(2,2))*Sqr(
+									     vu) - 0.1*Sqr(g1)*Sqr(vu) + 0.5*QH2p*Qup*Sqr(gN)*Sqr(vu);
+   mass_matrix_stops(1,0) = Conj(mass_matrix_stops(0,1));
+
+   return mass_matrix_stops;
+  }
+
 void CLASSNAME::calculate_MSu()
 {
    const auto mass_matrix_Su(get_mass_matrix_Su());
@@ -1258,6 +1322,23 @@ void CLASSNAME::calculate_MSu()
 
    MSu = AbsSqrt(MSu);
 }
+
+  // DH:: calculate stop masses only
+void CLASSNAME::calculate_MStop()
+{
+   const auto mass_matrix_stops(get_mass_matrix_Stop());
+
+   fs_diagonalize_hermitian(mass_matrix_stops, MStop, ZSTOP);
+
+   if (MStop.minCoeff() < 0.)
+      problems.flag_tachyon(Su);
+   else
+      problems.unflag_tachyon(Su);
+
+   MStop = AbsSqrt(MStop);
+
+}
+
 
 Eigen::Matrix<double,6,6> CLASSNAME::get_mass_matrix_Se() const
 {

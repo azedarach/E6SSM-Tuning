@@ -96,6 +96,9 @@ public:
    const Eigen::Array<double,6,1>& get_MSd() const { return MSd; }
    const Eigen::Array<double,3,1>& get_MSv() const { return MSv; }
    const Eigen::Array<double,6,1>& get_MSu() const { return MSu; }
+  // DH:: routines for accessing stops and sbottoms only
+  const Eigen::Array<double,2,1>& get_MStop() const { return MStop; }
+  const Eigen::Array<double,2,1>& get_MSbot() const { return MSbot; }
    const Eigen::Array<double,6,1>& get_MSe() const { return MSe; }
    const Eigen::Array<double,6,1>& get_MSDX() const { return MSDX; }
    const Eigen::Array<double,3,1>& get_Mhh() const { return Mhh; }
@@ -166,6 +169,11 @@ public:
    void calculate_MSv();
    Eigen::Matrix<double,6,6> get_mass_matrix_Su() const;
    void calculate_MSu();
+  // DH:: methods to calculate only the stops and sbottoms
+  Eigen::Matrix<double,2,2> get_mass_matrix_Stop() const;
+  void calculate_MStop();
+  Eigen::Matrix<double,2,2> get_mass_matrix_Sbot() const;
+  void calculate_MSbot();
    Eigen::Matrix<double,6,6> get_mass_matrix_Se() const;
    void calculate_MSe();
    Eigen::Matrix<double,6,6> get_mass_matrix_SDX() const;
@@ -1243,6 +1251,8 @@ private:
    Eigen::Array<double,6,1> MSd;
    Eigen::Array<double,3,1> MSv;
    Eigen::Array<double,6,1> MSu;
+  Eigen::Array<double,2,1> MStop; //< DH:: stop masses
+  Eigen::Array<double,2,1> MSbot; // DH:: sbottom masses
    Eigen::Array<double,6,1> MSe;
    Eigen::Array<double,6,1> MSDX;
    Eigen::Array<double,3,1> Mhh;
@@ -1268,6 +1278,8 @@ private:
    Eigen::Matrix<double,6,6> ZD;
    Eigen::Matrix<double,3,3> ZV;
    Eigen::Matrix<double,6,6> ZU;
+  Eigen::Matrix<double,2,2> ZSTOP; //< DH:: stop mixing matrix
+  Eigen::Matrix<double,2,2> ZSBOT; //< DH:: sbottom mixing matrix
    Eigen::Matrix<double,6,6> ZE;
    Eigen::Matrix<double,6,6> ZDX;
    Eigen::Matrix<double,3,3> ZH;

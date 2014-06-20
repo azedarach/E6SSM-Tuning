@@ -18,6 +18,8 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <sys/time.h>
+
 
 #include "flags.h"
 #include "tuningnumerics.h"
@@ -901,7 +903,7 @@ int main(int argc, const char* argv[])
 			  hasAlambda3Npts = true;
 			}
 		    }
-		  else if (word1 == "LOGLAMBDALL")
+		  else if (word1 == "LOGALAMBDALL")
 		    {
 		      if (hasNonLogAlambda3Option)
 			{
@@ -1546,6 +1548,32 @@ int main(int argc, const char* argv[])
 
 	}
 
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Scan summary: " << endl;
+	  cout << "# Lower tan(beta) = " << tb_vals(0) << ",";
+	  cout << " Upper tan(beta) = " << tb_vals(tb_vals.size()-1) << ",";
+	  cout << " Number of tan(beta) points = " << tb_vals.size() << endl;
+	  cout << "# Lower lambda_3 = " << lambda3_vals(0) << ",";
+	  cout << " Upper lambda_3 = " << lambda3_vals(lambda3_vals.size()-1) << ",";
+	  cout << " Number of lambda_3 points = " << lambda3_vals.size() << endl;
+	  cout << "# Lower A_lambda_3 = " << Alambda3_vals(0) << ",";
+	  cout << " Upper A_lambda_3 = " << Alambda3_vals(Alambda3_vals.size()-1) << ",";
+	  cout << " Number of A_lambda_3 points = " << Alambda3_vals.size() << endl;
+	  cout << "# Lower m_qL3^2 = " << mqL3sq_vals(0) << ",";
+	  cout << " Upper m_qL3^2 = " << mqL3sq_vals(mqL3sq_vals.size()-1) << ",";
+	  cout << " Number of m_qL3^2 points = " << mqL3sq_vals.size() << endl;
+	  cout << "# Lower m_tR^2 = " << mtRsq_vals(0) << ",";
+	  cout << " Upper m_tR^2 = " << mtRsq_vals(mtRsq_vals.size()-1) << ",";
+	  cout << " Number of m_tR^2 points = " << mtRsq_vals.size() << endl;
+	  cout << "# Lower A_t = " << At_vals(0) << ",";
+	  cout << " Upper A_t = " << At_vals(At_vals.size()-1) << ",";
+	  cout << " Number of A_t points = " << At_vals.size() << endl;
+	  cout << "# Lower M_2 = " << M2_vals(0) << ",";
+	  cout << " Upper M_2 = " << M2_vals(M2_vals.size()-1) << ",";
+	  cout << " Number of M_2 points = " << M2_vals.size() << endl;
+	}
+
       /*
 	----------------------------------------------------
       */
@@ -1562,13 +1590,13 @@ int main(int argc, const char* argv[])
 	{
       for (int k = 0; k < Alambda3_vals.size(); k++)
 	{
-      for (int l = 0; l <= mqL3sq_vals.size(); l++)
+      for (int l = 0; l < mqL3sq_vals.size(); l++)
 	{
-      for (int p = 0; p <= mtRsq_vals.size(); p++)
+      for (int p = 0; p < mtRsq_vals.size(); p++)
 	{
-      for (int q = 0; q <= At_vals.size(); q++)
+      for (int q = 0; q < At_vals.size(); q++)
 	{
-      for (int s = 0; s <= M2_vals.size(); s++)
+      for (int s = 0; s < M2_vals.size(); s++)
 	{
 
 	  // Update variable values
@@ -1580,7 +1608,17 @@ int main(int argc, const char* argv[])
 	  mHdSq = 1.0e6;
 	  mHuSq = 1.0e6;
 	  mSSq = 1.0e6;
-	  MS = 1.0e3;
+	  MS = 2.0e3;
+
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "# SCAN: tan(beta) = " << tb_vals(i) << ", lambda_3 = " << lambda3_vals(j)
+		   << ", A_lambda_3 = " << Alambda3_vals(k) << endl;
+	      cout << "# SCAN: m_qL3^2 = " << mQlSq(2,2) << ", m_tR^2 = " << mUrSq(2,2)
+		   << ", A_t = " << At_vals(q) << ", M_2 = " << M2_vals(s) << endl;
+	      cout << "# SCAN: v1 = " << vin/Sqrt(1.0+tb_vals(i)*tb_vals(i))
+		   << ", v2 = " << vin*tb_vals(i) << ", s = " << vsin << endl;
+	    }
 
 	  // Define model, first reset problem flags
 	  hasEWSBProblem = false;
@@ -1592,6 +1630,13 @@ int main(int argc, const char* argv[])
 	  inaccurateHiggsMass = false;
 	  hasSeriousProblem = false;
 
+	  struct timeval tvWall, tv2Wall;
+	  
+	  double cpuStart = ((double) clock())/(CLOCKS_PER_SEC);
+
+	  gettimeofday(&tvWall, NULL);
+
+
 	  // m is returned at M_{SUSY}
 	  m = doSimplifiedSpectrum(yuin, ydin, yein, g1in, g2in, g3in, gNin, lambda3_vals(j), lambda12in,
 				   kappain, mupr, tb_vals(i), vin, vsin,
@@ -1602,6 +1647,7 @@ int main(int argc, const char* argv[])
 				   TOLEWSB, mHdSq, mHuSq, mSSq, MS, 
 				   hasEWSBProblem, squarksTachyons, vectorBosonsTachyons, higgsTachyons, 
 				   tadpoleProblem, poleHiggsTachyons, inaccurateHiggsMass, hasSeriousProblem);
+
 
 	  lambda3AtMsusy = m.get_Lambdax(); kappa3AtMsusy = m.get_Kappa(2,2);
 
@@ -1739,7 +1785,7 @@ int main(int argc, const char* argv[])
 	      hasCCBProblem = true;
 	    }
 
-	  m.run_to(MX);
+	  m.run_to(MX, PRECISION);
 
 	  // Test at MX
 	  ccbTest = 3.0*(sqr(m.get_Lambdax()*m.get_vs()/Sqrt(2.0))+m.get_mHu2()
@@ -1829,21 +1875,36 @@ int main(int argc, const char* argv[])
 
 	  
 	  // Calculate fine tuning
-	  // hasTuningError = false;
+	  hasTuningError = false;
 
-	  // bool tuningEWSBProblem = false;
+	  bool tuningEWSBProblem = false;
 
 	  // try
 	  //   {
-	  //     tunings = doCalcpMSSMFineTuning(m, MS, tuningEWSBProblem, hasTuningError, USEAPPROXSOLNS, TOLEWSB);
-
+	  //     Eigen::ArrayXd pars;
+	  //     pars.resize(tuning_parameters::NUMESSMTUNINGPARS);
+	  //     pars(tuning_parameters::lam3) = lambda3_vals(j);
+	  //     pars(tuning_parameters::Alam3) = Alambda3_vals(k);
+	  //     pars(tuning_parameters::M1) = M1;
+	  //     pars(tuning_parameters::M2) = M2_vals(s);
+	  //     pars(tuning_parameters::M3) = M3;
+	  //     pars(tuning_parameters::M1p) = M1p;
+	  //     pars(tuning_parameters::Au3) = At_vals(q);
+	  //     pars(tuning_parameters::mH13Sq) = m.get_mHd2();
+	  //     pars(tuning_parameters::mH23Sq) = m.get_mHu2();
+	  //     pars(tuning_parameters::mS3Sq) = m.get_ms2();
+	  //     pars(tuning_parameters::mqL3Sq) = mQlSq(2,2);
+	  //     pars(tuning_parameters::mtRSq) = mUrSq(2,2);
+  	  //     //	      tunings = doCalcpMSSMFineTuning(m, MS, tuningEWSBProblem, hasTuningError, USEAPPROXSOLNS, TOLEWSB);
+	  //     tunings = doCalcESSMTuningNumerically(m, MS, MX, pars, pE6SSMftBCs);
 	  //     // Possible numerical errors here in running should be accounted for.
-	  //     if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
-	  // 	{
-	  // 	  // Probably a numerical issue.
-	  // 	  cerr << "WARNING: numerical issue in RG running for tuning calculation." << endl;
-	  // 	  hasTuningError = true;
-	  // 	}
+	  //     // if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
+	  //     // 	{
+	  //     // 	  // Probably a numerical issue.
+	  //     // 	  cerr << "WARNING: numerical issue in RG running for tuning calculation." << endl;
+	  //     // 	  hasTuningError = true;
+	  //     // 	}
+	  //     cout << tunings << endl;
 	  //   }
 	  // catch(const string & a) 
 	  //   { 
@@ -1861,6 +1922,26 @@ int main(int argc, const char* argv[])
 	  //     hasSeriousProblem = true; 
 	  //   }
 
+	  double cpuEnd = ((double) clock())/(CLOCKS_PER_SEC);
+	  gettimeofday(&tv2Wall, NULL);
+	  int wall_time = (tv2Wall.tv_sec-tvWall.tv_sec)*1000000+((int)tv2Wall.tv_usec-(int)tvWall.tv_usec);
+
+
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "# After spectrum calculation:" << endl;
+	      cout << "# f1 = " << f1 << endl;
+	      cout << "# f2 = " << f2 << endl;
+	      cout << "# f3 = " << f3 << endl;
+	      cout << "# m_Hd^2 = " << mHdSq << endl;
+	      cout << "# m_Hu^2 = " << mHuSq << endl;
+	      cout << "# m_s^2 = " << mSSq << endl;
+	      cout << "# M_SUSY = " << MS << endl;
+	      cout << "# Wall time = " << wall_time << endl;
+	      cout << "# CPU time = " << (int) ((cpuEnd-cpuStart)*1000000) << endl;
+
+	    }
+
 	  if (!hasSeriousProblem)
 	    {
 	      // Display output
@@ -1877,22 +1958,15 @@ int main(int argc, const char* argv[])
 	      cout << m.get_physical().MAh(2) << " ";
 	      cout << mHdSq << " ";
 	      cout << mHuSq << " ";
+	      cout << mSSq << " ";
 	      cout << f1 << " ";
 	      cout << f2 << " ";
 	      cout << f3 << " ";
 	      cout << MS << " ";
-	      cout << m.get_MSu()(0) << " ";
-	      cout << m.get_MSu()(1) << " ";
-	      cout << m.get_MSu()(2) << " ";
-	      cout << m.get_MSu()(3) << " ";
-	      cout << m.get_MSu()(4) << " ";
-	      cout << m.get_MSu()(5) << " ";
-	      cout << m.get_MSd()(0) << " ";
-	      cout << m.get_MSd()(1) << " ";
-	      cout << m.get_MSd()(2) << " ";
-	      cout << m.get_MSd()(3) << " ";
-	      cout << m.get_MSd()(4) << " ";
-	      cout << m.get_MSd()(5) << " ";
+	      cout << m.get_MStop()(0) << " ";
+	      cout << m.get_MStop()(1) << " ";
+	      cout << m.get_MSbot()(0) << " ";
+	      cout << m.get_MSbot()(1) << " ";
 	      cout << m.get_MCha()(0) << " ";
 	      cout << m.get_MCha()(1) << " ";
 	      cout << m.get_MChi()(0)<< " ";
@@ -2173,6 +2247,11 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
   double v1 = hvev/Sqrt(1.0+tanb*tanb);
   double v2 = v1*tanb;
 
+  if (ENABLE_DEBUG)
+    {
+      cout << "# Initialising SUSY parameters..." << endl;
+    }
+
   // SUSY parameters
   genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, ydin, yein, kappain, lambda12in, lambda3in, yuin, mupr, g1in, g2in, g3in, gNin, v1, v2, svev);
 
@@ -2237,6 +2316,11 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
   mDxbarSq(1,0) = 0.0; mDxbarSq(1,2) = 0.0;
   mDxbarSq(2,0) = 0.0; mDxbarSq(2,1) = 0.0;
 
+  if (ENABLE_DEBUG)
+    {
+      cout << "# Initialising soft SUSY breaking parameters..." << endl;
+    }
+
   // Soft SUSY breaking parameters. Note ordering of gauginos is 1 = M_1,
   // 2 = M_2, 3 = M_3 and 4 = M_1'
   genericE6SSM_soft_parameters r_soft = genericE6SSM_soft_parameters(r_susy, tdin, tein, tkappain, tlambda12in, tlambda3in, 
@@ -2262,12 +2346,19 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
   r_approx.set_mHu2(solnGuess(2));
   r_approx.set_ms2(solnGuess(3));
 
+
   // Try to determine the correct solution using Newton's method, 
   // catch any numerical errors and flag as a problem point if they occur.
   try
     {
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Imposing EWSB conditions on soft masses..." << endl;
+	}
+
       hasEWSBProblem = ESSM_ImplementEWSBConstraints_SoftMasses(r_approx, mx, ms, 
 								false, solnGuess, tol);
+
       
       if (hasEWSBProblem)
 	{
@@ -2276,9 +2367,14 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
 	  w.set_mHd2(solnGuess(1));
 	  w.set_mHu2(solnGuess(2));
 	  w.set_ms2(solnGuess(3));
-	  w.run_to(solnGuess(4));
+	  cerr << "m_Hd^2 = " << w.get_mHd2() << endl;
+	  cerr << "m_Hu^2 = " << w.get_mHu2() << endl;
+	  cerr << "m_s^2 = " << w.get_ms2() << endl;
+	  cerr << "M_{SUSY} = " << solnGuess(4) << endl;
+	  w.run_to(solnGuess(4), PRECISION);
 	  cerr << "f1 = " << ESSM_EWSBCondition1(w) << endl;
 	  cerr << "f2 = " << ESSM_EWSBCondition2(w) << endl;
+	  cerr << "f3 = " << ESSM_EWSBCondition3(w) << endl;
 	}
       
       mHdSq = solnGuess(1);
@@ -2293,17 +2389,32 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       // Try to get the spectrum. Catch any errors and flag as 
       // problem if they occur.
       // Get DR bar stop and sbottom masses.
-      r_approx.run_to(solnGuess(4));
-      
-      r_approx.calculate_MSu();
-      r_approx.calculate_MSd();
+      r_approx.run_to(solnGuess(4), PRECISION);
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating squark masses..." << endl;
+	}      
+
+      r_approx.calculate_MStop();
+      r_approx.calculate_MSbot();
+
+      if (ENABLE_DEBUG) 
+	{
+	  cout << "# Checking for tachyons..." << endl;
+	}
 
       // Check for tachyonic squakrs      
       if (r_approx.get_problems().is_tachyon(genericE6SSM_info::Su) || r_approx.get_problems().is_tachyon(genericE6SSM_info::Sd))
 	{
 	  squarksTachyons = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::Su)) cout << "#    tachyonic up-type squarks" << endl;
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::Sd)) cout << "#    tachyonic down-type squarks" << endl;
+	    }
 	}
-      
+
       // Values needed below, shouldn't be any problems here so long as tan(beta), v, and the gauge couplings
       // are sensible when input
       double v1 = r_approx.get_vd();
@@ -2313,39 +2424,93 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       double v = Sqrt(v1*v1+v2*v2);
       double tb = v2/v1;
 
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating quark masses..." << endl;
+	}
+
       double sw = Sin(r_approx.ThetaW());
-      double mt = r_approx.get_Yu(3, 3)*v*Sin(ArcTan(tb))/Sqrt(2.0);
-      double mb = r_approx.get_Yd(3, 3)*v*Cos(ArcTan(tb))/Sqrt(2.0);
+      double mt = r_approx.get_Yu(2, 2)*v*Sin(ArcTan(tb))/Sqrt(2.0);
+      double mb = r_approx.get_Yd(2, 2)*v*Cos(ArcTan(tb))/Sqrt(2.0);
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating vector boson masses..." << endl;
+	}
+
       r_approx.calculate_MVZ();
       r_approx.calculate_MVWm();
       r_approx.calculate_MVZp();
+
+      if (ENABLE_DEBUG) 
+	{
+	  cout << "# Checking for tachyons..." << endl;
+	}
 
       if (r_approx.get_problems().is_tachyon(genericE6SSM_info::VZ) || r_approx.get_problems().is_tachyon(genericE6SSM_info::VZp) 
 	  || r_approx.get_problems().is_tachyon(genericE6SSM_info::VWm) )
 	{
 	  vectorBosonsTachyons = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::VZ)) cout << "#    tachyonic Z" << endl;
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::VZp)) cout << "#    tachyonic Z'" << endl;
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::VWm)) cout << "#    tachyonic W" << endl;
+	    }
 	}
       
+
       // Calculate neutralino and chargino DR bar masses, there shouldn't be any problems here 
       // (or if there are they will be serious numerical ones in diagonalisation)
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating neutralino and chargino masses..." << endl;
+	}
+
       r_approx.calculate_MChi();
       r_approx.calculate_MCha();  
 
       // Calculate DR bar Higgs masses using FlexibleSUSY routines...
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating DR bar Higgs masses..." << endl;
+	}
       r_approx.calculate_Mhh();
       r_approx.calculate_MAh();
       r_approx.calculate_MHpm();
       
+      if (ENABLE_DEBUG) 
+	{
+	  cout << "# Checking for tachyons..." << endl;
+	}
+
       // Check if DR bar h0 or A0 are tachyons
       if (r_approx.get_problems().is_tachyon(genericE6SSM_info::hh) || r_approx.get_problems().is_tachyon(genericE6SSM_info::Ah) || 
 	  r_approx.get_problems().is_tachyon(genericE6SSM_info::Hpm))
 	{
 	  higgsTachyons = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::hh)) cout << "#    tachyonic hh" << endl;
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::Ah)) cout << "#    tachyonic Ah" << endl;
+	      if (r_approx.get_problems().is_tachyon(genericE6SSM_info::Hpm)) cout << "#    tachyonic Hpm" << endl;
+	    }
 	}
-      
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating tadpole corrections..." << endl;
+	}      
+
       // ... but use approximate expressions here for loop corrected Higgs masses
       DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
       physical_ESSM(r_approx, mstop, mstopsq, mD1sq, mD2sq, s, tb);      
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "#    using m_~t1 = " << mstop(1) << ", m_~t2 = " << mstop(2) << endl;
+	  cout << "#    using m_~t1^2 = " << mstopsq(1) << ", m_~t2^2 = " << mstopsq(2) << endl;
+	}
 
       // In HiggsMasses, sing = 1 indicates inaccurate Higgs mass.
       // ExpValid = 15 indicates TADPOLEPROBLEM.
@@ -2362,8 +2527,18 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       DoubleVector mh(3);
       DoubleMatrix mhmix(3,3), msq(3,3);
 
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating approximate CP-even Higgs pole masses..." << endl;
+	}
+
       poleHiggsTachyons = HiggsMasses(r_approx, s, tb, mstop, mstopsq, WhatCorrections, 
 				      false, false, expBounds, ExpValid, mh, mhmix, msq, sing);
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Checking for problems with pole CP-even Higgs masses..." << endl;
+	}
 
       // Other problems that can occur in physical Higgs mass calculation:
       // inaccurate result
@@ -2374,10 +2549,23 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       if (ExpValid == TADPOLESPROBLEM)
 	{
 	  tadpoleProblem = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    problem with tadpoles" << endl;
+	    }
 	}
       if (ExpValid == POLEHIGGSTACHYON)
 	{
 	  poleHiggsTachyons = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    tachyonic m_h^2" << endl;
+	    }
+	}
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Calculating approximate CP-odd Higgs pole mass..." << endl;
 	}
 
       // Also calculate the 1-loop mass of the CP-odd Higgs, which seems
@@ -2385,13 +2573,32 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       // expression for speed.
       int cpOddproblem = 0;
       double mAsq = mAsq_OneLoop(r_approx, s, tb, cpOddproblem);
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Checking for problems with pole CP-odd Higgs mass..." << endl;
+	}
+
       if (mAsq < 0.0)
 	{
 	  poleHiggsTachyons = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    tachyonic m_A^2" << endl;
+	    }
 	}
       if (cpOddproblem == TADPOLESPROBLEM)
 	{
 	  tadpoleProblem = true;
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    problem with tadpoles" << endl;
+	    }
+	}
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "# Setting approximate Higgs pole masses..." << endl;
 	}
 
       // Update the object at M_{SUSY} with the new values for the pole masses.
@@ -2399,6 +2606,16 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       // the FlexibleSUSY routines to get the pole masses.
       r_approx.set_Mhh_pole(mh(1), mh(2), mh(3));
       r_approx.set_MAh_pole(ZeroSqrt(mAsq));
+
+      if (ENABLE_DEBUG)
+	{
+	  cout << "#    Mhh(0) = " << r_approx.get_physical().Mhh(0)
+	       << ", Mhh(1) = " << r_approx.get_physical().Mhh(1)
+	       << ", Mhh(2) = " << r_approx.get_physical().Mhh(2) << endl;
+	  cout << "#    MAh(0) = " << r_approx.get_physical().MAh(0) 
+	       << ", MAh(1) = " << r_approx.get_physical().MAh(1) 
+	       << ", MAh(2) = " << r_approx.get_physical().MAh(2) << endl;
+	}
 
     }
   // DH::Check that there are no other possible failure conditions that may occur
@@ -2417,7 +2634,12 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       cerr << "WARNING: unknown type of exception caught: in doSimplifiedSpectrum." << endl; 
       hasSeriousProblem = true; 
     }
-  
+
+  if (ENABLE_DEBUG)
+    {
+      cout << "# Finished spectrum calculation..." << endl;
+    }  
+
   return r_approx;
 }
 

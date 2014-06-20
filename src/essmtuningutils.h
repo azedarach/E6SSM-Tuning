@@ -7,11 +7,17 @@
 #define ESSMTUNINGUTILS_H
 
 
-#include "E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_two_scale_soft_parameters.hpp"
+#include "E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_two_scale_model.hpp"
 #include "E6SSM_Spectrum_Generators/src/wrappers.hpp"
+#include "E6SSM_Spectrum_Generators/src/gsl_utils.hpp"
+#include "E6SSM_Spectrum_Generators/src/root_finder.hpp"
 #include "flags.h"
 #include "tuningnumerics.h"
 #include "tuningutils.h"
+
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_multiroots.h>
+#include <Eigen/Core>
 
 // To make including more parameters easier later and to avoid name clashes
 // (may be even better for encapsulation later on if we define a class
@@ -139,7 +145,7 @@ double doCalcTadpolesESSMS_Roman_atQ(flexiblesusy::genericE6SSM_soft_parameters,
 //    DoubleVector & mhout = Higgs masses
 //    DoubleMatrix & mhmix = mixing matrix for Higgs fields
 //    int & sing = flag to indicate poor accuracy in diagonalisation (non-zero if tolerance not met)
-bool HiggsMasses(flexiblesusy::genericE6SSM_soft_parameters &,double,double,DoubleVector &,DoubleVector &,int,bool,bool,DoubleVector &,int &,DoubleVector &, DoubleMatrix &, DoubleMatrix &, int &);
+bool HiggsMasses(flexiblesusy::genericE6SSM_soft_parameters const &,double,double,DoubleVector &,DoubleVector &,int,bool,bool,DoubleVector &,int &,DoubleVector &, DoubleMatrix &, DoubleMatrix &, int &);
 
 // To the above we will add methods for calculating m_A^2 at tree level and one-loop order, and
 // methods for calculating chargino and neutralino masses (at tree level).
@@ -290,6 +296,20 @@ Eigen::VectorXd doCalcESSMTuningNumerically(flexiblesusy::genericE6SSM_soft_para
 					     Eigen::ArrayXd pars,
 					     void (*BCatMX)(flexiblesusy::genericE6SSM_soft_parameters & , Eigen::ArrayXd &));
  
+  // Functions for numerically solving the EWSB conditions using GSL routines. 
+  // They are basically identical to there equivalents in the FlexibleSUSY
+  // generated spectrum generator, but using the simplified tadpole equations.
+  // Note, however, that those routines solve for the soft masses, whereas
+  // these solve for the VEVs.
+ int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f);
+ int solve_for_vevs_iteratively(flexiblesusy::genericE6SSM_soft_parameters & model, int nints, double intprecis);
+ void vevs_initial_guess(flexiblesusy::genericE6SSM_soft_parameters model, double x_init[3]);
+  int solve_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
+				      const double x_init[3],
+				      flexiblesusy::genericE6SSM_soft_parameters* model, 
+				      int number_of_ewsb_iterations, 
+				      double ewsb_iteration_precision);
+
 
 } // namespace essm_tuning_utils
 #endif

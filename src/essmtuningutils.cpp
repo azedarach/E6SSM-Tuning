@@ -287,6 +287,7 @@ double ESSM_EWSBCondition2(genericE6SSM_soft_parameters const & r)
 	-doCalcTadpoleESSMH2(r, s, tb);
     }
 
+
   return f2;
 }
 
@@ -354,7 +355,7 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
 	+0.5*Qtilde_s*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s)
 	-doCalcTadpolesESSMS(r, s, tb);
     }
-  
+
   return f3;
 
 }
@@ -364,7 +365,7 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
 static double mHuSqScaleFactor = 1.0e6;
 static double mHdSqScaleFactor = 1.0e6;
 static double mSSqScaleFactor = 1.0e6;
-static double MsusyScaleFactor = 1.0e3;
+static double MsusyScaleFactor = 2.0e3;
 bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, double mx, double ms, bool useMxEqualsMs,
 					      DoubleVector & updatedSoln, double tol)
 {
@@ -390,7 +391,12 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  if (fabs(mx-ms) > TOLERANCE || fabs(q-ms) > TOLERANCE)
 	    {
 	      cerr << "WARNING: MX = M_{SUSY} requested but given values do not agree. Assuming M_{SUSY} = " << ms << "." << endl;
-	      r.run_to(ms);
+	      r.run_to(ms, PRECISION);
+	    }
+
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    setting MSUSY = MX" << endl;
 	    }
 
 	  // Solve for the updated soft Higgs masses
@@ -444,6 +450,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  if (!INCLUDE1LPTADPOLES)
 	    {
 
+	      if (ENABLE_DEBUG)
+		{
+		  cout << "#    using tree level tadpole equations" << endl;
+		}
+
 	      mSSq = (1.0/s)*(lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0))-0.5*lambda*lambda*v*v*s
 			      -0.5*gdash_1*gdash_1*Qtilde_s*s*(Qtilde_1*v*v*cSqb+Qtilde_2*v*v*sSqb+Qtilde_s*s*s));
 	      mH1Sq = lambda*Alambda*s*tb/Sqrt(2.0)-0.5*lambda*lambda*(s*s+v*v*sSqb)-gbar*gbar*v*v*c2b/8.0
@@ -454,6 +465,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	    }
 	  else
 	    {
+
+	      if (ENABLE_DEBUG)
+		{
+		  cout << "#    using tree level tadpole equations + 1-loop tadpoles" << endl;
+		}
 
 	      // Calculate the values of the soft squared masses using the three EWSB
 	      // conditions at tree level.
@@ -477,6 +493,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	}
       else
 	{
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    iterating to get soft masses" << endl;
+	    }
+
 	  // Otherwise we have to use a shooting method to determine the values
 	  // of m_Hu^2, m_Hd^2 and m_S^2 at MX that satisfy the EWSB conditions at M_{SUSY}.
 
@@ -500,6 +521,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	      nLps = 2;
 	    }
 
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    constructing initial guess";   
+	    }
+
 	  double t_run = log(mx/ms);
 
 	  double mHuSq_guess, mHdSq_guess, mSSq_guess;
@@ -508,19 +534,28 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  const int TLIMIT = 10;
 	  if (t_run >= TLIMIT)
 	    {
+	      if (ENABLE_DEBUG)
+		{
+		  cout << " using default values" << endl;
+		}
 	      mHdSqScaleFactor = r.get_mHd2();
 	      mHuSqScaleFactor = r.get_mHu2();
 	      mSSqScaleFactor = r.get_ms2();
 
 	      mHuSq_guess = mHuSqScaleFactor;
 	      mHdSq_guess = mHdSqScaleFactor;
-
+	      mSSq_guess = mSSqScaleFactor;
 	    }
 	  else
 	    {
+	      if (ENABLE_DEBUG)
+		{
+		  cout << " using approximate RGE solutions" << endl;
+		}
+
 	      // The Taylor series expansion is about the solution at M_{SUSY} initially.
 	      genericE6SSM_soft_parameters w = r; // copy object to avoid numerical errors
-	      w.run_to(ms);
+	      w.run_to(ms, PRECISION);
 	      
 	      double mHuSqInit, mHdSqInit, mSSqInit;
 	     
@@ -594,14 +629,31 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 		  mHdSqInit = mHdSqInit + doCalcTadpoleESSMH1(w, s, tb);
 		  mHuSqInit = mHuSqInit + doCalcTadpoleESSMH2(w, s, tb);
 		}
-	      
+
+	      if (ENABLE_DEBUG)
+		{
+		  cout << "#    got tree approximation: m_Hd^2 = " << mHdSqInit
+		       << ", m_Hu^2 = " << mHuSqInit << ", m_s^2 = " << mSSqInit << endl;
+		  cout << "#    constructing log coefficients" << endl;
+		}	      
+
 	      // Construct required coefficients in Taylor series.
 	      double mHdSqLogCoeff = doCalcMh1SquaredLogCoeff(w, nLps);
-	      double mHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(w, 1);
+	      double mHdSqLogSqCoeff = 0.0;//doCalcMh1SquaredLogSqCoeff(w, 1); //< DH::TODO these seem to be causing problems
 	      double mHuSqLogCoeff = doCalcMh2SquaredLogCoeff(w, nLps);
-	      double mHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(w, 1);
+	      double mHuSqLogSqCoeff = 0.0;//doCalcMh2SquaredLogSqCoeff(w, 1); //< DH::TODO these seem to be causing problems
 	      double mSSqLogCoeff = doCalcMsSquaredLogCoeff(w, nLps);
-	      double mSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(w, 1);
+	      double mSSqLogSqCoeff = 0.0;//doCalcMsSquaredLogSqCoeff(w, 1); //< DH::TODO these seem to be causing problems
+
+	      if (ENABLE_DEBUG)
+		{
+		  cout << "#    log coefficient m_Hd^2 = " << mHdSqLogCoeff << endl;
+		  cout << "#    log^2 coefficient m_Hd^2 = " << mHdSqLogSqCoeff << endl;
+		  cout << "#    log coefficient m_Hu^2 = " << mHuSqLogCoeff << endl;
+		  cout << "#    log^2 coefficient m_Hu^2 = " << mHuSqLogSqCoeff << endl;
+		  cout << "#    log coefficient m_s^2 = " << mSSqLogCoeff << endl;
+		  cout << "#    log^2 coefficient m_s^2 = " << mSSqLogSqCoeff << endl;
+		}
 	      
 	      mHuSq_guess = mHuSqInit + t_run*mHuSqLogCoeff + Sqr(t_run)*mHuSqLogSqCoeff;
 	      mHdSq_guess = mHdSqInit + t_run*mHdSqLogCoeff + Sqr(t_run)*mHdSqLogSqCoeff;
@@ -611,6 +663,14 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	      mHdSqScaleFactor = mHdSq_guess;
 	      mSSqScaleFactor = mSSq_guess;
 
+	    }
+
+	  if (ENABLE_DEBUG)
+	    {
+	      cout << "#    initial guess: m_Hd^2 = " << mHdSq_guess
+		   << ", m_Hu^2 = " << mHuSq_guess 
+		   << ", m_s^2 = " << mSSq_guess
+		   << ", MSUSY = " << mSusy_guess << endl;
 	    }
 
 	  // Then shoot using Newton's method to try to get the actual solution. 
@@ -631,6 +691,15 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	}
 
     }
+
+  if (ENABLE_DEBUG)
+    {
+      cout << "#    found solution: m_Hd^2 = " << updatedSoln(1)
+	   << ", m_Hu^2 = " << updatedSoln(2) 
+	   << ", m_s^2 = " << updatedSoln(3)
+	   << ", MSUSY = " << updatedSoln(4) << endl;
+    }
+
   return hasProblem;
 
 }
@@ -660,12 +729,13 @@ void ESSM_EWSB_Shooter_Functions(DoubleVector const & parVals, DoubleVector & f)
   s.set_mHu2(parVals(2)*mHuSqScaleFactor);
   s.set_ms2(parVals(3)*mSSqScaleFactor);
 
-  s.run_to(parVals(4)*MsusyScaleFactor);
+  s.run_to(parVals(4)*MsusyScaleFactor, PRECISION);
 
   f(1) = ESSM_EWSBCondition1(s)/mHdSqScaleFactor;
   f(2) = ESSM_EWSBCondition2(s)/mHuSqScaleFactor;
   f(3) = ESSM_EWSBCondition3(s)/mSSqScaleFactor;
   f(4) = ESSM_Msusy_Cond(s, parVals(4)*MsusyScaleFactor);
+
 }
 
 bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVector & estimate, double tol)
@@ -692,7 +762,7 @@ bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVecto
   w.set_mHu2(estimate(2)*mHuSqScaleFactor);
   w.set_ms2(estimate(3)*mSSqScaleFactor);
 
-  w.run_to(estimate(4)*MsusyScaleFactor);
+  w.run_to(estimate(4)*MsusyScaleFactor, PRECISION);
 
   DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
   double v1 = w.get_vd();
@@ -707,9 +777,20 @@ bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVecto
   double f3 = ESSM_EWSBCondition3(w);
   double f4 = estimate(4)*MsusyScaleFactor/Sqrt(mstop(1)*mstop(2))-1.0;
 
-  // cout << "f1/mHdSq Scale Factor = " << f1/mHdSqScaleFactor << endl;
-  // cout << "f2/mHdSq Scale Factor = " << f1/mHuSqScaleFactor << endl;
-  // cout << "f3 = " << f3 << endl;
+  if (ENABLE_DEBUG)
+    {
+      cout << "#    Q                     = " << w.get_scale() << endl;
+      cout << "#    m_Hd^2                = " << w.get_mHd2() << endl;
+      cout << "#    m_Hu^2                = " << w.get_mHu2() << endl;
+      cout << "#    m_s^2                 = " << w.get_ms2() << endl;
+      cout << "#    f1                    = " << f1 << endl;
+      cout << "#    f1/mHdSq Scale Factor = " << f1/mHdSqScaleFactor << endl;
+      cout << "#    f2                    = " << f2 << endl;
+      cout << "#    f2/mHdSq Scale Factor = " << f1/mHuSqScaleFactor << endl;
+      cout << "#    f3                    = " << f3 << endl;
+      cout << "#    f3/mSSq Scale Factor  = " << f3 << endl;
+      cout << "#    f4                    = " << f4 << endl; 
+    }
 
   if (fabs(f1) > tol || fabs(f2) > tol || fabs(f3) > tol || fabs(f4) > tol)
     {
@@ -2995,7 +3076,11 @@ double doCalcTadpolesESSMS_Roman_atQ( genericE6SSM_soft_parameters r, double s ,
   return delta;
 }
 
-bool HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVector & mstop, DoubleVector & mstopsq, int WhatCorrections, bool speak, bool Bugspeak, DoubleVector & bounds, int & ExpValid, DoubleVector & mhout, DoubleMatrix & mhmix, DoubleMatrix & msq, int & sing) {
+bool HiggsMasses(genericE6SSM_soft_parameters const & model, double s, double tb, DoubleVector & mstop, DoubleVector & mstopsq, int WhatCorrections, bool speak, bool Bugspeak, DoubleVector & bounds, int & ExpValid, DoubleVector & mhout, DoubleMatrix & mhmix, DoubleMatrix & msq, int & sing) {
+
+
+  // Copy object for calculation
+  genericE6SSM_soft_parameters r = model;
 
   bool higgsTachyon = false;
   ExpValid = 0; //< assumes no problems initially
@@ -3154,11 +3239,11 @@ bool HiggsMasses(genericE6SSM_soft_parameters & r, double s, double tb, DoubleVe
  if((mstopsq(2) < 0)|| (mstopsq(1) < 0)){
    if(speak) cerr << "tachyonics stop masses so i'm not going to bother doing higgs mass corrections.  Point already ruled out. " << endl;
 
-     // Dylan:: I have modified this so that in the event of tachyonic stops, the returned Higgs masses are negative
+     // Dylan:: I have modified this so that in the event of tachyonic stops, the returned Higgs masses are zero
      // as a flag. Count it as a tadpole problem.
-     mhout.set(1, -1.0);
-     mhout.set(2, -1.0);
-     mhout.set(3, -1.0);
+     mhout.set(1, 0.0);
+     mhout.set(2, 0.0);
+     mhout.set(3, 0.0);
      ExpValid = TADPOLESPROBLEM;
      return higgsTachyon;
    }  
@@ -3427,11 +3512,11 @@ if(WhatCorrections ==1){
        { 
 	 cerr << "tachyonics stop masses so i'm not going to bother doing higgs mass corrections.  Point already ruled out. " << endl;
 	 
-	 // Dylan:: I have modified this so that in the event of tachyonic stops, the returned Higgs masses are negative
+	 // Dylan:: I have modified this so that in the event of tachyonic stops, the returned Higgs masses are zero
 	 // as a flag.
-	 mhout.set(1, -1.0);
-	 mhout.set(2, -1.0);
-	 mhout.set(3, -1.0);
+	 mhout.set(1, 0.0);
+	 mhout.set(2, 0.0);
+	 mhout.set(3, 0.0);
 	 ExpValid = TADPOLESPROBLEM;
        }  
    }
@@ -3490,7 +3575,9 @@ if(WhatCorrections ==1){
 	 
        }
      
-     mhout = mhphy;    
+
+     mhout = mhphy.sort();   
+ 
      mhmix = mixMH; // NOTE ADDITIONAL OUTPUT TO SAVE MIXING AS WELL
      msq = MH_even;
      
@@ -8074,85 +8161,85 @@ void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & model, Eigen::Arra
   // generated spectrum generator, but using the simplified tadpole equations.
   // Note, however, that those routines solve for the soft masses, whereas
   // these solve for the VEVs.
-// int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f)
-// {
-//   const int number_of_ewsb_equations = 3;
+int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f)
+{
+  const int number_of_ewsb_equations = 3;
 
-//    if (contains_nan(x, number_of_ewsb_equations)) {
-//       for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-//          gsl_vector_set(f, i, std::numeric_limits<double>::max());
-//       return GSL_EDOM;
-//    }
+   if (contains_nan(x, number_of_ewsb_equations)) {
+      for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+         gsl_vector_set(f, i, std::numeric_limits<double>::max());
+      return GSL_EDOM;
+   }
 
-//    const genericE6SSM_soft_parameters* model
-//       = static_cast<genericE6SSM_soft_parameters*>(params);
+   genericE6SSM_soft_parameters* model
+      = static_cast<genericE6SSM_soft_parameters*>(params);
 
-//    double tadpole[number_of_ewsb_equations];
+   double tadpole[number_of_ewsb_equations];
 
-//    model->set_vd(gsl_vector_get(x, 0));
-//    model->set_vu(gsl_vector_get(x, 1));
-//    model->set_vs(gsl_vector_get(x, 2));
+   model->set_vd(gsl_vector_get(x, 0));
+   model->set_vu(gsl_vector_get(x, 1));
+   model->set_vs(gsl_vector_get(x, 2));
 
-//    tadpole[0] = ESSM_EWSBCondition1(*model);
-//    tadpole[1] = ESSM_EWSBCondition2(*model);
-//    tadpole[2] = ESSM_EWSBCondition3(*model);
+   tadpole[0] = ESSM_EWSBCondition1(*model);
+   tadpole[1] = ESSM_EWSBCondition2(*model);
+   tadpole[2] = ESSM_EWSBCondition3(*model);
 
-//    for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
-//       gsl_vector_set(f, i, tadpole[i]);
+   for (std::size_t i = 0; i < number_of_ewsb_equations; ++i)
+      gsl_vector_set(f, i, tadpole[i]);
 
-//    return GSL_SUCCESS;
-// }
+   return GSL_SUCCESS;
+}
 
-//   int solve_for_vevs_iteratively(genericE6SSM_soft_parameters const & model, int nints, double intprecis)
-// {
-//    const gsl_multiroot_fsolver_type* solvers[] = {
-//       gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids,
-//          gsl_multiroot_fsolver_broyden
+  int solve_for_vevs_iteratively(genericE6SSM_soft_parameters* model, int nints, double intprecis)
+{
+   const gsl_multiroot_fsolver_type* solvers[] = {
+      gsl_multiroot_fsolver_hybrid, gsl_multiroot_fsolver_hybrids,
+         gsl_multiroot_fsolver_broyden
 
-//    };
+   };
 
-//    double x_init[3];
-//    vevs_initial_guess(x_init);
+   double x_init[3];
+   vevs_initial_guess(*model, x_init);
 
-//    int status;
-//    for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
-//      status = solve_for_vevs_iteratively_with(solvers[i], x_init, model, nints, intprecis);
-//       if (status == GSL_SUCCESS) {
-//          break;
-//       }
-//    }
+   int status;
+   for (std::size_t i = 0; i < sizeof(solvers)/sizeof(*solvers); ++i) {
+     status = solve_for_vevs_iteratively_with(solvers[i], x_init, model, nints, intprecis);
+      if (status == GSL_SUCCESS) {
+         break;
+      }
+   }
 
-//    if (status != GSL_SUCCESS) {
-//      cerr << "WARNING: problem solving EWSB conditions: tunings may be unreliable" << endl;
-//    } 
-//    return status;
-// }
+   if (status != GSL_SUCCESS) {
+     cerr << "WARNING: problem solving EWSB conditions: tunings may be unreliable" << endl;
+   } 
+   return status;
+}
 
 
-//   void vevs_initial_guess(genericE6SSM_soft_parameters const & model, double x_init[3])
-// {
-//   x_init[0] = model.get_vd();
-//   x_init[1] = model.get_vu();
-//   x_init[2] = model.get_vs();
+  void vevs_initial_guess(genericE6SSM_soft_parameters model, double x_init[3])
+{
+  x_init[0] = model.get_vd();
+  x_init[1] = model.get_vu();
+  x_init[2] = model.get_vs();
 
-// }
+}
 
-//   int solve_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
-// 				      const double x_init[3],
-// 				      const genericE6SSM_soft_parameters & model, 
-// 				      int number_of_ewsb_iterations, 
-// 				      double ewsb_iteration_precision)
-// {
-//    genericE6SSM_soft_parameters params = model;
-//    Root_finder<number_of_ewsb_equations> root_finder(ewsb_conditions,
-//                               &params,
-//                               number_of_ewsb_iterations,
-//                               ewsb_iteration_precision);
-//    root_finder.set_solver_type(solver);
-//    const int status = root_finder.find_root(x_init);
+  int solve_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
+				      const double x_init[3],
+				      genericE6SSM_soft_parameters * model, 
+				      int number_of_ewsb_iterations, 
+				      double ewsb_iteration_precision)
+{
 
-//    return status;
-// }
+   Root_finder<3> root_finder(ewsb_conditions,
+                              model,
+                              number_of_ewsb_iterations,
+                              ewsb_iteration_precision);
+   root_finder.set_solver_type(solver);
+   const int status = root_finder.find_root(x_init);
+
+   return status;
+}
 
 
 // Variables used for getting information to the functions used in numerically calculating the
@@ -8183,72 +8270,31 @@ double predpE6SSMMzSqRun(double parVal)
   // Solve iteratively using routines provided in the GSL
   // library instead of writing our own like in the MSSM,
   // as they are likely to be more reliable.
-  bool ALLOWVARYINGMSUSY = false; // < this needs to be false to get exact agreement with our analytics
 
   int maxIters = 100;
-  double tol = 1.0e-5;
+  double tol = 1.0e-2;
 
   double ms = ftMsusy; // < guess for M_{SUSY}.
   Eigen::Matrix<double,3,1> vevs(3);
 
   int sing = 0;
 
-  // TODO:: solve the EWSB conditions numerically, as below for the MSSM, but using
-  // GSL routines.
-  // if (ALLOWVARYINGMSUSY)
-  //   {
-  //     // Here we need to iterate to get the new M_{SUSY}
-  //     // when we recalculate the VEVs.
-  //     DoubleVector mstop(2), mstopsq(2);
+  tempsoftTuning->run_to(ms, PRECISION);
+  
+  // If we don't vary M_{SUSY}, we just need to run down
+  // and recalculate the VEVs.
+  sing = solve_for_vevs_iteratively(tempsoftTuning, maxIters, tol);
 
-  //     for (int i = 1; i <= maxIters; i++)
-  // 	{
-  // 	  tempsoftTuning->runto(ms);
+  if (sing != GSL_SUCCESS)
+    {
+      cerr << "WARNING: error encountered in solving E6SSM EWSB conditions." << endl;
+    }
+    
+  double v1 = tempsoftTuning->get_vd();
+  double v2 = tempsoftTuning->get_vu();
+  double s = tempsoftTuning->get_vs();
 
-  // 	  vevs = MSSM_EWSBNewtonSolver(*tempsoftTuning, tol, maxIters, sing);
-  // 	  if (sing != 0)
-  // 	    {
-  // 	      cerr << "WARNING: error encountered in solving MSSM EWSB conditions." << endl;
-  // 	    }
-
-  // 	  tempsoftTuning->setHvev(sqrt(vevs(1)*vevs(1)+vevs(2)*vevs(2)));
-  // 	  tempsoftTuning->setTanb(vevs(2)/vevs(1));
-
-  // 	  // Recalculate M_{SUSY} using the updated VEVs
-  // 	  physical_MSSM(*tempsoftTuning, mstop, mstopsq, vevs(2)/vevs(1));
-
-  // 	  if (fabs(ms-sqrt(mstop(1)*mstop(2))) < tol)
-  // 	    {
-  // 	      // Since we have converged, running to ms again is probably unnecessary.
-  // 	      ms = sqrt(mstop(1)*mstop(2));
-  // 	      break;
-  // 	    }
-  // 	  ms = sqrt(mstop(1)*mstop(2));
-
-  // 	  if (i == maxIters)
-  // 	    {
-  // 	      cerr << "WARNING: maximum iterations reached before estimate for M_{SUSY} converged." << endl;
-  // 	      sing = 1;
-  // 	    }
-
-  // 	}
-  //   }
-  // else
-  //   {
-
-  //     tempsoftTuning->runto(ms);
-
-  //     // If we don't vary M_{SUSY}, we just need to run down
-  //     // and recalculate the VEVs.
-  //     vevs = MSSM_EWSBNewtonSolver(*tempsoftTuning, tol, maxIters, sing);
-  //     if (sing != 0)
-  // 	{
-  // 	  cerr << "WARNING: error encountered in solving MSSM EWSB conditions." << endl;
-  // 	}
-  //   }
-
-  // tempsoftTuning->setHvev(sqrt(vevs(1)*vevs(1)+vevs(2)*vevs(2)));
-  // tempsoftTuning->setTanb(vevs(2)/vevs(1));
+  double tb = v2/v1;
 
   // Calculate the new M_Z^2
   double t1Ov1 = 0.0;
@@ -8334,7 +8380,7 @@ double predpE6SSMMzSqRun(double parVal)
 
       // Initial value of M_Z^2
       genericE6SSM_soft_parameters w = r;
-      w.run_to(ms);
+      w.run_to(ms, PRECISION);
 
       double v1 = w.get_vd();
       double v2 = w.get_vu();

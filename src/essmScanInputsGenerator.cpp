@@ -15,9 +15,9 @@
 #include <cstdio>
 #include <sstream>
 #include <cstring>
-#include "E6SSM_Spectrum_Generators/src/linalg.h"
-#include "E6SSM_Spectrum_Generators/src/utils.h"
-#include "E6SSM_Spectrum_Generators/src/numerics.h"
+#include "spectrum/src/linalg.h"
+#include "spectrum/src/utils.h"
+#include "spectrum/src/numerics.h"
 
 softsusy::DoubleVector generateVals(double lower, double upper, int npts, bool isLogSpaced = false);
 

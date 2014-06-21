@@ -7,10 +7,10 @@
 #define ESSMTUNINGUTILS_H
 
 
-#include "E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_two_scale_model.hpp"
-#include "E6SSM_Spectrum_Generators/src/wrappers.hpp"
-#include "E6SSM_Spectrum_Generators/src/gsl_utils.hpp"
-#include "E6SSM_Spectrum_Generators/src/root_finder.hpp"
+#include "spectrum/models/genericE6SSM/genericE6SSM_two_scale_model.hpp"
+#include "spectrum/src/wrappers.hpp"
+#include "spectrum/src/gsl_utils.hpp"
+#include "spectrum/src/root_finder.hpp"
 #include "flags.h"
 #include "tuningnumerics.h"
 #include "tuningutils.h"

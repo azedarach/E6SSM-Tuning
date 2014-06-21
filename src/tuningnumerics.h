@@ -8,9 +8,9 @@
 #ifndef TUNINGNUMERICS_H
 #define TUNINGNUMERICS_H
 
-#include "E6SSM_Spectrum_Generators/src/linalg.h"
-#include "E6SSM_Spectrum_Generators/src/utils.h"
-#include "E6SSM_Spectrum_Generators/src/numerics.h"
+#include "spectrum/src/linalg.h"
+#include "spectrum/src/utils.h"
+#include "spectrum/src/numerics.h"
 
 // The various doCalcFineTuning functions provide a set of overloaded
 // function for calculating the fine tuning in a model. Hopefully they

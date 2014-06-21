@@ -5,16 +5,16 @@
   SOFTSUSY routines.
  */
 
-#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_input_parameters.hpp"
-#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_spectrum_generator.hpp"
-#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_info.hpp"
-#include "./E6SSM_Spectrum_Generators/models/genericE6SSM/genericE6SSM_two_scale_model.hpp"
-#include "./E6SSM_Spectrum_Generators/src/error.hpp"
-#include "./E6SSM_Spectrum_Generators/src/spectrum_generator_settings.hpp"
-#include "./E6SSM_Spectrum_Generators/src/lowe.h"
-#include "./E6SSM_Spectrum_Generators/src/command_line_options.hpp"
-#include "./E6SSM_Spectrum_Generators/src/wrappers.hpp"
-#include "./E6SSM_Spectrum_Generators/src/problems.hpp"
+#include "spectrum/models/genericE6SSM/genericE6SSM_input_parameters.hpp"
+#include "spectrum/models/genericE6SSM/genericE6SSM_spectrum_generator.hpp"
+#include "spectrum/models/genericE6SSM/genericE6SSM_info.hpp"
+#include "spectrum/models/genericE6SSM/genericE6SSM_two_scale_model.hpp"
+#include "spectrum/src/error.hpp"
+#include "spectrum/src/spectrum_generator_settings.hpp"
+#include "spectrum/src/lowe.h"
+#include "spectrum/src/command_line_options.hpp"
+#include "spectrum/src/wrappers.hpp"
+#include "spectrum/src/problems.hpp"
 
 #include <iostream>
 #include <cstdlib>
@@ -2325,7 +2325,7 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
   // 2 = M_2, 3 = M_3 and 4 = M_1'
   genericE6SSM_soft_parameters r_soft = genericE6SSM_soft_parameters(r_susy, tdin, tein, tkappain, tlambda12in, tlambda3in, 
 								     tuin, Bmupr, mQlSq, mLlSq, mHdSq, mHuSq, mDrSq, mUrSq, mErSq,
-								     mSSq, mHdISq, mHdISq, mSISq, mDxSq, mDxbarSq, mHpSq, 
+								     mSSq, mHdISq, mHuISq, mSISq, mDxSq, mDxbarSq, mHpSq, 
 								     mHpbarSq, MBin, MWBin, MGin, 
 								     MBpin);
 

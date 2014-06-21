@@ -1,15 +1,9 @@
 # Switch between local machine and cloud
 IS_LOCAL        := yes
 
-# Package information
-PKGNAME         := FlexibleSUSY
-VERSION         := 1.0.1
-# Needs to be changed to correspond to the fine tuning
-# executable, not FlexibleSUSY
-ABSBASEDIR      := /data/dylan/FlexibleSUSY
+ABSBASEDIR      := /data/dylan/essmScans
 ifeq ($(IS_LOCAL),yes)
 ABSBASEDIR      := /home/dylan/Documents/Postgraduate/E6SSM-Tuning
-SRCDIR          := $(ABSBASEDIR)/src
 endif
 
 # Switches
@@ -23,12 +17,14 @@ endif
 LIBEXT          := .a
 
 MODEL           := genericE6SSM
+MODULES         := src test
 
-MODELDIR        := $(SRCDIR)/E6SSM_Spectrum_Generators/models/$(MODEL)
-CONFIGDIR       := $(SRCDIR)/E6SSM_Spectrum_Generators/config
-FLEXIDIR        := $(SRCDIR)/E6SSM_Spectrum_Generators/src
-LEGACYDIR       := $(SRCDIR)/E6SSM_Spectrum_Generators/legacy
-FFLITEDIR       := $(SRCDIR)/E6SSM_Spectrum_Generators/fflite
+# locations of spectrum generator libraries
+MODELDIR        := $(ABSBASEDIR)/spectrum/models/$(MODEL)
+CONFIGDIR       := $(ABSBASEDIR)/spectrum/config
+FLEXIDIR        := $(ABSBASEDIR)/spectrum/src
+LEGACYDIR       := $(ABSBASEDIR)/spectrum/legacy
+FFLITEDIR       := $(ABSBASEDIR)/spectrum/fflite
 
 INCMODEL        := -I$(MODELDIR)
 INCCONFIG       := -I$(CONFIGDIR)
@@ -41,27 +37,6 @@ LIBLEGACY       := $(LEGACYDIR)/liblegacy$(LIBEXT)
 LIBFFLITE       := $(FFLITEDIR)/libfflite$(LIBEXT)
 
 # Variables for compilation
-CXX             := g++
-CPPFLAGS        :=  -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
-                   $(INCMODEL)
-CXXFLAGS        := -std=c++0x -O2
-CXX_DEP_GEN     := g++
-CXXFLAGS_DEP_GEN:= -std=c++0x
-FC              := gfortran
-FFLAGS          := -O2 -frecursive
-FLIBS           := -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/ -lgfortran -lm
-FOR_DEP_GEN     := gfortran
-BOOSTTESTLIBS   := -L/data/dylan/lib -lboost_unit_test_framework
-BOOSTTHREADLIBS := 
-BOOSTFLAGS      := -I/data/dylan/include
-EIGENFLAGS      := -I/data/dylan/include/eigen3
-GSLLIBS         := -lgsl -lgslcblas -lm
-GSLFLAGS        := -I/usr/include
-LAPACKLIBS      := -llapack
-LOOPTOOLSFLAGS  := 
-LOOPTOOLSLIBS   := 
-THREADLIBS      := -lpthread
-
 ifeq ($(IS_LOCAL),yes)
 CXX                := g++
 CPPFLAGS           :=  -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
@@ -85,6 +60,27 @@ LAPACKLIBS         := -llapack
 LOOPTOOLSFLAGS     := 
 LOOPTOOLSLIBS      := 
 THREADLIBS         := -lpthread
+else
+CXX             := g++
+CPPFLAGS        :=  -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
+                   $(INCMODEL)
+CXXFLAGS        := -std=c++0x -O2
+CXX_DEP_GEN     := g++
+CXXFLAGS_DEP_GEN:= -std=c++0x
+FC              := gfortran
+FFLAGS          := -O2 -frecursive
+FLIBS           := -L/usr/lib/gcc/x86_64-redhat-linux/4.4.7/ -lgfortran -lm
+FOR_DEP_GEN     := gfortran
+BOOSTTESTLIBS   := -L/data/dylan/lib -lboost_unit_test_framework
+BOOSTTHREADLIBS := 
+BOOSTFLAGS      := -I/data/dylan/include
+EIGENFLAGS      := -I/data/dylan/include/eigen3
+GSLLIBS         := -lgsl -lgslcblas -lm
+GSLFLAGS        := -I/usr/include
+LAPACKLIBS      := -llapack
+LOOPTOOLSFLAGS  := 
+LOOPTOOLSLIBS   := 
+THREADLIBS      := -lpthread
 endif
 
 ifeq ($(ENABLE_LOOPTOOLS),yes)
@@ -96,81 +92,62 @@ LOOPFUNCFLAGS	   :=
 LOOPFUNCLIBS	    = $(LIBFFLITE)
 endif
 
-TUNING_HDR := \
-                $(SRCDIR)/essmtuningutils.h \
-                $(SRCDIR)/tuningutils.h \
-                $(SRCDIR)/flags.h \
-                $(SRCDIR)/tuningnumerics.h
-
-TUNING_SRC := \
-		$(SRCDIR)/essmScanner.cpp \
-                $(SRCDIR)/essmtuningutils.cpp \
-	        $(SRCDIR)/flags.cpp \
-                $(SRCDIR)/tuningnumerics.cpp
-
-TUNING_OBJ := \
-		$(patsubst %.cpp, %.o, $(filter %.cpp, $(TUNING_SRC))) \
-		$(patsubst %.f, %.o, $(filter %.f, $(TUNING_SRC)))
-
-TUNING_DEP := \
-		$(TUNING_OBJ:.o=.d)
-
-TUNING_EXE := \
-		essmScanner.x
-
-GENERATOR_SRC := \
-	           $(SRCDIR)/essmScanInputsGenerator.cpp
-
-GENERATOR_OBJ := \
-	        $(patsubst %.cpp, %.o, $(filter %.cpp, $(GENERATOR_SRC))) 
-
-GENERATOR_DEP := \
-               $(GENERATOR_OBJ:.o=.d)
-
-GENERATOR_EXE := \
-	        essmScanInputsGenerator.x
+# the modules add their dependency files to this variable
+ALLDEP   :=
+# the modules add source files to be created to this variable
+ALLSRC   :=
+# the modules add executables to this variable
+ALLEXE   :=
+# the modules add test executables to this variable
+ALLTST   :=
 
 # returns file name with absolute path, taking whitespace in directory
 # names into account
 abspathx        = $(foreach name,$(1),\
 		$(shell echo '$(abspath $(name))' | sed s/\[\[:space:\]\]/\\\\\&/g))
 
-.PHONY:         all clean clean-dep clean-obj showbuild
+.PHONY:         all allsrc allexec alltest clean clean-executables clean-dep \
+		clean-obj showbuild
 
-all: $(TUNING_EXE) $(GENERATOR_EXE)
+all: allexec
 
-clean-dep:
-		-rm -f $(TUNING_DEP)
-
-clean-obj:
-		-rm -f $(TUNING_OBJ)
-
-clean: clean-dep clean-obj
-		-rm -f $(TUNING_EXE)
-
-$(TUNING_DEP) $(TUNING_OBJ): CPPFLAGS += $(GSLFLAGS) $(EIGENFLAGS) $(BOOSTFLAGS)
-
-ifneq (,$(findstring yes,$(ENABLE_LOOPTOOLS)$(ENABLE_FFLITE)))
-$(TUNING_DEP) $(TUNING_OBJ): CPPFLAGS += $(LOOPFUNCFLAGS)
-endif
-
-$(TUNING_EXE): $(TUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
-		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
-
-$(GENERATOR_EXE): $(GENERATOR_OBJ) $(LIBFLEXI)
-		$(CXX) -o $@ $(call abspathx,$^) $(FLIBS) $(CPPFLAGS)
+include $(patsubst %, %/module.mk, $(MODULES))
 
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(MAKECMDGOALS),clean-dep)
-ifneq ($(MAKECMDGOALS),clean-obj)
 ifneq ($(MAKECMDGOALS),distclean)
+ifneq ($(MAKECMDGOALS),install-src)
 ifneq ($(MAKECMDGOALS),showbuild)
--include $(TUNING_DEP)
+ifneq ($(MAKECMDGOALS),tag)
+ifneq ($(MAKECMDGOALS),release)
+ifneq ($(MAKECMDGOALS),depend)
+ifneq ($(MAKECMDGOALS),doc)
+ifeq ($(ENABLE_COMPILE),yes)
+ifeq ($(findstring clean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring distclean-,$(MAKECMDGOALS)),)
+ifeq ($(findstring doc-,$(MAKECMDGOALS)),)
+-include $(ALLDEP)
 endif
 endif
 endif
 endif
 endif
+endif
+endif
+endif
+endif
+endif
+endif
+endif
+
+allsrc:   $(ALLSRC)
+allexec:  $(ALLEXE)
+alltest:  $(ALLTST)
+
+clean-dep:
+	-rm -f $(ALLDEP)
+
+depend:  clean-dep
+depend:  $(ALLDEP)
 
 %.d: %.cpp
 # -MT '$*.o' ensures that the target contains the full path
@@ -181,22 +158,24 @@ endif
 	$(FOR_DEP_GEN) $(CPPFLAGS) -cpp -MM -MP -MG $^ -MT '$*.o' | \
 	sed 's|.*\.o:|$*.o:|' > $@
 
+%.d: %.F
+# the sed script ensures that the target contains the full path
+	$(FC) $(CPPFLAGS) -cpp -MM -MP -MG $^ -MT '$*.o' | \
+	sed 's|.*\.o:|$*.o:|' > $@
+
+clean-executables:
+	-rm -f $(ALLEXE)
+
 showbuild:
-	@echo "# package information"
 	@echo "PKGNAME            = $(PKGNAME)"
-	@echo "VERSION            = $(VERSION)"
+	@echo "VERSION            = $(FLEXIBLESUSY_VERSION)"
 	@echo "ABSBASEDIR         = $(ABSBASEDIR)"
+	@echo "INSTALL_DIR        = $(INSTALL_DIR)"
 	@echo ""
-	@echo "# linked FlexibleSUSY libraries"
-	@echo "MODEL              = $(MODEL)"
-	@echo "MODELDIR           = $(MODELDIR)"
-	@echo "FLEXIDIR           = $(FLEXIDIR)"
-	@echo "LEGACYDIR          = $(LEGACYDIR)"
-	@echo "LIBMODEL           = $(LIBMODEL)"
-	@echo "LIBFLEXI           = $(LIBFLEXI)"
-	@echo "LIBLEGACY          = $(LIBLEGACY)"
+	@echo "MATH               = $(MATH)"
+	@echo "MODELS             = $(MODELS)"
+	@echo "ALGORITHMS         = $(ALGORITHMS)"
 	@echo ""
-	@echo "# compilation information"
 	@echo "CXX                = $(CXX)"
 	@echo "CPPFLAGS           = $(CPPFLAGS)"
 	@echo "CXXFLAGS           = $(CXXFLAGS)"
@@ -206,6 +185,7 @@ showbuild:
 	@echo "FFLAGS             = $(FFLAGS)"
 	@echo "FLIBS              = $(FLIBS)"
 	@echo "FOR_DEP_GEN        = $(FOR_DEP_GEN)"
+	@echo "MAKELIB            = $(MAKELIB)"
 	@echo "LIBEXT             = $(LIBEXT)"
 	@echo "BOOSTTESTLIBS      = $(BOOSTTESTLIBS)"
 	@echo "BOOSTTHREADLIBS    = $(BOOSTTHREADLIBS)"
@@ -218,6 +198,13 @@ showbuild:
 	@echo "LOOPFUNCLIBS       = $(LOOPFUNCLIBS)"
 	@echo "THREADLIBS         = $(THREADLIBS)"
 	@echo ""
+	@echo "ENABLE_COMPILE     = $(ENABLE_COMPILE)"
 	@echo "ENABLE_FFLITE      = $(ENABLE_FFLITE)"
 	@echo "ENABLE_LOOPTOOLS   = $(ENABLE_LOOPTOOLS)"
+	@echo "ENABLE_META        = $(ENABLE_META)"
+	@echo "ENABLE_STATIC_LIBS = $(ENABLE_STATIC_LIBS)"
 	@echo "ENABLE_THREADS     = $(ENABLE_THREADS)"
+	@echo ""
+	@echo "The list of modules to be built:"
+	@echo "--------------------------------"
+	@echo "$(MODULES)"

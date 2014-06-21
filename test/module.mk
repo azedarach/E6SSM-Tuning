@@ -55,6 +55,5 @@ $(DIR)/test_%.x: $(DIR)/test_%.o
 # add boost and eigen flags for the test object files and dependencies
 $(TEST_OBJ) $(TEST_DEP): CPPFLAGS += $(BOOSTFLAGS) $(EIGENFLAGS)
 
-ALLDEP += $(LIBTEST_DEP) $(TEST_DEP)
-ALLLIB += $(LIBTEST)
+ALLDEP += $(TEST_DEP)
 ALLTST += $(TEST_EXE)

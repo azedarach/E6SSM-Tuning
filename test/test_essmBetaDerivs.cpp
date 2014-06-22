@@ -1,5 +1,7 @@
 /*
-  Various tests for the fine tuning code in the E6SSM.
+  Test the routines calculating the derivative w.r.t 
+  t = log(Q/Q_0) of the 1-loop beta functions in the 
+  E6SSM.
  */
 
 #include "src/essmtuningutils.h"

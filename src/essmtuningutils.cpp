@@ -6227,6 +6227,11 @@ double doCalcMh2SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
 
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
+
   if (nLogs != 1)
     {
       cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
@@ -6323,6 +6328,11 @@ double doCalcMh1SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
+
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
 
   if (nLogs != 1)
     {
@@ -6423,6 +6433,11 @@ double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
 
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
+
   if (nLogs != 1)
     {
       cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
@@ -6515,6 +6530,11 @@ double doCalcmtRSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
+
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
 
   if (nLogs != 1)
     {
@@ -6610,6 +6630,11 @@ double doCalcmqL3SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
+
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
 
   if (nLogs != 1)
     {
@@ -6709,6 +6734,11 @@ double doCalcLambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
+
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
 
   if (nLogs != 1)
     {
@@ -6817,9 +6847,13 @@ double doCalcAlambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
 
-  if (nLogs != 1)
+  if (nLogs == 0)
     {
-      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
+      return 0.0;
+    }
+
+  if (nLogs != 1)
+    {      cerr << "WARNING: cannot yet do more than LL calculation: using nLogs = 1." << endl;
     }
 
   r.set_loops(1);
@@ -6943,6 +6977,11 @@ double doCalcAtLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   r.set_TYe(0,0,0.0);
   r.set_TYe(1,1,0.0);
+
+  if (nLogs == 0)
+    {
+      return 0.0;
+    }
 
   if (nLogs != 1)
     {
@@ -7073,7 +7112,7 @@ Eigen::Matrix<double,8,1> doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r,
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -7086,7 +7125,7 @@ Eigen::Matrix<double,8,1> doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r,
   // For derivatives of soft masses w.r.t. soft masses, take advantage
   // of the fact that beta functions are linear in the soft masses,
   // so can calculate derivatives by simple rise/run formula.
-  int nLps = 2;
+  int nLps = r.get_loops();
   int nLogs = 1;
   double shift = 1.0;
 
@@ -7144,14 +7183,14 @@ Eigen::Matrix<double,8,1> doCalcMh1SquaredDerivs(genericE6SSM_soft_parameters r,
   double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
   double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
 
-  derivs(1) = dlambdadp;
-  derivs(2) = dAlambdadp;
-  derivs(3) = KroneckerDelta(gen, 3) + t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
-  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
-  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
-  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
-  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
-  derivs(8) = dAtdp;
+  derivs(0) = dlambdadp;
+  derivs(1) = dAlambdadp;
+  derivs(2) = KroneckerDelta(gen, 3) + t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(3) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(4) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(5) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(6) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(7) = dAtdp;
 
   return derivs;
 
@@ -7172,8 +7211,8 @@ Eigen::Matrix<double,8,1> doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r,
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
-  
+  Eigen::Matrix<double,8,1> derivs;
+
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
   // These are zero for all soft squared masses
@@ -7185,7 +7224,7 @@ Eigen::Matrix<double,8,1> doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r,
   // For derivatives of soft masses w.r.t. soft masses, take advantage
   // of the fact that beta functions are linear in the soft masses,
   // so can calculate derivatives by simple rise/run formula.
-  int nLps = 2;
+  int nLps = r.get_loops();
   int nLogs = 1;
   double shift = 1.0;
 
@@ -7243,14 +7282,14 @@ Eigen::Matrix<double,8,1> doCalcMh2SquaredDerivs(genericE6SSM_soft_parameters r,
   double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
   double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
 
-  derivs(1) = dlambdadp;
-  derivs(2) = dAlambdadp;
-  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
-  derivs(4) = KroneckerDelta(gen, 3) + t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
-  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
-  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
-  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
-  derivs(8) = dAtdp;
+  derivs(0) = dlambdadp;
+  derivs(1) = dAlambdadp;
+  derivs(2) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(3) = KroneckerDelta(gen, 3) + t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(4) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(5) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(6) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(7) = dAtdp;
 
   return derivs;
 
@@ -7272,7 +7311,7 @@ Eigen::Matrix<double,8,1> doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, 
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -7285,7 +7324,7 @@ Eigen::Matrix<double,8,1> doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, 
   // For derivatives of soft masses w.r.t. soft masses, take advantage
   // of the fact that beta functions are linear in the soft masses,
   // so can calculate derivatives by simple rise/run formula.
-  int nLps = 2;
+  int nLps = r.get_loops();
   int nLogs = 1;
   double shift = 1.0;
 
@@ -7343,14 +7382,14 @@ Eigen::Matrix<double,8,1> doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, 
   double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
   double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
 
-  derivs(1) = dlambdadp;
-  derivs(2) = dAlambdadp;
-  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
-  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
-  derivs(5) = KroneckerDelta(gen,3) + t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
-  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
-  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
-  derivs(8) = dAtdp;
+  derivs(0) = dlambdadp;
+  derivs(1) = dAlambdadp;
+  derivs(2) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(3) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(4) = KroneckerDelta(gen,3) + t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(5) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(6) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(7) = dAtdp;
 
   return derivs;
 
@@ -7374,7 +7413,7 @@ Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, dou
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7458,14 +7497,14 @@ Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, dou
   double dbeta_2loop_mUrSqdp = 0.0;
   double dbeta_2loop_Atdp = 0.0;  
   
-  derivs(1) = 1.0 + t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-  derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-  derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-  derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-  derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-  derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-  derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-  derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
+  derivs(0) = 1.0 + t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+  derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+  derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+  derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+  derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+  derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+  derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+  derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
   
   return derivs;
 }
@@ -7485,7 +7524,7 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7567,15 +7606,16 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
-		
+	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
+
+	break;		
       }
     case 2:
       {
@@ -7610,15 +7650,16 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
 
+	break;
       }
     case 3:
       {
@@ -7653,15 +7694,16 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
 
+	break;
       }
     case 4:
       {
@@ -7696,15 +7738,16 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
 
+	break;
       }
     default:
       {
@@ -7732,7 +7775,7 @@ Eigen::Matrix<double,8,1> doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, dou
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7838,14 +7881,14 @@ Eigen::Matrix<double,8,1> doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, dou
   double dbeta_2loop_mUrSqdp = 0.0;
   double dbeta_2loop_Atdp = 0.0;  
 
-  derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-  derivs(2) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-  derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-  derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-  derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-  derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-  derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-  derivs(8) = 1.0 + t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+  derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+  derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+  derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+  derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+  derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+  derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+  derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+  derivs(7) = 1.0 + t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
 
   return derivs;
 
@@ -7866,7 +7909,7 @@ Eigen::Matrix<double,8,1> doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   genericE6SSM_input_parameters input = r.get_input();
 
@@ -7953,14 +7996,14 @@ Eigen::Matrix<double,8,1> doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r
   double dbeta_2loop_mUrSqdp = 0.0;
   double dbeta_2loop_Atdp = 0.0;  
 
-  derivs(1) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-  derivs(2) = 1.0 + t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-  derivs(3) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-  derivs(4) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-  derivs(5) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-  derivs(6) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-  derivs(7) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-  derivs(8) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+  derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
+  derivs(1) = 1.0 + t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
+  derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
+  derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
+  derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
+  derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
+  derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
+  derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
 
   return derivs;
 }
@@ -7980,7 +8023,7 @@ Eigen::Matrix<double,8,1> doCalcMq2Derivs(genericE6SSM_soft_parameters r, double
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -7993,7 +8036,7 @@ Eigen::Matrix<double,8,1> doCalcMq2Derivs(genericE6SSM_soft_parameters r, double
   // For derivatives of soft masses w.r.t. soft masses, take advantage
   // of the fact that beta functions are linear in the soft masses,
   // so can calculate derivatives by simple rise/run formula.
-  int nLps = 2;
+  int nLps = r.get_loops();
   int nLogs = 1;
   double shift = 1.0;
 
@@ -8044,14 +8087,14 @@ Eigen::Matrix<double,8,1> doCalcMq2Derivs(genericE6SSM_soft_parameters r, double
   double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
   double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
 
-  derivs(1) = dlambdadp;
-  derivs(2) = dAlambdadp;
-  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
-  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
-  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
-  derivs(6) = KroneckerDelta(m,3)*KroneckerDelta(n,3) + t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
-  derivs(7) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
-  derivs(8) = dAtdp;
+  derivs(0) = dlambdadp;
+  derivs(1) = dAlambdadp;
+  derivs(2) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(3) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(4) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(5) = KroneckerDelta(m,3)*KroneckerDelta(n,3) + t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(6) = t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(7) = dAtdp;
 
   return derivs;
 
@@ -8072,7 +8115,7 @@ Eigen::Matrix<double,8,1> doCalcMu2Derivs(genericE6SSM_soft_parameters r, double
   // Taylor approximation to the RGE solution is assumed to be about the values at MX.
   double t = log(ms/mx);
 
-  Eigen::Matrix<double,8,1> derivs(8);
+  Eigen::Matrix<double,8,1> derivs;
 
   double dlambdadp, dAlambdadp, dmHdSqdp, dmHuSqdp, dmSSqdp, dmQlSqdp, dmUrSqdp, dAtdp;
 
@@ -8085,7 +8128,7 @@ Eigen::Matrix<double,8,1> doCalcMu2Derivs(genericE6SSM_soft_parameters r, double
   // For derivatives of soft masses w.r.t. soft masses, take advantage
   // of the fact that beta functions are linear in the soft masses,
   // so can calculate derivatives by simple rise/run formula.
-  int nLps = 2;
+  int nLps = r.get_loops();
   int nLogs = 1;
   double shift = 1.0;
 
@@ -8136,14 +8179,14 @@ Eigen::Matrix<double,8,1> doCalcMu2Derivs(genericE6SSM_soft_parameters r, double
   double dmUrSqOtCoeffdp = (secondmUrSqLogCoeff-firstmUrSqLogCoeff)/shift;
   double dmUrSqOt2Coeffdp = (secondmUrSqLogSqCoeff-firstmUrSqLogSqCoeff)/shift;
 
-  derivs(1) = dlambdadp;
-  derivs(2) = dAlambdadp;
-  derivs(3) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
-  derivs(4) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
-  derivs(5) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
-  derivs(6) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
-  derivs(7) = KroneckerDelta(m,3)*KroneckerDelta(n,3) + t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
-  derivs(8) = dAtdp;
+  derivs(0) = dlambdadp;
+  derivs(1) = dAlambdadp;
+  derivs(2) = t * dmHdSqOtCoeffdp + Sqr(t) * dmHdSqOt2Coeffdp;
+  derivs(3) = t * dmHuSqOtCoeffdp + Sqr(t) * dmHuSqOt2Coeffdp;
+  derivs(4) = t * dmSSqOtCoeffdp + Sqr(t) * dmSSqOt2Coeffdp;
+  derivs(5) = t * dmQlSqOtCoeffdp + Sqr(t) * dmQlSqOt2Coeffdp;
+  derivs(6) = KroneckerDelta(m,3)*KroneckerDelta(n,3) + t * dmUrSqOtCoeffdp + Sqr(t) * dmUrSqOt2Coeffdp;
+  derivs(7) = dAtdp;
 
   return derivs;
 }
@@ -8205,8 +8248,8 @@ Eigen::Matrix<double,8,1> doCalcMu2Derivs(genericE6SSM_soft_parameters r, double
       // conditions wrt the EW scale parameters. For the EWSB conditions used in our study, this matrix has the form:
       // 
       //     [ df1/dlambda df1/dAlambda df1/dm_Hd^2 df1/dm_Hu^2 df1/dm_s^2 df1/dm_Ql^2 df1/dm_uR^2 df1/dA_t ]
-      //     [ df2/dlambda df2/dAlambda df2/dm_Hd^2 df2/dm_Hu^2 df2/dm_2^2 df2/dm_Ql^2 df2/dm_uR^2 df2/dA_t ]
-      //     [ df3/dlambda df3/dAlambda df3/dm_Hd^2 df3/dm_Hu^2 df3/dm_2^2 df3/dm_Ql^2 df3/dm_uR^2 df3/dA_t ]
+      //     [ df2/dlambda df2/dAlambda df2/dm_Hd^2 df2/dm_Hu^2 df2/dm_s^2 df2/dm_Ql^2 df2/dm_uR^2 df2/dA_t ]
+      //     [ df3/dlambda df3/dAlambda df3/dm_Hd^2 df3/dm_Hu^2 df3/dm_s^2 df3/dm_Ql^2 df3/dm_uR^2 df3/dA_t ]
       Eigen::Matrix<double,3,8> EWderivs;
       
       EWderivs(0,0) = lambda*(v2*v2+s*s)-Alambda*s*tb/Sqrt(2.0);

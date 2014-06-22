@@ -214,7 +214,6 @@ double calculateDeltaTadpole3(flexiblesusy::genericE6SSM_soft_parameters,double,
 //     flexiblesusy::genericE6SSM_soft_parameters essmSusy = object to calculate derivatives on
 //     double s = the value of the VEV s to use
 //     double tb = the value of tan(beta) to use.
-// CHECK IF NEED TO SUBTRACT TADPOLES FROM THESE!!
 double doCalcDeltaPrime11(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 double doCalcDeltaPrime12(flexiblesusy::genericE6SSM_soft_parameters,double,double);
 double doCalcDeltaPrime13(flexiblesusy::genericE6SSM_soft_parameters,double,double);

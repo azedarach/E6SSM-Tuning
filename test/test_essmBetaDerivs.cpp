@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
   /*
     Define maximum allowable deviation in %
    */
-  double tol = 5.0;
+  double tol = 0.5;
 
   /*
     Pass or fail?
@@ -291,9 +291,9 @@ int main(int argc, char* argv[])
   analytic_dBeta1MqSqdt = 2.0 * doCalcmqL3SquaredLogSqCoeff(soft_model, 1);
   analytic_dBeta1MuSqdt = 2.0 * doCalcmtRSquaredLogSqCoeff(soft_model, 1);
   // These haven't been calculated yet
-  analytic_dBeta1Atdt = 0.0;
-  analytic_dBeta1Lambdadt = 0.0;
-  analytic_dBeta1Alambdadt = 0.0;
+  analytic_dBeta1Atdt = 2.0 * doCalcAtLogSqCoeff(soft_model, 1);
+  analytic_dBeta1Lambdadt = 2.0 * doCalcLambda3LogSqCoeff(soft_model, 1);
+  analytic_dBeta1Alambdadt = 2.0 * doCalcAlambda3LogSqCoeff(soft_model,1);
 
   error_dBeta1Mh1Sqdt = 100.0*Abs(numeric_dBeta1Mh1Sqdt-analytic_dBeta1Mh1Sqdt)/(0.5*(numeric_dBeta1Mh1Sqdt+analytic_dBeta1Mh1Sqdt)); 
   error_dBeta1Mh2Sqdt = 100.0*Abs(numeric_dBeta1Mh2Sqdt-analytic_dBeta1Mh2Sqdt)/(0.5*(numeric_dBeta1Mh2Sqdt+analytic_dBeta1Mh2Sqdt)); 

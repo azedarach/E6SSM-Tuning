@@ -258,7 +258,14 @@ double doCalcmtRSquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, in
 double doCalcmqL3SquaredLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
 double doCalcmqL3SquaredLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 
+double doCalcLambda3LogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcLambda3LogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 
+double doCalcAlambda3LogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcAlambda3LogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
+
+double doCalcAtLogCoeff(flexiblesusy::genericE6SSM_soft_parameters , int);
+double doCalcAtLogSqCoeff(flexiblesusy::genericE6SSM_soft_parameters, int);
 
 Eigen::Matrix<double,8,1> doCalcMh1SquaredDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double ms, int gen,
 				      bool & hasError);

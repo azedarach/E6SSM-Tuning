@@ -6461,7 +6461,7 @@ double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   double coeff = -16.0 * Sqr(QSp) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
   coeff = coeff + 8.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
   coeff = coeff + 4.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 8.0 * r.get_TLambdax()*w.get_TLambdax();
-  coeff = coeff + 6.0*w.get_ms2()*(r.get_TKappa()*(r.get_TKappa().adjoint())).trace() + 6.0 * r.get_ms2()*(w.get_TKappa()*(r.get_TKappa().adjoint())).trace() + 6.0*r.get_ms2()*(r.get_TKappa()*(w.get_TKappa().adjoint())).trace();
+  coeff = coeff + 6.0*w.get_ms2()*(r.get_Kappa()*(r.get_Kappa().adjoint())).trace() + 6.0 * r.get_ms2()*(w.get_Kappa()*(r.get_Kappa().adjoint())).trace() + 6.0*r.get_ms2()*(r.get_Kappa()*(w.get_Kappa().adjoint())).trace();
   coeff = coeff + 4.0*w.get_ms2()*(r.get_Lambda12()*(r.get_Lambda12().adjoint())).trace()+4.0*r.get_ms2()*(w.get_Lambda12()*(r.get_Lambda12().adjoint())).trace()+4.0*r.get_ms2()*(r.get_Lambda12()*(w.get_Lambda12().adjoint())).trace();
   coeff = coeff + 6.0*(w.get_TKappa()*(r.get_TKappa().adjoint())).trace()+6.0*(r.get_TKappa()*(w.get_TKappa().adjoint())).trace();
   coeff = coeff + 4.0*(w.get_TLambda12()*(r.get_TLambda12().adjoint())).trace()+4.0*(r.get_TLambda12()*(w.get_TLambda12().adjoint())).trace();

@@ -6375,7 +6375,7 @@ double doCalcMh1SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   coeff += 6.0 * Sqr(r.get_Yd(2,2))*(w.get_mHd2()+w.get_mq2(2,2)+w.get_md2(2,2)) + 12.0*r.get_TYd(2,2)*w.get_TYd(2,2);
   coeff += 4.0 * r.get_Ye(2,2)*w.get_Ye(2,2)*(r.get_mHd2()+r.get_ml2(2,2)+r.get_me2(2,2));
   coeff += 2.0 * Sqr(r.get_Ye(2,2))*(w.get_mHd2()+w.get_ml2(2,2)+w.get_me2(2,2)) + 4.0*r.get_TYe(2,2)*w.get_TYe(2,2);
-  coeff -= 1.2 * r.get_g1()*w.get_g1()*sigma11 - 0.6 * Sqr(r.get_g1())*beta_sigma11;
+  coeff -= (1.2 * r.get_g1()*w.get_g1()*sigma11 + 0.6 * Sqr(r.get_g1())*beta_sigma11);
   coeff += 4.0 * QH1p * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QH1p * Sqr(r.get_gN()) * beta_sigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
@@ -6558,13 +6558,12 @@ double doCalcmtRSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
     +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
     +3.0*Qup*w.get_mu2().trace();
 
-
   double coeff = -16.0 * Sqr(Qup) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
   coeff -= (64.0/15.0) * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
   coeff -= (64.0/3.0) * (r.get_g3()*w.get_g3()*Sqr(r.get_MassG()) + Sqr(r.get_g3())*r.get_MassG()*w.get_MassG());
   coeff += 8.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2() + r.get_mu2(2,2) + r.get_mq2(2,2));
   coeff += 4.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2() + w.get_mu2(2,2) + w.get_mq2(2,2)) + 8.0*r.get_TYu(2,2)*w.get_TYu(2,2);
-  coeff -= 1.6 * r.get_g1()*w.get_g1()*sigma11 - 0.8 * Sqr(r.get_g1()) * beta_sigma11;
+  coeff -= (1.6 * r.get_g1()*w.get_g1()*sigma11 + 0.8 * Sqr(r.get_g1()) * beta_sigma11);
   coeff += 4.0 * Qup * r.get_gN()*w.get_gN()*sigma14 + 2.0 * Qup * Sqr(r.get_gN()) * beta_sigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
@@ -6658,6 +6657,7 @@ double doCalcmqL3SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   double coeff = -16.0 * Sqr(QQp) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
   coeff -= (4.0/15.0) * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
   coeff -= (64.0/3.0) * (r.get_g3()*w.get_g3()*Sqr(r.get_MassG()) + Sqr(r.get_g3())*r.get_MassG()*w.get_MassG());
+  coeff -= 12.0 * (r.get_g2() * w.get_g2() * Sqr(r.get_MassWB()) + Sqr(r.get_g2()) * r.get_MassWB() * w.get_MassWB());
   coeff += 4.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2() + r.get_mu2(2,2) + r.get_mq2(2,2));
   coeff += 2.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2() + w.get_mu2(2,2) + w.get_mq2(2,2)) + 4.0*r.get_TYu(2,2)*w.get_TYu(2,2);
   coeff += 4.0 * r.get_Yd(2,2)*w.get_Yd(2,2)*(r.get_mHd2() + r.get_md2(2,2) + r.get_mq2(2,2));
@@ -6777,7 +6777,7 @@ double doCalcAlambda3LogCoeff(genericE6SSM_soft_parameters r, int nLps)
     {
       Alambda = 0.0;
     }
-  else if (Abs(lambda) < 1.0e-100)
+  if (Abs(lambda) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
@@ -6848,7 +6848,7 @@ double doCalcAlambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
     {
       Alambda = 0.0;
     }
-  else if (Abs(lambda) < 1.0e-100)
+  if (Abs(lambda) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<
@@ -6904,7 +6904,7 @@ double doCalcAtLogCoeff(genericE6SSM_soft_parameters r, int nLps)
     {
       At = 0.0;
     }
-  else if (Abs(yt) < 1.0e-100)
+  if (Abs(yt) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
@@ -6975,7 +6975,7 @@ double doCalcAtLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
     {
       At = 0.0;
     }
-  else if (Abs(yt) < 1.0e-100)
+  if (Abs(yt) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
@@ -6996,7 +6996,7 @@ double doCalcAtLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
     {
       Ab = 0.0;
     }
-  else if (Abs(yb) < 1.0e-100)
+  if (Abs(yb) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_b where y_b coupling is " <<
@@ -7019,7 +7019,7 @@ double doCalcAtLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
     {
       Alambda = 0.0;
     }
-  else if (Abs(lambda) < 1.0e-100)
+  if (Abs(lambda) < 1.0e-100)
     {
       ostringstream ii;
       ii << "WARNING: trying to calculate A_lambda(3) where lambda(3) coupling is " <<

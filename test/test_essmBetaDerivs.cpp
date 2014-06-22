@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
   /*
     Define maximum allowable deviation in %
    */
-  double tol = 0.5;
+  double tol = 0.05;
 
   /*
     Pass or fail?
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
   tye(2,0) = 0.0; tye(2,1) = 0.0; // GeV
 
   // Kappa and T_kappa are assumed diagonal
-  kappa(0,0) = 0.6; kappa(1,1) = 0.6; kappa(2,2) = 0.0;
+  kappa(0,0) = 0.6; kappa(1,1) = 0.6; kappa(2,2) = 0.6;
   tkappa(0,0) = kappa(0,0) * 1000.0; tkappa(1,1) = kappa(1,1) * 1000.0; tkappa(2,2) = kappa(2,2) * 1000.0; // GeV
 
   kappa(0,1) = 0.0; kappa(0,2) = 0.0;
@@ -152,25 +152,25 @@ int main(int argc, char* argv[])
 
   M1 = 300.0; // GeV
   M1p = 300.0; // GeV
-  M2 = 1000.0; // GeV
+  M2 = 500.0; // GeV
   M3 = 2000.0; // GeV
 
   mHpSq = Sqr(5000.0); // GeV^2
   mHpbarSq = Sqr(5000.0); // GeV^2
 
-  lambda = 1.5;
+  lambda = -2.3;
   tlambda = lambda * (5000.0); // GeV
 
   mHdSq = 1.0e8; // GeV^2
-  mHuSq = 0.5e8; // GeV^2
-  mSSq = 1.5e8; // GeV^2
+  mHuSq = 05.e8; // GeV^2
+  mSSq = -1.5e8; // GeV^2
 
   mupr = 5000.0; // GeV
   Bmupr = 5000.0; // GeV^2
 
   Eigen::Matrix<double,3,3> mQlSq, mLlSq, mUrSq, mDrSq, mErSq, mDxSq, mDxbarSq;
 
-  mQlSq(2,2) = Sqr(2000.0); // GeV^2
+  mQlSq(2,2) = Sqr(1000.0); // GeV^2
   mUrSq(2,2) = Sqr(2000.0); // GeV^2
 
   // Soft masses are diagonal
@@ -274,96 +274,121 @@ int main(int argc, char* argv[])
   // % differences
   double error_dBeta1Mh1Sqdt, error_dBeta1Mh2Sqdt, error_dBeta1MsSqdt, error_dBeta1Atdt;
   double error_dBeta1Lambdadt, error_dBeta1MqSqdt, error_dBeta1MuSqdt, error_dBeta1Alambdadt;
-
-  numeric_dBeta1Mh1Sqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mH13Sq);
-  numeric_dBeta1Mh2Sqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mH23Sq);
-  numeric_dBeta1MsSqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mS3Sq);
-  numeric_dBeta1MqSqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mqL3Sq);
-  numeric_dBeta1MuSqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mtRSq);
-  numeric_dBeta1Atdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::Au3);
-  numeric_dBeta1Lambdadt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::lam3);
-  numeric_dBeta1Alambdadt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::Alam3);
-
-  // Note that the analytic routines include an extra factor of 1/2 that needs to be accounted for
-  analytic_dBeta1Mh1Sqdt = 2.0 * doCalcMh1SquaredLogSqCoeff(soft_model, 1);
-  analytic_dBeta1Mh2Sqdt = 2.0 * doCalcMh2SquaredLogSqCoeff(soft_model, 1);
-  analytic_dBeta1MsSqdt = 2.0 * doCalcMsSquaredLogSqCoeff(soft_model, 1);
-  analytic_dBeta1MqSqdt = 2.0 * doCalcmqL3SquaredLogSqCoeff(soft_model, 1);
-  analytic_dBeta1MuSqdt = 2.0 * doCalcmtRSquaredLogSqCoeff(soft_model, 1);
-  // These haven't been calculated yet
-  analytic_dBeta1Atdt = 2.0 * doCalcAtLogSqCoeff(soft_model, 1);
-  analytic_dBeta1Lambdadt = 2.0 * doCalcLambda3LogSqCoeff(soft_model, 1);
-  analytic_dBeta1Alambdadt = 2.0 * doCalcAlambda3LogSqCoeff(soft_model,1);
-
-  error_dBeta1Mh1Sqdt = 100.0*Abs(numeric_dBeta1Mh1Sqdt-analytic_dBeta1Mh1Sqdt)/(0.5*(numeric_dBeta1Mh1Sqdt+analytic_dBeta1Mh1Sqdt)); 
-  error_dBeta1Mh2Sqdt = 100.0*Abs(numeric_dBeta1Mh2Sqdt-analytic_dBeta1Mh2Sqdt)/(0.5*(numeric_dBeta1Mh2Sqdt+analytic_dBeta1Mh2Sqdt)); 
-  error_dBeta1MsSqdt = 100.0*Abs(numeric_dBeta1MsSqdt-analytic_dBeta1MsSqdt)/(0.5*(numeric_dBeta1MsSqdt+analytic_dBeta1MsSqdt)); 
-  error_dBeta1MqSqdt = 100.0*Abs(numeric_dBeta1MqSqdt-analytic_dBeta1MqSqdt)/(0.5*(numeric_dBeta1MqSqdt+analytic_dBeta1MqSqdt)); 
-  error_dBeta1MuSqdt = 100.0*Abs(numeric_dBeta1MuSqdt-analytic_dBeta1MuSqdt)/(0.5*(numeric_dBeta1MuSqdt+analytic_dBeta1MuSqdt)); 
-  error_dBeta1Atdt = 100.0*Abs(numeric_dBeta1Atdt-analytic_dBeta1Atdt)/(0.5*(numeric_dBeta1Atdt+analytic_dBeta1Atdt)); 
-  error_dBeta1Lambdadt = 100.0*Abs(numeric_dBeta1Alambdadt-analytic_dBeta1Alambdadt)/(0.5*(numeric_dBeta1Alambdadt+analytic_dBeta1Alambdadt)); 
-  error_dBeta1Alambdadt = 100.0*Abs(numeric_dBeta1Lambdadt-analytic_dBeta1Lambdadt)/(0.5*(numeric_dBeta1Lambdadt+analytic_dBeta1Lambdadt)); 
-
-  outputCharacteristics(8);
-
-  // Print results
-  cout << "**************************************************" << endl;
-  cout << "* TEST RESULTS: e6ssm_1lp_beta_derivs" << endl;
-  cout << "**************************************************" << endl;
-  cout << "* NUMERICAL DERIVATIVES: " << endl;
-  cout << "*    dbeta_{m_Hd^2}^{(1)}/dt = " << numeric_dBeta1Mh1Sqdt << endl;
-  cout << "*    dbeta_{m_Hu^2}^{(1)}/dt = " << numeric_dBeta1Mh2Sqdt << endl;
-  cout << "*    dbeta_{m_s^2}^{(1)}/dt = " << numeric_dBeta1MsSqdt << endl;
-  cout << "*    dbeta_{m_q3L^2}^{(1)}/dt = " << numeric_dBeta1MqSqdt << endl;
-  cout << "*    dbeta_{m_tR^2}^{(1)}/dt = " << numeric_dBeta1MuSqdt << endl;
-  cout << "*    dbeta_{A_t}^{(1)}/dt = " << numeric_dBeta1Atdt << endl;
-  cout << "*    dbeta_{A_lambda}^{(1)}/dt = " << numeric_dBeta1Alambdadt << endl;
-  cout << "*    dbeta_{lambda}^{(1)}/dt = " << numeric_dBeta1Lambdadt << endl;
-  cout << "**************************************************" << endl;
-  cout << "* ANALYTIC DERIVATIVES: " << endl;
-  cout << "*    dbeta_{m_Hd^2}^{(1)}/dt = " << analytic_dBeta1Mh1Sqdt << endl;
-  cout << "*    dbeta_{m_Hu^2}^{(1)}/dt = " << analytic_dBeta1Mh2Sqdt << endl;
-  cout << "*    dbeta_{m_s^2}^{(1)}/dt = " << analytic_dBeta1MsSqdt << endl;
-  cout << "*    dbeta_{m_q3L^2}^{(1)}/dt = " << analytic_dBeta1MqSqdt << endl;
-  cout << "*    dbeta_{m_tR^2}^{(1)}/dt = " << analytic_dBeta1MuSqdt << endl;
-  cout << "*    dbeta_{A_t}^{(1)}/dt = " << analytic_dBeta1Atdt << endl;
-  cout << "*    dbeta_{A_lambda}^{(1)}/dt = " << analytic_dBeta1Alambdadt << endl;
-  cout << "*    dbeta_{lambda}^{(1)}/dt = " << analytic_dBeta1Lambdadt << endl;
-  cout << "**************************************************" << endl;
-  cout << "* PERCENTAGE DIFFERENCES: " << endl;
-  cout << "*    dbeta_{m_Hd^2}^{(1)}/dt = " << error_dBeta1Mh1Sqdt << "%" << endl;
-  cout << "*    dbeta_{m_Hu^2}^{(1)}/dt = " << error_dBeta1Mh2Sqdt << "%" << endl;
-  cout << "*    dbeta_{m_s^2}^{(1)}/dt = " << error_dBeta1MsSqdt << "%" << endl;
-  cout << "*    dbeta_{m_q3L^2}^{(1)}/dt = " << error_dBeta1MqSqdt << "%" << endl;
-  cout << "*    dbeta_{m_tR^2}^{(1)}/dt = " << error_dBeta1MuSqdt << "%" << endl;
-  cout << "*    dbeta_{A_t}^{(1)}/dt = " << error_dBeta1Atdt << "%" << endl;
-  cout << "*    dbeta_{A_lambda}^{(1)}/dt = " << error_dBeta1Alambdadt << "%" << endl;
-  cout << "*    dbeta_{lambda}^{(1)}/dt = " << error_dBeta1Lambdadt << "%" << endl;
-  cout << "**************************************************" << endl;
-  cout << "* RESULT: ";
-  if (error_dBeta1Mh1Sqdt > tol || error_dBeta1Mh2Sqdt > tol || error_dBeta1MsSqdt > tol ||
-      error_dBeta1MqSqdt > tol || error_dBeta1MuSqdt > tol || error_dBeta1Atdt > tol ||
-      error_dBeta1Lambdadt > tol || error_dBeta1Alambdadt > tol)
+  try
     {
-      cout << "FAIL" << endl;
-      if (error_dBeta1Mh1Sqdt > tol) cout << "*    maximum error exceeded for beta m_Hd^2 derivative" << endl;
-      if (error_dBeta1Mh2Sqdt > tol) cout << "*    maximum error exceeded for beta m_Hu^2 derivative" << endl;
-      if (error_dBeta1MsSqdt > tol) cout << "*    maximum error exceeded for beta m_s^2 derivative" << endl;
-      if (error_dBeta1MqSqdt > tol) cout << "*    maximum error exceeded for beta m_qL3^2 derivative" << endl;
-      if (error_dBeta1MuSqdt > tol) cout << "*    maximum error exceeded for beta m_tR^2 derivative" << endl;
-      if (error_dBeta1Atdt > tol) cout << "*    maximum error exceeded for beta A_t derivative" << endl;
-      if (error_dBeta1Lambdadt > tol) cout << "*    maximum error exceeded for beta lambda derivative" << endl;
-      if (error_dBeta1Alambdadt > tol) cout << "*    maximum error exceeded for beta A_lambda derivative" << endl;
+      numeric_dBeta1Mh1Sqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mH13Sq);
+      numeric_dBeta1Mh2Sqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mH23Sq);
+      numeric_dBeta1MsSqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mS3Sq);
+      numeric_dBeta1MqSqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mqL3Sq);
+      numeric_dBeta1MuSqdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::mtRSq);
+      numeric_dBeta1Atdt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::Au3);
+      numeric_dBeta1Lambdadt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::lam3);
+      numeric_dBeta1Alambdadt = calcBetaDeriv(soft_model, soft_model.get_scale(), tuning_parameters::Alam3);
+      
+      // Note that the analytic routines include an extra factor of 1/2 that needs to be accounted for
+      analytic_dBeta1Mh1Sqdt = 2.0 * doCalcMh1SquaredLogSqCoeff(soft_model, 1);
+      analytic_dBeta1Mh2Sqdt = 2.0 * doCalcMh2SquaredLogSqCoeff(soft_model, 1);
+      analytic_dBeta1MsSqdt = 2.0 * doCalcMsSquaredLogSqCoeff(soft_model, 1);
+      analytic_dBeta1MqSqdt = 2.0 * doCalcmqL3SquaredLogSqCoeff(soft_model, 1);
+      analytic_dBeta1MuSqdt = 2.0 * doCalcmtRSquaredLogSqCoeff(soft_model, 1);
+      analytic_dBeta1Atdt = 2.0 * doCalcAtLogSqCoeff(soft_model, 1);
+      analytic_dBeta1Lambdadt = 2.0 * doCalcLambda3LogSqCoeff(soft_model, 1);
+      analytic_dBeta1Alambdadt = 2.0 * doCalcAlambda3LogSqCoeff(soft_model,1);
+      
+      error_dBeta1Mh1Sqdt = 100.0*Abs((numeric_dBeta1Mh1Sqdt-analytic_dBeta1Mh1Sqdt)/(0.5*(numeric_dBeta1Mh1Sqdt+analytic_dBeta1Mh1Sqdt))); 
+      error_dBeta1Mh2Sqdt = 100.0*Abs((numeric_dBeta1Mh2Sqdt-analytic_dBeta1Mh2Sqdt)/(0.5*(numeric_dBeta1Mh2Sqdt+analytic_dBeta1Mh2Sqdt))); 
+      error_dBeta1MsSqdt = 100.0*Abs((numeric_dBeta1MsSqdt-analytic_dBeta1MsSqdt)/(0.5*(numeric_dBeta1MsSqdt+analytic_dBeta1MsSqdt))); 
+      error_dBeta1MqSqdt = 100.0*Abs((numeric_dBeta1MqSqdt-analytic_dBeta1MqSqdt)/(0.5*(numeric_dBeta1MqSqdt+analytic_dBeta1MqSqdt))); 
+      error_dBeta1MuSqdt = 100.0*Abs((numeric_dBeta1MuSqdt-analytic_dBeta1MuSqdt)/(0.5*(numeric_dBeta1MuSqdt+analytic_dBeta1MuSqdt))); 
+      error_dBeta1Atdt = 100.0*Abs((numeric_dBeta1Atdt-analytic_dBeta1Atdt)/(0.5*(numeric_dBeta1Atdt+analytic_dBeta1Atdt))); 
+      error_dBeta1Alambdadt = 100.0*Abs((numeric_dBeta1Alambdadt-analytic_dBeta1Alambdadt)/(0.5*(numeric_dBeta1Alambdadt+analytic_dBeta1Alambdadt))); 
+      error_dBeta1Lambdadt = 100.0*Abs((numeric_dBeta1Lambdadt-analytic_dBeta1Lambdadt)/(0.5*(numeric_dBeta1Lambdadt+analytic_dBeta1Lambdadt))); 
+      
+      outputCharacteristics(8);
+      
+      // Print results
+      cout << "**************************************************" << endl;
+      cout << "* TEST RESULTS: e6ssm_1lp_beta_derivs" << endl;
+      cout << "**************************************************" << endl;
+      cout << "* NUMERICAL DERIVATIVES: " << endl;
+      cout << "*    dbeta_{m_Hd^2}^{(1)}/dt = " << numeric_dBeta1Mh1Sqdt << endl;
+      cout << "*    dbeta_{m_Hu^2}^{(1)}/dt = " << numeric_dBeta1Mh2Sqdt << endl;
+      cout << "*    dbeta_{m_s^2}^{(1)}/dt = " << numeric_dBeta1MsSqdt << endl;
+      cout << "*    dbeta_{m_q3L^2}^{(1)}/dt = " << numeric_dBeta1MqSqdt << endl;
+      cout << "*    dbeta_{m_tR^2}^{(1)}/dt = " << numeric_dBeta1MuSqdt << endl;
+      cout << "*    dbeta_{A_t}^{(1)}/dt = " << numeric_dBeta1Atdt << endl;
+      cout << "*    dbeta_{A_lambda}^{(1)}/dt = " << numeric_dBeta1Alambdadt << endl;
+      cout << "*    dbeta_{lambda}^{(1)}/dt = " << numeric_dBeta1Lambdadt << endl;
+      cout << "**************************************************" << endl;
+      cout << "* ANALYTIC DERIVATIVES: " << endl;
+      cout << "*    dbeta_{m_Hd^2}^{(1)}/dt = " << analytic_dBeta1Mh1Sqdt << endl;
+      cout << "*    dbeta_{m_Hu^2}^{(1)}/dt = " << analytic_dBeta1Mh2Sqdt << endl;
+      cout << "*    dbeta_{m_s^2}^{(1)}/dt = " << analytic_dBeta1MsSqdt << endl;
+      cout << "*    dbeta_{m_q3L^2}^{(1)}/dt = " << analytic_dBeta1MqSqdt << endl;
+      cout << "*    dbeta_{m_tR^2}^{(1)}/dt = " << analytic_dBeta1MuSqdt << endl;
+      cout << "*    dbeta_{A_t}^{(1)}/dt = " << analytic_dBeta1Atdt << endl;
+      cout << "*    dbeta_{A_lambda}^{(1)}/dt = " << analytic_dBeta1Alambdadt << endl;
+      cout << "*    dbeta_{lambda}^{(1)}/dt = " << analytic_dBeta1Lambdadt << endl;
+      cout << "**************************************************" << endl;
+      cout << "* PERCENTAGE DIFFERENCES: " << endl;
+      cout << "*    dbeta_{m_Hd^2}^{(1)}/dt = " << error_dBeta1Mh1Sqdt << "%" << endl;
+      cout << "*    dbeta_{m_Hu^2}^{(1)}/dt = " << error_dBeta1Mh2Sqdt << "%" << endl;
+      cout << "*    dbeta_{m_s^2}^{(1)}/dt = " << error_dBeta1MsSqdt << "%" << endl;
+      cout << "*    dbeta_{m_q3L^2}^{(1)}/dt = " << error_dBeta1MqSqdt << "%" << endl;
+      cout << "*    dbeta_{m_tR^2}^{(1)}/dt = " << error_dBeta1MuSqdt << "%" << endl;
+      cout << "*    dbeta_{A_t}^{(1)}/dt = " << error_dBeta1Atdt << "%" << endl;
+      cout << "*    dbeta_{A_lambda}^{(1)}/dt = " << error_dBeta1Alambdadt << "%" << endl;
+      cout << "*    dbeta_{lambda}^{(1)}/dt = " << error_dBeta1Lambdadt << "%" << endl;
+      cout << "**************************************************" << endl;
+      cout << "* RESULT: ";
+      if (error_dBeta1Mh1Sqdt > tol || error_dBeta1Mh2Sqdt > tol || error_dBeta1MsSqdt > tol ||
+	  error_dBeta1MqSqdt > tol || error_dBeta1MuSqdt > tol || error_dBeta1Atdt > tol ||
+	  error_dBeta1Lambdadt > tol || error_dBeta1Alambdadt > tol)
+	{
+	  cout << "FAIL" << endl;
+	  if (error_dBeta1Mh1Sqdt > tol) cout << "*    maximum error exceeded for beta m_Hd^2 derivative" << endl;
+	  if (error_dBeta1Mh2Sqdt > tol) cout << "*    maximum error exceeded for beta m_Hu^2 derivative" << endl;
+	  if (error_dBeta1MsSqdt > tol) cout << "*    maximum error exceeded for beta m_s^2 derivative" << endl;
+	  if (error_dBeta1MqSqdt > tol) cout << "*    maximum error exceeded for beta m_qL3^2 derivative" << endl;
+	  if (error_dBeta1MuSqdt > tol) cout << "*    maximum error exceeded for beta m_tR^2 derivative" << endl;
+	  if (error_dBeta1Atdt > tol) cout << "*    maximum error exceeded for beta A_t derivative" << endl;
+	  if (error_dBeta1Lambdadt > tol) cout << "*    maximum error exceeded for beta lambda derivative" << endl;
+	  if (error_dBeta1Alambdadt > tol) cout << "*    maximum error exceeded for beta A_lambda derivative" << endl;
+	  hasPassed = false;
+	}
+      else
+	{
+	  cout << "PASS" << endl; 
+	  hasPassed = true;
+	}
+      cout << "**************************************************" << endl;
+      cout << "* END OF TEST" << endl;
+      cout << "**************************************************" << endl;
+    }
+  catch(const string & a) 
+    { 
+      cout << "**************************************************" << endl;
+      cout << "* " << a;
+      cout << "\n* serious error during test: test aborted" << endl; 
+      cout << "**************************************************" << endl;
       hasPassed = false;
     }
-  else
-    {
-      cout << "PASS" << endl; 
-      hasPassed = true;
+  catch(const char * a) 
+    { 
+      cout << "**************************************************" << endl;
+      cout << "* " << a;
+      cout << "\n* serious error during test: test aborted" << endl;
+      cout << "**************************************************" << endl;
+      hasPassed = false;
     }
-  cout << "**************************************************" << endl;
-  cout << "* END OF TEST" << endl;
-  cout << "**************************************************" << endl;
+  catch(...) 
+    { 
+      cout << "**************************************************" << endl;
+      cout << "* WARNING: unknown error encountered during test: test aborted" << endl;
+      cout << "**************************************************" << endl;
+      hasPassed = false;
+    }
+
   if (hasPassed)
     {
       return 0;

@@ -162,11 +162,11 @@ int main(int argc, char* argv[])
   mHpSq = Sqr(5000.0); // GeV^2
   mHpbarSq = Sqr(5000.0); // GeV^2
 
-  lambda = -2.3;
+  lambda = -1.9;
   tlambda = lambda * (5000.0); // GeV
 
   mHdSq = 1.0e8; // GeV^2
-  mHuSq = 05.e8; // GeV^2
+  mHuSq = -1.5e8; // GeV^2
   mSSq = -1.5e8; // GeV^2
 
   mupr = 5000.0; // GeV
@@ -226,7 +226,7 @@ int main(int argc, char* argv[])
   double MX = 20000.0; // GeV
   double q = 2300.0; // GeV
 
-  int LOOPS = 1;
+  int LOOPS = 2;
   int LEADINGLOGS = 1;
   int THRESH = 0;
 

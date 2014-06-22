@@ -6720,7 +6720,7 @@ double doCalcLambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   r.set_Yu(1,1,0.0);
 
   r.set_Yd(0,0,0.0);
-  r.set_Ye(1,1,0.0);
+  r.set_Yd(1,1,0.0);
 
   r.set_Ye(0,0,0.0);
   r.set_Ye(1,1,0.0);
@@ -6770,7 +6770,7 @@ double doCalcLambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   coeff += r.get_Lambdax()*(-1.2 * r.get_g1() * w.get_g1() - 6.0 * r.get_g2() * w.get_g2() 
 			    - 4.0 * r.get_gN() * w.get_gN() * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp)) + 8.0 * r.get_Lambdax() * w.get_Lambdax()
 			    + 3.0 * (w.get_Yd()*(r.get_Yd().adjoint())).trace() + 3.0 * (r.get_Yd()*(w.get_Yd().adjoint())).trace()
-			    + (w.get_Ye()*(r.get_Ye().adjoint())).trace() + 3.0 * (r.get_Ye()*(w.get_Ye().adjoint())).trace()
+			    + (w.get_Ye()*(r.get_Ye().adjoint())).trace() + (r.get_Ye()*(w.get_Ye().adjoint())).trace()
 			    + 3.0 * (w.get_Yu()*(r.get_Yu().adjoint())).trace() + 3.0 * (r.get_Yu()*(w.get_Yu().adjoint())).trace()
 			    + 3.0 * (w.get_Kappa()*(r.get_Kappa().adjoint())).trace() 
 			    + 3.0 * (r.get_Kappa()*(w.get_Kappa().adjoint())).trace()
@@ -7477,6 +7477,39 @@ Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, dou
   // Assume first and second generation, and off-diagonal mixings, all vanish for simplicity
   double dbeta_1loop_Atdp = 4.0*lambda*Alambda;
 
+  Eigen::Matrix<double,3,3> Td = r.get_TYd();
+  Eigen::Matrix<double,3,3> Tu = r.get_TYu();
+  Eigen::Matrix<double,3,3> Te = r.get_TYe();
+
+  // Extra 1-loop derivatives needed below
+  Eigen::Matrix<double,3,3> dbeta_1loop_Yddp = 2.0 * lambda * Yd;
+  Eigen::Matrix<double,3,3> dbeta_1loop_kappadp = 4.0 * lambda * kappa;
+  Eigen::Matrix<double,2,2> dbeta_1loop_lambda12dp = 4.0 * lambda * lambda12;
+  Eigen::Matrix<double,3,3> dbeta_1loop_Yudp = 2.0 * lambda * Yu;
+  Eigen::Matrix<double,3,3> dbeta_1loop_Yedp = 2.0 * lambda * Ye; 
+  Eigen::Matrix<double,3,3> dbeta_1loop_Tddp = 2.0 * lambda * Td + 4.0 * lambda * Alambda * Yd;
+  Eigen::Matrix<double,3,3> dbeta_1loop_Tudp = 2.0 * lambda * Tu + 4.0 * lambda * Alambda * Yu;
+
+  int savedLoops = r.get_loops();
+  r.set_loops(1);
+
+  genericE6SSM_soft_parameters w = r.calc_beta();
+
+  r.set_loops(savedLoops);
+
+  double QQp = r.get_input().QQp;
+  double Qup = r.get_input().Qup;
+  double Qdp = r.get_input().Qdp;
+  double QLp = r.get_input().QLp;
+  double Qep = r.get_input().Qep;
+  double QH1p = r.get_input().QH1p;
+  double QH2p = r.get_input().QH2p;
+  double QSp = r.get_input().QSp;
+  double QHpp = r.get_input().QHpp;
+  double QHpbarp = r.get_input().QHpbarp;
+  double QDxp = r.get_input().QDxp;
+  double QDxbarp = r.get_input().QDxbarp;
+
   // TODO:: (1-loop)^2 derivatives (which can be expressed in terms of the above)
   double dbeta_1loop2_lambdadp = 0.0;
   double dbeta_1loop2_Alambdadp = 0.0;
@@ -7487,6 +7520,45 @@ Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, dou
   double dbeta_1loop2_mUrSqdp = 0.0;
   double dbeta_1loop2_Atdp = 0.0;  
   
+  int nLogs = 1;
+
+  if (nLogs > 0)
+    {
+      // Add in leading log contributions
+      dbeta_1loop2_lambdadp += (-1.2 * g1 * w.get_g1() - 6.0 * g2 * w.get_g2() - 4.0 * gN * w.get_gN() * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp))
+				+ 8.0 * lambda * w.get_Lambdax()
+				+ 3.0 * (w.get_Yd()*(Yd.adjoint())).trace() + 3.0 * (Yd * (w.get_Yd().adjoint())).trace()
+				+ 3.0 * (w.get_Yu()*(Yu.adjoint())).trace() + 3.0 * (Yu * (w.get_Yu().adjoint())).trace()
+				+ (w.get_Ye()*(Ye.adjoint())).trace() + (Ye * (w.get_Ye().adjoint())).trace()
+				+ 3.0 * (w.get_Kappa()*(kappa.adjoint())).trace() + 3.0 * (kappa * (w.get_Kappa().adjoint())).trace()
+				+ 2.0 * (w.get_Lambda12()*(lambda12.adjoint())).trace() + 2.0 * (lambda12 * (w.get_Lambda12().adjoint())).trace())/oneOver16PiSqr;
+      dbeta_1loop2_lambdadp += lambda * (8.0 * w.get_Lambdax()/oneOver16PiSqr + 8.0 * lambda * dbeta_1loop_lambdadp
+      					 + 3.0 * (dbeta_1loop_Yddp*(Yd.adjoint())).trace() + 3.0 * (Yd*(dbeta_1loop_Yddp.adjoint())).trace()
+      					 + 3.0 * (dbeta_1loop_Yudp*(Yu.adjoint())).trace() + 3.0 * (Yu*(dbeta_1loop_Yudp.adjoint())).trace()
+      					 + (dbeta_1loop_Yedp*(Ye.adjoint())).trace() + (Ye*(dbeta_1loop_Yedp.adjoint())).trace()
+      					 + 3.0 * (dbeta_1loop_kappadp*(kappa.adjoint())).trace() + 3.0 * (kappa*(dbeta_1loop_kappadp.adjoint())).trace()
+      					 + 2.0 * (dbeta_1loop_lambda12dp*(lambda12.adjoint())).trace() + 2.0 * (lambda12*(dbeta_1loop_lambda12dp.adjoint())).trace());
+      dbeta_1loop2_lambdadp += dbeta_1loop_lambdadp * (-0.6*g1*g1-3.0*g2*g2-2.0*gN*gN*(Sqr(QH1p)+Sqr(QH2p)+Sqr(QSp))+4.0*lambda*lambda
+      						       +3.0*(Yd*(Yd.adjoint())).trace()+3.0*(Yu*(Yu.adjoint())).trace()
+      						       +(Ye*(Ye.adjoint())).trace()+3.0*(kappa*(kappa.adjoint())).trace()
+      						       +2.0*(lambda12*(lambda12.adjoint())).trace());
+      dbeta_1loop2_lambdadp += 8.0 * lambda * w.get_Lambdax()/oneOver16PiSqr;
+      
+      dbeta_1loop2_mQlSqdp += 2.0 * dbeta_1loop_mHdSqdp * (Yd.adjoint() * Yd)(2,2) + 2.0 * mHd2 * (dbeta_1loop_Yddp.adjoint() * Yd)(2,2)
+	+ 2.0 * mHd2 * (Yd.adjoint() * dbeta_1loop_Yddp)(2,2) + 2.0 * dbeta_1loop_mHuSqdp * (Yu.adjoint() * Yu)(2,2)
+	+ 2.0 * mHu2 * (dbeta_1loop_Yudp.adjoint() * Yu)(2,2) + 2.0 * mHu2 * (Yu.adjoint() * dbeta_1loop_Yudp)(2,2)
+	+ 2.0 * (dbeta_1loop_Tddp.adjoint() * Td)(2,2) + 2.0 * (Td.adjoint() * dbeta_1loop_Tddp)(2,2)
+	+ 2.0 * (dbeta_1loop_Tudp.adjoint() * Tu)(2,2) + 2.0 * (Tu.adjoint() * dbeta_1loop_Tudp)(2,2)
+	+ (r.get_mq2()*(dbeta_1loop_Yudp.adjoint())*Yu)(2,2) + (r.get_mq2()*(Yu.adjoint())*dbeta_1loop_Yudp)(2,2)
+	+ (r.get_mq2()*(dbeta_1loop_Yddp.adjoint())*Yd)(2,2) + (r.get_mq2()*(Yd.adjoint())*dbeta_1loop_Yddp)(2,2)
+	+ 2.0 * (dbeta_1loop_Yddp.adjoint()*r.get_md2()*Yd)(2,2) + 2.0 * (Yd.adjoint()*r.get_md2()*dbeta_1loop_Yddp)(2,2)
+	+ (dbeta_1loop_Yddp.adjoint()*Yd*r.get_mq2())(2,2) +(Yd.adjoint()*dbeta_1loop_Yddp*r.get_mq2())(2,2)
+	+ 2.0 * (dbeta_1loop_Yudp.adjoint()*r.get_mu2()*Yu)(2,2) + 2.0 * (Yu.adjoint() * r.get_mu2() * dbeta_1loop_Yudp)(2,2)
+	+ (dbeta_1loop_Yudp.adjoint()*Yu*r.get_mq2())(2,2) + (Yu.adjoint()*dbeta_1loop_Yudp*r.get_mq2())(2,2);
+
+
+    }
+
   // TODO:: 2-loop derivatives
   double dbeta_2loop_lambdadp = 0.0;
   double dbeta_2loop_Alambdadp = 0.0;
@@ -7497,14 +7569,115 @@ Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, dou
   double dbeta_2loop_mUrSqdp = 0.0;
   double dbeta_2loop_Atdp = 0.0;  
   
-  derivs(0) = 1.0 + t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-  derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-  derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-  derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-  derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-  derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-  derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-  derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
+  if (r.get_loops() > 1)
+    {
+      // Add in 2-loop contributions
+      dbeta_2loop_lambdadp += -0.02 * (-297.0*Sqr(g1*g1)-90.0*Sqr(g1*g2)-825.0*Sqr(g2*g2)+180.0*Sqr(g1*gN)*Qdp*QH1p
+      			      	       +180.0*Sqr(g1*gN)*QDxbarp*QH1p-180.0*Sqr(g1*gN)*QDxp*QH1p+180.0*Sqr(g1*gN)*Qep*QH1p
+				       -240.0*Sqr(g1*gN*QH1p)-300.0*Sqr(g2*gN*QH1p)-900.0*Sqr(gN*gN*Qdp*QH1p)
+				       -900.0*Sqr(gN*gN*QDxbarp*QH1p)-900.0*Sqr(gN*gN*QDxp*QH1p)-300.0*Sqr(gN*gN*Qep*QH1p)
+				       -800.0*Sqr(gN*gN*QH1p*QH1p)-180.0*Sqr(g1*gN)*Qdp*QH2p-180.0*Sqr(g1*gN)*QDxbarp*QH2p
+				       +180.0*Sqr(g1*gN)*QDxp*QH2p-180.0*Sqr(g1*gN)*Qep*QH2p+360.0*Sqr(g1*gN)*QH1p*QH2p
+				       -240.0*Sqr(g1*gN*QH2p)-300.0*Sqr(g2*gN*QH2p)-900.0*Sqr(gN*gN*Qdp*QH2p)
+				       -900.0*Sqr(gN*gN*QDxbarp*QH2p)-900.0*Sqr(gN*gN*QDxp*QH2p)-300.0*Sqr(gN*gN*Qep*QH2p)
+				       -1200.0*Sqr(gN*gN*QH1p*QH2p)-800.0*Sqr(gN*gN*QH2p*QH2p)+60.0*Sqr(g1*gN)*QH1p*QHpbarp
+				       -60.0*Sqr(g1*gN)*QH2p*QHpbarp-200.0*Sqr(gN*gN*QH1p*QHpbarp)-200.0*Sqr(gN*gN*QH2p*QHpbarp)
+				       -60.0*Sqr(g1*gN)*QH1p*QHpp+60.0*Sqr(g1*gN)*QH2p*QHpp-200.0*Sqr(gN*gN*QH1p*QHpp)
+				       -200.0*Sqr(gN*gN*QH2p*QHpp)-180.0*Sqr(g1*gN)*QH1p*QLp+180.0*Sqr(g1*gN)*QH2p*QLp
+				       -600.0*Sqr(gN*gN*QH1p*QLp)-600.0*Sqr(gN*gN*QH2p*QLp)+180.0*Sqr(g1*gN)*QH1p*QQp
+				       -180.0*Sqr(g1*gN)*QH2p*QQp-1800.0*Sqr(gN*gN*QH1p*QQp)-1800.0*Sqr(gN*gN*QH2p*QQp)
+				       -900.0*Sqr(gN*gN*Qdp*QSp)-900.0*Sqr(gN*gN*QDxbarp*QSp)-900.0*Sqr(gN*gN*QDxp*QSp)
+				       -300.0*Sqr(gN*gN*Qep*QSp)-900.0*Sqr(gN*gN*QH1p*QSp)-900.0*Sqr(gN*gN*QH2p*QSp)
+				       -200.0*Sqr(gN*gN*QHpbarp*QSp)-200.0*Sqr(gN*gN*QHpp*QSp)-600.0*Sqr(gN*gN*QLp*QSp)
+				       -1800.0*Sqr(gN*gN*QQp*QSp)-500.0*Sqr(gN*gN*QSp*QSp)-360.0*Sqr(g1*gN)*QH1p*Qup
+				       +360.0*Sqr(g1*gN)*QH2p*Qup-900.0*Sqr(gN*gN*QH1p*Qup)-900.0*Sqr(gN*gN*QH2p*Qup)
+				       -900.0*Sqr(gN*gN*QSp*Qup)+500.0*Sqr(lambda*lambda)
+				       +20.0*(-5.0*(3.0*Sqr(gN)*(-Sqr(QH1p)+Sqr(Qdp)+Sqr(QQp))+8.0*Sqr(g3))+Sqr(g1))*(Yd*(Yd.adjoint())).trace()
+				       -20.0*(3.0*Sqr(g1)+5.0*Sqr(gN)*(Sqr(Qep)+Sqr(QLp)-Sqr(QH1p)))*(Ye*(Ye.adjoint())).trace()
+				       -20.0*(2.0*Sqr(g1)+40.0*Sqr(g3)+15.0*Sqr(gN)*(Sqr(QQp)-Sqr(QH2p)+Sqr(Qup)))*(Yu*(Yu.adjoint())).trace()
+				       -20.0*(2.0*Sqr(g1)+40.0*Sqr(g3)+15.0*Sqr(gN)*(Sqr(QDxbarp)+Sqr(QDxp)-Sqr(QSp)))*(kappa*(kappa.adjoint())).trace()
+				       -10.0*Sqr(lambda)*(6.0*Sqr(g1)+30.0*Sqr(g2)+20.0*Sqr(gN)*(Sqr(QH1p)+Sqr(QH2p))
+							  -45.0*(Yd*(Yd.adjoint())).trace()-15.0*(Ye*(Ye.adjoint())).trace()
+							  -45.0*(Yu*(Yu.adjoint())).trace()-30.0*(kappa*(kappa.adjoint())).trace()
+							  -20.0*(lambda12*(lambda12.adjoint())).trace())
+				       -20.0*(3.0*Sqr(g1)+15.0*Sqr(g2)+10.0*Sqr(gN)*(Sqr(QH1p)+Sqr(QH2p)-Sqr(QSp)))*(lambda12*(lambda12.adjoint())).trace()
+				       +450.0*(Yd*(Yd.adjoint())*Yd*(Yd.adjoint())).trace()
+				       +300.0*(Yd*(Yu.adjoint())*Yu*(Yd.adjoint())).trace()
+				       +150.0*(Ye*(Ye.adjoint())*Ye*(Ye.adjoint())).trace()
+				       +450.0*(Yu*(Yu.adjoint())*Yu*(Yu.adjoint())).trace()
+				       +300.0*(kappa*(kappa.adjoint())*kappa*(kappa.adjoint())).trace()
+				       +200.0*(lambda12*(lambda12.adjoint())*lambda12*(lambda12.adjoint())).trace());
+      dbeta_2loop_lambdadp += -0.02 * lambda * (2000.0*Sqr(lambda)*lambda
+						-20.0*lambda*(6.0*Sqr(g1)+30.0*Sqr(g2)+20.0*Sqr(gN)*(Sqr(QH1p)+Sqr(QH2p))
+							  -45.0*(Yd*(Yd.adjoint())).trace()-15.0*(Ye*(Ye.adjoint())).trace()
+							  -45.0*(Yu*(Yu.adjoint())).trace()-30.0*(kappa*(kappa.adjoint())).trace()
+							  -20.0*(lambda12*(lambda12.adjoint())).trace()));
+
+      dbeta_2loop_Alambdadp = 0.0;
+      dbeta_2loop_mHdSqdp = 0.0;
+      dbeta_2loop_mHuSqdp = 0.0;
+      dbeta_2loop_mSSqdp = -0.8 * (-6.0 * Sqr(g1) * lambda * Sqr(Alambda) - 30.0 * Sqr(g2) * lambda * Sqr(Alambda)
+				   -20.0 * Sqr(gN) * lambda * Sqr(Alambda) * (Sqr(QH1p) + Sqr(QH2p) - Sqr(QSp))
+				   + 80.0 * Sqr(lambda)*lambda * (mHd2 + mHu2 + ms2) + 6.0 * Sqr(g1) * M1 * lambda * Alambda
+				   + 30.0 * Sqr(g2) * M2 * lambda * Alambda 
+				   + 20.0 * Sqr(gN) * M1p * lambda * Alambda * (Sqr(QH1p) + Sqr(QH2p) - Sqr(QSp))
+				   - Sqr(gN) * QSp * (-20.0 * lambda * (mHd2 * QH1p + mHu2 * QH2p + ms2 * QSp))
+				   + 30.0 * lambda * Sqr(Alambda) * (Yd*(Yd.adjoint())).trace()
+				   + 10.0 * lambda *Sqr(Alambda) * (Ye*(Ye.adjoint())).trace()
+				   + 30.0 * lambda * Sqr(Alambda) * (Yu*(Yu.adjoint())).trace()
+				   + 30.0 * lambda * Alambda * (Yd.adjoint()*Td).trace()
+				   + 10.0 * lambda * Alambda * (Ye.adjoint()*Te).trace()
+				   + 30.0 * lambda * Alambda *(Yu.adjoint()*Tu).trace()
+				   - 5.0 * Sqr(gN) * M1p * (2.0 * (Sqr(QH1p) + Sqr(QH2p)-Sqr(QSp))*(2.0 * M1p * lambda - Tlambda)
+							    + 2.0 * (Sqr(QH1p) + Sqr(QH2p) - Sqr(QSp))*lambda*(2.0*M1p-Alambda))
+				   + 160.0 * Sqr(lambda*Alambda)*lambda
+				   + 2.0 * lambda * (-3.0 * Sqr(g1) * mHd2 -15.0 * Sqr(g2) * mHd2 - 3.0 * Sqr(g1) * mHu2
+						     -15.0 * Sqr(g2) * mHu2 - 3.0 * Sqr(g1) * ms2 - 15.0 * Sqr(g2) * ms2
+						     -10.0*Sqr(gN)*(Sqr(QH1p)+Sqr(QH2p)-Sqr(QSp))*(mHd2+mHu2+ms2)
+						     +3.0*Sqr(g1)*M1*(-2.0*M1+Alambda)+15.0*Sqr(g2)*M2*(-2.0*M2+Alambda)
+						     +30.0*mHd2*(Yd*(Yd.adjoint())).trace()+15.0*mHu2*(Yd*(Yd.adjoint())).trace()
+						     +15.0*ms2*(Yd*(Yd.adjoint())).trace()+10.0*mHd2*(Ye*(Ye.adjoint())).trace()
+						     +5.0*mHu2*(Ye*(Ye.adjoint())).trace()+5.0*ms2*(Ye*(Ye.adjoint())).trace()
+						     +15.0*mHd2*(Yu*(Yu.adjoint())).trace()+30.0*mHu2*(Yu*(Yu.adjoint())).trace()
+						     +15.0*ms2*(Yu*(Yu.adjoint())).trace()+15.0*Alambda*(Yd*(Td.adjoint())).trace()
+						     +15.0*(Td*(Td.adjoint())).trace()+5.0*(Te*(Te.adjoint())).trace()
+						     +5.0*Alambda*(Ye*(Te.adjoint())).trace()+15.0*Alambda*(Yu*(Tu.adjoint())).trace()
+						     +15.0*(Tu*(Tu.adjoint())).trace()+15.0*(r.get_md2()*Yd*(Yd.adjoint())).trace()
+						     +5.0*(r.get_me2()*Ye*(Ye.adjoint())).trace()+5.0*(r.get_ml2()*(Ye.adjoint())*Ye).trace()
+						     +15.0*(r.get_mq2()*(Yd.adjoint())*Yd).trace()+15.0*(r.get_mq2()*(Yu.adjoint())*Yu).trace()
+						     +15.0*(r.get_mu2()*Yu*(Yu.adjoint())).trace()));
+      dbeta_2loop_mQlSqdp += -8.0*lambda*mHd2*(Yd.adjoint()*Yd)(2,2)-4.0*mHu2*lambda*(Yd.adjoint()*Yd)(2,2)
+	-4.0*lambda*ms2*(Yd.adjoint()*Yd)(2,2)-4.0*lambda*Sqr(Alambda)*(Yd.adjoint()*Yd)(2,2)
+	-4.0*lambda*Alambda*(Yd.adjoint()*r.get_TYd())(2,2)-4.0*lambda*mHd2*(Yu.adjoint()*Yu)(2,2)
+	-8.0*lambda*mHu2*(Yu.adjoint()*Yu)(2,2)-4.0*lambda*ms2*(Yu.adjoint()*Yu)(2,2)-4.0*lambda*Sqr(Alambda)*(Yu.adjoint()*Yu)(2,2)
+	-4.0*lambda*Alambda*(Yu.adjoint()*r.get_TYu())(2,2)-4.0*lambda*(r.get_TYd().adjoint()*r.get_TYd())(2,2)
+	-4.0*lambda*(r.get_TYu().adjoint()*r.get_TYu())(2,2)-2.0*lambda*(r.get_mq2()*Yd.adjoint()*Yd)(2,2)
+	-2.0*lambda*(r.get_mq2()*Yu.adjoint()*Yu)(2,2)-4.0*lambda*(Yd.adjoint()*r.get_md2()*Yd)(2,2)
+	-2.0*lambda*(Yd.adjoint()*Yd*r.get_mq2())(2,2)-4.0*lambda*(Yu.adjoint()*r.get_mu2()*Yu)(2,2)
+	-2.0*lambda*(Yu.adjoint()*Yu*r.get_mq2())(2,2)-4.0*lambda*Alambda*(r.get_TYd().adjoint()*Yd)(2,2)
+	-4.0*lambda*Alambda*(r.get_TYu().adjoint()*Yu)(2,2)+(1.0/75.0)*Sqr(g1)*(60.0*lambda*(mHd2-mHu2))
+	+0.8*QQp*Sqr(gN)*(-20.0*lambda*(mHd2*QH1p+mHu2*QH2p+ms2*QSp));
+      dbeta_2loop_mUrSqdp = 0.0;
+      dbeta_2loop_Atdp = 0.0;  
+				       
+    }
+
+  derivs(0) = 1.0 + t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+  derivs(1) = t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+  derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+  derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+  derivs(4) = t * (oneOver16PiSqr * dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+  derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+  derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+  derivs(7) = t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;	
   
   return derivs;
 }
@@ -7595,6 +7768,13 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_1loop2_mQlSqdp = 0.0;
 	double dbeta_1loop2_mUrSqdp = 0.0;
 	double dbeta_1loop2_Atdp = 0.0;  
+
+	int nLogs = 1;
+	
+	if (nLogs > 0)
+	  {
+	    // Add in leading log contributions
+	  }
 	
 	// TODO:: 2-loop derivatives
 	double dbeta_2loop_lambdadp = 0.0;
@@ -7605,15 +7785,28 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mQlSqdp = 0.0;
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
+
+	if (r.get_loops() > 1)
+	  {
+	    // Add in 2-loop contributions
+	  }
 	
-	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;	
+	derivs(0) = t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp)
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (oneOver16PiSqr * dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp)
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;	
 
 	break;		
       }
@@ -7640,6 +7833,13 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_1loop2_mUrSqdp = 0.0;
 	double dbeta_1loop2_Atdp = 0.0;  
 	
+	int nLogs = 1;
+	
+	if (nLogs > 0)
+	  {
+	    // Add in leading log contributions
+	  }
+	
 	// TODO:: 2-loop derivatives
 	double dbeta_2loop_lambdadp = 0.0;
 	double dbeta_2loop_Alambdadp = 0.0;
@@ -7650,14 +7850,27 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+	if (r.get_loops() > 1)
+	  {
+	    // Add in 2-loop contributions
+	  }
+
+	derivs(0) = t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (oneOver16PiSqr * dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;
 
 	break;
       }
@@ -7683,6 +7896,13 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_1loop2_mQlSqdp = 0.0;
 	double dbeta_1loop2_mUrSqdp = 0.0;
 	double dbeta_1loop2_Atdp = 0.0;  
+
+	int nLogs = 1;
+	
+	if (nLogs > 0)
+	  {
+	    // Add in leading log contributions
+	  }
 	
 	// TODO:: 2-loop derivatives
 	double dbeta_2loop_lambdadp = 0.0;
@@ -7694,14 +7914,27 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+	if (r.get_loops() > 1)
+	  {
+	    // Add in 2-loop contributions
+	  }
+
+	derivs(0) = t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp)
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (oneOver16PiSqr * dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp)
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp)
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;
 
 	break;
       }
@@ -7728,6 +7961,13 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_1loop2_mUrSqdp = 0.0;
 	double dbeta_1loop2_Atdp = 0.0;  
 	
+	int nLogs = 1;
+	
+	if (nLogs > 0)
+	  {
+	    // Add in leading log contributions
+	  }
+	
 	// TODO:: 2-loop derivatives
 	double dbeta_2loop_lambdadp = 0.0;
 	double dbeta_2loop_Alambdadp = 0.0;
@@ -7738,14 +7978,27 @@ Eigen::Matrix<double,8,1> doCalcGauginoDerivs(genericE6SSM_soft_parameters r, do
 	double dbeta_2loop_mUrSqdp = 0.0;
 	double dbeta_2loop_Atdp = 0.0;  
 	
-	derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-	derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-	derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-	derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-	derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-	derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-	derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-	derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+	if (r.get_loops() > 1)
+	  {
+	    // Add in 2-loop contributions
+	  }
+
+	derivs(0) = t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+	derivs(1) = t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+	derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+	derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+	derivs(4) = t * (oneOver16PiSqr * dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+	derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+	derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp)
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+	derivs(7) = t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp) 
+	  + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;
 
 	break;
       }
@@ -7871,6 +8124,13 @@ Eigen::Matrix<double,8,1> doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, dou
   double dbeta_1loop2_mUrSqdp = 0.0;
   double dbeta_1loop2_Atdp = 0.0;  
   
+  int nLogs = 1;
+  
+  if (nLogs > 0)
+    {
+	    // Add in leading log contributions
+    }	
+
   // TODO:: 2-loop derivatives
   double dbeta_2loop_lambdadp = 0.0;
   double dbeta_2loop_Alambdadp = 0.0;
@@ -7881,14 +8141,27 @@ Eigen::Matrix<double,8,1> doCalcSoftAuDerivs(genericE6SSM_soft_parameters r, dou
   double dbeta_2loop_mUrSqdp = 0.0;
   double dbeta_2loop_Atdp = 0.0;  
 
-  derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-  derivs(1) = t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-  derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-  derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-  derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-  derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-  derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-  derivs(7) = 1.0 + t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+  if (r.get_loops() > 1)
+    {
+      // Add in 2-loop contributions
+    }
+
+  derivs(0) = t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+  derivs(1) = t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+  derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+  derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+  derivs(4) = t * (oneOver16PiSqr* dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+  derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+  derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+  derivs(7) = 1.0 + t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;
 
   return derivs;
 
@@ -7986,6 +8259,13 @@ Eigen::Matrix<double,8,1> doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r
   double dbeta_1loop2_mUrSqdp = 0.0;
   double dbeta_1loop2_Atdp = 0.0;  
   
+  int nLogs = 1;
+  
+  if (nLogs > 0)
+    {
+	    // Add in leading log contributions
+    }
+
   // TODO:: 2-loop derivatives
   double dbeta_2loop_lambdadp = 0.0;
   double dbeta_2loop_Alambdadp = 0.0;
@@ -7996,14 +8276,27 @@ Eigen::Matrix<double,8,1> doCalcSoftAlambdaDerivs(genericE6SSM_soft_parameters r
   double dbeta_2loop_mUrSqdp = 0.0;
   double dbeta_2loop_Atdp = 0.0;  
 
-  derivs(0) = t * (dbeta_1loop_lambdadp + dbeta_2loop_lambdadp) + Sqr(t) * dbeta_1loop2_lambdadp;
-  derivs(1) = 1.0 + t * (dbeta_1loop_Alambdadp + dbeta_2loop_Alambdadp) + Sqr(t) * dbeta_1loop2_Alambdadp;   
-  derivs(2) = t * (dbeta_1loop_mHdSqdp + dbeta_2loop_mHdSqdp) + Sqr(t) * dbeta_1loop2_mHdSqdp;
-  derivs(3) = t * (dbeta_1loop_mHuSqdp + dbeta_2loop_mHuSqdp) + Sqr(t) * dbeta_1loop2_mHuSqdp;
-  derivs(4) = t * (dbeta_1loop_mSSqdp + dbeta_2loop_mSSqdp) + Sqr(t) * dbeta_1loop2_mSSqdp;
-  derivs(5) = t * (dbeta_1loop_mQlSqdp + dbeta_2loop_mQlSqdp) + Sqr(t) * dbeta_1loop2_mQlSqdp;
-  derivs(6) = t * (dbeta_1loop_mUrSqdp + dbeta_2loop_mUrSqdp) + Sqr(t) * dbeta_1loop2_mUrSqdp;
-  derivs(7) = t * (dbeta_1loop_Atdp + dbeta_2loop_Atdp) + Sqr(t) * dbeta_1loop2_Atdp;
+  if (r.get_loops() > 1)
+    {
+      // Add in 2-loop contributions
+    }
+
+  derivs(0) = t * (oneOver16PiSqr * dbeta_1loop_lambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_lambdadp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_lambdadp;
+  derivs(1) = 1.0 + t * (oneOver16PiSqr * dbeta_1loop_Alambdadp + Sqr(oneOver16PiSqr) * dbeta_2loop_Alambdadp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Alambdadp;   
+  derivs(2) = t * (oneOver16PiSqr * dbeta_1loop_mHdSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHdSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHdSqdp;
+  derivs(3) = t * (oneOver16PiSqr * dbeta_1loop_mHuSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mHuSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mHuSqdp;
+  derivs(4) = t * (oneOver16PiSqr * dbeta_1loop_mSSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mSSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mSSqdp;
+  derivs(5) = t * (oneOver16PiSqr * dbeta_1loop_mQlSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mQlSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mQlSqdp;
+  derivs(6) = t * (oneOver16PiSqr * dbeta_1loop_mUrSqdp + Sqr(oneOver16PiSqr) * dbeta_2loop_mUrSqdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_mUrSqdp;
+  derivs(7) = t * (oneOver16PiSqr * dbeta_1loop_Atdp + Sqr(oneOver16PiSqr) * dbeta_2loop_Atdp) 
+    + 0.5 * Sqr(t * oneOver16PiSqr) * dbeta_1loop2_Atdp;
 
   return derivs;
 }

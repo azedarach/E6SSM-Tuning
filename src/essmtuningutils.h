@@ -18,6 +18,7 @@
 #include <gsl/gsl_vector.h>
 #include <gsl/gsl_multiroots.h>
 #include <Eigen/Core>
+#include <Eigen/QR>
 
 // To make including more parameters easier later and to avoid name clashes
 // (may be even better for encapsulation later on if we define a class
@@ -301,6 +302,10 @@ double predpE6SSMMzSqRun(double parVal);
 Eigen::VectorXd doCalcESSMTuningNumerically(flexiblesusy::genericE6SSM_soft_parameters r, double ms, double mx, 
 					     Eigen::ArrayXd pars,
 					     void (*BCatMX)(flexiblesusy::genericE6SSM_soft_parameters & , Eigen::ArrayXd &));
+
+ Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> doCalcESSMTuningApprox(flexiblesusy::genericE6SSM_soft_parameters r, double ms, double mx, 
+										     Eigen::ArrayXd pars, bool & hasTuningProblem, bool useApproxSolns);
+
  
   // Functions for numerically solving the EWSB conditions using GSL routines. 
   // They are basically identical to there equivalents in the FlexibleSUSY
@@ -315,6 +320,28 @@ Eigen::VectorXd doCalcESSMTuningNumerically(flexiblesusy::genericE6SSM_soft_para
 				      flexiblesusy::genericE6SSM_soft_parameters* model, 
 				      int number_of_ewsb_iterations, 
 				      double ewsb_iteration_precision);
+
+
+  // Useful functions for calculating derivatives of the 
+  // low scale parameters numerically
+
+ double getApproximateMh1Squared(double param);
+
+ double getApproximateMh2Squared(double param);
+
+ double getApproximateMsSquared(double param);
+
+ double getApproximateMqL3Squared(double param);
+
+ double getApproximateMtRSquared(double param);
+
+ double getApproximateLambda(double param);
+
+ double getApproximateAlambda(double param);
+
+ double getApproximateAt(double param);
+
+ Eigen::Matrix<double,8,1> doCalcNumericDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs);
 
 
 } // namespace essm_tuning_utils

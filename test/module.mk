@@ -3,7 +3,8 @@ MODNAME  := test
 
 TEST_SRC := \
 		$(DIR)/test_essmBetaDerivs.cpp \
-		$(DIR)/test_essmRgeSolnDerivs.cpp
+		$(DIR)/test_essmRgeSolnDerivs.cpp \
+		$(DIR)/test_essmFineTuning.cpp
 
 TEST_OBJ := \
 		$(patsubst %.cpp, %.o, $(filter %.cpp, $(TEST_SRC)))
@@ -50,6 +51,9 @@ $(DIR)/test_essmBetaDerivs.x: $(DIR)/test_essmBetaDerivs.o $(ESSMTUNING_OBJ) $(L
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
 
 $(DIR)/test_essmRgeSolnDerivs.x: $(DIR)/test_essmRgeSolnDerivs.o $(ESSMTUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
+
+$(DIR)/test_essmFineTuning.x: $(DIR)/test_essmFineTuning.o $(ESSMTUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
 
 # general test rule which links all libraries needed for a generated model

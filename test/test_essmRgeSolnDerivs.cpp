@@ -13,15 +13,15 @@ using namespace essm_tuning_utils;
 
 Eigen::MatrixXd calcPercentageDifferences(const Eigen::MatrixXd & a, const Eigen::MatrixXd& b);
 
-double getApproximateMh1Squared(double param);
-double getApproximateMh2Squared(double param);
-double getApproximateMsSquared(double param);
-double getApproximateMqL3Squared(double param);
-double getApproximateMtRSquared(double param);
-double getApproximateLambda(double param);
-double getApproximateAlambda(double param);
-double getApproximateAt(double param);
-Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs);
+// double getApproximateMh1Squared(double param);
+// double getApproximateMh2Squared(double param);
+// double getApproximateMsSquared(double param);
+// double getApproximateMqL3Squared(double param);
+// double getApproximateMtRSquared(double param);
+// double getApproximateLambda(double param);
+// double getApproximateAlambda(double param);
+// double getApproximateAt(double param);
+// Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs);
 
 /*
   --------------------------------------------------------------
@@ -1105,306 +1105,306 @@ Eigen::MatrixXd calcPercentageDifferences(const Eigen::MatrixXd & a, const Eigen
   return errors.matrix();
 } 
 
-genericE6SSM_soft_parameters* tempmodel;
-double scale;
-int parChoice;
-Eigen::ArrayXd* pars;
-int nLogs;
-int nLps;
+// genericE6SSM_soft_parameters* tempmodel;
+// double scale;
+// int parChoice;
+// Eigen::ArrayXd* pars;
+// int nLogs;
+// int nLps;
 
-double getApproximateMh1Squared(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
+// double getApproximateMh1Squared(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
 
-  input_pars(parChoice) = param;
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
+//   pE6SSMftBCs(r, input_pars);
 
-  double logCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
-  double logSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+//   double logCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+//   double logSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
 
-  double t = Log(scale/r.get_scale());
+//   double t = Log(scale/r.get_scale());
 
-  double mH1Sq = r.get_mHd2() + t * logCoeff + Sqr(t) * logSqCoeff;
+//   double mH1Sq = r.get_mHd2() + t * logCoeff + Sqr(t) * logSqCoeff;
 
-  return mH1Sq;
+//   return mH1Sq;
 
-}
+// }
 
-double getApproximateMh2Squared(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
+// double getApproximateMh2Squared(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
 
-  input_pars(parChoice) = param;
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
+//   pE6SSMftBCs(r, input_pars);
 
-  double logCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
-  double logSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+//   double logCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+//   double logSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
 
-  double t = Log(scale/r.get_scale());
+//   double t = Log(scale/r.get_scale());
 
-  double mH2Sq = r.get_mHu2() + t * logCoeff + Sqr(t) * logSqCoeff;
+//   double mH2Sq = r.get_mHu2() + t * logCoeff + Sqr(t) * logSqCoeff;
 
-  return mH2Sq;
-}
+//   return mH2Sq;
+// }
 
-double getApproximateMsSquared(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
+// double getApproximateMsSquared(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
 
-  input_pars(parChoice) = param;
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
+//   pE6SSMftBCs(r, input_pars);
 
-  double logCoeff = doCalcMsSquaredLogCoeff(r, nLps);
-  double logSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+//   double logCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+//   double logSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
 
-  double t = Log(scale/r.get_scale());
+//   double t = Log(scale/r.get_scale());
 
-  double mSSq = r.get_ms2() + t * logCoeff + Sqr(t) * logSqCoeff;
+//   double mSSq = r.get_ms2() + t * logCoeff + Sqr(t) * logSqCoeff;
 
-  return mSSq;
-}
+//   return mSSq;
+// }
 
-double getApproximateMqL3Squared(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
+// double getApproximateMqL3Squared(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
 
-  input_pars(parChoice) = param;
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
+//   pE6SSMftBCs(r, input_pars);
 
-  double logCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
-  double logSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+//   double logCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+//   double logSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
 
-  double t = Log(scale/r.get_scale());
+//   double t = Log(scale/r.get_scale());
 
-  double mqL3Sq = r.get_mq2(2,2) + t * logCoeff + Sqr(t) * logSqCoeff;
+//   double mqL3Sq = r.get_mq2(2,2) + t * logCoeff + Sqr(t) * logSqCoeff;
 
-  return mqL3Sq;
-}
+//   return mqL3Sq;
+// }
 
-double getApproximateMtRSquared(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
+// double getApproximateMtRSquared(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
 
-  input_pars(parChoice) = param;
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
+//   pE6SSMftBCs(r, input_pars);
 
-  double logCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
-  double logSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+//   double logCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+//   double logSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
 
-  double t = Log(scale/r.get_scale());
+//   double t = Log(scale/r.get_scale());
 
-  double mtRSq = r.get_mu2(2,2) + t * logCoeff + Sqr(t) * logSqCoeff;
+//   double mtRSq = r.get_mu2(2,2) + t * logCoeff + Sqr(t) * logSqCoeff;
 
-  return mtRSq;
-}
+//   return mtRSq;
+// }
 
-double getApproximateLambda(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
+// double getApproximateLambda(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
 
-  input_pars(parChoice) = param;
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
+//   pE6SSMftBCs(r, input_pars);
 
-  double logCoeff = doCalcLambda3LogCoeff(r, nLps);
-  double logSqCoeff = doCalcLambda3LogSqCoeff(r, nLogs);
+//   double logCoeff = doCalcLambda3LogCoeff(r, nLps);
+//   double logSqCoeff = doCalcLambda3LogSqCoeff(r, nLogs);
 
-  double t = Log(scale/r.get_scale());
+//   double t = Log(scale/r.get_scale());
 
-  double lambda = r.get_Lambdax() + t * logCoeff + Sqr(t) * logSqCoeff;
+//   double lambda = r.get_Lambdax() + t * logCoeff + Sqr(t) * logSqCoeff;
 
-  return lambda;
-}
-
-double getApproximateAlambda(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
-
-  input_pars(parChoice) = param;
+//   return lambda;
+// }
+
+// double getApproximateAlambda(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
+
+//   input_pars(parChoice) = param;
 
-  pE6SSMftBCs(r, input_pars);
-
-  double logCoeff = doCalcAlambda3LogCoeff(r, nLps);
-  double logSqCoeff = doCalcAlambda3LogSqCoeff(r, nLogs);
-
-  double t = Log(scale/r.get_scale());
-
-  double Tlambda = r.get_TLambdax();
-  double lambda = r.get_Lambdax();
-  double Alambda_mx;
-
-
-  if (Abs(Tlambda) < EPSTOL) 
-    {
-      Alambda_mx = 0.0;
-    }
-  else if (Abs(lambda) < 1.0e-100)
-    {
-      ostringstream ii;
-      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
-	Abs(lambda) << endl;
-      throw ii.str();
-    }
-  else
-    {
-      Alambda_mx = Tlambda/lambda;
-    }
-
-  double Alambda = Alambda_mx + t * logCoeff + Sqr(t) * logSqCoeff;
-
-  return Alambda;
-}
-
-double getApproximateAt(double param)
-{
-  genericE6SSM_soft_parameters r(*tempmodel);
-  Eigen::ArrayXd input_pars = *pars;
-
-  input_pars(parChoice) = param;
-
-  pE6SSMftBCs(r, input_pars);
-
-  double logCoeff = doCalcAtLogCoeff(r, nLps);
-  double logSqCoeff = doCalcAtLogSqCoeff(r, nLogs);
-
-  double t = Log(scale/r.get_scale());
-
-  double TYt = r.get_TYu(2,2);
-  double yt = r.get_Yu(2,2);
-  double At_mx;
-
-
-  if (Abs(TYt) < EPSTOL) 
-    {
-      At_mx = 0.0;
-    }
-  else if (Abs(yt) < 1.0e-100)
-    {
-      ostringstream ii;
-      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
-	Abs(yt) << endl;
-      throw ii.str();
-    }
-  else
-    {
-      At_mx = TYt/yt;
-    }
-
-  double At = At_mx + t * logCoeff + Sqr(t) * logSqCoeff;
-
-  return At;
-}
-
-Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs)
-{
-  tempmodel = &r;
-  parChoice = i;
-  nLps = lps;
-  nLogs = logs;
-
-  Eigen::ArrayXd params;
-  params.resize(tuning_parameters::NUMESSMTUNINGPARS,1);
-
-  params(tuning_parameters::lam3) = r.get_Lambdax();
-  params(tuning_parameters::mH13Sq) = r.get_mHd2();
-  params(tuning_parameters::mH23Sq) = r.get_mHu2();
-  params(tuning_parameters::mS3Sq) = r.get_ms2();
-  params(tuning_parameters::mqL3Sq) = r.get_mq2(2,2);
-  params(tuning_parameters::mtRSq) = r.get_mu2(2,2);
-  params(tuning_parameters::M1) = r.get_MassB();
-  params(tuning_parameters::M2) = r.get_MassWB();
-  params(tuning_parameters::M3) = r.get_MassG();
-  params(tuning_parameters::M1p) = r.get_MassBp();
-
-  double TYt = r.get_TYu(2,2);
-  double yt = r.get_Yu(2,2);
-  double At;
-
-  if (Abs(TYt) < EPSTOL) 
-    {
-      At = 0.0;
-    }
-  else if (Abs(yt) < 1.0e-100)
-    {
-      ostringstream ii;
-      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
-	Abs(yt) << endl;
-      throw ii.str();
-    }
-  else
-    {
-      At = TYt/yt;
-    }
-
-  params(tuning_parameters::Au3) = At;
-
-  double Tlambda = r.get_TLambdax();
-  double lambda = r.get_Lambdax();
-  double Alambda;
-
-  if (Abs(Tlambda) < EPSTOL) 
-    {
-      Alambda = 0.0;
-    }
-  else if (Abs(lambda) < 1.0e-100)
-    {
-      ostringstream ii;
-      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
-	Abs(lambda) << endl;
-      throw ii.str();
-    }
-  else
-    {
-      Alambda = Tlambda/lambda;
-    }
-
-  params(tuning_parameters::Alam3) = Alambda;
-
-  pars = &params;
-
-  scale = q;
-
-  double deriv, h, temp, err;
-
-  double epsilon = 1.0e-5;
-
-  // Initial estimate for step size h.
-  h = epsilon*Abs(params(i));
-  if (h == 0.0) h = epsilon;
-  temp = params(i);
-  params(i) = temp + h;
-  h = params(i) - temp;
-
-  Eigen::Matrix<double,8,1> derivs, errvec;
-
-  derivs(0) = calcDerivative(getApproximateLambda, temp, h, &err); errvec(0) = err;
-  derivs(1) = calcDerivative(getApproximateAlambda, temp, h, &err); errvec(1) = err;
-  derivs(2) = calcDerivative(getApproximateMh1Squared, temp, h, &err); errvec(2) = err;
-  derivs(3) = calcDerivative(getApproximateMh2Squared, temp, h, &err); errvec(3) = err;
-  derivs(4) = calcDerivative(getApproximateMsSquared, temp, h, &err); errvec(4) = err;
-  derivs(5) = calcDerivative(getApproximateMqL3Squared, temp, h, &err); errvec(5) = err;
-  derivs(6) = calcDerivative(getApproximateMtRSquared, temp, h, &err); errvec(6) = err;
-  derivs(7) = calcDerivative(getApproximateAt, temp, h, &err); errvec(7) = err;
-
-  for (int j = 0; j < 8; j++)
-    {
-      if (Abs(errvec(j)) > 1.0e-8 && Abs(errvec(j)/derivs(j)) > 1.0)
-	{
-	  derivs(j) = numberOfTheBeast;
-	}
-    }
-
-  return derivs;
-}
+//   pE6SSMftBCs(r, input_pars);
+
+//   double logCoeff = doCalcAlambda3LogCoeff(r, nLps);
+//   double logSqCoeff = doCalcAlambda3LogSqCoeff(r, nLogs);
+
+//   double t = Log(scale/r.get_scale());
+
+//   double Tlambda = r.get_TLambdax();
+//   double lambda = r.get_Lambdax();
+//   double Alambda_mx;
+
+
+//   if (Abs(Tlambda) < EPSTOL) 
+//     {
+//       Alambda_mx = 0.0;
+//     }
+//   else if (Abs(lambda) < 1.0e-100)
+//     {
+//       ostringstream ii;
+//       ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+// 	Abs(lambda) << endl;
+//       throw ii.str();
+//     }
+//   else
+//     {
+//       Alambda_mx = Tlambda/lambda;
+//     }
+
+//   double Alambda = Alambda_mx + t * logCoeff + Sqr(t) * logSqCoeff;
+
+//   return Alambda;
+// }
+
+// double getApproximateAt(double param)
+// {
+//   genericE6SSM_soft_parameters r(*tempmodel);
+//   Eigen::ArrayXd input_pars = *pars;
+
+//   input_pars(parChoice) = param;
+
+//   pE6SSMftBCs(r, input_pars);
+
+//   double logCoeff = doCalcAtLogCoeff(r, nLps);
+//   double logSqCoeff = doCalcAtLogSqCoeff(r, nLogs);
+
+//   double t = Log(scale/r.get_scale());
+
+//   double TYt = r.get_TYu(2,2);
+//   double yt = r.get_Yu(2,2);
+//   double At_mx;
+
+
+//   if (Abs(TYt) < EPSTOL) 
+//     {
+//       At_mx = 0.0;
+//     }
+//   else if (Abs(yt) < 1.0e-100)
+//     {
+//       ostringstream ii;
+//       ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+// 	Abs(yt) << endl;
+//       throw ii.str();
+//     }
+//   else
+//     {
+//       At_mx = TYt/yt;
+//     }
+
+//   double At = At_mx + t * logCoeff + Sqr(t) * logSqCoeff;
+
+//   return At;
+// }
+
+// Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs)
+// {
+//   tempmodel = &r;
+//   parChoice = i;
+//   nLps = lps;
+//   nLogs = logs;
+
+//   Eigen::ArrayXd params;
+//   params.resize(tuning_parameters::NUMESSMTUNINGPARS,1);
+
+//   params(tuning_parameters::lam3) = r.get_Lambdax();
+//   params(tuning_parameters::mH13Sq) = r.get_mHd2();
+//   params(tuning_parameters::mH23Sq) = r.get_mHu2();
+//   params(tuning_parameters::mS3Sq) = r.get_ms2();
+//   params(tuning_parameters::mqL3Sq) = r.get_mq2(2,2);
+//   params(tuning_parameters::mtRSq) = r.get_mu2(2,2);
+//   params(tuning_parameters::M1) = r.get_MassB();
+//   params(tuning_parameters::M2) = r.get_MassWB();
+//   params(tuning_parameters::M3) = r.get_MassG();
+//   params(tuning_parameters::M1p) = r.get_MassBp();
+
+//   double TYt = r.get_TYu(2,2);
+//   double yt = r.get_Yu(2,2);
+//   double At;
+
+//   if (Abs(TYt) < EPSTOL) 
+//     {
+//       At = 0.0;
+//     }
+//   else if (Abs(yt) < 1.0e-100)
+//     {
+//       ostringstream ii;
+//       ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+// 	Abs(yt) << endl;
+//       throw ii.str();
+//     }
+//   else
+//     {
+//       At = TYt/yt;
+//     }
+
+//   params(tuning_parameters::Au3) = At;
+
+//   double Tlambda = r.get_TLambdax();
+//   double lambda = r.get_Lambdax();
+//   double Alambda;
+
+//   if (Abs(Tlambda) < EPSTOL) 
+//     {
+//       Alambda = 0.0;
+//     }
+//   else if (Abs(lambda) < 1.0e-100)
+//     {
+//       ostringstream ii;
+//       ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+// 	Abs(lambda) << endl;
+//       throw ii.str();
+//     }
+//   else
+//     {
+//       Alambda = Tlambda/lambda;
+//     }
+
+//   params(tuning_parameters::Alam3) = Alambda;
+
+//   pars = &params;
+
+//   scale = q;
+
+//   double deriv, h, temp, err;
+
+//   double epsilon = 1.0e-5;
+
+//   // Initial estimate for step size h.
+//   h = epsilon*Abs(params(i));
+//   if (h == 0.0) h = epsilon;
+//   temp = params(i);
+//   params(i) = temp + h;
+//   h = params(i) - temp;
+
+//   Eigen::Matrix<double,8,1> derivs, errvec;
+
+//   derivs(0) = calcDerivative(getApproximateLambda, temp, h, &err); errvec(0) = err;
+//   derivs(1) = calcDerivative(getApproximateAlambda, temp, h, &err); errvec(1) = err;
+//   derivs(2) = calcDerivative(getApproximateMh1Squared, temp, h, &err); errvec(2) = err;
+//   derivs(3) = calcDerivative(getApproximateMh2Squared, temp, h, &err); errvec(3) = err;
+//   derivs(4) = calcDerivative(getApproximateMsSquared, temp, h, &err); errvec(4) = err;
+//   derivs(5) = calcDerivative(getApproximateMqL3Squared, temp, h, &err); errvec(5) = err;
+//   derivs(6) = calcDerivative(getApproximateMtRSquared, temp, h, &err); errvec(6) = err;
+//   derivs(7) = calcDerivative(getApproximateAt, temp, h, &err); errvec(7) = err;
+
+//   for (int j = 0; j < 8; j++)
+//     {
+//       if (Abs(errvec(j)) > 1.0e-8 && Abs(errvec(j)/derivs(j)) > 1.0)
+// 	{
+// 	  derivs(j) = numberOfTheBeast;
+// 	}
+//     }
+
+//   return derivs;
+// }

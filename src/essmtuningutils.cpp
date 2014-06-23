@@ -26,7 +26,7 @@ using namespace flexiblesusy;
       
       double v1 = vevs(0);
       double v2 = vevs(1);
-      double s = vevs(3);
+      double s = vevs(2);
       double tb = v2/v1;
       double v = Sqrt(v1*v1+v2*v2);
 
@@ -97,15 +97,15 @@ using namespace flexiblesusy;
 	}      
       
             
-      lhsMat(1,1) = df1dv1;
-      lhsMat(1,2) = df1dv2;
-      lhsMat(1,3) = df1ds;
-      lhsMat(2,1) = df2dv1;
-      lhsMat(2,2) = df2dv2;
-      lhsMat(2,3) = df2ds;
-      lhsMat(3,1) = df3dv1;
-      lhsMat(3,2) = df3dv2;
-      lhsMat(3,3) = df3ds;
+      lhsMat(0,0) = df1dv1;
+      lhsMat(0,1) = df1dv2;
+      lhsMat(0,2) = df1ds;
+      lhsMat(1,0) = df2dv1;
+      lhsMat(1,1) = df2dv2;
+      lhsMat(1,2) = df2ds;
+      lhsMat(2,0) = df3dv1;
+      lhsMat(2,1) = df3dv2;
+      lhsMat(2,2) = df3ds;
 
     }
   
@@ -639,11 +639,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 
 	      // Construct required coefficients in Taylor series.
 	      double mHdSqLogCoeff = doCalcMh1SquaredLogCoeff(w, nLps);
-	      double mHdSqLogSqCoeff = 0.0;//doCalcMh1SquaredLogSqCoeff(w, 1); //< DH::TODO these seem to be causing problems
+	      double mHdSqLogSqCoeff = doCalcMh1SquaredLogSqCoeff(w, 1); 
 	      double mHuSqLogCoeff = doCalcMh2SquaredLogCoeff(w, nLps);
-	      double mHuSqLogSqCoeff = 0.0;//doCalcMh2SquaredLogSqCoeff(w, 1); //< DH::TODO these seem to be causing problems
+	      double mHuSqLogSqCoeff = doCalcMh2SquaredLogSqCoeff(w, 1); 
 	      double mSSqLogCoeff = doCalcMsSquaredLogCoeff(w, nLps);
-	      double mSSqLogSqCoeff = 0.0;//doCalcMsSquaredLogSqCoeff(w, 1); //< DH::TODO these seem to be causing problems
+	      double mSSqLogSqCoeff = doCalcMsSquaredLogSqCoeff(w, 1); 
 
 	      if (ENABLE_DEBUG)
 		{
@@ -7395,9 +7395,7 @@ Eigen::Matrix<double,8,1> doCalcMsSquaredDerivs(genericE6SSM_soft_parameters r, 
 
 }
 
-// Note for derivatives of beta_Alambda, we will use
-// the simplified expressions in which the charges are hard-coded,
-// until there is time to work out the proper expressions.
+// Currently only 1-loop contributions are included in the derivatives for A_lambda
 Eigen::Matrix<double,8,1> doCalcLambdaDerivs(genericE6SSM_soft_parameters r, double ms, int gen,
 				bool & hasError)
 {
@@ -8963,7 +8961,7 @@ int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f)
 static genericE6SSM_soft_parameters *tempsoftTuning; // < a SoftParsMssm object given at the input scale MX
 static double ftMsusy; // < the value of M_{SUSY} for the above object
 static int ftParChoice; // < index labelling the current parameter we are varying
-static Eigen::ArrayXd ftPars(3); // < vector containing the parameters varied as part of the fine tuning
+static Eigen::ArrayXd ftPars; // < vector containing the parameters varied as part of the fine tuning
 static void (*currentftBC)(genericE6SSM_soft_parameters & , Eigen::ArrayXd &);
 
 
@@ -9018,8 +9016,8 @@ double predpE6SSMMzSqRun(double parVal)
 
   if (INCLUDE1LPTADPOLES)
     {
-      t1Ov1 = doCalcTadpoleESSMH1(*tempsoftTuning, s, tb);
-      t2Ov2 = doCalcTadpoleESSMH2(*tempsoftTuning, s, tb);
+      t1Ov1 = -doCalcTadpoleESSMH1(*tempsoftTuning, s, tb);
+      t2Ov2 = -doCalcTadpoleESSMH2(*tempsoftTuning, s, tb);
     }
 
   double mHdSq = tempsoftTuning->get_mHd2();
@@ -9040,7 +9038,7 @@ double predpE6SSMMzSqRun(double parVal)
   double Qtilde_s = input.QSp;
   
   double MzSq = -Sqr(lambda*s)+(2.0*(mHdSq+t1Ov1-tb*tb*(mHuSq+t2Ov2)))/(tb*tb-1.0)
-    + Sqr(gdash_1)*Sqr(Qtilde_1*v1*v1+Qtilde_2*v2*v2+Qtilde_s*s*s)*(Qtilde_1-Qtilde_2*tb*tb)/(tb*tb-1);
+    + Sqr(gdash_1)*(Qtilde_1*v1*v1+Qtilde_2*v2*v2+Qtilde_s*s*s)*(Qtilde_1-Qtilde_2*tb*tb)/(tb*tb-1.0);
   
 
   // Reset objects
@@ -9071,7 +9069,7 @@ double predpE6SSMMzSqRun(double parVal)
    // Check that we are at the right scale
    if (fabs(r.get_scale()-mx) > TOLERANCE)
     {
-      cerr << "WARNING: object provided to doCalcMSSMTuningNumerically should be at scale MX = " << mx
+      cerr << "WARNING: object provided to doCalcESSMTuningNumerically should be at scale MX = " << mx
 	   << ", not Q = " << r.get_scale() << ": skipping calculation." << endl;
       for (int i = 0; i < nPars; i++)
 	{
@@ -9108,8 +9106,8 @@ double predpE6SSMMzSqRun(double parVal)
 
       if (INCLUDE1LPTADPOLES)
 	{
-	  t1Ov1 = doCalcTadpoleESSMH1(w, s, tb);
-	  t2Ov2 = doCalcTadpoleESSMH2(w, s, tb);
+	  t1Ov1 = -doCalcTadpoleESSMH1(w, s, tb);
+	  t2Ov2 = -doCalcTadpoleESSMH2(w, s, tb);
 	}
       
       double mHdSq = w.get_mHd2();
@@ -9130,7 +9128,7 @@ double predpE6SSMMzSqRun(double parVal)
       double Qtilde_s = input.QSp;
 
       double refMzSq = -Sqr(lambda*s)+(2.0*(mHdSq+t1Ov1-tb*tb*(mHuSq+t2Ov2)))/(tb*tb-1.0)
-	+ Sqr(gdash_1)*Sqr(Qtilde_1*v1*v1+Qtilde_2*v2*v2+Qtilde_s*s*s)*(Qtilde_1-Qtilde_2*tb*tb)/(tb*tb-1);
+	+ Sqr(gdash_1)*(Qtilde_1*v1*v1+Qtilde_2*v2*v2+Qtilde_s*s*s)*(Qtilde_1-Qtilde_2*tb*tb)/(tb*tb-1.0);
 
       // Loop over the provided parameters and calculate the fine tuning for each
       for (int i = 0; i < nPars; i++)
@@ -9160,5 +9158,588 @@ double predpE6SSMMzSqRun(double parVal)
     }
   return tunings;
 }
+
+  Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> doCalcESSMTuningApprox(genericE6SSM_soft_parameters r, double ms, double mx, 
+					  Eigen::ArrayXd pars, bool & hasTuningProblem, bool useApproxSolns)
+  {
+    Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> tunings;
+
+    // Check that we are at the right scale
+    if (fabs(r.get_scale()-mx) > TOLERANCE)
+      {
+	cerr << "WARNING: object provided to doCalcESSMTuningNumerically should be at scale MX = " << mx
+	     << ", not Q = " << r.get_scale() << ": skipping calculation." << endl;
+	for (int i = 0; i < tuning_parameters::NUMESSMTUNINGPARS; i++)
+	  {
+	    tunings(i) = -numberOfTheBeast; // negative values indicate error, since tunings are positive by definition
+	  }
+    }
+    else
+    {
+      // Save values of tuning parameters at MX
+      double lambdaAtMx = r.get_Lambdax();
+      double TlambdaAtMx = r.get_TLambdax();
+
+      double AlambdaAtMx;
+      
+      if (Abs(TlambdaAtMx) < EPSTOL) 
+	{
+	  AlambdaAtMx = 0.0;
+	}
+      else if (Abs(lambdaAtMx) < 1.0e-100)
+	{
+	  ostringstream ii;
+	  ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	    Abs(lambdaAtMx) << endl;
+	  throw ii.str();
+	}
+      else
+	{
+	  AlambdaAtMx = TlambdaAtMx/lambdaAtMx;
+	}
+
+      double mHdSqAtMx = r.get_mHd2();
+      double mHuSqAtMx = r.get_mHu2();
+      double mSSqAtMx = r.get_ms2();
+      double mqL3SqAtMx = r.get_mq2(2,2);
+      double mtRSqAtMx = r.get_mu2(2,2);
+
+      double ytAtMx = r.get_Yu(2,2);
+      double TytAtMx = r.get_TYu(2,2);
+
+      double AtAtMx;
+      
+      if (Abs(TytAtMx) < EPSTOL) 
+	{
+	  AtAtMx = 0.0;
+	}
+      else if (Abs(ytAtMx) < 1.0e-100)
+	{
+	  ostringstream ii;
+	  ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	    Abs(ytAtMx) << endl;
+	  throw ii.str();
+	}
+      else
+	{
+	  AtAtMx = TytAtMx/ytAtMx;
+	}
+
+      double M1AtMx = r.get_MassB();
+      double M2AtMx = r.get_MassWB();
+      double M3AtMx = r.get_MassG();
+      double M1pAtMx = r.get_MassBp();
+
+      // Calculate vectors of derivatives at MX, either using approximate analytic solutions 
+      // or numerically (for later: change this so more easily extensible to general parameter set)
+      Eigen::Matrix<double,8,1> rhs_vec_lambda, rhs_vec_Alambda, rhs_vec_mHdSq, rhs_vec_mHuSq, rhs_vec_mSSq;
+      Eigen::Matrix<double,8,1> rhs_vec_mqL3Sq, rhs_vec_mtRSq, rhs_vec_At, rhs_vec_M1, rhs_vec_M2, rhs_vec_M3, rhs_vec_M1p;
+
+      int nLogs = 1; //< include leading logarithms? Default is 1 (i.e. yes) for numerical calculation
+
+      if (useApproxSolns)
+	{
+
+	  rhs_vec_lambda = doCalcLambdaDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_Alambda = doCalcSoftAlambdaDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mHdSq = doCalcMh1SquaredDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mHuSq = doCalcMh2SquaredDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mSSq = doCalcMsSquaredDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mqL3Sq = doCalcMq2Derivs(r, ms, 3, 3, hasTuningProblem);
+	  rhs_vec_mtRSq = doCalcMu2Derivs(r, ms, 3, 3, hasTuningProblem);
+	  rhs_vec_At = doCalcSoftAuDerivs(r, ms, 3, 3, hasTuningProblem);
+	  rhs_vec_M1 = doCalcGauginoDerivs(r, ms, 1, hasTuningProblem);
+	  rhs_vec_M2 = doCalcGauginoDerivs(r, ms, 2, hasTuningProblem);
+	  rhs_vec_M3 = doCalcGauginoDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_M1p = doCalcGauginoDerivs(r, ms, 4, hasTuningProblem);
+	}
+      else
+	{
+	  rhs_vec_lambda = doCalcNumericDerivs(r, ms, tuning_parameters::lam3, r.get_loops(), nLogs);
+	  rhs_vec_Alambda = doCalcNumericDerivs(r, ms, tuning_parameters::Alam3, r.get_loops(), nLogs);
+	  // For the soft masses, the analytic and numerical routines are identical...
+	  rhs_vec_mHdSq = doCalcMh1SquaredDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mHuSq = doCalcMh2SquaredDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mSSq = doCalcMsSquaredDerivs(r, ms, 3, hasTuningProblem);
+	  rhs_vec_mqL3Sq = doCalcMq2Derivs(r, ms, 3, 3, hasTuningProblem);
+	  rhs_vec_mtRSq = doCalcMu2Derivs(r, ms, 3, 3, hasTuningProblem);
+	  rhs_vec_At = doCalcNumericDerivs(r, ms, tuning_parameters::Au3, r.get_loops(), nLogs);
+	  rhs_vec_M1 = doCalcNumericDerivs(r, ms, tuning_parameters::M1, r.get_loops(), nLogs);
+	  rhs_vec_M2 = doCalcNumericDerivs(r, ms, tuning_parameters::M2, r.get_loops(), nLogs);
+	  rhs_vec_M3 = doCalcNumericDerivs(r, ms, tuning_parameters::M3, r.get_loops(), nLogs);
+	  rhs_vec_M1p = doCalcNumericDerivs(r, ms, tuning_parameters::M1p, r.get_loops(), nLogs);
+	}
+
+      // Run to M_{SUSY} and calculate the matrices appearing on the left and
+      // right hand sides (which are the same for all parameters)
+      r.run_to(ms);
+
+      double v1 = r.get_vd();
+      double v2 = r.get_vu();
+      double tb = v2/v1;
+      double v = Sqrt(v1*v1+v2*v2);
+
+      double s = r.get_vs();
+      
+      genericE6SSM_input_parameters input = r.get_input();
+      
+      double g1 = r.get_g1();
+      double g2 = r.get_g2();
+      double g3 = r.get_g3();
+      double gN = r.get_gN();
+      
+      double Tlambda = r.get_TLambdax();
+      double lambda = r.get_Lambdax();
+      double Alambda;
+      
+      if (Abs(Tlambda) < EPSTOL) 
+	{
+	  Alambda = 0.0;
+	}
+      else if (Abs(lambda) < 1.0e-100)
+	{
+	  ostringstream ii;
+	  ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	    Abs(lambda) << endl;
+	  throw ii.str();
+	}
+      else
+	{
+	  Alambda = Tlambda/lambda;
+	}
+      
+      // First calculate the elements of the matrix that appears on the RHS in general, being derivatives of the EWSB
+      // conditions wrt the EW scale parameters. For the EWSB conditions used in our study, this matrix has the form:
+      // 
+      //     [ df1/dlambda df1/dAlambda df1/dm_Hd^2 df1/dm_Hu^2 df1/dm_s^2 df1/dm_Ql^2 df1/dm_uR^2 df1/dA_t ]
+      //     [ df2/dlambda df2/dAlambda df2/dm_Hd^2 df2/dm_Hu^2 df2/dm_s^2 df2/dm_Ql^2 df2/dm_uR^2 df2/dA_t ]
+      //     [ df3/dlambda df3/dAlambda df3/dm_Hd^2 df3/dm_Hu^2 df3/dm_s^2 df3/dm_Ql^2 df3/dm_uR^2 df3/dA_t ]
+      Eigen::Matrix<double,3,8> EWderivs;
+      
+      EWderivs(0,0) = lambda*(v2*v2+s*s)-Alambda*s*tb/Sqrt(2.0);
+      EWderivs(1,0) = lambda*(v1*v1+s*s)-Alambda*s/(Sqrt(2.0)*tb);
+      EWderivs(2,0) = lambda*v*v-Alambda*v1*v2/(Sqrt(2.0)*s);
+
+      EWderivs(0,1) = -lambda*s*tb/Sqrt(2.0);
+      EWderivs(1,1) = -lambda*s/(Sqrt(2.0)*tb);
+      EWderivs(2,1) = -lambda*v1*v2/(Sqrt(2.0)*s);
+      
+      EWderivs(0,2) = 1.0;
+      EWderivs(1,2) = 0.0;
+      EWderivs(2,2) = 0.0;
+      
+      EWderivs(0,3) = 0.0;
+      EWderivs(1,3) = 1.0;
+      EWderivs(2,3) = 0.0;
+      
+      EWderivs(0,4) = 0.0;
+      EWderivs(1,4) = 0.0;
+      EWderivs(2,4) = 1.0;
+      
+      EWderivs(0,5) = 0.0;
+      EWderivs(1,5) = 0.0;
+      EWderivs(2,5) = 0.0;
+      
+      EWderivs(0,6) = 0.0;
+      EWderivs(1,6) = 0.0;
+      EWderivs(2,6) = 0.0;
+      
+      EWderivs(0,7) = 0.0;
+      EWderivs(1,7) = 0.0;
+      EWderivs(2,7) = 0.0;
+      
+      
+      if (INCLUDE1LPTADPOLES)
+	{
+	  EWderivs(0,0) += doCalcd2DeltaVdLambdadv1(r, s, tb);
+	  EWderivs(1,0) += doCalcd2DeltaVdLambdadv2(r, s, tb);
+	  EWderivs(2,0) += doCalcd2DeltaVdLambdadv3(r, s, tb);
+	  
+	  EWderivs(0,5) += doCalcd2DeltaVdmQlsqdv1(r, s, tb);
+	  EWderivs(1,5) += doCalcd2DeltaVdmQlsqdv2(r, s, tb);
+	  EWderivs(2,5) += doCalcd2DeltaVdmQlsqdv3(r, s, tb);
+	  
+	  EWderivs(0,6) += doCalcd2DeltaVdmUrsqdv1(r, s, tb);
+	  EWderivs(1,6) += doCalcd2DeltaVdmUrsqdv2(r, s, tb);
+	  EWderivs(2,6) += doCalcd2DeltaVdmUrsqdv3(r, s, tb);
+	  
+	  EWderivs(0,7) += doCalcd2DeltaVdAtdv1(r, s, tb);
+	  EWderivs(1,7) += doCalcd2DeltaVdAtdv2(r, s, tb);
+	  EWderivs(2,7) += doCalcd2DeltaVdAtdv3(r, s, tb);
+	}    
+
+      // Also save the VEVs and couplings at M_SUSY
+      Eigen::Matrix<double,3,1> vevs;
+      vevs(0) = v1; vevs(1) = v2; vevs(2) = s;
+
+      Eigen::Matrix<double,3,3> lhs = doCalcLHSTuningMatrix(r, vevs);
+
+      // Solve using QR routine for each parameter
+      Eigen::Matrix<double,3,1> dvevs_dlambda, dvevs_dAlambda, dvevs_dmHdSq, dvevs_dmHuSq, dvevs_dmSSq;
+      Eigen::Matrix<double,3,1> dvevs_dmqL3Sq, dvevs_dmtRSq, dvevs_dAt, dvevs_dM1, dvevs_dM2, dvevs_dM3, dvevs_dM1p;
+
+      dvevs_dlambda = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_lambda);
+      dvevs_dAlambda = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_Alambda);
+      dvevs_dmHdSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mHdSq);
+      dvevs_dmHuSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mHuSq);
+      dvevs_dmSSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mSSq);
+      dvevs_dmqL3Sq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mqL3Sq);
+      dvevs_dmtRSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mtRSq);
+      dvevs_dAt = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_At);
+      dvevs_dM1 = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M1);
+      dvevs_dM2 = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M2);
+      dvevs_dM3 = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M3);
+      dvevs_dM1p = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M1p);
+
+      // Check solutions are valid
+      bool has_lambda_solution = (lhs*dvevs_dlambda).isApprox(-EWderivs*rhs_vec_lambda);
+      bool has_Alambda_solution = (lhs*dvevs_dAlambda).isApprox(-EWderivs*rhs_vec_Alambda);
+      bool has_mHdSq_solution = (lhs*dvevs_dmHdSq).isApprox(-EWderivs*rhs_vec_mHdSq);
+      bool has_mHuSq_solution = (lhs*dvevs_dmHuSq).isApprox(-EWderivs*rhs_vec_mHuSq);
+      bool has_mSSq_solution = (lhs*dvevs_dmSSq).isApprox(-EWderivs*rhs_vec_mSSq);
+      bool has_mqL3Sq_solution = (lhs*dvevs_dmqL3Sq).isApprox(-EWderivs*rhs_vec_mqL3Sq);
+      bool has_mtRSq_solution = (lhs*dvevs_dmtRSq).isApprox(-EWderivs*rhs_vec_mtRSq);
+      bool has_At_solution = (lhs*dvevs_dAt).isApprox(-EWderivs*rhs_vec_At);
+      bool has_M1_solution = (lhs*dvevs_dM1).isApprox(-EWderivs*rhs_vec_M1);
+      bool has_M2_solution = (lhs*dvevs_dM2).isApprox(-EWderivs*rhs_vec_M2);
+      bool has_M3_solution = (lhs*dvevs_dM3).isApprox(-EWderivs*rhs_vec_M3);
+      bool has_M1p_solution = (lhs*dvevs_dM1p).isApprox(-EWderivs*rhs_vec_M1p);
+
+
+      if (!has_lambda_solution || !has_Alambda_solution || !has_mHdSq_solution
+	  || !has_mHuSq_solution || !has_mSSq_solution || !has_mqL3Sq_solution
+	  || !has_mtRSq_solution || !has_At_solution || !has_M1_solution
+	  || !has_M2_solution || !has_M3_solution || !has_M1p_solution)
+	{
+	  cerr << "WARNING: problem calculating fine tunings: calculated fine tunings are inaccurate" << endl;
+	  hasTuningProblem = true;
+	}
+
+      // Calculate fine tuning
+
+      tunings(tuning_parameters::lam3) = Abs(doCalcdLogMzSqdLogParam(r, lambdaAtMx, vevs, dvevs_dlambda));
+      tunings(tuning_parameters::Alam3) = Abs(doCalcdLogMzSqdLogParam(r, AlambdaAtMx, vevs, dvevs_dAlambda));
+      tunings(tuning_parameters::mH13Sq) = Abs(doCalcdLogMzSqdLogParam(r, mHdSqAtMx, vevs, dvevs_dmHdSq));
+      tunings(tuning_parameters::mH23Sq) = Abs(doCalcdLogMzSqdLogParam(r, mHuSqAtMx, vevs, dvevs_dmHuSq));
+      tunings(tuning_parameters::mS3Sq) = Abs(doCalcdLogMzSqdLogParam(r, mSSqAtMx, vevs, dvevs_dmSSq));
+      tunings(tuning_parameters::mqL3Sq) = Abs(doCalcdLogMzSqdLogParam(r, mqL3SqAtMx, vevs, dvevs_dmqL3Sq));
+      tunings(tuning_parameters::mtRSq) = Abs(doCalcdLogMzSqdLogParam(r, mtRSqAtMx, vevs, dvevs_dmtRSq));
+      tunings(tuning_parameters::Au3) = Abs(doCalcdLogMzSqdLogParam(r, AtAtMx, vevs, dvevs_dAt));
+      tunings(tuning_parameters::M1) = Abs(doCalcdLogMzSqdLogParam(r, M1AtMx, vevs, dvevs_dM1));
+      tunings(tuning_parameters::M2) = Abs(doCalcdLogMzSqdLogParam(r, M2AtMx, vevs, dvevs_dM2));
+      tunings(tuning_parameters::M3) = Abs(doCalcdLogMzSqdLogParam(r, M3AtMx, vevs, dvevs_dM3));
+      tunings(tuning_parameters::M1p) = Abs(doCalcdLogMzSqdLogParam(r, M1pAtMx, vevs, dvevs_dM1p));
+
+    }
+
+    return tunings;
+  }
+
+  // Useful functions for calculating derivatives of the 
+  // low scale parameters numerically
+genericE6SSM_soft_parameters* tempmodel;
+double scale;
+int parChoice;
+Eigen::ArrayXd* pars;
+int nLogs;
+int nLps;
+
+double getApproximateMh1Squared(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcMh1SquaredLogCoeff(r, nLps);
+  double logSqCoeff = doCalcMh1SquaredLogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double mH1Sq = r.get_mHd2() + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return mH1Sq;
+
+}
+
+double getApproximateMh2Squared(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcMh2SquaredLogCoeff(r, nLps);
+  double logSqCoeff = doCalcMh2SquaredLogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double mH2Sq = r.get_mHu2() + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return mH2Sq;
+}
+
+double getApproximateMsSquared(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcMsSquaredLogCoeff(r, nLps);
+  double logSqCoeff = doCalcMsSquaredLogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double mSSq = r.get_ms2() + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return mSSq;
+}
+
+double getApproximateMqL3Squared(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcmqL3SquaredLogCoeff(r, nLps);
+  double logSqCoeff = doCalcmqL3SquaredLogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double mqL3Sq = r.get_mq2(2,2) + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return mqL3Sq;
+}
+
+double getApproximateMtRSquared(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcmtRSquaredLogCoeff(r, nLps);
+  double logSqCoeff = doCalcmtRSquaredLogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double mtRSq = r.get_mu2(2,2) + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return mtRSq;
+}
+
+double getApproximateLambda(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcLambda3LogCoeff(r, nLps);
+  double logSqCoeff = doCalcLambda3LogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double lambda = r.get_Lambdax() + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return lambda;
+}
+
+double getApproximateAlambda(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcAlambda3LogCoeff(r, nLps);
+  double logSqCoeff = doCalcAlambda3LogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double Tlambda = r.get_TLambdax();
+  double lambda = r.get_Lambdax();
+  double Alambda_mx;
+
+
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda_mx = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    { 
+     ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda_mx = Tlambda/lambda;
+    }
+
+  double Alambda = Alambda_mx + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return Alambda;
+}
+
+double getApproximateAt(double param)
+{
+  genericE6SSM_soft_parameters r(*tempmodel);
+  Eigen::ArrayXd input_pars = *pars;
+
+  input_pars(parChoice) = param;
+
+  pE6SSMftBCs(r, input_pars);
+
+  double logCoeff = doCalcAtLogCoeff(r, nLps);
+  double logSqCoeff = doCalcAtLogSqCoeff(r, nLogs);
+
+  double t = Log(scale/r.get_scale());
+
+  double TYt = r.get_TYu(2,2);
+  double yt = r.get_Yu(2,2);
+  double At_mx;
+
+
+  if (Abs(TYt) < EPSTOL) 
+    {
+      At_mx = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At_mx = TYt/yt;
+    }
+
+  double At = At_mx + t * logCoeff + Sqr(t) * logSqCoeff;
+
+  return At;
+}
+
+Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs)
+{
+  tempmodel = &r;
+  parChoice = i;
+  nLps = lps;
+  nLogs = logs;
+
+  Eigen::ArrayXd params;
+  params.resize(tuning_parameters::NUMESSMTUNINGPARS,1);
+
+  params(tuning_parameters::lam3) = r.get_Lambdax();
+  params(tuning_parameters::mH13Sq) = r.get_mHd2();
+  params(tuning_parameters::mH23Sq) = r.get_mHu2();
+  params(tuning_parameters::mS3Sq) = r.get_ms2();
+  params(tuning_parameters::mqL3Sq) = r.get_mq2(2,2);
+  params(tuning_parameters::mtRSq) = r.get_mu2(2,2);
+  params(tuning_parameters::M1) = r.get_MassB();
+  params(tuning_parameters::M2) = r.get_MassWB();
+  params(tuning_parameters::M3) = r.get_MassG();
+  params(tuning_parameters::M1p) = r.get_MassBp();
+
+  double TYt = r.get_TYu(2,2);
+  double yt = r.get_Yu(2,2);
+  double At;
+
+  if (Abs(TYt) < EPSTOL) 
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  params(tuning_parameters::Au3) = At;
+
+  double Tlambda = r.get_TLambdax();
+  double lambda = r.get_Lambdax();
+  double Alambda;
+
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda = Tlambda/lambda;
+    }
+
+  params(tuning_parameters::Alam3) = Alambda;
+
+  pars = &params;
+
+  scale = q;
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(params(i));
+  if (h == 0.0) h = epsilon;
+  temp = params(i);
+  params(i) = temp + h;
+  h = params(i) - temp;
+
+  Eigen::Matrix<double,8,1> derivs, errvec;
+
+  derivs(0) = calcDerivative(getApproximateLambda, temp, h, &err); errvec(0) = err;
+  derivs(1) = calcDerivative(getApproximateAlambda, temp, h, &err); errvec(1) = err;
+  derivs(2) = calcDerivative(getApproximateMh1Squared, temp, h, &err); errvec(2) = err;
+  derivs(3) = calcDerivative(getApproximateMh2Squared, temp, h, &err); errvec(3) = err;
+  derivs(4) = calcDerivative(getApproximateMsSquared, temp, h, &err); errvec(4) = err;
+  derivs(5) = calcDerivative(getApproximateMqL3Squared, temp, h, &err); errvec(5) = err;
+  derivs(6) = calcDerivative(getApproximateMtRSquared, temp, h, &err); errvec(6) = err;
+  derivs(7) = calcDerivative(getApproximateAt, temp, h, &err); errvec(7) = err;
+
+  for (int j = 0; j < 8; j++)
+    {
+      if (Abs(errvec(j)) > 1.0e-8 && Abs(errvec(j)/derivs(j)) > 1.0)
+	{
+	  derivs(j) = numberOfTheBeast;
+	}
+    }
+
+  return derivs;
+}
+
 
 } // namespace essm_tuning_utils

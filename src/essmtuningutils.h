@@ -343,6 +343,30 @@ Eigen::VectorXd doCalcESSMTuningNumerically(flexiblesusy::genericE6SSM_soft_para
 
  Eigen::Matrix<double,8,1> doCalcNumericDerivs(flexiblesusy::genericE6SSM_soft_parameters r, double q, unsigned i, int lps, int logs);
 
+ Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> doCalcESSMTuningSemianalytic(flexiblesusy::genericE6SSM_soft_parameters r, 
+  											    double ms, double mx, 
+  											    bool & hasTuningProblem);
+
+ double doCalcLowScaleLambda(double par_val);
+ 
+  double doCalcLowScaleAlambda(double par_val);
+  
+  double doCalcLowScaleMh1Squared(double par_val);
+  
+  double doCalcLowScaleMh2Squared(double par_val);
+
+  double doCalcLowScaleMsSquared(double par_val);
+
+  double doCalcLowScaleMqL3Squared(double par_val);
+
+  double doCalcLowScaleMtRSquared(double par_val);
+
+  double doCalcLowScaleAt(double par_val);
+
+  Eigen::Matrix<double,8,1> doCalcdLowScaledHighScale(flexiblesusy::genericE6SSM_soft_parameters r, double ms, 
+						      Eigen::MatrixXd params, unsigned i,
+						      void (*BCatMX)(flexiblesusy::genericE6SSM_soft_parameters & , Eigen::ArrayXd &), 
+						      bool & hasTuningProblem);
 
 } // namespace essm_tuning_utils
 #endif

@@ -9106,8 +9106,8 @@ double predpE6SSMMzSqRun(double parVal)
 
       if (INCLUDE1LPTADPOLES)
 	{
-	  t1Ov1 = -doCalcTadpoleESSMH1(w, s, tb);
-	  t2Ov2 = -doCalcTadpoleESSMH2(w, s, tb);
+	  t1Ov1 = calculateDeltaTadpole1(w, s, tb);//-doCalcTadpoleESSMH1(w, s, tb);
+	  t2Ov2 = calculateDeltaTadpole2(w,s,tb);//-doCalcTadpoleESSMH2(w, s, tb);
 	}
       
       double mHdSq = w.get_mHd2();
@@ -9167,7 +9167,7 @@ double predpE6SSMMzSqRun(double parVal)
     // Check that we are at the right scale
     if (fabs(r.get_scale()-mx) > TOLERANCE)
       {
-	cerr << "WARNING: object provided to doCalcESSMTuningNumerically should be at scale MX = " << mx
+	cerr << "WARNING: object provided to doCalcESSMTuningApprox should be at scale MX = " << mx
 	     << ", not Q = " << r.get_scale() << ": skipping calculation." << endl;
 	for (int i = 0; i < tuning_parameters::NUMESSMTUNINGPARS; i++)
 	  {
@@ -9741,5 +9741,518 @@ Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, do
   return derivs;
 }
 
+  // Calculate the fine tuning using the matrix approach, but 
+  // computing the derivatives of the high scale parameters
+  // numerically (not using the approximate solutions at all).
+  // If there are no issues with the calculation of the matrices, 
+  // this should agree exactly with the results of doCalcESSMTuningNumerically.
+  Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> doCalcESSMTuningSemianalytic(genericE6SSM_soft_parameters r, 
+  											    double ms, double mx, 
+  											    bool & hasTuningProblem)
+  {
+    // Object is provided at MX
+    Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> tunings;
+
+    // Check that we are at the right scale
+    if (fabs(r.get_scale()-mx) > TOLERANCE)
+      {
+  	cerr << "WARNING: object provided to doCalcESSMTuningSemianalytic should be at scale MX = " << mx
+  	     << ", not Q = " << r.get_scale() << ": skipping calculation." << endl;
+  	for (int i = 0; i < tuning_parameters::NUMESSMTUNINGPARS; i++)
+  	  {
+  	    tunings(i) = -numberOfTheBeast; // negative values indicate error, since tunings are positive by definition
+  	  }
+  	return tunings;
+      }
+
+    // Save values of tuning parameters at MX
+    double lambdaAtMx = r.get_Lambdax();
+    double TlambdaAtMx = r.get_TLambdax();
+    
+    double AlambdaAtMx;
+    
+    if (Abs(TlambdaAtMx) < EPSTOL) 
+      {
+  	AlambdaAtMx = 0.0;
+      }
+    else if (Abs(lambdaAtMx) < 1.0e-100)
+      {
+  	ostringstream ii;
+  	ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+  	  Abs(lambdaAtMx) << endl;
+  	throw ii.str();
+      }
+    else
+      {
+  	AlambdaAtMx = TlambdaAtMx/lambdaAtMx;
+      }
+    
+    double mHdSqAtMx = r.get_mHd2();
+    double mHuSqAtMx = r.get_mHu2();
+    double mSSqAtMx = r.get_ms2();
+    double mqL3SqAtMx = r.get_mq2(2,2);
+    double mtRSqAtMx = r.get_mu2(2,2);
+    
+    double ytAtMx = r.get_Yu(2,2);
+    double TytAtMx = r.get_TYu(2,2);
+    
+    double AtAtMx;
+    
+    if (Abs(TytAtMx) < EPSTOL) 
+      {
+  	AtAtMx = 0.0;
+      }
+    else if (Abs(ytAtMx) < 1.0e-100)
+      {
+  	ostringstream ii;
+  	ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+  	  Abs(ytAtMx) << endl;
+  	throw ii.str();
+      }
+    else
+      {
+  	AtAtMx = TytAtMx/ytAtMx;
+      }
+    
+    double M1AtMx = r.get_MassB();
+    double M2AtMx = r.get_MassWB();
+    double M3AtMx = r.get_MassG();
+    double M1pAtMx = r.get_MassBp();
+    
+    // Calculate the derivatives of the low scale parameters w.r.t the
+    // high scale input parameters
+    Eigen::Matrix<double,8,1> rhs_vec_lambda, rhs_vec_Alambda, rhs_vec_mHdSq, rhs_vec_mHuSq, rhs_vec_mSSq;
+    Eigen::Matrix<double,8,1> rhs_vec_mqL3Sq, rhs_vec_mtRSq, rhs_vec_At, rhs_vec_M1, rhs_vec_M2, rhs_vec_M3, rhs_vec_M1p;
+
+    Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> params;
+
+    params(tuning_parameters::lam3) = lambdaAtMx;
+    params(tuning_parameters::Alam3) = AlambdaAtMx;
+    params(tuning_parameters::mH13Sq) = mHdSqAtMx;
+    params(tuning_parameters::mH23Sq) = mHuSqAtMx;
+    params(tuning_parameters::mS3Sq) = mSSqAtMx;
+    params(tuning_parameters::mqL3Sq) = mqL3SqAtMx;
+    params(tuning_parameters::mtRSq) = mtRSqAtMx;
+    params(tuning_parameters::Au3) = AtAtMx;
+    params(tuning_parameters::M1) = M1AtMx;
+    params(tuning_parameters::M2) = M2AtMx;
+    params(tuning_parameters::M3) = M3AtMx;
+    params(tuning_parameters::M1p) = M1pAtMx;
+
+    rhs_vec_lambda = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::lam3, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_Alambda = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::Alam3, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_mHdSq = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::mH13Sq, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_mHuSq = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::mH23Sq, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_mSSq = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::mS3Sq, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_mqL3Sq = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::mqL3Sq, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_mtRSq = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::mtRSq, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_At = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::Au3, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_M1 = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::M1, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_M2 = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::M2, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_M3 = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::M3, pE6SSMftBCs, hasTuningProblem);
+    rhs_vec_M1p = doCalcdLowScaledHighScale(r, ms, params, tuning_parameters::M1p, pE6SSMftBCs, hasTuningProblem);
+
+    // Run to M_{SUSY} and calculate the matrices appearing on the left and
+    // right hand sides (which are the same for all parameters)
+    r.run_to(ms);
+    
+    double v1 = r.get_vd();
+    double v2 = r.get_vu();
+    double tb = v2/v1;
+    double v = Sqrt(v1*v1+v2*v2);
+    
+    double s = r.get_vs();
+    
+    genericE6SSM_input_parameters input = r.get_input();
+    
+    double g1 = r.get_g1();
+    double g2 = r.get_g2();
+    double g3 = r.get_g3();
+    double gN = r.get_gN();
+    
+    double Tlambda = r.get_TLambdax();
+    double lambda = r.get_Lambdax();
+    double Alambda;
+    
+    if (Abs(Tlambda) < EPSTOL) 
+      {
+  	Alambda = 0.0;
+      }
+    else if (Abs(lambda) < 1.0e-100)
+      {
+  	ostringstream ii;
+  	ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+  	  Abs(lambda) << endl;
+  	throw ii.str();
+      }
+    else
+      {
+  	Alambda = Tlambda/lambda;
+      }
+    
+    // First calculate the elements of the matrix that appears on the RHS in general, being derivatives of the EWSB
+    // conditions wrt the EW scale parameters. For the EWSB conditions used in our study, this matrix has the form:
+    // 
+    //     [ df1/dlambda df1/dAlambda df1/dm_Hd^2 df1/dm_Hu^2 df1/dm_s^2 df1/dm_Ql^2 df1/dm_uR^2 df1/dA_t ]
+    //     [ df2/dlambda df2/dAlambda df2/dm_Hd^2 df2/dm_Hu^2 df2/dm_s^2 df2/dm_Ql^2 df2/dm_uR^2 df2/dA_t ]
+    //     [ df3/dlambda df3/dAlambda df3/dm_Hd^2 df3/dm_Hu^2 df3/dm_s^2 df3/dm_Ql^2 df3/dm_uR^2 df3/dA_t ]
+    Eigen::Matrix<double,3,8> EWderivs;
+    
+    EWderivs(0,0) = lambda*(v2*v2+s*s)-Alambda*s*tb/Sqrt(2.0);
+    EWderivs(1,0) = lambda*(v1*v1+s*s)-Alambda*s/(Sqrt(2.0)*tb);
+    EWderivs(2,0) = lambda*v*v-Alambda*v1*v2/(Sqrt(2.0)*s);
+    
+    EWderivs(0,1) = -lambda*s*tb/Sqrt(2.0);
+    EWderivs(1,1) = -lambda*s/(Sqrt(2.0)*tb);
+    EWderivs(2,1) = -lambda*v1*v2/(Sqrt(2.0)*s);
+    
+    EWderivs(0,2) = 1.0;
+    EWderivs(1,2) = 0.0;
+    EWderivs(2,2) = 0.0;
+    
+    EWderivs(0,3) = 0.0;
+    EWderivs(1,3) = 1.0;
+    EWderivs(2,3) = 0.0;
+    
+    EWderivs(0,4) = 0.0;
+    EWderivs(1,4) = 0.0;
+    EWderivs(2,4) = 1.0;
+    
+    EWderivs(0,5) = 0.0;
+    EWderivs(1,5) = 0.0;
+    EWderivs(2,5) = 0.0;
+    
+    EWderivs(0,6) = 0.0;
+    EWderivs(1,6) = 0.0;
+    EWderivs(2,6) = 0.0;
+    
+    EWderivs(0,7) = 0.0;
+    EWderivs(1,7) = 0.0;
+    EWderivs(2,7) = 0.0;
+    
+    
+    if (INCLUDE1LPTADPOLES)
+      {
+  	EWderivs(0,0) += doCalcd2DeltaVdLambdadv1(r, s, tb);
+  	EWderivs(1,0) += doCalcd2DeltaVdLambdadv2(r, s, tb);
+  	EWderivs(2,0) += doCalcd2DeltaVdLambdadv3(r, s, tb);
+	
+  	EWderivs(0,5) += doCalcd2DeltaVdmQlsqdv1(r, s, tb);
+  	EWderivs(1,5) += doCalcd2DeltaVdmQlsqdv2(r, s, tb);
+  	EWderivs(2,5) += doCalcd2DeltaVdmQlsqdv3(r, s, tb);
+	
+  	EWderivs(0,6) += doCalcd2DeltaVdmUrsqdv1(r, s, tb);
+  	EWderivs(1,6) += doCalcd2DeltaVdmUrsqdv2(r, s, tb);
+  	EWderivs(2,6) += doCalcd2DeltaVdmUrsqdv3(r, s, tb);
+	
+  	EWderivs(0,7) += doCalcd2DeltaVdAtdv1(r, s, tb);
+  	EWderivs(1,7) += doCalcd2DeltaVdAtdv2(r, s, tb);
+  	EWderivs(2,7) += doCalcd2DeltaVdAtdv3(r, s, tb);
+      }    
+    
+    // Also save the VEVs and couplings at M_SUSY
+    Eigen::Matrix<double,3,1> vevs;
+    vevs(0) = v1; vevs(1) = v2; vevs(2) = s;
+    
+    Eigen::Matrix<double,3,3> lhs = doCalcLHSTuningMatrix(r, vevs);
+    
+    // Solve using QR routine for each parameter
+    Eigen::Matrix<double,3,1> dvevs_dlambda, dvevs_dAlambda, dvevs_dmHdSq, dvevs_dmHuSq, dvevs_dmSSq;
+    Eigen::Matrix<double,3,1> dvevs_dmqL3Sq, dvevs_dmtRSq, dvevs_dAt, dvevs_dM1, dvevs_dM2, dvevs_dM3, dvevs_dM1p;
+    
+    dvevs_dlambda = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_lambda);
+    dvevs_dAlambda = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_Alambda);
+    dvevs_dmHdSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mHdSq);
+    dvevs_dmHuSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mHuSq);
+    dvevs_dmSSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mSSq);
+    dvevs_dmqL3Sq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mqL3Sq);
+    dvevs_dmtRSq = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_mtRSq);
+    dvevs_dAt = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_At);
+    dvevs_dM1 = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M1);
+    dvevs_dM2 = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M2);
+    dvevs_dM3 = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M3);
+    dvevs_dM1p = lhs.fullPivHouseholderQr().solve(-EWderivs*rhs_vec_M1p);
+    
+    // Check solutions are valid
+    bool has_lambda_solution = (lhs*dvevs_dlambda).isApprox(-EWderivs*rhs_vec_lambda);
+    bool has_Alambda_solution = (lhs*dvevs_dAlambda).isApprox(-EWderivs*rhs_vec_Alambda);
+    bool has_mHdSq_solution = (lhs*dvevs_dmHdSq).isApprox(-EWderivs*rhs_vec_mHdSq);
+    bool has_mHuSq_solution = (lhs*dvevs_dmHuSq).isApprox(-EWderivs*rhs_vec_mHuSq);
+    bool has_mSSq_solution = (lhs*dvevs_dmSSq).isApprox(-EWderivs*rhs_vec_mSSq);
+    bool has_mqL3Sq_solution = (lhs*dvevs_dmqL3Sq).isApprox(-EWderivs*rhs_vec_mqL3Sq);
+    bool has_mtRSq_solution = (lhs*dvevs_dmtRSq).isApprox(-EWderivs*rhs_vec_mtRSq);
+    bool has_At_solution = (lhs*dvevs_dAt).isApprox(-EWderivs*rhs_vec_At);
+    bool has_M1_solution = (lhs*dvevs_dM1).isApprox(-EWderivs*rhs_vec_M1);
+    bool has_M2_solution = (lhs*dvevs_dM2).isApprox(-EWderivs*rhs_vec_M2);
+    bool has_M3_solution = (lhs*dvevs_dM3).isApprox(-EWderivs*rhs_vec_M3);
+    bool has_M1p_solution = (lhs*dvevs_dM1p).isApprox(-EWderivs*rhs_vec_M1p);
+    
+    
+    if (!has_lambda_solution || !has_Alambda_solution || !has_mHdSq_solution
+  	|| !has_mHuSq_solution || !has_mSSq_solution || !has_mqL3Sq_solution
+  	|| !has_mtRSq_solution || !has_At_solution || !has_M1_solution
+  	|| !has_M2_solution || !has_M3_solution || !has_M1p_solution)
+      {
+  	cerr << "WARNING: problem calculating fine tunings: calculated fine tunings are inaccurate" << endl;
+  	hasTuningProblem = true;
+      }
+    
+    // Calculate fine tuning
+    
+    tunings(tuning_parameters::lam3) = Abs(doCalcdLogMzSqdLogParam(r, lambdaAtMx, vevs, dvevs_dlambda));
+    tunings(tuning_parameters::Alam3) = Abs(doCalcdLogMzSqdLogParam(r, AlambdaAtMx, vevs, dvevs_dAlambda));
+    tunings(tuning_parameters::mH13Sq) = Abs(doCalcdLogMzSqdLogParam(r, mHdSqAtMx, vevs, dvevs_dmHdSq));
+    tunings(tuning_parameters::mH23Sq) = Abs(doCalcdLogMzSqdLogParam(r, mHuSqAtMx, vevs, dvevs_dmHuSq));
+    tunings(tuning_parameters::mS3Sq) = Abs(doCalcdLogMzSqdLogParam(r, mSSqAtMx, vevs, dvevs_dmSSq));
+    tunings(tuning_parameters::mqL3Sq) = Abs(doCalcdLogMzSqdLogParam(r, mqL3SqAtMx, vevs, dvevs_dmqL3Sq));
+    tunings(tuning_parameters::mtRSq) = Abs(doCalcdLogMzSqdLogParam(r, mtRSqAtMx, vevs, dvevs_dmtRSq));
+    tunings(tuning_parameters::Au3) = Abs(doCalcdLogMzSqdLogParam(r, AtAtMx, vevs, dvevs_dAt));
+    tunings(tuning_parameters::M1) = Abs(doCalcdLogMzSqdLogParam(r, M1AtMx, vevs, dvevs_dM1));
+    tunings(tuning_parameters::M2) = Abs(doCalcdLogMzSqdLogParam(r, M2AtMx, vevs, dvevs_dM2));
+    tunings(tuning_parameters::M3) = Abs(doCalcdLogMzSqdLogParam(r, M3AtMx, vevs, dvevs_dM3));
+    tunings(tuning_parameters::M1p) = Abs(doCalcdLogMzSqdLogParam(r, M1pAtMx, vevs, dvevs_dM1p));
+    
+    return tunings;
+    
+  }
+
+
+static genericE6SSM_soft_parameters *tempessm; // < an E6SSM object given at the input scale MX
+static double modelMsusy; // < the value of M_{SUSY} for the above object
+static int essmParChoice; // < index labelling the current parameter we are varying
+static Eigen::ArrayXd tuningPars; // < vector containing the parameters varied as part of the fine tuning
+static void (*currentessmBC)(genericE6SSM_soft_parameters & , Eigen::ArrayXd &);
+
+  double doCalcLowScaleLambda(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    return model.get_Lambdax();
+
+  }
+
+  double doCalcLowScaleAlambda(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    double lambda = model.get_Lambdax();
+    double Tlambda = model.get_TLambdax();
+    double Alambda;
+    
+    if (Abs(Tlambda) < EPSTOL) 
+      {
+  	Alambda = 0.0;
+      }
+    else if (Abs(lambda) < 1.0e-100)
+      {
+  	ostringstream ii;
+  	ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+  	  Abs(lambda) << endl;
+  	throw ii.str();
+      }
+    else
+      {
+  	Alambda = Tlambda/lambda;
+      }
+
+    return Alambda;
+
+  }
+
+  double doCalcLowScaleMh1Squared(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    return model.get_mHd2();
+
+  }
+
+  double doCalcLowScaleMh2Squared(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    return model.get_mHu2();
+
+  }
+
+  double doCalcLowScaleMsSquared(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    return model.get_ms2();
+
+  }
+
+  double doCalcLowScaleMqL3Squared(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    return model.get_mq2(2,2);
+
+  }
+
+  double doCalcLowScaleMtRSquared(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    return model.get_mu2(2,2);
+
+  }
+
+  double doCalcLowScaleAt(double par_val)
+  {
+    // Get copy of current model
+    genericE6SSM_soft_parameters model(*tempessm);
+
+    // Update parameter values
+    Eigen::ArrayXd params = tuningPars;
+
+    params(essmParChoice) = par_val;
+
+    currentessmBC(model, params);
+
+    model.run_to(modelMsusy, PRECISION);
+
+    double yt = model.get_Yu(2,2);
+    double Tyt = model.get_TYu(2,2);
+    
+    double At;
+    
+    if (Abs(Tyt) < EPSTOL) 
+      {
+  	At = 0.0;
+      }
+    else if (Abs(yt) < 1.0e-100)
+      {
+  	ostringstream ii;
+  	ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+  	  Abs(yt) << endl;
+  	throw ii.str();
+      }
+    else
+      {
+  	At = Tyt/yt;
+      }
+
+    return At;
+
+  }
+
+  Eigen::Matrix<double,8,1> doCalcdLowScaledHighScale(genericE6SSM_soft_parameters r, double ms, 
+						      Eigen::MatrixXd params, unsigned i,
+						      void (*BCatMX)(genericE6SSM_soft_parameters & , Eigen::ArrayXd &), 
+						      bool & hasTuningProblem)
+  {
+
+    essmParChoice = i;
+    tuningPars = params;
+    modelMsusy = ms;
+    currentessmBC = BCatMX;
+    tempessm = &r;
+
+    double deriv, h, temp, err;
+    
+    double epsilon = 1.0e-5;
+    
+    // Initial estimate for step size h.
+    h = epsilon*Abs(params(i));
+    if (h == 0.0) h = epsilon;
+    temp = params(i);
+    params(i) = temp + h;
+    h = params(i) - temp;
+    
+    Eigen::Matrix<double,8,1> derivs, errvec;
+    
+    derivs(0) = calcDerivative(doCalcLowScaleLambda, temp, h, &err); errvec(0) = err;
+    derivs(1) = calcDerivative(doCalcLowScaleAlambda, temp, h, &err); errvec(1) = err;
+    derivs(2) = calcDerivative(doCalcLowScaleMh1Squared, temp, h, &err); errvec(2) = err;
+    derivs(3) = calcDerivative(doCalcLowScaleMh2Squared, temp, h, &err); errvec(3) = err;
+    derivs(4) = calcDerivative(doCalcLowScaleMsSquared, temp, h, &err); errvec(4) = err;
+    derivs(5) = calcDerivative(doCalcLowScaleMqL3Squared, temp, h, &err); errvec(5) = err;
+    derivs(6) = calcDerivative(doCalcLowScaleMtRSquared, temp, h, &err); errvec(6) = err;
+    derivs(7) = calcDerivative(doCalcLowScaleAt, temp, h, &err); errvec(7) = err;
+
+    for (int j = 0; j < 8; j++)
+      {
+	if (Abs(errvec(j)) > 1.0e-8 && Abs(errvec(j)/derivs(j)) > 1.0)
+	  {
+	    cerr << "WARNING: problem calculating derivatives of low scale parameters" << endl;
+	    derivs(j) = numberOfTheBeast;
+	    hasTuningProblem = true;
+	  }
+      }
+    
+    return derivs;
+  }
 
 } // namespace essm_tuning_utils

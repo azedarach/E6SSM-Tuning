@@ -305,14 +305,14 @@ int main(int argc, char* argv[])
   double lambda, tlambda, Alambda, mqL3Sq, mtRSq, At;
 
   // Lower bounds
-  double tb_low = 2.0;
-  double lambda_low = -3.0;
-  double Alambda_low = -10000.0; // GeV
+  double tb_low = 10.0;
+  double lambda_low = -0.1;//-3.0;
+  double Alambda_low = -1000.0; // GeV
   double mqL3Sq_low = Sqr(200.0); // GeV^2
   double mtRSq_low = Sqr(200.0); // GeV^2
-  double At_low = -10000.0; // GeV
-  double M2_low = 200.0; // GeV
-  double M3_low = 200.0; // GeV
+  double At_low = 1000.0; // GeV
+  double M2_low = 0.0;//200.0; // GeV
+  double M3_low = 0.0;//200.0; // GeV
 
   // Upper bounds
   double tb_up = 50.0;
@@ -325,13 +325,13 @@ int main(int argc, char* argv[])
   double M3_up = 3000.0; // GeV
 
   // Number of points (just a linear scan for this simple test)
-  int tb_npts = 5;
-  int lambda_npts = 5;
-  int Alambda_npts = 5;
-  int mqL3Sq_npts = 5;
-  int mtRSq_npts = 5;
-  int At_npts = 5;
-  int M2_npts = 5;
+  int tb_npts = 1;
+  int lambda_npts = 1;
+  int Alambda_npts = 1;
+  int mqL3Sq_npts = 1;
+  int mtRSq_npts = 1;
+  int At_npts = 1;
+  int M2_npts = 1;
   int M3_npts = 5;
 
   // Increments
@@ -513,6 +513,10 @@ int main(int argc, char* argv[])
     gettimeofday(&tv2Numeric, NULL);
     wall_time_numeric = (tv2Numeric.tv_sec-tvNumeric.tv_sec)*1000000+((int)tv2Numeric.tv_usec-(int)tvNumeric.tv_usec);
 
+    // Calculate tunings semi-numerically
+    Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> tuningSemianalytic;
+    tuningSemianalytic = doCalcESSMTuningSemianalytic(model, MS, MX, hasTuningProblem);
+
     if (hasSeriousProblem)
       {
 	cerr << "WARNING: serious problem encountered at point: declining to write data" << endl;
@@ -522,8 +526,10 @@ int main(int argc, char* argv[])
 	// Write results
 	cout << wall_time << " ";
 	cout << (int) ((cpuEnd-cpuStart)*1000000) << " ";
+	cout << (int) ((cpuEndNumeric-cpuStartNumeric)*1000000) << " ";
 	cout << tuningApprox.maxCoeff() << " ";
 	cout << tuningNumeric.maxCoeff() << " ";
+	cout << tuningSemianalytic.maxCoeff() << " ";
 	cout << tuningApprox(tuning_parameters::lam3) << " ";
 	cout << tuningNumeric(tuning_parameters::lam3) << " ";
 	cout << tuningApprox(tuning_parameters::Alam3) << " ";

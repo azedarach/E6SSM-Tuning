@@ -147,10 +147,10 @@ int main(int argc, char* argv[])
 
   double g1, g2, g3, gN, M1, M2, M3, M1p, mHpSq, mHpbarSq, lambda, tlambda, mHdSq, mHuSq, mSSq, mupr, Bmupr;
 
-  g1 = 0.0;//0.45;
-  gN = 0.0;//0.46;
-  g2 = 0.0;//0.6;
-  g3 = 0.0;//0.98;
+  g1 = 0.45;
+  gN = 0.46;
+  g2 = 0.6;
+  g3 = 0.98;
 
   M1 = 300.0; // GeV
   M1p = 300.0; // GeV
@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
 
   Eigen::Matrix<double,3,3> mQlSq, mLlSq, mUrSq, mDrSq, mErSq, mDxSq, mDxbarSq;
 
-  mQlSq(2,2) = Sqr(2000.0); // GeV^2
+  mQlSq(2,2) = Sqr(1000.0); // GeV^2
   mUrSq(2,2) = Sqr(2000.0); // GeV^2
 
   // Soft masses are diagonal

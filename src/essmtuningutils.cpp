@@ -3949,7 +3949,7 @@ double doCalcdmstop2sqdv1(genericE6SSM_soft_parameters essmSusy, double s, doubl
   double gd1 = essmSusy.get_gN();
 
   double yt = essmSusy.get_Yu( 2, 2);
-  double mtop = 165;//yt*v2/Sqrt(2.0);
+  double mtop = yt*v2/Sqrt(2.0);
   // Option to fix m_t(M_t) = 165 GeV
   
   if(USEMTOFMT){

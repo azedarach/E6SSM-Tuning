@@ -306,12 +306,12 @@ int main(int argc, char* argv[])
 
   // Lower bounds
   double tb_low = 10.0;
-  double lambda_low = -0.1;//-3.0;
-  double Alambda_low = -1000.0; // GeV
-  double mqL3Sq_low = Sqr(200.0); // GeV^2
-  double mtRSq_low = Sqr(200.0); // GeV^2
+  double lambda_low = 0.8;//-3.0;
+  double Alambda_low = 1000.0; // GeV
+  double mqL3Sq_low = Sqr(500.0); // GeV^2
+  double mtRSq_low = Sqr(500.0); // GeV^2
   double At_low = 1000.0; // GeV
-  double M2_low = 0.0;//200.0; // GeV
+  double M2_low = 200.0;//200.0; // GeV
   double M3_low = 0.0;//200.0; // GeV
 
   // Upper bounds
@@ -322,7 +322,7 @@ int main(int argc, char* argv[])
   double mtRSq_up = Sqr(2000.0); // GeV^2
   double At_up = 10000.0; // GeV
   double M2_up = 2000.0; // GeV
-  double M3_up = 3000.0; // GeV
+  double M3_up = 5000.0; // GeV
 
   // Number of points (just a linear scan for this simple test)
   int tb_npts = 1;
@@ -332,7 +332,7 @@ int main(int argc, char* argv[])
   int mtRSq_npts = 1;
   int At_npts = 1;
   int M2_npts = 1;
-  int M3_npts = 5;
+  int M3_npts = 100;
 
   // Increments
   double tb_incr = 0.0;
@@ -527,6 +527,7 @@ int main(int argc, char* argv[])
 	cout << wall_time << " ";
 	cout << (int) ((cpuEnd-cpuStart)*1000000) << " ";
 	cout << (int) ((cpuEndNumeric-cpuStartNumeric)*1000000) << " ";
+	cout << M3 << " ";
 	cout << tuningApprox.maxCoeff() << " ";
 	cout << tuningNumeric.maxCoeff() << " ";
 	cout << tuningSemianalytic.maxCoeff() << " ";
@@ -552,6 +553,7 @@ int main(int argc, char* argv[])
 	cout << tuningNumeric(tuning_parameters::M2) << " ";
 	cout << tuningApprox(tuning_parameters::M3) << " ";
 	cout << tuningNumeric(tuning_parameters::M3) << " ";
+	cout << tuningSemianalytic(tuning_parameters::M3) << " ";
 	cout << tuningApprox(tuning_parameters::M1p) << " ";
 	cout << tuningNumeric(tuning_parameters::M1p) << " ";
 	if (hasTuningProblem || hasEWSBProblem)

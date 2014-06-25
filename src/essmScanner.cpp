@@ -1879,48 +1879,49 @@ int main(int argc, const char* argv[])
 
 	  bool tuningEWSBProblem = false;
 
-	  // try
-	  //   {
-	  //     Eigen::ArrayXd pars;
-	  //     pars.resize(tuning_parameters::NUMESSMTUNINGPARS);
-	  //     pars(tuning_parameters::lam3) = lambda3_vals(j);
-	  //     pars(tuning_parameters::Alam3) = Alambda3_vals(k);
-	  //     pars(tuning_parameters::M1) = M1;
-	  //     pars(tuning_parameters::M2) = M2_vals(s);
-	  //     pars(tuning_parameters::M3) = M3;
-	  //     pars(tuning_parameters::M1p) = M1p;
-	  //     pars(tuning_parameters::Au3) = At_vals(q);
-	  //     pars(tuning_parameters::mH13Sq) = m.get_mHd2();
-	  //     pars(tuning_parameters::mH23Sq) = m.get_mHu2();
-	  //     pars(tuning_parameters::mS3Sq) = m.get_ms2();
-	  //     pars(tuning_parameters::mqL3Sq) = mQlSq(2,2);
-	  //     pars(tuning_parameters::mtRSq) = mUrSq(2,2);
-  	  //     //	      tunings = doCalcpMSSMFineTuning(m, MS, tuningEWSBProblem, hasTuningError, USEAPPROXSOLNS, TOLEWSB);
-	  //     tunings = doCalcESSMTuningNumerically(m, MS, MX, pars, pE6SSMftBCs);
-	  //     // Possible numerical errors here in running should be accounted for.
-	  //     // if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
-	  //     // 	{
-	  //     // 	  // Probably a numerical issue.
-	  //     // 	  cerr << "WARNING: numerical issue in RG running for tuning calculation." << endl;
-	  //     // 	  hasTuningError = true;
-	  //     // 	}
-	  //     cout << tunings << endl;
-	  //   }
-	  // catch(const string & a) 
-	  //   { 
-	  //     cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
-	  //     hasSeriousProblem = true; 
-	  //   }
-	  // catch(const char * a) 
-	  //   { 
-	  //     cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
-	  //     hasSeriousProblem = true; 
-	  //   }
-	  // catch(...) 
-	  //   { 
-	  //     cerr << "WARNING: unknown problem encountered in fine tuning calculation." << endl; 
-	  //     hasSeriousProblem = true; 
-	  //   }
+	  try
+	    {
+	      Eigen::ArrayXd pars;
+	      pars.resize(tuning_parameters::NUMESSMTUNINGPARS);
+	      pars(tuning_parameters::lam3) = lambda3_vals(j);
+	      pars(tuning_parameters::Alam3) = Alambda3_vals(k);
+	      pars(tuning_parameters::M1) = M1;
+	      pars(tuning_parameters::M2) = M2_vals(s);
+	      pars(tuning_parameters::M3) = M3;
+	      pars(tuning_parameters::M1p) = M1p;
+	      pars(tuning_parameters::Au3) = At_vals(q);
+	      pars(tuning_parameters::mH13Sq) = m.get_mHd2();
+	      pars(tuning_parameters::mH23Sq) = m.get_mHu2();
+	      pars(tuning_parameters::mS3Sq) = m.get_ms2();
+	      pars(tuning_parameters::mqL3Sq) = mQlSq(2,2);
+	      pars(tuning_parameters::mtRSq) = mUrSq(2,2);
+
+	      tunings = doCalcESSMTuningApprox(m, MS, MX, pars, hasTuningError, false);
+
+	      // Possible numerical errors here in running should be accounted for.
+	      // if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
+	      // 	{
+	      // 	  // Probably a numerical issue.
+	      // 	  cerr << "WARNING: numerical issue in RG running for tuning calculation." << endl;
+	      // 	  hasTuningError = true;
+	      // 	}
+
+	    }
+	  catch(const string & a) 
+	    { 
+	      cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
+	      hasSeriousProblem = true; 
+	    }
+	  catch(const char * a) 
+	    { 
+	      cerr << "WARNING: serious numerical problem encountered in fine tuning calculation." << endl; 
+	      hasSeriousProblem = true; 
+	    }
+	  catch(...) 
+	    { 
+	      cerr << "WARNING: unknown problem encountered in fine tuning calculation." << endl; 
+	      hasSeriousProblem = true; 
+	    }
 
 	  double cpuEnd = ((double) clock())/(CLOCKS_PER_SEC);
 	  gettimeofday(&tv2Wall, NULL);
@@ -1963,6 +1964,7 @@ int main(int argc, const char* argv[])
 	      cout << f2 << " ";
 	      cout << f3 << " ";
 	      cout << MS << " ";
+	      cout << m.get_MVZp() << " ";
 	      cout << m.get_MStop()(0) << " ";
 	      cout << m.get_MStop()(1) << " ";
 	      cout << m.get_MSbot()(0) << " ";
@@ -1981,12 +1983,11 @@ int main(int argc, const char* argv[])
 	      cout << m.get_MAh()(0) << " ";
 	      cout << m.get_MAh()(1) << " ";
 	      cout << m.get_MAh()(2) << " ";
-
-	      // cout << tunings.max() << " ";
-	      // for (int i = 1; i <= tunings.displayEnd(); i++)
-	      // 	{
-	      // 	  cout << tunings(i) << " ";
-	      // 	}
+	      cout << tunings.maxCoeff() << " ";
+	      for (int i = 0; i < tunings.size(); i++)
+	      	{
+	      	  cout << tunings(i) << " ";
+	      	}
 	      if (hasUFBProblem)
 		{
 		  cout << UFBPROBLEM << " ";

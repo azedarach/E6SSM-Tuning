@@ -15,7 +15,7 @@ bool INCLUDE1LPTADPOLES = true;
 bool USEMTOFMT = false;
 
 // Set to true for trace printing
-bool ENABLE_DEBUG = true;
+bool ENABLE_DEBUG = false;
 
 // Precision used in RG running
 double PRECISION = 1.0e-3;

@@ -11,6 +11,15 @@ using namespace essm_tuning_utils;
 
 double calcEWSBConditionVal(double vev);
 double doCalcdEWSBConditiondVev(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, int vev, bool & hasProblem);
+double calcEWSBConditionValForParam(double param);
+double doCalcdEWSBConditiondLambda(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondAlambda(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondMh1Squared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondMh2Squared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondMsSquared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondMqL3Squared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondMtRSquared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
+double doCalcdEWSBConditiondAt(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem);
 
 /*
   --------------------------------------------------------------
@@ -138,10 +147,10 @@ int main(int argc, char* argv[])
 
   double g1, g2, g3, gN, M1, M2, M3, M1p, mHpSq, mHpbarSq, lambda, tlambda, mHdSq, mHuSq, mSSq, mupr, Bmupr;
 
-  g1 = 0.45;
-  gN = 0.46;
-  g2 = 0.6;
-  g3 = 0.98;
+  g1 = 0.0;//0.45;
+  gN = 0.0;//0.46;
+  g2 = 0.0;//0.6;
+  g3 = 0.0;//0.98;
 
   M1 = 300.0; // GeV
   M1p = 300.0; // GeV
@@ -151,12 +160,12 @@ int main(int argc, char* argv[])
   mHpSq = Sqr(5000.0); // GeV^2
   mHpbarSq = Sqr(5000.0); // GeV^2
 
-  lambda = -2.3;
+  lambda = 2.3;
   double Alambda = 5000.0;
   tlambda = lambda * Alambda; // GeV
 
   mHdSq = 1.0e8; // GeV^2
-  mHuSq = 05.e8; // GeV^2
+  mHuSq = 0.5e8; // GeV^2
   mSSq = -1.5e8; // GeV^2
 
   mupr = 5000.0; // GeV
@@ -164,7 +173,7 @@ int main(int argc, char* argv[])
 
   Eigen::Matrix<double,3,3> mQlSq, mLlSq, mUrSq, mDrSq, mErSq, mDxSq, mDxbarSq;
 
-  mQlSq(2,2) = Sqr(1000.0); // GeV^2
+  mQlSq(2,2) = Sqr(2000.0); // GeV^2
   mUrSq(2,2) = Sqr(2000.0); // GeV^2
 
   // Soft masses are diagonal
@@ -213,7 +222,7 @@ int main(int argc, char* argv[])
   v1 = v/Sqrt(1.0+tb*tb); // GeV
   v2 = v1*tb; // GeV
 
-  double MX = 20000.0; // GeV
+  double MX = 2000.0; // GeV
 
   int LOOPS = 2;
   int THRESH = 0;
@@ -250,6 +259,7 @@ int main(int argc, char* argv[])
 									 mDrSq, mUrSq, mErSq, mSSq, mH1ISq, mH2ISq, mSISq,
 									 mDxSq, mDxbarSq, mHpSq, mHpbarSq, M1, M2, M3, M1p);
 
+  INCLUDE1LPTADPOLES = true;
   /*
     Do test
    */
@@ -263,8 +273,8 @@ try
     // Calculate derivatives analytically at the current scale
     Eigen::Matrix<double,3,3> dfdv = doCalcLHSTuningMatrix(soft_model, vevs);
     
-    Eigen::Matrix<double,3,8> EWderivs;
-    
+    Eigen::Matrix<double,3,8> EWderivs;    
+
     EWderivs(0,0) = lambda*(v2*v2+s*s)-Alambda*s*tb/Sqrt(2.0);
     EWderivs(1,0) = lambda*(v1*v1+s*s)-Alambda*s/(Sqrt(2.0)*tb);
     EWderivs(2,0) = lambda*v*v-Alambda*v1*v2/(Sqrt(2.0)*s);
@@ -330,37 +340,37 @@ try
     double df3dv2 = doCalcdEWSBConditiondVev(soft_model, 3, 2, hasProblem);
     double df3ds = doCalcdEWSBConditiondVev(soft_model, 3, 3, hasProblem);
     
-    // double df1dlambda = doCalcdEWSBConditiondLambda(soft_model, 1, hasProblem);
-    // double df2dlambda = doCalcdEWSBConditiondLambda(soft_model, 2, hasProblem);
-    // double df3dlambda = doCalcdEWSBConditiondLambda(soft_model, 3, hasProblem);
+    double df1dlambda = doCalcdEWSBConditiondLambda(soft_model, 1, hasProblem);
+    double df2dlambda = doCalcdEWSBConditiondLambda(soft_model, 2, hasProblem);
+    double df3dlambda = doCalcdEWSBConditiondLambda(soft_model, 3, hasProblem);
     
-    // double df1dAlambda = doCalcdEWSBConditiondAlambda(soft_model, 1, hasProblem);
-    // double df2dAlambda = doCalcdEWSBConditiondAlambda(soft_model, 2, hasProblem);
-    // double df3dAlambda = doCalcdEWSBConditiondAlambda(soft_model, 3, hasProblem);
+    double df1dAlambda = doCalcdEWSBConditiondAlambda(soft_model, 1, hasProblem);
+    double df2dAlambda = doCalcdEWSBConditiondAlambda(soft_model, 2, hasProblem);
+    double df3dAlambda = doCalcdEWSBConditiondAlambda(soft_model, 3, hasProblem);
     
-    // double df1dmHdSq = doCalcdEWSBConditiondMh1Squared(soft_model, 1, hasProblem);
-    // double df2dmHdSq = doCalcdEWSBConditiondMh1Squared(soft_model, 2, hasProblem);
-    // double df3dmHdSq = doCalcdEWSBConditiondMh1Squared(soft_model, 3, hasProblem);
+    double df1dmHdSq = doCalcdEWSBConditiondMh1Squared(soft_model, 1, hasProblem);
+    double df2dmHdSq = doCalcdEWSBConditiondMh1Squared(soft_model, 2, hasProblem);
+    double df3dmHdSq = doCalcdEWSBConditiondMh1Squared(soft_model, 3, hasProblem);
     
-    // double df1dmHuSq = doCalcdEWSBConditiondMh2Squared(soft_model, 1, hasProblem);
-    // double df2dmHuSq = doCalcdEWSBConditiondMh2Squared(soft_model, 2, hasProblem);
-    // double df3dmHuSq = doCalcdEWSBConditiondMh2Squared(soft_model, 3, hasProblem);
+    double df1dmHuSq = doCalcdEWSBConditiondMh2Squared(soft_model, 1, hasProblem);
+    double df2dmHuSq = doCalcdEWSBConditiondMh2Squared(soft_model, 2, hasProblem);
+    double df3dmHuSq = doCalcdEWSBConditiondMh2Squared(soft_model, 3, hasProblem);
     
-    // double df1dmSSq = doCalcdEWSBConditiondMsSquared(soft_model, 1, hasProblem);
-    // double df2dmSSq = doCalcdEWSBConditiondMsSquared(soft_model, 2, hasProblem);
-    // double df3dmSSq = doCalcdEWSBConditiondMsSquared(soft_model, 3, hasProblem);
+    double df1dmSSq = doCalcdEWSBConditiondMsSquared(soft_model, 1, hasProblem);
+    double df2dmSSq = doCalcdEWSBConditiondMsSquared(soft_model, 2, hasProblem);
+    double df3dmSSq = doCalcdEWSBConditiondMsSquared(soft_model, 3, hasProblem);
     
-    // double df1dmqL3Sq = doCalcdEWSBConditiondMqL3Squared(soft_model, 1, hasProblem);
-    // double df2dmqL3Sq = doCalcdEWSBConditiondMqL3Squared(soft_model, 2, hasProblem);
-    // double df3dmqL3Sq = doCalcdEWSBConditiondMqL3Squared(soft_model, 3, hasProblem);
+    double df1dmqL3Sq = doCalcdEWSBConditiondMqL3Squared(soft_model, 1, hasProblem);
+    double df2dmqL3Sq = doCalcdEWSBConditiondMqL3Squared(soft_model, 2, hasProblem);
+    double df3dmqL3Sq = doCalcdEWSBConditiondMqL3Squared(soft_model, 3, hasProblem);
     
-    // double df1dmtRSq = doCalcdEWSBConditiondMtRSquared(soft_model, 1, hasProblem);
-    // double df2dmtRSq = doCalcdEWSBConditiondMtRSquared(soft_model, 2, hasProblem);
-    // double df3dmtRSq = doCalcdEWSBConditiondMtRSquared(soft_model, 3, hasProblem);
+    double df1dmtRSq = doCalcdEWSBConditiondMtRSquared(soft_model, 1, hasProblem);
+    double df2dmtRSq = doCalcdEWSBConditiondMtRSquared(soft_model, 2, hasProblem);
+    double df3dmtRSq = doCalcdEWSBConditiondMtRSquared(soft_model, 3, hasProblem);
     
-    // double df1dAt = doCalcdEWSBConditiondAt(soft_model, 1, hasProblem);
-    // double df2dAt = doCalcdEWSBConditiondAt(soft_model, 2, hasProblem);
-    // double df3dAt = doCalcdEWSBConditiondAt(soft_model, 3, hasProblem);
+    double df1dAt = doCalcdEWSBConditiondAt(soft_model, 1, hasProblem);
+    double df2dAt = doCalcdEWSBConditiondAt(soft_model, 2, hasProblem);
+    double df3dAt = doCalcdEWSBConditiondAt(soft_model, 3, hasProblem);
     
     // Get relative errors
     double error_df1dv1, error_df1dv2, error_df1ds;
@@ -379,53 +389,53 @@ try
     error_df3dv2 = 100.0 * Abs((df3dv2-dfdv(2,1))/(0.5*(df3dv2+dfdv(2,1))));
     error_df3ds = 100.0 * Abs((df3ds-dfdv(2,2))/(0.5*(df3ds+dfdv(2,2))));
 
-    // double error_df1dlambda, error_df2dlambda, error_df3dlambda;
-    // double error_df1dAlambda, error_df2dAlambda, error_df3dAlambda;
-    // double error_df1dmHdSq, error_df2dmHdSq, error_df3dmHdSq;
-    // double error_df1dmHuSq, error_df2dmHuSq, error_df3dmHuSq;
-    // double error_df1dmSSq, error_df2dmSSq, error_df3dmSSq;
-    // double error_df1dmqL3Sq, error_df2dmqL3Sq, error_df3mqL3Sqd;
-    // double error_df1dmtRSq, error_df2dmtRSq, error_df3dmtRSq;
-    // double error_df1dAt, error_df2dAt, error_df3dAt;
+    double error_df1dlambda, error_df2dlambda, error_df3dlambda;
+    double error_df1dAlambda, error_df2dAlambda, error_df3dAlambda;
+    double error_df1dmHdSq, error_df2dmHdSq, error_df3dmHdSq;
+    double error_df1dmHuSq, error_df2dmHuSq, error_df3dmHuSq;
+    double error_df1dmSSq, error_df2dmSSq, error_df3dmSSq;
+    double error_df1dmqL3Sq, error_df2dmqL3Sq, error_df3dmqL3Sq;
+    double error_df1dmtRSq, error_df2dmtRSq, error_df3dmtRSq;
+    double error_df1dAt, error_df2dAt, error_df3dAt;
 
-    // error_df1dlambda = 100.0 * Abs((df1dlambda-EWderivs(0,0))/(0.5*(df1dlambda+EWderivs(0,0))));
-    // error_df2dlambda = 100.0 * Abs((df2dlambda-EWderivs(1,0))/(0.5*(df2dlambda+EWderivs(1,0))));
-    // error_df3dlambda = 100.0 * Abs((df3dlambda-EWderivs(2,0))/(0.5*(df3dlambda+EWderivs(2,0))));
+    error_df1dlambda = 100.0 * Abs((df1dlambda-EWderivs(0,0))/(0.5*(df1dlambda+EWderivs(0,0))));
+    error_df2dlambda = 100.0 * Abs((df2dlambda-EWderivs(1,0))/(0.5*(df2dlambda+EWderivs(1,0))));
+    error_df3dlambda = 100.0 * Abs((df3dlambda-EWderivs(2,0))/(0.5*(df3dlambda+EWderivs(2,0))));
 
-    // error_df1dAlambda = 100.0 * Abs((df1dAlambda-EWderivs(0,1))/(0.5*(df1dAlambda+EWderivs(0,1))));
-    // error_df2dAlambda = 100.0 * Abs((df2dAlambda-EWderivs(1,1))/(0.5*(df2dAlambda+EWderivs(1,1))));
-    // error_df3dAlambda = 100.0 * Abs((df3dAlambda-EWderivs(2,1))/(0.5*(df3dAlambda+EWderivs(2,1))));
+    error_df1dAlambda = 100.0 * Abs((df1dAlambda-EWderivs(0,1))/(0.5*(df1dAlambda+EWderivs(0,1))));
+    error_df2dAlambda = 100.0 * Abs((df2dAlambda-EWderivs(1,1))/(0.5*(df2dAlambda+EWderivs(1,1))));
+    error_df3dAlambda = 100.0 * Abs((df3dAlambda-EWderivs(2,1))/(0.5*(df3dAlambda+EWderivs(2,1))));
 
-    // error_df1dmHdSq = 100.0 * Abs((df1dmHdSq-EWderivs(0,2))/(0.5*(df1dmHdSq+EWderivs(0,2))));
-    // error_df2dmHdSq = 100.0 * Abs((df2dmHdSq-EWderivs(1,2))/(0.5*(df2dmHdSq+EWderivs(1,2))));
-    // error_df3dmHdSq = 100.0 * Abs((df3dmHdSq-EWderivs(2,2))/(0.5*(df3dmHdSq+EWderivs(2,2))));
+    error_df1dmHdSq = 100.0 * Abs((df1dmHdSq-EWderivs(0,2))/(0.5*(df1dmHdSq+EWderivs(0,2))));
+    error_df2dmHdSq = 100.0 * Abs((df2dmHdSq-EWderivs(1,2))/(0.5*(df2dmHdSq+EWderivs(1,2))));
+    error_df3dmHdSq = 100.0 * Abs((df3dmHdSq-EWderivs(2,2))/(0.5*(df3dmHdSq+EWderivs(2,2))));
 
-    // error_df1dmHuSq = 100.0 * Abs((df1dmHuSq-EWderivs(0,3))/(0.5*(df1dmHuSq+EWderivs(0,3))));
-    // error_df2dmHuSq = 100.0 * Abs((df2dmHuSq-EWderivs(1,3))/(0.5*(df2dmHuSq+EWderivs(1,3))));
-    // error_df3dmHuSq = 100.0 * Abs((df3dmHuSq-EWderivs(2,3))/(0.5*(df3dmHuSq+EWderivs(2,3))));
+    error_df1dmHuSq = 100.0 * Abs((df1dmHuSq-EWderivs(0,3))/(0.5*(df1dmHuSq+EWderivs(0,3))));
+    error_df2dmHuSq = 100.0 * Abs((df2dmHuSq-EWderivs(1,3))/(0.5*(df2dmHuSq+EWderivs(1,3))));
+    error_df3dmHuSq = 100.0 * Abs((df3dmHuSq-EWderivs(2,3))/(0.5*(df3dmHuSq+EWderivs(2,3))));
 
-    // error_df1dmSSq = 100.0 * Abs((df1dmSSq-EWderivs(0,4))/(0.5*(df1dmSSq+EWderivs(0,4))));
-    // error_df2dmSSq = 100.0 * Abs((df2dmSSq-EWderivs(1,4))/(0.5*(df2dmSSq+EWderivs(1,4))));
-    // error_df3dmSSq = 100.0 * Abs((df3dmSSq-EWderivs(2,4))/(0.5*(df3dmSSq+EWderivs(2,4))));
+    error_df1dmSSq = 100.0 * Abs((df1dmSSq-EWderivs(0,4))/(0.5*(df1dmSSq+EWderivs(0,4))));
+    error_df2dmSSq = 100.0 * Abs((df2dmSSq-EWderivs(1,4))/(0.5*(df2dmSSq+EWderivs(1,4))));
+    error_df3dmSSq = 100.0 * Abs((df3dmSSq-EWderivs(2,4))/(0.5*(df3dmSSq+EWderivs(2,4))));
 
-    // error_df1dmqL3Sq = 100.0 * Abs((df1dmqL3Sq-EWderivs(0,5))/(0.5*(df1dmqL3Sq+EWderivs(0,5))));
-    // error_df2dmqL3Sq = 100.0 * Abs((df2dmqL3Sq-EWderivs(1,5))/(0.5*(df2dmqL3Sq+EWderivs(1,5))));
-    // error_df3dmqL3Sq = 100.0 * Abs((df3dmqL3Sq-EWderivs(2,5))/(0.5*(df3dmqL3Sq+EWderivs(2,5))));
+    error_df1dmqL3Sq = 100.0 * Abs((df1dmqL3Sq-EWderivs(0,5))/(0.5*(df1dmqL3Sq+EWderivs(0,5))));
+    error_df2dmqL3Sq = 100.0 * Abs((df2dmqL3Sq-EWderivs(1,5))/(0.5*(df2dmqL3Sq+EWderivs(1,5))));
+    error_df3dmqL3Sq = 100.0 * Abs((df3dmqL3Sq-EWderivs(2,5))/(0.5*(df3dmqL3Sq+EWderivs(2,5))));
 
-    // error_df1dmtRSq = 100.0 * Abs((df1dmtRSq-EWderivs(0,6))/(0.5*(df1dmtRSq+EWderivs(0,6))));
-    // error_df2dmtRSq = 100.0 * Abs((df2dmtRSq-EWderivs(1,6))/(0.5*(df2dmtRSq+EWderivs(1,6))));
-    // error_df3dmtRSq = 100.0 * Abs((df3dmtRSq-EWderivs(2,6))/(0.5*(df3dmtRSq+EWderivs(2,6))));
+    error_df1dmtRSq = 100.0 * Abs((df1dmtRSq-EWderivs(0,6))/(0.5*(df1dmtRSq+EWderivs(0,6))));
+    error_df2dmtRSq = 100.0 * Abs((df2dmtRSq-EWderivs(1,6))/(0.5*(df2dmtRSq+EWderivs(1,6))));
+    error_df3dmtRSq = 100.0 * Abs((df3dmtRSq-EWderivs(2,6))/(0.5*(df3dmtRSq+EWderivs(2,6))));
 
-    // error_df1dAt = 100.0 * Abs((df1dAt-EWderivs(0,7))/(0.5*(df1dAt+EWderivs(0,7))));
-    // error_df2dAt = 100.0 * Abs((df2dAt-EWderivs(1,7))/(0.5*(df2dAt+EWderivs(1,7))));
-    // error_df3dAt = 100.0 * Abs((df3dAt-EWderivs(2,7))/(0.5*(df3dAt+EWderivs(2,7))));
+    error_df1dAt = 100.0 * Abs((df1dAt-EWderivs(0,7))/(0.5*(df1dAt+EWderivs(0,7))));
+    error_df2dAt = 100.0 * Abs((df2dAt-EWderivs(1,7))/(0.5*(df2dAt+EWderivs(1,7))));
+    error_df3dAt = 100.0 * Abs((df3dAt-EWderivs(2,7))/(0.5*(df3dAt+EWderivs(2,7))));
 
 
     outputCharacteristics(8);
     
     // Print results
     cout << "**************************************************" << endl;
-    cout << "* TEST RESULTS: e6ssm_1lp_beta_derivs" << endl;
+    cout << "* TEST RESULTS: e6ssm_EWSB_condition_derivs" << endl;
     cout << "**************************************************" << endl;
     cout << "* NUMERICAL DERIVATIVES: " << endl;
     cout << "*    df_1/dv_1 = " << df1dv1 << endl;
@@ -437,30 +447,30 @@ try
     cout << "*    df_3/dv_1 = " << df3dv1 << endl;
     cout << "*    df_3/dv_2 = " << df3dv2 << endl;
     cout << "*    df_3/ds = " << df3ds << endl;
-    // cout << "*    df_1/dlambda = " << df1dlambda << endl;
-    // cout << "*    df_2/dlambda = " << df2dlambda << endl;
-    // cout << "*    df_3/dlambda = " << df3dlambda << endl;
-    // cout << "*    df_1/dA_lambda = " << df1dAlambda << endl;
-    // cout << "*    df_2/dA_lambda = " << df2dAlambda << endl;
-    // cout << "*    df_3/dA_lambda = " << df3dAlambda << endl;
-    // cout << "*    df_1/dm_Hd^2 = " << df1dmHdSq << endl;
-    // cout << "*    df_2/dm_Hd^2 = " << df2dmHdSq << endl;
-    // cout << "*    df_3/dm_Hd^2 = " << df3dmHdSq << endl;
-    // cout << "*    df_1/dm_Hu^2 = " << df1dmHuSq << endl;
-    // cout << "*    df_2/dm_Hu^2 = " << df2dmHuSq << endl;
-    // cout << "*    df_3/dm_Hu^2 = " << df3dmHuSq << endl;
-    // cout << "*    df_1/dm_s^2 = " << df1dmSSq << endl;
-    // cout << "*    df_2/dm_s^2 = " << df2dmSSq << endl;
-    // cout << "*    df_3/dm_s^2 = " << df3dmSSq << endl;
-    // cout << "*    df_1/dm_q3L^2 = " << df1dmqL3Sq << endl;
-    // cout << "*    df_2/dm_q3L^2 = " << df2dmqL3Sq << endl;
-    // cout << "*    df_3/dm_q3L^2 = " << df3dmqL3Sq << endl;
-    // cout << "*    df_1/dm_tR^2 = " << df1dmtRSq << endl;
-    // cout << "*    df_2/dm_tR^2 = " << df2dmtRSq << endl;
-    // cout << "*    df_3/dm_tR^2 = " << df3dmtRSq << endl;
-    // cout << "*    df_1/dA_t = " << df1dAt << endl;
-    // cout << "*    df_2/dA_t = " << df2dAt << endl;
-    // cout << "*    df_3/dA_t = " << df3dAt << endl;
+    cout << "*    df_1/dlambda = " << df1dlambda << endl;
+    cout << "*    df_2/dlambda = " << df2dlambda << endl;
+    cout << "*    df_3/dlambda = " << df3dlambda << endl;
+    cout << "*    df_1/dA_lambda = " << df1dAlambda << endl;
+    cout << "*    df_2/dA_lambda = " << df2dAlambda << endl;
+    cout << "*    df_3/dA_lambda = " << df3dAlambda << endl;
+    cout << "*    df_1/dm_Hd^2 = " << df1dmHdSq << endl;
+    cout << "*    df_2/dm_Hd^2 = " << df2dmHdSq << endl;
+    cout << "*    df_3/dm_Hd^2 = " << df3dmHdSq << endl;
+    cout << "*    df_1/dm_Hu^2 = " << df1dmHuSq << endl;
+    cout << "*    df_2/dm_Hu^2 = " << df2dmHuSq << endl;
+    cout << "*    df_3/dm_Hu^2 = " << df3dmHuSq << endl;
+    cout << "*    df_1/dm_s^2 = " << df1dmSSq << endl;
+    cout << "*    df_2/dm_s^2 = " << df2dmSSq << endl;
+    cout << "*    df_3/dm_s^2 = " << df3dmSSq << endl;
+    cout << "*    df_1/dm_q3L^2 = " << df1dmqL3Sq << endl;
+    cout << "*    df_2/dm_q3L^2 = " << df2dmqL3Sq << endl;
+    cout << "*    df_3/dm_q3L^2 = " << df3dmqL3Sq << endl;
+    cout << "*    df_1/dm_tR^2 = " << df1dmtRSq << endl;
+    cout << "*    df_2/dm_tR^2 = " << df2dmtRSq << endl;
+    cout << "*    df_3/dm_tR^2 = " << df3dmtRSq << endl;
+    cout << "*    df_1/dA_t = " << df1dAt << endl;
+    cout << "*    df_2/dA_t = " << df2dAt << endl;
+    cout << "*    df_3/dA_t = " << df3dAt << endl;
     cout << "**************************************************" << endl;
     cout << "* ANALYTIC DERIVATIVES: " << endl;
     cout << "*    df_1/dv_1 = " << dfdv(0,0) << endl;
@@ -472,30 +482,30 @@ try
     cout << "*    df_3/dv_1 = " << dfdv(2,0) << endl;
     cout << "*    df_3/dv_2 = " << dfdv(2,1) << endl;
     cout << "*    df_3/ds = " << dfdv(2,2) << endl;
-    // cout << "*    df_1/dlambda = " << EWderivs(0,0) << endl;
-    // cout << "*    df_2/dlambda = " << EWderivs(1,0) << endl;
-    // cout << "*    df_3/dlambda = " << EWderivs(2,0) << endl;
-    // cout << "*    df_1/dA_lambda = " << EWderivs(0,1) << endl;
-    // cout << "*    df_2/dA_lambda = " << EWderivs(1,1) << endl;
-    // cout << "*    df_3/dA_lambda = " << EWderivs(2,1) << endl;
-    // cout << "*    df_1/dm_Hd^2 = " << EWderivs(0,2) << endl;
-    // cout << "*    df_2/dm_Hd^2 = " << EWderivs(1,2) << endl;
-    // cout << "*    df_3/dm_Hd^2 = " << EWderivs(2,2) << endl;
-    // cout << "*    df_1/dm_Hu^2 = " << EWderivs(0,3) << endl;
-    // cout << "*    df_2/dm_Hu^2 = " << EWderivs(1,3) << endl;
-    // cout << "*    df_3/dm_Hu^2 = " << EWderivs(2,3) << endl;
-    // cout << "*    df_1/dm_s^2 = " << EWderivs(0,4) << endl;
-    // cout << "*    df_2/dm_s^2 = " << EWderivs(1,4) << endl;
-    // cout << "*    df_3/dm_s^2 = " << EWderivs(2,4) << endl;
-    // cout << "*    df_1/dm_q3L^2 = " << EWderivs(0,5) << endl;
-    // cout << "*    df_2/dm_q3L^2 = " << EWderivs(1,5) << endl;
-    // cout << "*    df_3/dm_q3L^2 = " << EWderivs(2,5) << endl;
-    // cout << "*    df_1/dm_tR^2 = " << EWderivs(0,6) << endl;
-    // cout << "*    df_2/dm_tR^2 = " << EWderivs(1,6) << endl;
-    // cout << "*    df_3/dm_tR^2 = " << EWderivs(2,6) << endl;
-    // cout << "*    df_1/dA_t = " << EWderivs(0,7) << endl;
-    // cout << "*    df_2/dA_t = " << EWderivs(1,7) << endl;
-    // cout << "*    df_3/dA_t = " << EWderivs(2,7) << endl;
+    cout << "*    df_1/dlambda = " << EWderivs(0,0) << endl;
+    cout << "*    df_2/dlambda = " << EWderivs(1,0) << endl;
+    cout << "*    df_3/dlambda = " << EWderivs(2,0) << endl;
+    cout << "*    df_1/dA_lambda = " << EWderivs(0,1) << endl;
+    cout << "*    df_2/dA_lambda = " << EWderivs(1,1) << endl;
+    cout << "*    df_3/dA_lambda = " << EWderivs(2,1) << endl;
+    cout << "*    df_1/dm_Hd^2 = " << EWderivs(0,2) << endl;
+    cout << "*    df_2/dm_Hd^2 = " << EWderivs(1,2) << endl;
+    cout << "*    df_3/dm_Hd^2 = " << EWderivs(2,2) << endl;
+    cout << "*    df_1/dm_Hu^2 = " << EWderivs(0,3) << endl;
+    cout << "*    df_2/dm_Hu^2 = " << EWderivs(1,3) << endl;
+    cout << "*    df_3/dm_Hu^2 = " << EWderivs(2,3) << endl;
+    cout << "*    df_1/dm_s^2 = " << EWderivs(0,4) << endl;
+    cout << "*    df_2/dm_s^2 = " << EWderivs(1,4) << endl;
+    cout << "*    df_3/dm_s^2 = " << EWderivs(2,4) << endl;
+    cout << "*    df_1/dm_q3L^2 = " << EWderivs(0,5) << endl;
+    cout << "*    df_2/dm_q3L^2 = " << EWderivs(1,5) << endl;
+    cout << "*    df_3/dm_q3L^2 = " << EWderivs(2,5) << endl;
+    cout << "*    df_1/dm_tR^2 = " << EWderivs(0,6) << endl;
+    cout << "*    df_2/dm_tR^2 = " << EWderivs(1,6) << endl;
+    cout << "*    df_3/dm_tR^2 = " << EWderivs(2,6) << endl;
+    cout << "*    df_1/dA_t = " << EWderivs(0,7) << endl;
+    cout << "*    df_2/dA_t = " << EWderivs(1,7) << endl;
+    cout << "*    df_3/dA_t = " << EWderivs(2,7) << endl;
     cout << "**************************************************" << endl;
     cout << "* PERCENTAGE DIFFERENCES: " << endl;
     cout << "*    df_1/dv_1 = " << error_df1dv1 << "%" << endl;
@@ -507,43 +517,43 @@ try
     cout << "*    df_3/dv_1 = " << error_df3dv1 << "%" << endl;
     cout << "*    df_3/dv_2 = " << error_df3dv2 << "%" << endl;
     cout << "*    df_3/ds = " << error_df3ds << "%" << endl;
-    // cout << "*    df_1/dlambda = " << error_df1dlambda << "%" << endl;
-    // cout << "*    df_2/dlambda = " << error_df2dlambda << "%" << endl;
-    // cout << "*    df_3/dlambda = " << error_df3dlambda << "%" << endl;
-    // cout << "*    df_1/dA_lambda = " << error_df1dAlambda << "%" << endl;
-    // cout << "*    df_2/dA_lambda = " << error_df2dAlambda << "%" << endl;
-    // cout << "*    df_3/dA_lambda = " << error_df3dAlambda << "%" << endl;
-    // cout << "*    df_1/dm_Hd^2 = " << error_df1dmHdSq << "%" << endl;
-    // cout << "*    df_2/dm_Hd^2 = " << error_df2dmHdSq << "%" << endl;
-    // cout << "*    df_3/dm_Hd^2 = " << error_df3dmHdSq << "%" << endl;
-    // cout << "*    df_1/dm_Hu^2 = " << error_df1dmHuSq << "%" << endl;
-    // cout << "*    df_2/dm_Hu^2 = " << error_df2dmHuSq << "%" << endl;
-    // cout << "*    df_3/dm_Hu^2 = " << error_df3dmHuSq << "%" << endl;
-    // cout << "*    df_1/dm_s^2 = " << error_df1dmSSq << "%" << endl;
-    // cout << "*    df_2/dm_s^2 = " << error_df2dmSSq << "%" << endl;
-    // cout << "*    df_3/dm_s^2 = " << error_df3dmSSq << "%" << endl;
-    // cout << "*    df_1/dm_q3L^2 = " << error_df1dmqL3Sq << "%" << endl;
-    // cout << "*    df_2/dm_q3L^2 = " << error_df2dmqL3Sq << "%" << endl;
-    // cout << "*    df_3/dm_q3L^2 = " << error_df3smqL3Sq << "%" << endl;
-    // cout << "*    df_1/dm_tR^2 = " << error_df1dmtRSq << "%" << endl;
-    // cout << "*    df_2/dm_tR^2 = " << error_df2dmtRSq << "%" << endl;
-    // cout << "*    df_3/dm_tR^2 = " << error_df3dmtRSq << "%" << endl;
-    // cout << "*    df_1/dA_t = " << error_df1dAt << "%" << endl;
-    // cout << "*    df_2/dA_t = " << error_df2dAt << "%" << endl;
-    // cout << "*    df_3/dA_t = " << error_df3dAt << "%" << endl;
+    cout << "*    df_1/dlambda = " << error_df1dlambda << "%" << endl;
+    cout << "*    df_2/dlambda = " << error_df2dlambda << "%" << endl;
+    cout << "*    df_3/dlambda = " << error_df3dlambda << "%" << endl;
+    cout << "*    df_1/dA_lambda = " << error_df1dAlambda << "%" << endl;
+    cout << "*    df_2/dA_lambda = " << error_df2dAlambda << "%" << endl;
+    cout << "*    df_3/dA_lambda = " << error_df3dAlambda << "%" << endl;
+    cout << "*    df_1/dm_Hd^2 = " << error_df1dmHdSq << "%" << endl;
+    cout << "*    df_2/dm_Hd^2 = " << error_df2dmHdSq << "%" << endl;
+    cout << "*    df_3/dm_Hd^2 = " << error_df3dmHdSq << "%" << endl;
+    cout << "*    df_1/dm_Hu^2 = " << error_df1dmHuSq << "%" << endl;
+    cout << "*    df_2/dm_Hu^2 = " << error_df2dmHuSq << "%" << endl;
+    cout << "*    df_3/dm_Hu^2 = " << error_df3dmHuSq << "%" << endl;
+    cout << "*    df_1/dm_s^2 = " << error_df1dmSSq << "%" << endl;
+    cout << "*    df_2/dm_s^2 = " << error_df2dmSSq << "%" << endl;
+    cout << "*    df_3/dm_s^2 = " << error_df3dmSSq << "%" << endl;
+    cout << "*    df_1/dm_q3L^2 = " << error_df1dmqL3Sq << "%" << endl;
+    cout << "*    df_2/dm_q3L^2 = " << error_df2dmqL3Sq << "%" << endl;
+    cout << "*    df_3/dm_q3L^2 = " << error_df3dmqL3Sq << "%" << endl;
+    cout << "*    df_1/dm_tR^2 = " << error_df1dmtRSq << "%" << endl;
+    cout << "*    df_2/dm_tR^2 = " << error_df2dmtRSq << "%" << endl;
+    cout << "*    df_3/dm_tR^2 = " << error_df3dmtRSq << "%" << endl;
+    cout << "*    df_1/dA_t = " << error_df1dAt << "%" << endl;
+    cout << "*    df_2/dA_t = " << error_df2dAt << "%" << endl;
+    cout << "*    df_3/dA_t = " << error_df3dAt << "%" << endl;
     cout << "**************************************************" << endl;
     cout << "* RESULT: ";
     if (error_df1dv1 > tol || error_df1dv2 > tol || error_df1ds > tol ||
 	error_df2dv1 > tol || error_df2dv2 > tol || error_df2ds > tol ||
-	error_df3dv1 > tol || error_df3dv2 > tol || error_df3ds > tol || hasProblem)
-	// error_df3dlambda > tol || error_df3dlambda > tol || error_df3dlambda > tol ||
-	// error_df3dAlambda > tol || error_df3dAlambda > tol || error_df3dAlambda > tol ||
-	// error_df3dmHdSq > tol || error_df3dmHdSq > tol || error_df3dmHdSq > tol ||
-	// error_df3dmHuSq > tol || error_df3dmHuSq > tol || error_df3dmHuSq > tol ||
-	// error_df3dmSSq > tol || error_df3dmSSq > tol || error_df3dmSSq > tol ||
-	// error_df3dmqL3Sq > tol || error_df3dmqL3Sq > tol || error_df3dqL3Sq > tol ||
-	// error_df3dmtRSq > tol || error_df3dmtRSq > tol || error_df3dmtRSq > tol ||
-	// error_df3dAt > tol || error_df3dAt > tol || error_df3dAt > tol )
+	error_df3dv1 > tol || error_df3dv2 > tol || error_df3ds > tol || hasProblem || 
+	error_df3dlambda > tol || error_df3dlambda > tol || error_df3dlambda > tol ||
+	error_df3dAlambda > tol || error_df3dAlambda > tol || error_df3dAlambda > tol ||
+	error_df3dmHdSq > tol || error_df3dmHdSq > tol || error_df3dmHdSq > tol ||
+	error_df3dmHuSq > tol || error_df3dmHuSq > tol || error_df3dmHuSq > tol ||
+	error_df3dmSSq > tol || error_df3dmSSq > tol || error_df3dmSSq > tol ||
+	error_df3dmqL3Sq > tol || error_df3dmqL3Sq > tol || error_df3dmqL3Sq > tol ||
+	error_df3dmtRSq > tol || error_df3dmtRSq > tol || error_df3dmtRSq > tol ||
+	error_df3dAt > tol || error_df3dAt > tol || error_df3dAt > tol )
       {
 	cout << "FAIL" << endl;
 	if (error_df1dv1 > tol) cout << "*    maximum error exceeded for df_1/dv_1 derivative" << endl;
@@ -558,37 +568,37 @@ try
 	if (error_df3dv2 > tol) cout << "*    maximum error exceeded for df_3/dv_2 derivative" << endl;
 	if (error_df3ds > tol) cout << "*    maximum error exceeded for df_3/ds derivative" << endl;
 
-	// if (error_df1dlambda > tol) cout << "*    maximum error exceeded for df_1/dlambda derivative" << endl;
-	// if (error_df2dlambda > tol) cout << "*    maximum error exceeded for df_2/dlambda derivative" << endl;
-	// if (error_df3dlambda > tol) cout << "*    maximum error exceeded for df_3/dlambda derivative" << endl;
+	if (error_df1dlambda > tol) cout << "*    maximum error exceeded for df_1/dlambda derivative" << endl;
+	if (error_df2dlambda > tol) cout << "*    maximum error exceeded for df_2/dlambda derivative" << endl;
+	if (error_df3dlambda > tol) cout << "*    maximum error exceeded for df_3/dlambda derivative" << endl;
 
-	// if (error_df1dAlambda > tol) cout << "*    maximum error exceeded for df_1/dA_lambda derivative" << endl;
-	// if (error_df2dAlambda > tol) cout << "*    maximum error exceeded for df_2/dA_lambda derivative" << endl;
-	// if (error_df3dAlambda > tol) cout << "*    maximum error exceeded for df_3/dA_lambda derivative" << endl;
+	if (error_df1dAlambda > tol) cout << "*    maximum error exceeded for df_1/dA_lambda derivative" << endl;
+	if (error_df2dAlambda > tol) cout << "*    maximum error exceeded for df_2/dA_lambda derivative" << endl;
+	if (error_df3dAlambda > tol) cout << "*    maximum error exceeded for df_3/dA_lambda derivative" << endl;
 
-	// if (error_df1dmHdSq > tol) cout << "*    maximum error exceeded for df_1/dm_Hd^2 derivative" << endl;
-	// if (error_df2dmHdSq > tol) cout << "*    maximum error exceeded for df_2/dm_Hd^2 derivative" << endl;
-	// if (error_df3dmHdSq > tol) cout << "*    maximum error exceeded for df_3/dm_Hd^2 derivative" << endl;
+	if (error_df1dmHdSq > tol) cout << "*    maximum error exceeded for df_1/dm_Hd^2 derivative" << endl;
+	if (error_df2dmHdSq > tol) cout << "*    maximum error exceeded for df_2/dm_Hd^2 derivative" << endl;
+	if (error_df3dmHdSq > tol) cout << "*    maximum error exceeded for df_3/dm_Hd^2 derivative" << endl;
 
-	// if (error_df1dmHuSq > tol) cout << "*    maximum error exceeded for df_1/dm_Hu^2 derivative" << endl;
-	// if (error_df2dmHuSq > tol) cout << "*    maximum error exceeded for df_2/dm_Hu^2 derivative" << endl;
-	// if (error_df3dmHuSq > tol) cout << "*    maximum error exceeded for df_3/dm_Hu^2 derivative" << endl;
+	if (error_df1dmHuSq > tol) cout << "*    maximum error exceeded for df_1/dm_Hu^2 derivative" << endl;
+	if (error_df2dmHuSq > tol) cout << "*    maximum error exceeded for df_2/dm_Hu^2 derivative" << endl;
+	if (error_df3dmHuSq > tol) cout << "*    maximum error exceeded for df_3/dm_Hu^2 derivative" << endl;
 
-	// if (error_df1dmSSq > tol) cout << "*    maximum error exceeded for df_1/dm_s^2 derivative" << endl;
-	// if (error_df2dmSSq > tol) cout << "*    maximum error exceeded for df_2/dm_s^2 derivative" << endl;
-	// if (error_df3dmSSq > tol) cout << "*    maximum error exceeded for df_3/dm_s^2 derivative" << endl;
+	if (error_df1dmSSq > tol) cout << "*    maximum error exceeded for df_1/dm_s^2 derivative" << endl;
+	if (error_df2dmSSq > tol) cout << "*    maximum error exceeded for df_2/dm_s^2 derivative" << endl;
+	if (error_df3dmSSq > tol) cout << "*    maximum error exceeded for df_3/dm_s^2 derivative" << endl;
 
-	// if (error_df1dmqL3Sq > tol) cout << "*    maximum error exceeded for df_1/dm_q3L^2 derivative" << endl;
-	// if (error_df2dmqL3Sq > tol) cout << "*    maximum error exceeded for df_2/dm_q3L^2 derivative" << endl;
-	// if (error_df3dmqL3Sq > tol) cout << "*    maximum error exceeded for df_3/dm_q3L^2 derivative" << endl;
+	if (error_df1dmqL3Sq > tol) cout << "*    maximum error exceeded for df_1/dm_q3L^2 derivative" << endl;
+	if (error_df2dmqL3Sq > tol) cout << "*    maximum error exceeded for df_2/dm_q3L^2 derivative" << endl;
+	if (error_df3dmqL3Sq > tol) cout << "*    maximum error exceeded for df_3/dm_q3L^2 derivative" << endl;
 
-	// if (error_df1dmtRSq > tol) cout << "*    maximum error exceeded for df_1/dm_tR^2 derivative" << endl;
-	// if (error_df2dmtRSq > tol) cout << "*    maximum error exceeded for df_2/dm_tR^2 derivative" << endl;
-	// if (error_df3dmtRSq > tol) cout << "*    maximum error exceeded for df_3/dm_tR^2 derivative" << endl;
+	if (error_df1dmtRSq > tol) cout << "*    maximum error exceeded for df_1/dm_tR^2 derivative" << endl;
+	if (error_df2dmtRSq > tol) cout << "*    maximum error exceeded for df_2/dm_tR^2 derivative" << endl;
+	if (error_df3dmtRSq > tol) cout << "*    maximum error exceeded for df_3/dm_tR^2 derivative" << endl;
 
-	// if (error_df1dAt > tol) cout << "*    maximum error exceeded for df_1/dA_t derivative" << endl;
-	// if (error_df2dAt > tol) cout << "*    maximum error exceeded for df_2/dA_t derivative" << endl;
-	// if (error_df3dAt > tol) cout << "*    maximum error exceeded for df_3/dA_t derivative" << endl;
+	if (error_df1dAt > tol) cout << "*    maximum error exceeded for df_1/dA_t derivative" << endl;
+	if (error_df2dAt > tol) cout << "*    maximum error exceeded for df_2/dA_t derivative" << endl;
+	if (error_df3dAt > tol) cout << "*    maximum error exceeded for df_3/dA_t derivative" << endl;
 
 	hasPassed = false;
       }
@@ -712,5 +722,393 @@ double doCalcdEWSBConditiondVev(flexiblesusy::genericE6SSM_soft_parameters soft_
 
   return deriv;
 
+
+}
+
+static int parchoice;
+double calcEWSBConditionValForParam(double param)
+{
+  genericE6SSM_soft_parameters model(*tempmodel);
+
+  switch(parchoice)
+    {
+    case tuning_parameters::lam3:
+      {
+	// Note that varying lambda ALSO
+	// varies Tlambda, so we need to maintain
+	// Alambda as constant
+	double Tlambda = model.get_TLambdax();
+	double lambda = model.get_Lambdax();
+	double Alambda;
+	
+	if (Abs(Tlambda) < EPSTOL) 
+	  {
+	    Alambda = 0.0;
+	  }
+	else if (Abs(lambda) < 1.0e-100)
+	  {
+	    ostringstream ii;
+	    ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	      Abs(lambda) << endl;
+	    throw ii.str();
+	  }
+	else
+	  {
+	    Alambda = Tlambda/lambda;
+	  }
+
+	model.set_TLambdax(param*Alambda);
+	model.set_Lambdax(param);
+	break;
+      }
+    case tuning_parameters::Alam3:
+      {
+	model.set_TLambdax(model.get_Lambdax()*param);
+	break;
+      }
+    case tuning_parameters::mH13Sq:
+      {
+	model.set_mHd2(param);
+	break;
+      }
+    case tuning_parameters::mH23Sq:
+      {
+	model.set_mHu2(param);
+	break;
+      }
+    case tuning_parameters::mS3Sq:
+      {
+	model.set_ms2(param);
+	break;
+      }
+    case tuning_parameters::mqL3Sq:
+      {
+	model.set_mq2(2,2,param);
+	break;
+      }
+    case tuning_parameters::mtRSq:
+      {
+	model.set_mu2(2,2,param);
+	break;
+      }
+    case tuning_parameters::Au3:
+      {
+	model.set_TYu(2,2,model.get_Yu(2,2)*param);
+	break;
+      }
+    default:
+      {
+	ostringstream ii;
+	ii << "ERROR: unrecognised parameter choice in calcEWSBConditionValForParam" << endl;
+	throw ii.str();
+      }
+    }
+
+  switch(ewsbchoice)
+    {
+    case 1: return ESSM_EWSBCondition1(model); break;
+    case 2: return ESSM_EWSBCondition2(model); break;
+    case 3: return ESSM_EWSBCondition3(model); break;
+    default:
+      {
+	ostringstream ii;
+	ii << "ERROR: unrecognised EWSB condition choice in calcEWSBConditionValForParam" << endl;
+	throw ii.str();
+      }
+    }
+
+  return 1; //< other errors
+
+}
+
+double doCalcdEWSBConditiondLambda(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::lam3;
+
+  double par = soft_model.get_Lambdax();
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+double doCalcdEWSBConditiondAlambda(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::Alam3;
+
+  double par;
+
+  double Tlambda = soft_model.get_TLambdax();
+  double lambda = soft_model.get_Lambdax();
+  double Alambda;
+  
+  if (Abs(Tlambda) < EPSTOL) 
+    {
+      Alambda = 0.0;
+    }
+  else if (Abs(lambda) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_lambda where lambda3 coupling is " <<
+	Abs(lambda) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      Alambda = Tlambda/lambda;
+    }
+
+  par = Alambda;  
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+double doCalcdEWSBConditiondMh1Squared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::mH13Sq;
+
+  double par = soft_model.get_mHd2();
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+
+double doCalcdEWSBConditiondMh2Squared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::mH23Sq;
+
+  double par = soft_model.get_mHu2();
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+double doCalcdEWSBConditiondMsSquared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::mS3Sq;
+
+  double par = soft_model.get_ms2();
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+double doCalcdEWSBConditiondMqL3Squared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::mqL3Sq;
+
+  double par = soft_model.get_mq2(2,2);
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+double doCalcdEWSBConditiondMtRSquared(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::mtRSq;
+
+  double par = soft_model.get_mu2(2,2);
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
+
+}
+
+double doCalcdEWSBConditiondAt(flexiblesusy::genericE6SSM_soft_parameters soft_model, int ewsb, bool & hasProblem)
+{
+  tempmodel = &soft_model;
+  ewsbchoice = ewsb;
+  parchoice = tuning_parameters::Au3;
+
+  double par;
+  double yt = soft_model.get_Yu(2,2);
+  double At;
+  double TYt = soft_model.get_TYu(2,2);
+
+  if (Abs(TYt) < EPSTOL)
+    {
+      At = 0.0;
+    }
+  else if (Abs(yt) < 1.0e-100)
+    {
+      ostringstream ii;
+      ii << "WARNING: trying to calculate A_t where y_t coupling is " <<
+	Abs(yt) << endl;
+      throw ii.str();
+    }
+  else
+    {
+      At = TYt/yt;
+    }
+
+  par = At;
+
+  double deriv, h, temp, err;
+
+  double epsilon = 1.0e-5;
+
+  // Initial estimate for step size h.
+  h = epsilon*Abs(par);
+  if (h == 0.0) h = epsilon;
+  temp = par;
+  par = temp + h;
+  h = par - temp;
+
+  deriv = calcDerivative(calcEWSBConditionValForParam, temp, h, &err);
+
+  if (par > TOLERANCE && fabs(err / deriv) > 1.0) 
+    {
+      deriv = -numberOfTheBeast; // derivative is inaccurate, so flag using a large negative number
+      hasProblem = true;
+    }
+
+  return deriv;
 
 }

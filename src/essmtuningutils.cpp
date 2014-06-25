@@ -131,8 +131,8 @@ using namespace flexiblesusy;
       double g2 = r.get_g2();
       double gbar = Sqrt(g2*g2+0.6*g1*g1);
       
-      double v1 = vevs(1);
-      double v2 = vevs(2);
+      double v1 = vevs(0);
+      double v2 = vevs(1);
 
       double v = Sqrt(v1*v1+v2*v2);
 
@@ -316,6 +316,7 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
       Alambda = Tlambda/lambda;
     }
 
+
   double gdash = Sqrt(3.0/5.0)*r.get_g1();
   double g_2 = r.get_g2();
   double gbar = Sqrt(gdash*gdash+g_2*g_2);
@@ -346,12 +347,12 @@ double ESSM_EWSBCondition3(genericE6SSM_soft_parameters const & r)
 
   if (!INCLUDE1LPTADPOLES)
     {
-      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0)*s)
+      f3 = msSq + 0.5*lambda*lambda*v*v-(lambda*Alambda*v1*v2/(Sqrt(2.0)*s))
 	+0.5*Qtilde_s*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s);
     }
   else
     {
-      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v*v*s2b/(2.0*Sqrt(2.0)*s)
+      f3 = msSq + 0.5*lambda*lambda*v*v-lambda*Alambda*v1*v2/(Sqrt(2.0)*s)
 	+0.5*Qtilde_s*gdash_1*gdash_1*(Qtilde_1*v*v*cSqb + Qtilde_2*v*v*sSqb + Qtilde_s*s*s)
 	-doCalcTadpolesESSMS(r, s, tb);
     }
@@ -1312,7 +1313,8 @@ double doCalcTadpoleESSMH1(genericE6SSM_soft_parameters r,  double s , double tb
 
 
   //tested and debugged up tothis point 27/06/07
-  double delta =   threeO32pisq*(-2.0*a0Peter(mstopsq(1),q)*Delmstop1-2.0*a0Peter(mstopsq(2),q)*Delmstop2 + 4.0*a0Peter(Sqr(mtop),q)*Delmtop);				     
+  double delta =   threeO32pisq*(-2.0*a0Peter(mstopsq(1),q)*Delmstop1-2.0*a0Peter(mstopsq(2),q)*Delmstop2 + 4.0*a0Peter(Sqr(mtop),q)*Delmtop);		
+		     
   return delta; 
 }
 
@@ -8854,6 +8856,41 @@ void pE6SSMftBCs(flexiblesusy::genericE6SSM_soft_parameters & model, Eigen::Arra
   model.set_TYe(1,0,0.0); model.set_TYe(1,2,0.0);
   model.set_TYe(2,0,0.0); model.set_TYe(2,1,0.0);
 
+  // Make sure off-diagonal soft masses also vanish
+  model.set_mq2(0,1,0.0); model.set_mq2(0,2,0.0);
+  model.set_mq2(1,0,0.0); model.set_mq2(1,2,0.0);
+  model.set_mq2(2,0,0.0); model.set_mq2(2,1,0.0);
+
+  model.set_mu2(0,1,0.0); model.set_mu2(0,2,0.0);
+  model.set_mu2(1,0,0.0); model.set_mu2(1,2,0.0);
+  model.set_mu2(2,0,0.0); model.set_mu2(2,1,0.0);
+
+  model.set_md2(0,1,0.0); model.set_md2(0,2,0.0);
+  model.set_md2(1,0,0.0); model.set_md2(1,2,0.0);
+  model.set_md2(2,0,0.0); model.set_md2(2,1,0.0);
+
+  model.set_ml2(0,1,0.0); model.set_ml2(0,2,0.0);
+  model.set_ml2(1,0,0.0); model.set_ml2(1,2,0.0);
+  model.set_ml2(2,0,0.0); model.set_ml2(2,1,0.0);
+
+  model.set_me2(0,1,0.0); model.set_me2(0,2,0.0);
+  model.set_me2(1,0,0.0); model.set_me2(1,2,0.0);
+  model.set_me2(2,0,0.0); model.set_me2(2,1,0.0);
+
+  // Off-diagonal exotic Yukawas should vanish
+  model.set_Kappa(0,1,0.0); model.set_Kappa(0,2,0.0);
+  model.set_Kappa(1,0,0.0); model.set_Kappa(1,2,0.0);
+  model.set_Kappa(2,0,0.0); model.set_Kappa(2,1,0.0);
+
+  model.set_TKappa(0,1,0.0); model.set_TKappa(0,2,0.0);
+  model.set_TKappa(1,0,0.0); model.set_TKappa(1,2,0.0);
+  model.set_TKappa(2,0,0.0); model.set_TKappa(2,1,0.0);
+
+  model.set_Lambda12(0,1,0.0); model.set_Lambda12(1,0,0.0);
+
+  model.set_mH1I2(0,1,0.0); model.set_mH1I2(1,0,0.0);
+  model.set_mH2I2(0,1,0.0); model.set_mH2I2(1,0,0.0);
+  model.set_msI2(0,1,0.0); model.set_msI2(1,0,0.0);
 
   // Set the remaining parameters
   model.set_Lambdax(tuningPars(tuning_parameters::lam3));
@@ -9150,7 +9187,7 @@ double predpE6SSMMzSqRun(double parVal)
 	    }
 	  else
 	    {
-	      tunings(i) = fabs((temp/refMzSq)*deriv);
+	      tunings(i) = fabs((temp/refMzSq)*deriv); //DH::NOTE
 	    }
 
 	}
@@ -9416,6 +9453,7 @@ double predpE6SSMMzSqRun(double parVal)
 	}
 
       // Calculate fine tuning
+
 
       tunings(tuning_parameters::lam3) = Abs(doCalcdLogMzSqdLogParam(r, lambdaAtMx, vevs, dvevs_dlambda));
       tunings(tuning_parameters::Alam3) = Abs(doCalcdLogMzSqdLogParam(r, AlambdaAtMx, vevs, dvevs_dAlambda));
@@ -9998,7 +10036,8 @@ Eigen::Matrix<double,8,1> doCalcNumericDerivs(genericE6SSM_soft_parameters r, do
       }
     
     // Calculate fine tuning
-    
+ 
+
     tunings(tuning_parameters::lam3) = Abs(doCalcdLogMzSqdLogParam(r, lambdaAtMx, vevs, dvevs_dlambda));
     tunings(tuning_parameters::Alam3) = Abs(doCalcdLogMzSqdLogParam(r, AlambdaAtMx, vevs, dvevs_dAlambda));
     tunings(tuning_parameters::mH13Sq) = Abs(doCalcdLogMzSqdLogParam(r, mHdSqAtMx, vevs, dvevs_dmHdSq));

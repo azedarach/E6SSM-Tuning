@@ -411,7 +411,7 @@ int main(int argc, char* argv[])
   // Use approximate analytic expressions for tuning?
   // Turned off at the moment because I want to see the impact
   // of calculating the full 2-loop derivatives numerically
-  bool useApproxSolns = true;
+  bool useApproxSolns = false;
 
   // Suppress print out
   ENABLE_DEBUG = false;

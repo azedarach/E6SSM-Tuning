@@ -6764,6 +6764,8 @@ double doCalcLambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   genericE6SSM_soft_parameters w = r.calc_beta();
 
+  
+
   double coeff = w.get_Lambdax()*(-0.6 * Sqr(r.get_g1()) - 3.0 * Sqr(r.get_g2()) - 2.0 * Sqr(r.get_gN()) * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp))
 				  + 4.0 * Sqr(r.get_Lambdax()) + 3.0 * (r.get_Yd()*(r.get_Yd().adjoint())).trace()
 				  +(r.get_Ye()*(r.get_Ye().adjoint())).trace() + 3.0 * (r.get_Yu()*(r.get_Yu().adjoint())).trace()

@@ -43,7 +43,7 @@ using namespace softsusy;
     ----------------------------------------------------
   */
   
-  double tb_low = 2.0;
+  double tb_low = 10.0;
   double lambda_low = -3.0;
   double Alambda_low = -10000.0; // GeV
   double mqL3sq_low = sqr(200.0); // GeV
@@ -125,26 +125,26 @@ using namespace softsusy;
   // pE6SSM assumption: 1st and 2nd generation Yukawas are zero
   double yu = 0.0;
   double yc = 0.0;
-  double yt = 8.40236500e-01;
+  double yt = 8.32883879e-01;
 
   double yd = 0.0;
   double ys = 0.0;
-  double yb = 6.39364115e-01;
+  double yb = 1.79506721e-01;
 
   double ye = 0.0;
   double ymu = 0.0;
-  double ytau = 5.29502172e-01;
+  double ytau = 9.81595687e-02;
 
-  double g1 = sqrt(5.0/3.0)*3.71453554e-01;
-  double g2 = 6.43227110e-01;
-  double g3 = 9.79054815e-01;
+  double g1 = sqrt(5.0/3.0)*3.76571215e-01;
+  double g2 = 6.55780111e-01;
+  double g3 = 1.03206201e+00;
   // U(1)_N gauge coupling
-  double g1p = g1;
+  double g1p = 4.90419902e-01;
 
-  double v = 2.36246110e+02;
+  double v = 2.369007164e+02;
   // Singlet vev. Note current Z' mass limit
   // of ~2.5 TeV ==> s ~ 6.7 TeV
-  double s = 6700.0; // GeV
+  double s = 6689.94285; // GeV
 
   /*
     ----------------------------------------------------
@@ -160,7 +160,7 @@ using namespace softsusy;
   bool alambdalogscan = true;
   double const LOWERLOGAT = 1.0;
   double const LOWERLOGALAMBDA = 1.0;
-  string outfileprefix = "/home/dylan/Documents/Postgraduate/E6SSM-Tuning/essmScans/essmScan1/essmScan1tb2/essmScan1tb2Inputs/essmScan1tb2";
+  string outfileprefix = "/home/dylan/Documents/Postgraduate/E6SSM-Tuning/essmScans/essmScan1/essmScan1tb10/essmScan1tb10Inputs/essmScan1tb10";
   
   
   /*

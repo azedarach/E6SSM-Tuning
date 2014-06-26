@@ -1956,6 +1956,8 @@ int main(int argc, const char* argv[])
 	      cout << lambda3AtMsusy << " ";
 	      cout << kappa3AtMsusy << " ";
 	      cout << m.get_physical().Mhh(0) << " ";
+	      cout << m.get_physical().Mhh(1) << " ";
+	      cout << m.get_physical().Mhh(2) << " ";
 	      cout << m.get_physical().MAh(2) << " ";
 	      cout << mHdSq << " ";
 	      cout << mHuSq << " ";
@@ -1964,6 +1966,7 @@ int main(int argc, const char* argv[])
 	      cout << f2 << " ";
 	      cout << f3 << " ";
 	      cout << MS << " ";
+	      cout << m.get_MVZ() << " ";
 	      cout << m.get_MVZp() << " ";
 	      cout << m.get_MStop()(0) << " ";
 	      cout << m.get_MStop()(1) << " ";
@@ -2617,6 +2620,7 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
 	       << ", MAh(1) = " << r_approx.get_physical().MAh(1) 
 	       << ", MAh(2) = " << r_approx.get_physical().MAh(2) << endl;
 	}
+
 
     }
   // DH::Check that there are no other possible failure conditions that may occur

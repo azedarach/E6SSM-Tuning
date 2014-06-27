@@ -6764,8 +6764,18 @@ double doCalcLambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
 
   genericE6SSM_soft_parameters w = r.calc_beta();
 
-  // Save required matrices prior to calculation; might
-  // help avoid segfaults on cloud
+  // Save required matrices prior to calculation; this seems
+  // to be necessary for successful running on the cloud
+  double g1, g2, g3, gN;
+  double betag1, betag2, betag3, betagN;
+  double lambda, betalambda;
+
+  g1 = r.get_g1(); betag1 = w.get_g1();
+  g2 = r.get_g2(); betag2 = w.get_g2();
+  g3 = r.get_g3(); betag3 = w.get_g3();
+  gN = r.get_gN(); betagN = w.get_gN();
+  lambda = r.get_Lambdax(); betalambda = w.get_Lambdax();
+
   Eigen::Matrix<double,3,3> Yu, Yd, Ye, Kappa, BetaYu, BetaYd, BetaYe, BetaKappa;
   Eigen::Matrix<double,3,3> YuAdj, YdAdj, YeAdj, KappaAdj, BetaYuAdj, BetaYdAdj, BetaYeAdj, BetaKappaAdj;
   Eigen::Matrix<double,2,2> Lambda12, BetaLambda12, Lambda12Adj, BetaLambda12Adj;
@@ -6782,35 +6792,35 @@ double doCalcLambda3LogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   BetaKappa = w.get_Kappa(); BetaKappaAdj = BetaKappa.adjoint();
   BetaLambda12 = w.get_Lambda12(); BetaLambda12Adj = BetaLambda12.adjoint();
 
-  double coeff = w.get_Lambdax()*(-0.6 * Sqr(r.get_g1()) - 3.0 * Sqr(r.get_g2()) - 2.0 * Sqr(r.get_gN()) * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp))
-  				  + 4.0 * Sqr(r.get_Lambdax()) + 3.0 * (Yd*YdAdj).trace()
+  double coeff = betalambda*(-0.6 * Sqr(g1) - 3.0 * Sqr(g2) - 2.0 * Sqr(gN) * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp))
+  				  + 4.0 * Sqr(lambda) + 3.0 * (Yd*YdAdj).trace()
   				  +(Ye*YeAdj).trace() + 3.0 * (Yu*YuAdj).trace()
   				  + 3.0 * (Kappa*KappaAdj).trace() 
   				  + 2.0 * (Lambda12*Lambda12Adj).trace());
-  coeff += r.get_Lambdax()*(-1.2 * r.get_g1() * w.get_g1() - 6.0 * r.get_g2() * w.get_g2() 
-  			    - 4.0 * r.get_gN() * w.get_gN() * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp)) + 8.0 * r.get_Lambdax() * w.get_Lambdax()
-  			    + 3.0 * (BetaYd*YdAdj).trace() + 3.0 * (Yd*BetaYdAdj).trace()
-  			    + (BetaYe*YeAdj).trace() + (Ye*BetaYeAdj).trace()
-  			    + 3.0 * (BetaYu*YuAdj).trace() + 3.0 * (Yu*BetaYuAdj).trace()
-  			    + 3.0 * (BetaKappa*KappaAdj).trace() 
-  			    + 3.0 * (Kappa*BetaKappaAdj).trace()
-  			    + 2.0 * (BetaLambda12*Lambda12Adj).trace() 
-  			    + 2.0 * (Lambda12*BetaLambda12Adj).trace());
+  coeff += lambda*(-1.2 * g1 * betag1 - 6.0 * g2 * betag2 
+		   - 4.0 * gN * betagN * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp)) + 8.0 * lambda * betalambda
+		   + 3.0 * (BetaYd*YdAdj).trace() + 3.0 * (Yd*BetaYdAdj).trace()
+		   + (BetaYe*YeAdj).trace() + (Ye*BetaYeAdj).trace()
+		   + 3.0 * (BetaYu*YuAdj).trace() + 3.0 * (Yu*BetaYuAdj).trace()
+		   + 3.0 * (BetaKappa*KappaAdj).trace() 
+		   + 3.0 * (Kappa*BetaKappaAdj).trace()
+		   + 2.0 * (BetaLambda12*Lambda12Adj).trace() 
+		   + 2.0 * (Lambda12*BetaLambda12Adj).trace());
 
   // double coeff = w.get_Lambdax()*(-0.6 * Sqr(r.get_g1()) - 3.0 * Sqr(r.get_g2()) - 2.0 * Sqr(r.get_gN()) * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp))
-  // 				  + 4.0 * Sqr(r.get_Lambdax()) + 3.0 * (r.get_Yd()*(r.get_Yd().adjoint())).trace()
-  // 				  +(r.get_Ye()*(r.get_Ye().adjoint())).trace() + 3.0 * (r.get_Yu()*(r.get_Yu().adjoint())).trace()
-  // 				  + 3.0 * (r.get_Kappa()*(r.get_Kappa().adjoint())).trace() 
-  // 				  + 2.0 * (r.get_Lambda12()*(r.get_Lambda12().adjoint())).trace());
+  // 				  + 4.0 * Sqr(r.get_Lambdax()) + 3.0 * (Yd*YdAdj).trace()
+  // 				  +(Ye*YeAdj).trace() + 3.0 * (Yu*YuAdj).trace()
+  // 				  + 3.0 * (Kappa*KappaAdj).trace() 
+  // 				  + 2.0 * (Lambda12*Lambda12Adj).trace());
   // coeff += r.get_Lambdax()*(-1.2 * r.get_g1() * w.get_g1() - 6.0 * r.get_g2() * w.get_g2() 
   // 			    - 4.0 * r.get_gN() * w.get_gN() * (Sqr(QH1p) + Sqr(QH2p) + Sqr(QSp)) + 8.0 * r.get_Lambdax() * w.get_Lambdax()
-  // 			    + 3.0 * (w.get_Yd()*(r.get_Yd().adjoint())).trace() + 3.0 * (r.get_Yd()*(w.get_Yd().adjoint())).trace()
-  // 			    + (w.get_Ye()*(r.get_Ye().adjoint())).trace() + (r.get_Ye()*(w.get_Ye().adjoint())).trace()
-  // 			    + 3.0 * (w.get_Yu()*(r.get_Yu().adjoint())).trace() + 3.0 * (r.get_Yu()*(w.get_Yu().adjoint())).trace()
-  // 			    + 3.0 * (w.get_Kappa()*(r.get_Kappa().adjoint())).trace() 
-  // 			    + 3.0 * (r.get_Kappa()*(w.get_Kappa().adjoint())).trace()
-  // 			    + 2.0 * (w.get_Lambda12()*(r.get_Lambda12().adjoint())).trace() 
-  // 			    + 2.0 * (r.get_Lambda12()*(w.get_Lambda12().adjoint())).trace());
+  // 			    + 3.0 * (BetaYd*YdAdj).trace() + 3.0 * (Yd*BetaYdAdj).trace()
+  // 			    + (BetaYe*YeAdj).trace() + (Ye*BetaYeAdj).trace()
+  // 			    + 3.0 * (BetaYu*YuAdj).trace() + 3.0 * (Yu*BetaYuAdj).trace()
+  // 			    + 3.0 * (BetaKappa*KappaAdj).trace() 
+  // 			    + 3.0 * (Kappa*BetaKappaAdj).trace()
+  // 			    + 2.0 * (BetaLambda12*Lambda12Adj).trace() 
+  // 			    + 2.0 * (Lambda12*BetaLambda12Adj).trace());
 
   coeff = 0.5*oneOver16PiSqr*coeff;
 
@@ -9233,8 +9243,6 @@ double predpE6SSMMzSqRun(double parVal)
 					  Eigen::ArrayXd pars, bool & hasTuningProblem, bool useApproxSolns)
   {
     Eigen::Matrix<double,tuning_parameters::NUMESSMTUNINGPARS,1> tunings;
-
-    r.print(cout);
 
     // Check that we are at the right scale
     if (fabs(r.get_scale()-mx) > TOLERANCE)

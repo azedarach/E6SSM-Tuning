@@ -2259,20 +2259,6 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
   // SUSY parameters
   genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, ydin, yein, kappain, lambda12in, lambda3in, yuin, mupr, g1in, g2in, g3in, gNin, v1, v2, svev);
 
-  // DH:: try fixing v = 246 GeV at Q = M_Z, probably safer than allowing it to vary
-  genericE6SSM_susy_parameters r_susy_temp(r_susy);
-  r_susy_temp.run_to(MZ, PRECISION);
-  const double vAtMz = 246.0; // GeV
-  double vdAtMz = r_susy_temp.get_vd();
-  double vuAtMz = r_susy_temp.get_vu();
-  double tbAtMz = vuAtMz/vdAtMz;
-  r_susy_temp.set_vd(vAtMz/Sqrt(1.0+tbAtMz*tbAtMz));
-  r_susy_temp.set_vu(vAtMz*tbAtMz/Sqrt(1.0+tbAtMz*tbAtMz));
-  r_susy_temp.run_to(mx, PRECISION);
-
-  r_susy.set_vd(r_susy_temp.get_vd());
-  r_susy.set_vu(r_susy_temp.get_vu());
-
   // In the pE6SSM, the first and second generation A terms should vanish, as
   // should the off-diagonal mixings.
   tuin(0,0) = 0.0; tuin(1,1) = 0.0;

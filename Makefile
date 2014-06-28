@@ -39,7 +39,7 @@ LIBFFLITE       := $(FFLITEDIR)/libfflite$(LIBEXT)
 # Variables for compilation
 ifeq ($(IS_LOCAL),yes)
 CXX                := g++
-CPPFLAGS           :=  -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
+CPPFLAGS           := -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
                       $(INCMODEL)  
 CXXFLAGS           := -std=c++11 -O2
 CXX_DEP_GEN        := g++

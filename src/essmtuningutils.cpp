@@ -6254,37 +6254,89 @@ double doCalcMh2SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   double QDxp = r.get_input().QDxp;
   double QDxbarp = r.get_input().QDxbarp;
 
-  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
-    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
-    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
-
-  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
-    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
-    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
-    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
-    +3.0*Qup*r.get_mu2().trace();
-
   genericE6SSM_soft_parameters w = r.calc_beta();
 
-  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
-    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
-    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+  double mHu2, mHd2, ms2, mHp2, mHpbar2;
+  Eigen::Matrix<double,3,3> mq2, ml2, mu2, md2, me2, mDx2, mDxbar2;
+  Eigen::Matrix<double,2,2> mH1I2, mH2I2, msI2;
 
-  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
-    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
-    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
-    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
-    +3.0*Qup*w.get_mu2().trace();
+  double betamHu2, betamHd2, betams2, betamHp2, betamHpbar2;
+  Eigen::Matrix<double,3,3> betamq2, betaml2, betamu2, betamd2, betame2, betamDx2, betamDxbar2;
+  Eigen::Matrix<double,2,2> betamH1I2, betamH2I2, betamsI2;
 
-  double coeff = -2.4 * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
-  coeff -= 16.0 * Sqr(QH2p) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
-  coeff -= 12.0 * (r.get_g2()*w.get_g2()*Sqr(r.get_MassWB()) + Sqr(r.get_g2())*r.get_MassWB()*w.get_MassWB());
-  coeff += 4.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
-  coeff += 2.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 4.0 * r.get_TLambdax()*w.get_TLambdax();
-  coeff += 12.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2()+r.get_mq2(2,2)+r.get_mu2(2,2));
-  coeff += 6.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2()+w.get_mq2(2,2)+w.get_mu2(2,2)) + 12.0*r.get_TYu(2,2)*w.get_TYu(2,2);
-  coeff += 1.2 * r.get_g1()*w.get_g1()*sigma11 + 0.6 * Sqr(r.get_g1())*beta_sigma11;
-  coeff += 4.0 * QH2p * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QH2p * Sqr(r.get_gN()) * beta_sigma14;
+  mHu2 = r.get_mHu2(); betamHu2 = w.get_mHu2();
+  mHd2 = r.get_mHd2(); betamHd2 = w.get_mHd2();
+  ms2 = r.get_ms2(); betams2 = w.get_ms2();
+  mHp2 = r.get_mHp2(); betamHp2 = w.get_mHp2();
+  mHpbar2 = r.get_mHpbar2(); betamHpbar2 = w.get_mHpbar2();
+
+  mq2 = r.get_mq2(); betamq2 = w.get_mq2();
+  ml2 = r.get_ml2(); betaml2 = w.get_ml2();
+  mu2 = r.get_mu2(); betamu2 = w.get_mu2();
+  md2 = r.get_md2(); betamd2 = w.get_md2();
+  me2 = r.get_me2(); betame2 = w.get_me2();
+  mDx2 = r.get_mDx2(); betamDx2 = w.get_mDx2();
+  mDxbar2 = r.get_mDxbar2(); betamDxbar2 = w.get_mDxbar2();
+
+  mH1I2 = r.get_mH1I2(); betamH1I2 = w.get_mH1I2();
+  mH2I2 = r.get_mH2I2(); betamH2I2 = w.get_mH2I2();
+  msI2 = r.get_msI2(); betamsI2 = w.get_msI2();
+
+  double M1, M2, M1p;
+  double betaM1, betaM2, betaM1p;
+
+  M1 = r.get_MassB(); betaM1 = w.get_MassB();
+  M2 = r.get_MassWB(); betaM2 = w.get_MassWB();
+  M1p = r.get_MassBp(); betaM1p = w.get_MassBp();
+
+  double g1, g2, g3, gN;
+  double betag1, betag2, betag3, betagN;
+  g1 = r.get_g1(); betag1 = w.get_g1();
+  g2 = r.get_g2(); betag2 = w.get_g2();
+  g3 = r.get_g3(); betag3 = w.get_g3();
+  gN = r.get_gN(); betagN = w.get_gN();
+
+  double yt;
+  double betayt;
+  yt = r.get_Yu(2,2); betayt = w.get_Yu(2,2);
+
+  double Tyt;
+  double betaTyt;
+  Tyt = r.get_TYu(2,2); betaTyt = w.get_TYu(2,2);
+
+  double lambda, betalambda, Tlambda, betaTlambda;
+  lambda = r.get_Lambdax(); betalambda = w.get_Lambdax();
+  Tlambda = r.get_TLambdax(); betaTlambda = w.get_TLambdax();
+
+  double sigma11 = mHu2 - mHd2 + mHpbar2 - mHp2 + md2.trace()
+    - mDx2.trace() + mDxbar2.trace() + me2.trace() - mH1I2.trace()
+    + mH2I2.trace() - ml2.trace() + mq2.trace() - 2.0 * mu2.trace();
+
+  double sigma14 = 2.0 * QH1p * mHd2 + 2.0 * QH2p * mHu2 + 2.0 * QHpbarp * mHpbar2
+    + 2.0 * QHpp * mHp2 + QSp * ms2 + 3.0 * Qdp * md2.trace() + 3.0 * QDxp * mDx2.trace()
+    + 3.0 * QDxbarp * mDxbar2.trace() + Qep * me2.trace() + 2.0 * QH1p * mH1I2.trace()
+    + 2.0 * QH2p * mH2I2.trace() + 2.0 * QLp * ml2.trace() + 6.0 * QQp * mq2.trace() + QSp * msI2.trace()
+    + 3.0 * Qup * mu2.trace();
+
+  double betasigma11 = betamHu2 - betamHd2 + betamHpbar2 - betamHp2 + betamd2.trace()
+    - betamDx2.trace() + betamDxbar2.trace() + betame2.trace() - betamH1I2.trace()
+    + betamH2I2.trace() - betaml2.trace() + betamq2.trace() - 2.0 * betamu2.trace();
+
+  double betasigma14 = 2.0 * QH1p * betamHd2 + 2.0 * QH2p * betamHu2 + 2.0 * QHpbarp * betamHpbar2
+    + 2.0 * QHpp * betamHp2 + QSp * betams2 + 3.0 * Qdp * betamd2.trace() + 3.0 * QDxp * betamDx2.trace()
+    + 3.0 * QDxbarp * betamDxbar2.trace() + Qep * betame2.trace() + 2.0 * QH1p * betamH1I2.trace()
+    + 2.0 * QH2p * betamH2I2.trace() + 2.0 * QLp * betaml2.trace() + 6.0 * QQp * betamq2.trace() + QSp * betamsI2.trace()
+    + 3.0 * Qup * betamu2.trace();
+
+  double coeff = -2.4 * (g1 * betag1 * Sqr(M1) + Sqr(g1) * M1 * betaM1);
+  coeff -= 16.0 * Sqr(QH2p) * (gN * betagN * Sqr(M1p) + Sqr(gN) * M1p * betaM1p);
+  coeff -= 12.0 * (g2 * betag2 * Sqr(M2) + Sqr(g2) * M2 * betaM2);
+  coeff += 4.0 * lambda * betalambda * (mHd2 + mHu2 + ms2);
+  coeff += 2.0 * Sqr(lambda) * (betamHd2 + betamHu2 + betams2) + 4.0 * Tlambda * betaTlambda;
+  coeff += 12.0 * yt * betayt * (mHu2 + mq2(2,2) + mu2(2,2));
+  coeff += 6.0 * Sqr(yt) * (betamHu2 + betamq2(2,2) + betamu2(2,2)) + 12.0 * Tyt * betaTyt;
+  coeff += 1.2 * g1 * betag1 * sigma11 + 0.6 * Sqr(g1) * betasigma11;
+  coeff += 4.0 * QH2p * gN * betagN * sigma14 + 2.0 * QH2p * Sqr(gN) * betasigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
 
@@ -6356,39 +6408,93 @@ double doCalcMh1SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   double QDxp = r.get_input().QDxp;
   double QDxbarp = r.get_input().QDxbarp;
 
-  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
-    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
-    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
-
-  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
-    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
-    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
-    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
-    +3.0*Qup*r.get_mu2().trace();
-
   genericE6SSM_soft_parameters w = r.calc_beta();
 
-  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
-    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
-    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+  double mHu2, mHd2, ms2, mHp2, mHpbar2;
+  Eigen::Matrix<double,3,3> mq2, ml2, mu2, md2, me2, mDx2, mDxbar2;
+  Eigen::Matrix<double,2,2> mH1I2, mH2I2, msI2;
 
-  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
-    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
-    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
-    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
-    +3.0*Qup*w.get_mu2().trace();
+  double betamHu2, betamHd2, betams2, betamHp2, betamHpbar2;
+  Eigen::Matrix<double,3,3> betamq2, betaml2, betamu2, betamd2, betame2, betamDx2, betamDxbar2;
+  Eigen::Matrix<double,2,2> betamH1I2, betamH2I2, betamsI2;
 
-  double coeff = -2.4 * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
-  coeff -= 16.0 * Sqr(QH1p) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
-  coeff -= 12.0 * (r.get_g2()*w.get_g2()*Sqr(r.get_MassWB()) + Sqr(r.get_g2())*r.get_MassWB()*w.get_MassWB());
-  coeff += 4.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
-  coeff += 2.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 4.0 * r.get_TLambdax()*w.get_TLambdax();
-  coeff += 12.0 * r.get_Yd(2,2)*w.get_Yd(2,2)*(r.get_mHd2()+r.get_mq2(2,2)+r.get_md2(2,2));
-  coeff += 6.0 * Sqr(r.get_Yd(2,2))*(w.get_mHd2()+w.get_mq2(2,2)+w.get_md2(2,2)) + 12.0*r.get_TYd(2,2)*w.get_TYd(2,2);
-  coeff += 4.0 * r.get_Ye(2,2)*w.get_Ye(2,2)*(r.get_mHd2()+r.get_ml2(2,2)+r.get_me2(2,2));
-  coeff += 2.0 * Sqr(r.get_Ye(2,2))*(w.get_mHd2()+w.get_ml2(2,2)+w.get_me2(2,2)) + 4.0*r.get_TYe(2,2)*w.get_TYe(2,2);
-  coeff -= (1.2 * r.get_g1()*w.get_g1()*sigma11 + 0.6 * Sqr(r.get_g1())*beta_sigma11);
-  coeff += 4.0 * QH1p * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QH1p * Sqr(r.get_gN()) * beta_sigma14;
+  mHu2 = r.get_mHu2(); betamHu2 = w.get_mHu2();
+  mHd2 = r.get_mHd2(); betamHd2 = w.get_mHd2();
+  ms2 = r.get_ms2(); betams2 = w.get_ms2();
+  mHp2 = r.get_mHp2(); betamHp2 = w.get_mHp2();
+  mHpbar2 = r.get_mHpbar2(); betamHpbar2 = w.get_mHpbar2();
+
+  mq2 = r.get_mq2(); betamq2 = w.get_mq2();
+  ml2 = r.get_ml2(); betaml2 = w.get_ml2();
+  mu2 = r.get_mu2(); betamu2 = w.get_mu2();
+  md2 = r.get_md2(); betamd2 = w.get_md2();
+  me2 = r.get_me2(); betame2 = w.get_me2();
+  mDx2 = r.get_mDx2(); betamDx2 = w.get_mDx2();
+  mDxbar2 = r.get_mDxbar2(); betamDxbar2 = w.get_mDxbar2();
+
+  mH1I2 = r.get_mH1I2(); betamH1I2 = w.get_mH1I2();
+  mH2I2 = r.get_mH2I2(); betamH2I2 = w.get_mH2I2();
+  msI2 = r.get_msI2(); betamsI2 = w.get_msI2();
+
+  double M1, M2, M1p;
+  double betaM1, betaM2, betaM1p;
+
+  M1 = r.get_MassB(); betaM1 = w.get_MassB();
+  M2 = r.get_MassWB(); betaM2 = w.get_MassWB();
+  M1p = r.get_MassBp(); betaM1p = w.get_MassBp();
+
+  double g1, g2, g3, gN;
+  double betag1, betag2, betag3, betagN;
+  g1 = r.get_g1(); betag1 = w.get_g1();
+  g2 = r.get_g2(); betag2 = w.get_g2();
+  g3 = r.get_g3(); betag3 = w.get_g3();
+  gN = r.get_gN(); betagN = w.get_gN();
+
+  double yb, ytau;
+  double betayb, betaytau;
+  yb = r.get_Yd(2,2); betayb = w.get_Yd(2,2);
+  ytau = r.get_Ye(2,2); betaytau = w.get_Ye(2,2);
+
+  double Tyb, Tytau;
+  double betaTyb, betaTytau;
+  Tyb = r.get_TYd(2,2); betaTyb = w.get_TYd(2,2);
+  Tytau = r.get_TYe(2,2); betaTytau = w.get_TYe(2,2);
+
+  double lambda, betalambda, Tlambda, betaTlambda;
+  lambda = r.get_Lambdax(); betalambda = w.get_Lambdax();
+  Tlambda = r.get_TLambdax(); betaTlambda = w.get_TLambdax();
+
+  double sigma11 = mHu2 - mHd2 + mHpbar2 - mHp2 + md2.trace()
+    - mDx2.trace() + mDxbar2.trace() + me2.trace() - mH1I2.trace()
+    + mH2I2.trace() - ml2.trace() + mq2.trace() - 2.0 * mu2.trace();
+
+  double sigma14 = 2.0 * QH1p * mHd2 + 2.0 * QH2p * mHu2 + 2.0 * QHpbarp * mHpbar2
+    + 2.0 * QHpp * mHp2 + QSp * ms2 + 3.0 * Qdp * md2.trace() + 3.0 * QDxp * mDx2.trace()
+    + 3.0 * QDxbarp * mDxbar2.trace() + Qep * me2.trace() + 2.0 * QH1p * mH1I2.trace()
+    + 2.0 * QH2p * mH2I2.trace() + 2.0 * QLp * ml2.trace() + 6.0 * QQp * mq2.trace() + QSp * msI2.trace()
+    + 3.0 * Qup * mu2.trace();
+
+  double betasigma11 = betamHu2 - betamHd2 + betamHpbar2 - betamHp2 + betamd2.trace()
+    - betamDx2.trace() + betamDxbar2.trace() + betame2.trace() - betamH1I2.trace()
+    + betamH2I2.trace() - betaml2.trace() + betamq2.trace() - 2.0 * betamu2.trace();
+
+  double betasigma14 = 2.0 * QH1p * betamHd2 + 2.0 * QH2p * betamHu2 + 2.0 * QHpbarp * betamHpbar2
+    + 2.0 * QHpp * betamHp2 + QSp * betams2 + 3.0 * Qdp * betamd2.trace() + 3.0 * QDxp * betamDx2.trace()
+    + 3.0 * QDxbarp * betamDxbar2.trace() + Qep * betame2.trace() + 2.0 * QH1p * betamH1I2.trace()
+    + 2.0 * QH2p * betamH2I2.trace() + 2.0 * QLp * betaml2.trace() + 6.0 * QQp * betamq2.trace() + QSp * betamsI2.trace()
+    + 3.0 * Qup * betamu2.trace();
+
+  double coeff = -2.4 * (g1 * betag1 * Sqr(M1) + Sqr(g1) * M1 * betaM1);
+  coeff -= 16.0 * Sqr(QH1p) * (gN * betagN * Sqr(M1p) + Sqr(gN) * M1p * betaM1p);
+  coeff -= 12.0 * (g2 * betag2 * Sqr(M2) + Sqr(g2) * M2 * betaM2);
+  coeff += 4.0 * lambda * betalambda * (mHd2 + mHu2 + ms2);
+  coeff += 2.0 * Sqr(lambda) * (betamHd2 + betamHu2 + betams2) + 4.0 * Tlambda * betaTlambda;
+  coeff += 12.0 * yb * betayb * (mHd2 + mq2(2,2) + md2(2,2));
+  coeff += 6.0 * Sqr(yb) * (betamHd2 + betamq2(2,2) + betamd2(2,2)) + 12.0 * Tyb * betaTyb;
+  coeff += 4.0 * ytau * betaytau * (mHd2 + ml2(2,2) + me2(2,2));
+  coeff += 2.0 * Sqr(ytau) * (betamHd2 + betaml2(2,2) + betame2(2,2)) + 4.0 * Tytau * betaTytau;
+  coeff -= (1.2 * g1 * betag1 * sigma11 + 0.6 * Sqr(g1) * betasigma11);
+  coeff += 4.0 * QH1p * gN * betagN * sigma14 + 2.0 * QH1p * Sqr(gN) * betasigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
 
@@ -6460,33 +6566,93 @@ double doCalcMsSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   double QDxp = r.get_input().QDxp;
   double QDxbarp = r.get_input().QDxbarp;
 
-  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
-    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
-    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
-    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
-    +3.0*Qup*r.get_mu2().trace();
-
   genericE6SSM_soft_parameters w = r.calc_beta();
 
-  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
-    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
-    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
-    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
-    +3.0*Qup*w.get_mu2().trace();
+  double mHu2, mHd2, ms2, mHp2, mHpbar2;
+  Eigen::Matrix<double,3,3> mq2, ml2, mu2, md2, me2, mDx2, mDxbar2;
+  Eigen::Matrix<double,2,2> mH1I2, mH2I2, msI2;
 
+  double betamHu2, betamHd2, betams2, betamHp2, betamHpbar2;
+  Eigen::Matrix<double,3,3> betamq2, betaml2, betamu2, betamd2, betame2, betamDx2, betamDxbar2;
+  Eigen::Matrix<double,2,2> betamH1I2, betamH2I2, betamsI2;
 
-  double coeff = -16.0 * Sqr(QSp) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
-  coeff += 8.0 * r.get_Lambdax()*w.get_Lambdax()*(r.get_mHd2()+r.get_mHu2()+r.get_ms2());
-  coeff += 4.0 * Sqr(r.get_Lambdax())*(w.get_mHd2()+w.get_mHu2()+w.get_ms2()) + 8.0 * r.get_TLambdax()*w.get_TLambdax();
-  coeff += 6.0*w.get_ms2()*(r.get_Kappa()*(r.get_Kappa().adjoint())).trace() + 6.0 * r.get_ms2()*(w.get_Kappa()*(r.get_Kappa().adjoint())).trace() + 6.0*r.get_ms2()*(r.get_Kappa()*(w.get_Kappa().adjoint())).trace();
-  coeff += 4.0*w.get_ms2()*(r.get_Lambda12()*(r.get_Lambda12().adjoint())).trace()+4.0*r.get_ms2()*(w.get_Lambda12()*(r.get_Lambda12().adjoint())).trace()+4.0*r.get_ms2()*(r.get_Lambda12()*(w.get_Lambda12().adjoint())).trace();
-  coeff += 6.0*(w.get_TKappa()*(r.get_TKappa().adjoint())).trace()+6.0*(r.get_TKappa()*(w.get_TKappa().adjoint())).trace();
-  coeff += 4.0*(w.get_TLambda12()*(r.get_TLambda12().adjoint())).trace()+4.0*(r.get_TLambda12()*(w.get_TLambda12().adjoint())).trace();
-  coeff += 4.0*(w.get_mH1I2()*(r.get_Lambda12().adjoint())*r.get_Lambda12() + r.get_mH1I2()*(w.get_Lambda12().adjoint())*r.get_Lambda12() + r.get_mH1I2()*(r.get_Lambda12().adjoint())*w.get_Lambda12()).trace();
-  coeff += 6.0*(w.get_Kappa()*(r.get_Kappa().adjoint())*r.get_mDx2() + r.get_Kappa()*(w.get_Kappa().adjoint())*r.get_mDx2() + r.get_Kappa()*(r.get_Kappa().adjoint())*w.get_mDx2()).trace();
-  coeff += 6.0*(w.get_Kappa()*r.get_mDxbar2()*(r.get_Kappa().adjoint()) + r.get_Kappa()*w.get_mDxbar2()*(r.get_Kappa().adjoint()) + r.get_Kappa()*r.get_mDxbar2()*(w.get_Kappa().adjoint())).trace();
-  coeff += 4.0*(w.get_Lambda12()*(r.get_Lambda12().adjoint())*r.get_mH2I2() + r.get_Lambda12()*(w.get_Lambda12().adjoint())*r.get_mH2I2() + r.get_Lambda12()*(r.get_Lambda12().adjoint())*w.get_mH2I2()).trace();
-  coeff += 4.0 * QSp * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QSp * Sqr(r.get_gN()) * beta_sigma14;
+  mHu2 = r.get_mHu2(); betamHu2 = w.get_mHu2();
+  mHd2 = r.get_mHd2(); betamHd2 = w.get_mHd2();
+  ms2 = r.get_ms2(); betams2 = w.get_ms2();
+  mHp2 = r.get_mHp2(); betamHp2 = w.get_mHp2();
+  mHpbar2 = r.get_mHpbar2(); betamHpbar2 = w.get_mHpbar2();
+
+  mq2 = r.get_mq2(); betamq2 = w.get_mq2();
+  ml2 = r.get_ml2(); betaml2 = w.get_ml2();
+  mu2 = r.get_mu2(); betamu2 = w.get_mu2();
+  md2 = r.get_md2(); betamd2 = w.get_md2();
+  me2 = r.get_me2(); betame2 = w.get_me2();
+  mDx2 = r.get_mDx2(); betamDx2 = w.get_mDx2();
+  mDxbar2 = r.get_mDxbar2(); betamDxbar2 = w.get_mDxbar2();
+
+  mH1I2 = r.get_mH1I2(); betamH1I2 = w.get_mH1I2();
+  mH2I2 = r.get_mH2I2(); betamH2I2 = w.get_mH2I2();
+  msI2 = r.get_msI2(); betamsI2 = w.get_msI2();
+
+  double M1, M1p;
+  double betaM1, betaM1p;
+
+  M1 = r.get_MassB(); betaM1 = w.get_MassB();
+  M1p = r.get_MassBp(); betaM1p = w.get_MassBp();
+
+  double g1, g2, g3, gN;
+  double betag1, betag2, betag3, betagN;
+  g1 = r.get_g1(); betag1 = w.get_g1();
+  g2 = r.get_g2(); betag2 = w.get_g2();
+  g3 = r.get_g3(); betag3 = w.get_g3();
+  gN = r.get_gN(); betagN = w.get_gN();
+
+  double lambda, betalambda, Tlambda, betaTlambda;
+
+  lambda = r.get_Lambdax(); betalambda = w.get_Lambdax();
+  Tlambda = r.get_TLambdax(); betaTlambda = w.get_TLambdax();
+
+  Eigen::Matrix<double,3,3> Kappa, KappaAdj, betaKappa, betaKappaAdj;
+  Eigen::Matrix<double,3,3> TKappa, TKappaAdj, betaTKappa, betaTKappaAdj;
+  Eigen::Matrix<double,2,2> Lambda12, Lambda12Adj, betaLambda12, betaLambda12Adj;
+  Eigen::Matrix<double,2,2> TLambda12, TLambda12Adj, betaTLambda12, betaTLambda12Adj;
+
+  Kappa = r.get_Kappa(); KappaAdj = Kappa.adjoint();
+  betaKappa = w.get_Kappa(); betaKappaAdj = betaKappa.adjoint();
+
+  TKappa = r.get_TKappa(); TKappaAdj = TKappa.adjoint();
+  betaTKappa = w.get_TKappa(); betaTKappaAdj = betaTKappa.adjoint();
+
+  Lambda12 = r.get_Lambda12(); Lambda12Adj = Lambda12.adjoint();
+  betaLambda12 = w.get_Lambda12(); betaLambda12Adj = betaLambda12.adjoint();
+
+  TLambda12 = r.get_TLambda12(); TLambda12Adj = TLambda12.adjoint();
+  betaTLambda12 = w.get_TLambda12(); betaTLambda12Adj = betaTLambda12.adjoint();
+
+  double sigma14 = 2.0 * QH1p * mHd2 + 2.0 * QH2p * mHu2 + 2.0 * QHpbarp * mHpbar2
+    + 2.0 * QHpp * mHp2 + QSp * ms2 + 3.0 * Qdp * md2.trace() + 3.0 * QDxp * mDx2.trace()
+    + 3.0 * QDxbarp * mDxbar2.trace() + Qep * me2.trace() + 2.0 * QH1p * mH1I2.trace()
+    + 2.0 * QH2p * mH2I2.trace() + 2.0 * QLp * ml2.trace() + 6.0 * QQp * mq2.trace() + QSp * msI2.trace()
+    + 3.0 * Qup * mu2.trace();
+
+  double betasigma14 = 2.0 * QH1p * betamHd2 + 2.0 * QH2p * betamHu2 + 2.0 * QHpbarp * betamHpbar2
+    + 2.0 * QHpp * betamHp2 + QSp * betams2 + 3.0 * Qdp * betamd2.trace() + 3.0 * QDxp * betamDx2.trace()
+    + 3.0 * QDxbarp * betamDxbar2.trace() + Qep * betame2.trace() + 2.0 * QH1p * betamH1I2.trace()
+    + 2.0 * QH2p * betamH2I2.trace() + 2.0 * QLp * betaml2.trace() + 6.0 * QQp * betamq2.trace() + QSp * betamsI2.trace()
+    + 3.0 * Qup * betamu2.trace();
+
+  double coeff = -16.0 * Sqr(QSp) * (gN * betagN * Sqr(M1p) + Sqr(gN) * M1p * betaM1p);
+  coeff += 8.0 * lambda * betalambda * (mHd2 + mHu2 + ms2);
+  coeff += 4.0 * Sqr(lambda) * (betamHd2 + betamHu2 + betams2) + 8.0 * Tlambda * betaTlambda;
+  coeff += 6.0 * betams2 * (Kappa * KappaAdj).trace() + 6.0 * ms2 * (betaKappa * KappaAdj).trace() + 6.0 * ms2 * (Kappa * betaKappaAdj).trace();
+  coeff += 4.0 * betams2 * (Lambda12 * Lambda12Adj).trace() + 4.0 * ms2 * (betaLambda12 * Lambda12Adj).trace() + 4.0 * ms2 * (Lambda12 * betaLambda12Adj).trace();
+  coeff += 6.0 * (betaTKappa * TKappaAdj).trace() + 6.0 * (TKappa * betaTKappaAdj).trace();
+  coeff += 4.0 * (betaTLambda12 * TLambda12Adj).trace() + 4.0 * (TLambda12 * betaTLambda12Adj).trace();
+  coeff += 4.0 * (betamH1I2 * Lambda12Adj * Lambda12 + mH1I2 * betaLambda12Adj * Lambda12 + mH1I2 * Lambda12Adj * betaLambda12).trace();
+  coeff += 6.0 * (betaKappa * KappaAdj * mDx2 + Kappa * betaKappaAdj * mDx2 + Kappa * KappaAdj * betamDx2).trace();
+  coeff += 6.0 * (betaKappa * mDxbar2 * KappaAdj + Kappa * betamDxbar2 * KappaAdj + Kappa * mDxbar2 * betaKappaAdj).trace();
+  coeff += 4.0 * (betaLambda12 * Lambda12Adj * mH2I2 + Lambda12 * betaLambda12Adj * mH2I2 + Lambda12 * Lambda12Adj * betamH2I2).trace();
+  coeff += 4.0 * QSp * gN * betagN * sigma14 + 2.0 * QSp * Sqr(gN) * betasigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
 
@@ -6558,35 +6724,82 @@ double doCalcmtRSquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   double QDxp = r.get_input().QDxp;
   double QDxbarp = r.get_input().QDxbarp;
 
-  double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
-    -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
-    +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
-
-  double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
-    +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
-    +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
-    +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
-    +3.0*Qup*r.get_mu2().trace();
-
   genericE6SSM_soft_parameters w = r.calc_beta();
 
-  double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
-    -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
-    +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
+  double mHu2, mHd2, ms2, mHp2, mHpbar2;
+  Eigen::Matrix<double,3,3> mq2, ml2, mu2, md2, me2, mDx2, mDxbar2;
+  Eigen::Matrix<double,2,2> mH1I2, mH2I2, msI2;
 
-  double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
-    +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
-    +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
-    +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
-    +3.0*Qup*w.get_mu2().trace();
+  double betamHu2, betamHd2, betams2, betamHp2, betamHpbar2;
+  Eigen::Matrix<double,3,3> betamq2, betaml2, betamu2, betamd2, betame2, betamDx2, betamDxbar2;
+  Eigen::Matrix<double,2,2> betamH1I2, betamH2I2, betamsI2;
 
-  double coeff = -16.0 * Sqr(Qup) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
-  coeff -= (64.0/15.0) * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
-  coeff -= (64.0/3.0) * (r.get_g3()*w.get_g3()*Sqr(r.get_MassG()) + Sqr(r.get_g3())*r.get_MassG()*w.get_MassG());
-  coeff += 8.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2() + r.get_mu2(2,2) + r.get_mq2(2,2));
-  coeff += 4.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2() + w.get_mu2(2,2) + w.get_mq2(2,2)) + 8.0*r.get_TYu(2,2)*w.get_TYu(2,2);
-  coeff -= (1.6 * r.get_g1()*w.get_g1()*sigma11 + 0.8 * Sqr(r.get_g1()) * beta_sigma11);
-  coeff += 4.0 * Qup * r.get_gN()*w.get_gN()*sigma14 + 2.0 * Qup * Sqr(r.get_gN()) * beta_sigma14;
+  mHu2 = r.get_mHu2(); betamHu2 = w.get_mHu2();
+  mHd2 = r.get_mHd2(); betamHd2 = w.get_mHd2();
+  ms2 = r.get_ms2(); betams2 = w.get_ms2();
+  mHp2 = r.get_mHp2(); betamHp2 = w.get_mHp2();
+  mHpbar2 = r.get_mHpbar2(); betamHpbar2 = w.get_mHpbar2();
+
+  mq2 = r.get_mq2(); betamq2 = w.get_mq2();
+  ml2 = r.get_ml2(); betaml2 = w.get_ml2();
+  mu2 = r.get_mu2(); betamu2 = w.get_mu2();
+  md2 = r.get_md2(); betamd2 = w.get_md2();
+  me2 = r.get_me2(); betame2 = w.get_me2();
+  mDx2 = r.get_mDx2(); betamDx2 = w.get_mDx2();
+  mDxbar2 = r.get_mDxbar2(); betamDxbar2 = w.get_mDxbar2();
+
+  mH1I2 = r.get_mH1I2(); betamH1I2 = w.get_mH1I2();
+  mH2I2 = r.get_mH2I2(); betamH2I2 = w.get_mH2I2();
+  msI2 = r.get_msI2(); betamsI2 = w.get_msI2();
+
+  double M1, M3, M1p;
+  double betaM1, betaM3, betaM1p;
+
+  M1 = r.get_MassB(); betaM1 = w.get_MassB();
+  M3 = r.get_MassG(); betaM3 = w.get_MassG();
+  M1p = r.get_MassBp(); betaM1p = w.get_MassBp();
+
+  double g1, g2, g3, gN;
+  double betag1, betag2, betag3, betagN;
+  g1 = r.get_g1(); betag1 = w.get_g1();
+  g3 = r.get_g3(); betag3 = w.get_g3();
+  gN = r.get_gN(); betagN = w.get_gN();
+
+  double yt;
+  double betayt;
+  yt = r.get_Yu(2,2); betayt = w.get_Yu(2,2);
+
+  double Tyt;
+  double betaTyt;
+  Tyt = r.get_TYu(2,2); betaTyt = w.get_TYu(2,2);
+
+  double sigma11 = mHu2 - mHd2 + mHpbar2 - mHp2 + md2.trace()
+    - mDx2.trace() + mDxbar2.trace() + me2.trace() - mH1I2.trace()
+    + mH2I2.trace() - ml2.trace() + mq2.trace() - 2.0 * mu2.trace();
+
+  double sigma14 = 2.0 * QH1p * mHd2 + 2.0 * QH2p * mHu2 + 2.0 * QHpbarp * mHpbar2
+    + 2.0 * QHpp * mHp2 + QSp * ms2 + 3.0 * Qdp * md2.trace() + 3.0 * QDxp * mDx2.trace()
+    + 3.0 * QDxbarp * mDxbar2.trace() + Qep * me2.trace() + 2.0 * QH1p * mH1I2.trace()
+    + 2.0 * QH2p * mH2I2.trace() + 2.0 * QLp * ml2.trace() + 6.0 * QQp * mq2.trace() + QSp * msI2.trace()
+    + 3.0 * Qup * mu2.trace();
+
+  double betasigma11 = betamHu2 - betamHd2 + betamHpbar2 - betamHp2 + betamd2.trace()
+    - betamDx2.trace() + betamDxbar2.trace() + betame2.trace() - betamH1I2.trace()
+    + betamH2I2.trace() - betaml2.trace() + betamq2.trace() - 2.0 * betamu2.trace();
+
+  double betasigma14 = 2.0 * QH1p * betamHd2 + 2.0 * QH2p * betamHu2 + 2.0 * QHpbarp * betamHpbar2
+    + 2.0 * QHpp * betamHp2 + QSp * betams2 + 3.0 * Qdp * betamd2.trace() + 3.0 * QDxp * betamDx2.trace()
+    + 3.0 * QDxbarp * betamDxbar2.trace() + Qep * betame2.trace() + 2.0 * QH1p * betamH1I2.trace()
+    + 2.0 * QH2p * betamH2I2.trace() + 2.0 * QLp * betaml2.trace() + 6.0 * QQp * betamq2.trace() + QSp * betamsI2.trace()
+    + 3.0 * Qup * betamu2.trace();
+
+  double coeff = -16.0 * Sqr(Qup) * (gN * betagN * Sqr(M1p) + Sqr(gN) * M1p * betaM1p);
+  coeff -= (64.0/15.0) * (g1 * betag1 * Sqr(M1) + Sqr(g1) * M1 * betaM1);
+  coeff -= (64.0/3.0) * (g3 * betag3 * Sqr(M3) + Sqr(g3) * M3 * betaM3);
+  coeff += 8.0 * yt * betayt * (mHu2 + mu2(2,2) + mq2(2,2));
+  coeff += 4.0 * Sqr(yt) *(betamHu2 + betamu2(2,2) + betamq2(2,2)) + 8.0 * Tyt * betaTyt;
+  coeff -= (1.6 * g1 * betag1 * sigma11 + 0.8 * Sqr(g1) * betasigma11);
+  coeff += 4.0 * Qup * gN * betagN * sigma14 + 2.0 * Qup * Sqr(gN) * betasigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
 
@@ -6721,11 +6934,11 @@ double doCalcmqL3SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
     + 2.0 * QH2p * mH2I2.trace() + 2.0 * QLp * ml2.trace() + 6.0 * QQp * mq2.trace() + QSp * msI2.trace()
     + 3.0 * Qup * mu2.trace();
 
-  double beta_sigma11 = betamHu2 - betamHd2 + betamHpbar2 - betamHp2 + betamd2.trace()
+  double betasigma11 = betamHu2 - betamHd2 + betamHpbar2 - betamHp2 + betamd2.trace()
     - betamDx2.trace() + betamDxbar2.trace() + betame2.trace() - betamH1I2.trace()
     + betamH2I2.trace() - betaml2.trace() + betamq2.trace() - 2.0 * betamu2.trace();
 
-  double beta_sigma14 = 2.0 * QH1p * betamHd2 + 2.0 * QH2p * betamHu2 + 2.0 * QHpbarp * betamHpbar2
+  double betasigma14 = 2.0 * QH1p * betamHd2 + 2.0 * QH2p * betamHu2 + 2.0 * QHpbarp * betamHpbar2
     + 2.0 * QHpp * betamHp2 + QSp * betams2 + 3.0 * Qdp * betamd2.trace() + 3.0 * QDxp * betamDx2.trace()
     + 3.0 * QDxbarp * betamDxbar2.trace() + Qep * betame2.trace() + 2.0 * QH1p * betamH1I2.trace()
     + 2.0 * QH2p * betamH2I2.trace() + 2.0 * QLp * betaml2.trace() + 6.0 * QQp * betamq2.trace() + QSp * betamsI2.trace()
@@ -6736,42 +6949,11 @@ double doCalcmqL3SquaredLogSqCoeff(genericE6SSM_soft_parameters r, int nLogs)
   coeff -= (64.0/3.0) * (g3 * betag3 * Sqr(M3) + Sqr(g3) * M3 * betaM3);
   coeff -= 12.0 * (g2 * betag2 * Sqr(M2) + Sqr(g2) * M2 * betaM2);
   coeff += 4.0 * yt * betayt * (mHu2 + mu2(2,2) + mq2(2,2));
-  coeff += 2.0 * Sqr(yt) * (betamHu2 + betamu2(2,2) + betamq2(2,2)) + 4.0 * TYt * betaTYt;
+  coeff += 2.0 * Sqr(yt) * (betamHu2 + betamu2(2,2) + betamq2(2,2)) + 4.0 * Tyt * betaTyt;
   coeff += 4.0 * yb * betayb * (mHd2 + md2(2,2) + mq2(2,2));
-  coeff += 2.0 * Sqr(yb) * (betamHd2 + betamd2(2,2) + betamq2(2,2)) + 4.0 * TYb * betaTYb; //DH::UP TO HERE
-  coeff += 0.4 * r.get_g1()*w.get_g1()*sigma11 + 0.2 * Sqr(r.get_g1()) * beta_sigma11;
-  coeff += 4.0 * QQp * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QQp * Sqr(r.get_gN()) * beta_sigma14;
-
-  // double sigma11 = r.get_mHu2()-r.get_mHd2()+r.get_mHpbar2()-r.get_mHp2()+r.get_md2().trace()
-  //   -r.get_mDx2().trace()+r.get_mDxbar2().trace()+r.get_me2().trace()-r.get_mH1I2().trace()
-  //   +r.get_mH2I2().trace()-r.get_ml2().trace()+r.get_mq2().trace()-2.0*r.get_mu2().trace();
-
-  // double sigma14 = 2.0*QH1p*r.get_mHd2()+2.0*QH2p*r.get_mHu2()+2.0*QHpbarp*r.get_mHpbar2()
-  //   +2.0*QHpp*r.get_mHp2()+QSp*r.get_ms2()+3.0*Qdp*r.get_md2().trace()+3.0*QDxp*r.get_mDx2().trace()
-  //   +3.0*QDxbarp*r.get_mDxbar2().trace()+Qep*r.get_me2().trace()+2.0*QH1p*r.get_mH1I2().trace()
-  //   +2.0*QH2p*r.get_mH2I2().trace()+2.0*QLp*r.get_ml2().trace()+6.0*QQp*r.get_mq2().trace()+QSp*r.get_msI2().trace()
-  //   +3.0*Qup*r.get_mu2().trace();
-
-  // double beta_sigma11 = w.get_mHu2()-w.get_mHd2()+w.get_mHpbar2()-w.get_mHp2()+w.get_md2().trace()
-  //   -w.get_mDx2().trace()+w.get_mDxbar2().trace()+w.get_me2().trace()-w.get_mH1I2().trace()
-  //   +w.get_mH2I2().trace()-w.get_ml2().trace()+w.get_mq2().trace()-2.0*w.get_mu2().trace();
-
-  // double beta_sigma14 = 2.0*QH1p*w.get_mHd2()+2.0*QH2p*w.get_mHu2()+2.0*QHpbarp*w.get_mHpbar2()
-  //   +2.0*QHpp*w.get_mHp2()+QSp*w.get_ms2()+3.0*Qdp*w.get_md2().trace()+3.0*QDxp*w.get_mDx2().trace()
-  //   +3.0*QDxbarp*w.get_mDxbar2().trace()+Qep*w.get_me2().trace()+2.0*QH1p*w.get_mH1I2().trace()
-  //   +2.0*QH2p*w.get_mH2I2().trace()+2.0*QLp*w.get_ml2().trace()+6.0*QQp*w.get_mq2().trace()+QSp*w.get_msI2().trace()
-  //   +3.0*Qup*w.get_mu2().trace();
-
-  // double coeff = -16.0 * Sqr(QQp) * (r.get_gN()*w.get_gN()*Sqr(r.get_MassBp()) + Sqr(r.get_gN())*r.get_MassBp()*w.get_MassBp());
-  // coeff -= (4.0/15.0) * (r.get_g1()*w.get_g1()*Sqr(r.get_MassB()) + Sqr(r.get_g1())*r.get_MassB()*w.get_MassB());
-  // coeff -= (64.0/3.0) * (r.get_g3()*w.get_g3()*Sqr(r.get_MassG()) + Sqr(r.get_g3())*r.get_MassG()*w.get_MassG());
-  // coeff -= 12.0 * (r.get_g2() * w.get_g2() * Sqr(r.get_MassWB()) + Sqr(r.get_g2()) * r.get_MassWB() * w.get_MassWB());
-  // coeff += 4.0 * r.get_Yu(2,2)*w.get_Yu(2,2)*(r.get_mHu2() + r.get_mu2(2,2) + r.get_mq2(2,2));
-  // coeff += 2.0 * Sqr(r.get_Yu(2,2))*(w.get_mHu2() + w.get_mu2(2,2) + w.get_mq2(2,2)) + 4.0*r.get_TYu(2,2)*w.get_TYu(2,2);
-  // coeff += 4.0 * r.get_Yd(2,2)*w.get_Yd(2,2)*(r.get_mHd2() + r.get_md2(2,2) + r.get_mq2(2,2));
-  // coeff += 2.0 * Sqr(r.get_Yd(2,2))*(w.get_mHd2() + w.get_md2(2,2) + w.get_mq2(2,2)) + 4.0*r.get_TYd(2,2)*w.get_TYd(2,2);
-  // coeff += 0.4 * r.get_g1()*w.get_g1()*sigma11 + 0.2 * Sqr(r.get_g1()) * beta_sigma11;
-  // coeff += 4.0 * QQp * r.get_gN()*w.get_gN()*sigma14 + 2.0 * QQp * Sqr(r.get_gN()) * beta_sigma14;
+  coeff += 2.0 * Sqr(yb) * (betamHd2 + betamd2(2,2) + betamq2(2,2)) + 4.0 * Tyb * betaTyb;
+  coeff += 0.4 * g1 * betag1 * sigma11 + 0.2 * Sqr(g1) * betasigma11;
+  coeff += 4.0 * QQp * gN * betagN * sigma14 + 2.0 * QQp * Sqr(gN) * betasigma14;
 
   coeff = 0.5*oneOver16PiSqr*coeff;
 

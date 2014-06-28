@@ -2259,6 +2259,20 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
   // SUSY parameters
   genericE6SSM_susy_parameters r_susy = genericE6SSM_susy_parameters(mx, l, t, input, ydin, yein, kappain, lambda12in, lambda3in, yuin, mupr, g1in, g2in, g3in, gNin, v1, v2, svev);
 
+  // DH:: try fixing v = 246 GeV at Q = M_Z, probably safer than allowing it to vary
+  genericE6SSM_susy_parameters r_susy_temp(r_susy);
+  r_susy_temp.run_to(MZ, PRECISION);
+  const double vAtMz = 246.0; // GeV
+  double vdAtMz = r_susy_temp.get_vd();
+  double vuAtMz = r_susy_temp.get_vu();
+  double tbAtMz = vuAtMz/vdAtMz;
+  r_susy_temp.set_vd(vAtMz/Sqrt(1.0+tbAtMz*tbAtMz));
+  r_susy_temp.set_vu(vAtMz*tbAtMz/Sqrt(1.0+tbAtMz*tbAtMz));
+  r_susy_temp.run_to(mx, PRECISION);
+
+  r_susy.set_vd(r_susy_temp.get_vd());
+  r_susy.set_vu(r_susy_temp.get_vu());
+
   // In the pE6SSM, the first and second generation A terms should vanish, as
   // should the off-diagonal mixings.
   tuin(0,0) = 0.0; tuin(1,1) = 0.0;
@@ -2474,7 +2488,23 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       r_approx.calculate_MChi();
       r_approx.calculate_MCha();  
 
-      // Calculate DR bar Higgs masses using FlexibleSUSY routines...
+      // Calculate *tree level* DR bar Higgs masses using FlexibleSUSY routines.
+      // To get this right, we need to temporarily use the soft squared masses that
+      // satisfy the tree level EWSB conditions.
+
+      double saved_mHdSq = r_approx.get_mHd2();
+      double saved_mHuSq = r_approx.get_mHu2();
+      double saved_mSSq = r_approx.get_ms2();
+      DoubleVector treelevelguess = solnGuess;
+      bool savedtadpoles = INCLUDE1LPTADPOLES;
+
+      INCLUDE1LPTADPOLES = false;
+      bool treelevel_softmass = ESSM_ImplementEWSBConstraints_SoftMasses(r_approx, ms, ms, true, treelevelguess);
+
+      r_approx.set_mHd2(treelevelguess(1));
+      r_approx.set_mHu2(treelevelguess(2));
+      r_approx.set_ms2(treelevelguess(3));
+
       if (ENABLE_DEBUG)
 	{
 	  cout << "# Calculating DR bar Higgs masses..." << endl;
@@ -2482,6 +2512,12 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
       r_approx.calculate_Mhh();
       r_approx.calculate_MAh();
       r_approx.calculate_MHpm();
+
+      // Reset soft masses
+      r_approx.set_mHd2(saved_mHdSq);
+      r_approx.set_mHu2(saved_mHuSq);
+      r_approx.set_ms2(saved_mSSq);
+      INCLUDE1LPTADPOLES = savedtadpoles;
       
       if (ENABLE_DEBUG) 
 	{
@@ -2514,6 +2550,7 @@ flexiblesusy::genericE6SSM<flexiblesusy::Two_scale> doSimplifiedSpectrum(Eigen::
 	{
 	  cout << "#    using m_~t1 = " << mstop(1) << ", m_~t2 = " << mstop(2) << endl;
 	  cout << "#    using m_~t1^2 = " << mstopsq(1) << ", m_~t2^2 = " << mstopsq(2) << endl;
+	  cout << "#    compare m_~t1 = " << r_approx.get_MStop()(0) << ", m_~t2 = " << r_approx.get_MStop()(1) << endl;
 	}
 
       // In HiggsMasses, sing = 1 indicates inaccurate Higgs mass.

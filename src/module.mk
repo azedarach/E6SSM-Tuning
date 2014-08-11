@@ -17,7 +17,8 @@ ESSMTUNING_SRC := \
 
 EXEESSMTUNING_SRC := \
 		$(DIR)/essmScanner.cpp \
-		$(DIR)/essmScanInputsGenerator.cpp
+		$(DIR)/essmScanInputsGenerator.cpp \
+		$(DIR)/essmHiggsMasses.cpp
 
 ESSMTUNING_OBJ := \
 		$(patsubst %.cpp, %.o, $(filter %.cpp, $(ESSMTUNING_SRC))) \
@@ -45,6 +46,11 @@ ESSMGENERATOR_OBJ := \
 ESSMGENERATOR_EXE := \
 			$(DIR)/essmScanInputsGenerator.x
 
+ESSMHIGGSSCAN_OBJ := \
+			$(DIR)/essmHiggsMasses.o
+
+ESSMHIGGSSCAN_EXE := \
+			$(DIR)/essmHiggsMasses.x
 
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) clean-$(MODNAME)-dep \
 		clean-$(MODNAME)-obj
@@ -77,6 +83,9 @@ $(ESSMTUNINGSCAN_EXE): $(ESSMTUNINGSCAN_OBJ) $(ESSMTUNING_OBJ) $(LIBMODEL) $(LIB
 $(ESSMGENERATOR_EXE): $(ESSMGENERATOR_OBJ) $(LIBFLEXI)
 		$(CXX) -o $@ $(call abspathx,$^) $(FLIBS) $(CPPFLAGS)
 
+$(ESSMHIGGSSCAN_EXE): $(ESSMHIGGSSCAN_OBJ) $(ESSMTUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
+
 ALLDEP += $(ESSMTUNING_DEP) $(EXEESSMTUNING_DEP)
 ALLSRC += $(ESSMTUNING_SRC) $(EXEESSMTUNING_SRC)
-ALLEXE += $(ESSMTUNINGSCAN_EXE) $(ESSMGENERATOR_EXE)
+ALLEXE += $(ESSMTUNINGSCAN_EXE) $(ESSMGENERATOR_EXE) $(ESSMHIGGSSCAN_EXE)

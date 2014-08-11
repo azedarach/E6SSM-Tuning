@@ -41,7 +41,7 @@ ifeq ($(IS_LOCAL),yes)
 CXX                := g++
 CPPFLAGS           := -I. $(INCCONFIG) $(INCFLEXI) $(INCLEGACY) \
                       $(INCMODEL)  
-CXXFLAGS           := -std=c++11 -O2
+CXXFLAGS           := -std=c++11 -O2 -Wall
 CXX_DEP_GEN        := g++
 CXXFLAGS_DEP_GEN   := -std=c++11
 FC                 := gfortran

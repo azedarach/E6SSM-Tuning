@@ -323,7 +323,7 @@ int main(int argc, const char* argv[])
   mDrSq(2,2) = Sqr(mbR);
 
   // SUSY singlet-D-Dbar trilinear couplings
-  double universal_kappa = 0.1;
+  double universal_kappa = 0.6;
   double kappa1 = universal_kappa;
   double kappa2 = universal_kappa;
   double kappa3 = universal_kappa;
@@ -456,7 +456,7 @@ int main(int argc, const char* argv[])
   
   // Lower bounds
   const double lambda3_low = 1.1;
-  const double Alambda3_low = 30000.0; // GeV
+  const double Alambda3_low = 40000.0; // GeV
   const double At_low = -1000.0; // GeV
   const double mqL3_low = 2000.0; // GeV
   const double mtR_low = 2000.0; // GeV
@@ -703,7 +703,7 @@ int main(int argc, const char* argv[])
 	  if (model_problems.have_problem() || model_problems.have_serious_problem())
 	    {
 	      cout << "# " << model_problems;
-	      cout << "lambda = " << lambda3 << ", Alambda = " << Alambda3 << endl;
+	      cout << "lambda = " << lambda3 << ", Alambda = " << Alambda3 << ", At = " << At << endl;
 	    }
 	  else if (hasEWSBProblem)
 	    {

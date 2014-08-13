@@ -68,6 +68,7 @@ clean-$(MODNAME)-obj:
 clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(ESSMTUNINGSCAN_EXE)
 		-rm -f $(ESSMGENERATOR_EXE)
+		-rm -f $(ESSMHIGGSSCAN_EXE)
 
 clean::		clean-$(MODNAME)
 

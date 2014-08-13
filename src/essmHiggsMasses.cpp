@@ -66,18 +66,19 @@ struct genericE6SSM_tanb_benchmark {
   double gN;
   double vd;
   double vu;
+  double vs;
   double q;
 
   genericE6SSM_tanb_benchmark()
     : yt(0), yb(0), ytau(0), g1(0), 
-      g2(0), g3(0), gN(0), vd(0), vu(0), q(0)
+      g2(0), g3(0), gN(0), vd(0), vu(0), vs(0), q(0)
   {}
 
   genericE6SSM_tanb_benchmark(double yt_, double yb_, double ytau_, double g1_, 
 			      double g2_, double g3_, double gN_, double vd_, 
-			      double vu_, double q_)
+			      double vu_, double vs_, double q_)
     : yt(yt_), yb(yb_), ytau(ytau_), g1(g1_), g2(g2_), g3(g3_), 
-      gN(gN_), vd(vd_), vu(vu_), q(q_)
+      gN(gN_), vd(vd_), vu(vu_), vs(vs_), q(q_)
   {}
 
 };
@@ -111,18 +112,20 @@ int main(int argc, const char* argv[])
     --------------------------------------------------------------
   */
 
-  std::map<double, genericE6SSM_tanb_benchmark> tanb_benchmarks;
 
-  tanb_benchmarks[2] = genericE6SSM_tanb_benchmark(0.959124964,0.0400071651,0.0216468839,0.4863671017,0.655920190,1.03253774,0.490545769,114.499068,206.720817,20000.0);
-  tanb_benchmarks[4] = genericE6SSM_tanb_benchmark(0.859951732,0.0734441866,0.0399972936,0.48621451,0.655880073,1.03211622,0.490468747,62.0254231,227.861139,20000.0);
-  tanb_benchmarks[6] = genericE6SSM_tanb_benchmark(0.841945783,0.108333702,0.0591237075,0.4861821009,0.655834175,1.03207227,0.490446235,41.9982217,232.330999,20000.0);
-  tanb_benchmarks[8] = genericE6SSM_tanb_benchmark(0.835707235,0.143738028,0.0785402143,0.4861642477,0.655801403,1.03206204,0.490431588,31.6439425,233.943395,20000.0);
-  tanb_benchmarks[10] = genericE6SSM_tanb_benchmark(0.832883879,0.179506721,0.0981595687,0.4861513481,0.655780111,1.03206201,0.490419902,25.3426343,234.696923,20000.0);
-  tanb_benchmarks[15] = genericE6SSM_tanb_benchmark(0.830271928,0.270491511,0.148048266,0.4861273795,0.655766615,1.03208667,0.490397035,16.8431261,235.444017,20000.0);
-  tanb_benchmarks[20] = genericE6SSM_tanb_benchmark(0.829606947,0.364129251,0.199340931,0.4861097226,0.655803693,1.03215025,0.490380135,12.5410697,235.702334,20000.0);
-  tanb_benchmarks[30] = genericE6SSM_tanb_benchmark(0.830223730,0.561326513,0.307827785,0.4861051809,0.656077992,1.03256720,0.490378735,8.16984550,235.845120,20000.0);
-  tanb_benchmarks[40] = genericE6SSM_tanb_benchmark(0.837056784,0.797297515,0.423453064,0.4865421102,0.660715078,1.03234294,0.490892040,5.90104956,235.398004,20000.0);
-  tanb_benchmarks[50] = genericE6SSM_tanb_benchmark(0.809680220,1.03497910,0.555805753,0.4869302761,0.656906847,1.09553359,0.490973612,4.52472815,236.857502,20000.0);
+  // M_Z' ~ 2.5 TeV benchmarks
+  std::map<double, genericE6SSM_tanb_benchmark> tanb_benchmarks_lightZp;
+
+  tanb_benchmarks_lightZp[2] = genericE6SSM_tanb_benchmark(0.959124964,0.0400071651,0.0216468839,0.4863671017,0.655920190,1.03253774,0.490545769,114.499068,206.720817,6473.40002,20000.0);
+  tanb_benchmarks_lightZp[4] = genericE6SSM_tanb_benchmark(0.859951732,0.0734441866,0.0399972936,0.48621451,0.655880073,1.03211622,0.490468747,62.0254231,227.861139,6488.98714,20000.0);
+  tanb_benchmarks_lightZp[6] = genericE6SSM_tanb_benchmark(0.841945783,0.108333702,0.0591237075,0.4861821009,0.655834175,1.03207227,0.490446235,41.9982217,232.330999,6490.78019,20000.0);
+  tanb_benchmarks_lightZp[8] = genericE6SSM_tanb_benchmark(0.835707235,0.143738028,0.0785402143,0.4861642477,0.655801403,1.03206204,0.490431588,31.6439425,233.943395,6491.35943,20000.0);
+  tanb_benchmarks_lightZp[10] = genericE6SSM_tanb_benchmark(0.832883879,0.179506721,0.0981595687,0.4861513481,0.655780111,1.03206201,0.490419902,25.3426343,234.696923,6491.58828,20000.0);
+  tanb_benchmarks_lightZp[15] = genericE6SSM_tanb_benchmark(0.830271928,0.270491511,0.148048266,0.4861273795,0.655766615,1.03208667,0.490397035,16.8431261,235.444017,6491.72748,20000.0);
+  tanb_benchmarks_lightZp[20] = genericE6SSM_tanb_benchmark(0.829606947,0.364129251,0.199340931,0.4861097226,0.655803693,1.03215025,0.490380135,12.5410697,235.702334,6491.68545,20000.0);
+  tanb_benchmarks_lightZp[30] = genericE6SSM_tanb_benchmark(0.830223730,0.561326513,0.307827785,0.4861051809,0.656077992,1.03256720,0.490378735,8.16984550,235.845120,6491.53142,20000.0);
+  tanb_benchmarks_lightZp[40] = genericE6SSM_tanb_benchmark(0.837056784,0.797297515,0.423453064,0.4865421102,0.660715078,1.03234294,0.490892040,5.90104956,235.398004,6488.05664,20000.0);
+  tanb_benchmarks_lightZp[50] = genericE6SSM_tanb_benchmark(0.809680220,1.03497910,0.555805753,0.4869302761,0.656906847,1.09553359,0.490973612,4.52472815,236.857502,6689.94285,20000.0);
 
   /*
     --------------------------------------------------------------
@@ -145,7 +148,19 @@ int main(int argc, const char* argv[])
     Values for parameters that are not scanned over
     --------------------------------------------------------------
    */
-  
+
+  // Select tan(beta) value
+  double tanb = 10.0;
+
+  // Get values from saved benchmarks
+  std::map<double,genericE6SSM_tanb_benchmark>::iterator benchmark = tanb_benchmarks_lightZp.find(tanb);
+
+  if (benchmark == tanb_benchmarks_lightZp.end()) 
+    {
+      cerr << "ERROR: no benchmark for tan(beta) = " << tanb << endl;
+      return 1;
+    }
+
   // SM Yukawas, assumed diagonal and
   // 1st and 2nd gen vanishing
   Eigen::Matrix<double,3,3> Yu, Yd, Ye;
@@ -158,7 +173,7 @@ int main(int argc, const char* argv[])
   Yu(1,2) = 0.0;
   Yu(2,0) = 0.0;
   Yu(2,1) = 0.0;
-  Yu(2,2) = 0.8;
+  Yu(2,2) = benchmark->second.yt;
 
   Yd(0,0) = 0.0;
   Yd(0,1) = 0.0;
@@ -168,7 +183,7 @@ int main(int argc, const char* argv[])
   Yd(1,2) = 0.0;
   Yd(2,0) = 0.0;
   Yd(2,1) = 0.0;
-  Yd(2,2) = 0.1;
+  Yd(2,2) = benchmark->second.yb;
 
   Ye(0,0) = 0.0;
   Ye(0,1) = 0.0;
@@ -178,20 +193,19 @@ int main(int argc, const char* argv[])
   Ye(1,2) = 0.0;
   Ye(2,0) = 0.0;
   Ye(2,1) = 0.0;
-  Ye(2,2) = 0.05;
+  Ye(2,2) = benchmark->second.ytau;
 
   // SM gauge couplings
-  double g1 = 0.46;
-  double g2 = 0.6;
-  double g3 = 1.0;
-  double g1p = 0.46;
+  double g1 = benchmark->second.g1;
+  double g2 = benchmark->second.g2;
+  double g3 = benchmark->second.g3;
+  double g1p = benchmark->second.gN;
 
   // Higgs and singlet VEVs
-  double v = 246.0; // GeV
-  double tanb = 10.0;
+  double v = Sqrt(Sqr(benchmark->second.vd)+Sqr(benchmark->second.vu)); // GeV
   double v1 = v/Sqrt(1.0+tanb*tanb);
-  double v2 = v1*tanb;
-  double vs = 6700.0; // GeV
+  double v2 = v1*tanb; 
+  double vs = benchmark->second.vs; // GeV
 
   // Gaugino soft masses
   double M1 = 300.0; // GeV
@@ -309,9 +323,10 @@ int main(int argc, const char* argv[])
   mDrSq(2,2) = Sqr(mbR);
 
   // SUSY singlet-D-Dbar trilinear couplings
-  double kappa1 = 0.6;
-  double kappa2 = 0.6;
-  double kappa3 = 0.6;
+  double universal_kappa = 0.1;
+  double kappa1 = universal_kappa;
+  double kappa2 = universal_kappa;
+  double kappa3 = universal_kappa;
   Eigen::Matrix<double,3,3> Kappa;
   Kappa(0,0) = kappa1;
   Kappa(0,1) = 0.0;
@@ -433,18 +448,18 @@ int main(int argc, const char* argv[])
   
   // Number of points in each direction
   const unsigned lambda3_npts = 1;
-  const unsigned Alambda3_npts = 1;
-  const unsigned mqL3sq_npts = 1;
-  const unsigned mtRsq_npts = 1;
-  const unsigned At_npts = 1;
+  const unsigned Alambda3_npts = 10;
+  const unsigned mqL3sq_npts = 5;
+  const unsigned mtRsq_npts = 5;
+  const unsigned At_npts = 5;
   const unsigned M2_npts = 1;
   
   // Lower bounds
-  const double lambda3_low = -1000.0; // GeV
-  const double Alambda3_low = -1000.0; // GeV
-  const double At_low = -10000.0; // GeV
-  const double mqL3_low = 200.0; // GeV
-  const double mtR_low = 200.0; // GeV
+  const double lambda3_low = 1.1;
+  const double Alambda3_low = 30000.0; // GeV
+  const double At_low = -1000.0; // GeV
+  const double mqL3_low = 2000.0; // GeV
+  const double mtR_low = 2000.0; // GeV
   
   const double mqL3sq_low = Sqr(mqL3_low);
   const double mtRsq_low = Sqr(mtR_low);
@@ -452,8 +467,8 @@ int main(int argc, const char* argv[])
   const double M2_low = 100.0; // GeV
 
   // Upper bounds
-  const double lambda3_up = 1000.0; // GeV
-  const double Alambda3_up = 1000.0; // GeV
+  const double lambda3_up = 3.0; // GeV
+  const double Alambda3_up = 50000.0; // GeV
   const double At_up = 10000.0; // GeV
   const double mqL3_up = 2000.0; // GeV
   const double mtR_up = 2000.0; // GeV
@@ -577,6 +592,7 @@ int main(int argc, const char* argv[])
   double M2 = M2_low;
 
   double mHdSq = 1.0e6, mHuSq = 1.0e6, mSSq = 1.0e6;
+  double tol = 10.0;
 
   for (unsigned i_lambda3 = 1; i_lambda3 <= lambda3_npts; ++i_lambda3)
     {
@@ -619,7 +635,85 @@ int main(int argc, const char* argv[])
       // Calculate the Higgs masses. This is done using the 
       // approximate code (actually used in the scan) and
       // the FlexibleSUSY routines, for comparison
+      
+      // Approximate solution, note have to get M_{SUSY} using Newton iteration
+      DoubleVector ewsb_guess(4);
+      ewsb_guess(1) = model.get_mHd2();
+      ewsb_guess(2) = model.get_mHu2();
+      ewsb_guess(3) = model.get_ms2();
+      ewsb_guess(4) = 2.0e3;
 
+      bool hasEWSBProblem = ESSM_ImplementEWSBConstraints_SoftMasses(model, MX, 2.0e3, 
+								     false, ewsb_guess, tol);
+
+      model.set_mHd2(ewsb_guess(1));
+      model.set_mHu2(ewsb_guess(2));
+      model.set_ms2(ewsb_guess(3));
+      
+      model.run_to(ewsb_guess(4), PRECISION);
+
+      DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
+      physical_ESSM(model, mstop, mstopsq, mD1sq, mD2sq, model.get_vs(), model.get_vu()/model.get_vd());      
+
+      // In HiggsMasses, sing = 1 indicates inaccurate Higgs mass.
+      // ExpValid = 15 indicates TADPOLEPROBLEM.
+      // ExpValid = 30 indicates not experimentally valid, but otherwise no problems
+      // WhatCorrections selects which version to use (use 1)
+      int sing = 0;
+      int ExpValid = 0;
+      const int WhatCorrections = 1;
+      DoubleVector expBounds(2);
+
+      expBounds(1) = HIGGSCENT - HIGGSERROR;
+      expBounds(2) = HIGGSCENT + HIGGSERROR;
+
+      DoubleVector mh(3);
+      DoubleMatrix mhmix(3,3), msq(3,3);
+
+      bool poleHiggsTachyons = HiggsMasses(model, model.get_vs(), model.get_vu()/model.get_vd(), mstop, mstopsq, WhatCorrections, 
+					   false, false, expBounds, ExpValid, mh, mhmix, msq, sing);
+
+      // FlexibleSUSY routines. Assume M_{SUSY} does not change substantially 
+      // when using the exact routines for simplicity.
+      model.solve_ewsb_tree_level();
+      model.calculate_DRbar_parameters();
+      model.calculate_MStop();
+      // Check to see if M_{SUSY} has changed much
+      double scale_change = Abs(ewsb_guess(4)-Sqrt(model.get_MStop()(0)*model.get_MStop()(1)))
+	/(0.5*(ewsb_guess(4)+Sqrt(model.get_MStop()(0)*model.get_MStop()(1))));
+      model.solve_ewsb();
+      model.calculate_Mhh_pole();
+      //model.calculate_MAh_pole();
+
+      Problems<genericE6SSM_info::NUMBER_OF_PARTICLES> model_problems = model.get_problems();
+
+      if (!model_problems.have_problem() && !model_problems.have_serious_problem() && !poleHiggsTachyons && !hasEWSBProblem)
+	{
+	  cout << lambda3 << " ";
+	  cout << Alambda3 << " ";
+	  cout << model.get_MVZ() << " ";
+	  cout << model.get_MVZp() << " ";
+	  cout << model.get_Mhh().minCoeff() << " ";
+	  cout << mh(1) << " ";
+	  cout << model.get_physical().Mhh.minCoeff() << " ";
+	  cout << scale_change << endl;
+	}
+      else
+	{
+	  if (model_problems.have_problem() || model_problems.have_serious_problem())
+	    {
+	      cout << "# " << model_problems;
+	      cout << "lambda = " << lambda3 << ", Alambda = " << Alambda3 << endl;
+	    }
+	  else if (hasEWSBProblem)
+	    {
+	      cout << "# Problems: impose approximate EWSB conditions failed" << endl;
+	    }
+	  else if (poleHiggsTachyons)
+	    {
+	      cout << "# Problems: tachyon approximate Higgs masses" << endl;
+	    }
+	}
     } //< M2 scan
     } //< At scan
     } //< mtRsq scan

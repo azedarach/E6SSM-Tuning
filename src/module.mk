@@ -18,7 +18,8 @@ ESSMTUNING_SRC := \
 EXEESSMTUNING_SRC := \
 		$(DIR)/essmScanner.cpp \
 		$(DIR)/essmScanInputsGenerator.cpp \
-		$(DIR)/essmHiggsMasses.cpp
+		$(DIR)/essmHiggsMasses.cpp \
+		$(DIR)/essmRGERunner.cpp
 
 ESSMTUNING_OBJ := \
 		$(patsubst %.cpp, %.o, $(filter %.cpp, $(ESSMTUNING_SRC))) \
@@ -52,6 +53,12 @@ ESSMHIGGSSCAN_OBJ := \
 ESSMHIGGSSCAN_EXE := \
 			$(DIR)/essmHiggsMasses.x
 
+ESSMRGERUNNER_OBJ := \
+			$(DIR)/essmRGERunner.o
+
+ESSMRGERUNNER_EXE := \
+			$(DIR)/essmRGERunner.x
+
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) clean-$(MODNAME)-dep \
 		clean-$(MODNAME)-obj
 
@@ -69,6 +76,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(ESSMTUNINGSCAN_EXE)
 		-rm -f $(ESSMGENERATOR_EXE)
 		-rm -f $(ESSMHIGGSSCAN_EXE)
+		-rm -f $(ESSMRGERUNNER_EXE)
 
 clean::		clean-$(MODNAME)
 
@@ -87,6 +95,9 @@ $(ESSMGENERATOR_EXE): $(ESSMGENERATOR_OBJ) $(LIBFLEXI)
 $(ESSMHIGGSSCAN_EXE): $(ESSMHIGGSSCAN_OBJ) $(ESSMTUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
 
+$(ESSMRGERUNNER_EXE): $(ESSMRGERUNNER_OBJ) $(ESSMTUNING_OBJ) $(LIBMODEL) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(THREADLIBS) $(LAPACKLIBS) $(FLIBS) $(CPPFLAGS)
+
 ALLDEP += $(ESSMTUNING_DEP) $(EXEESSMTUNING_DEP)
 ALLSRC += $(ESSMTUNING_SRC) $(EXEESSMTUNING_SRC)
-ALLEXE += $(ESSMTUNINGSCAN_EXE) $(ESSMGENERATOR_EXE) $(ESSMHIGGSSCAN_EXE)
+ALLEXE += $(ESSMTUNINGSCAN_EXE) $(ESSMGENERATOR_EXE) $(ESSMHIGGSSCAN_EXE) $(ESSMRGERUNNER_EXE)

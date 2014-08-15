@@ -212,7 +212,7 @@ int main(int argc, const char* argv[])
   // 3rd-gen down and lepton soft A-terms
   double Ab = 0.0; // GeV
   double Atau = 0.0; // GeV
-  double At = -1000.0; // GeV, we set this later in the scan
+  double At = 0.0; // GeV, we set this later in the scan
 
   // Soft SM A-terms
   Eigen::Matrix<double,3,3> TYu, TYd, TYe;
@@ -287,6 +287,7 @@ int main(int argc, const char* argv[])
   mQlSq(0,2) = 0.0;
   mQlSq(1,0) = 0.0;
   mQlSq(1,1) = Sqr(mqL2);
+  mQlSq(1,2) = 0.0;
   mQlSq(2,0) = 0.0;
   mQlSq(2,1) = 0.0;
   mQlSq(2,2) = Sqr(mqL3); 
@@ -356,7 +357,7 @@ int main(int argc, const char* argv[])
   double lambda3 = 1.1;
 
   // Soft singlet-H1-H2 A-terms
-  double Alambda3 = 50000.0; // GeV
+  double Alambda3 = 0.0; // GeV
   double TLambda3 = lambda3*Alambda3;
 
   // SUSY singlet-inert H1-inert H2 trilinear couplings
@@ -498,13 +499,13 @@ int main(int argc, const char* argv[])
       genericE6SSM_susy_parameters susy_model 
 	= genericE6SSM_susy_parameters(MX, LOOPS, THRESH, input, Yd, Ye, Kappa, Lambda12, 
 				       lambda3, Yu, mupr, g1, g2, g3, g1p, v1, v2, vs);
-      
+
       genericE6SSM_soft_parameters soft_model
 	= genericE6SSM_soft_parameters(susy_model, TYd, TYe, TKappa, TLambda12, TLambda3, 
 				       TYu, Bmupr, mQlSq, mLlSq, mHdSq, mHuSq, mDrSq, 
 				       mUrSq, mErSq, mSSq, mHdISq, mHuISq, mSISq, mDxSq, 
 				       mDxbarSq, mHpSq, mHpbarSq, M1, M2, M3, M1p);
-      
+
       genericE6SSM<algorithm_type> model = genericE6SSM<algorithm_type>(soft_model);
 
       model.run_to(scale, PRECISION);

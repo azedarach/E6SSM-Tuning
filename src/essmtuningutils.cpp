@@ -376,8 +376,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 
   bool hasProblem = false;
 
+  cout << "In here" << endl;
+
   if (fabs(q-mx) > TOLERANCE)
     {
+      cout << "q not mx" << endl;
       ostringstream ii;
       ii << "WARNING: trying to calculate required soft masses at inappropriate scale q = " << q << " GeV,\n"
 	 << "         instead of at MX = " << mx << " GeV: exiting." << endl;
@@ -385,6 +388,7 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
     }
   else
     {
+      cout << "in else" << endl;
       // If MX = M_{SUSY} there is no need to use the shooting approach; just
       // rearrange the EWSB conditions to solve for m_Hu^2 and m_Hd^2.
       if (useMxEqualsMs)
@@ -406,6 +410,8 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  double lambda = r.get_Lambdax();
 	  double Alambda;
 	  
+	  cout << "Getting Alambda..." << endl;
+
 	  if (Abs(Tlambda) < EPSTOL)
 	    {
 	      Alambda = 0.0;
@@ -447,6 +453,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  double Qtilde_1 = input.QH1p;
 	  double Qtilde_2 = input.QH2p;
 	  double Qtilde_s = input.QSp;
+
+	  cout << "About to do cout statements..." << endl;
+	  cout << doCalcTadpolesESSMS(r, s, tb) << endl;
+	  cout << doCalcTadpoleESSMH1(r, s, tb) << endl;
+	  cout << doCalcTadpoleESSMH2(r, s, tb) << endl;
 
 	  if (!INCLUDE1LPTADPOLES)
 	    {
@@ -730,7 +741,17 @@ void ESSM_EWSB_Shooter_Functions(DoubleVector const & parVals, DoubleVector & f)
   s.set_mHu2(parVals(2)*mHuSqScaleFactor);
   s.set_ms2(parVals(3)*mSSqScaleFactor);
 
+  // DH:NOTE
+  cout << "lambda = " << s.get_Lambdax() << endl;
+  cout << "Alambda = " << s.get_TLambdax()/s.get_Lambdax() << endl;
+  cout << "At = " << s.get_TYu(2,2)/s.get_Yu(2,2) << endl;
+  cout << "mHd2 = " << s.get_mHd2() << endl;
+  cout << "mHu2 = " << s.get_mHu2() << endl;
+  cout << "ms2 = " << s.get_ms2() << endl;
+
   s.run_to(parVals(4)*MsusyScaleFactor, PRECISION);
+
+  cout << "msusy = " << s.get_scale() << endl;
 
   f(1) = ESSM_EWSBCondition1(s)/mHdSqScaleFactor;
   f(2) = ESSM_EWSBCondition2(s)/mHuSqScaleFactor;
@@ -778,7 +799,7 @@ bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVecto
   double f3 = ESSM_EWSBCondition3(w);
   double f4 = estimate(4)*MsusyScaleFactor/Sqrt(mstop(1)*mstop(2))-1.0;
 
-  if (ENABLE_DEBUG)
+  if (true)//ENABLE_DEBUG)
     {
       cout << "#    Q                     = " << w.get_scale() << endl;
       cout << "#    m_Hd^2                = " << w.get_mHd2() << endl;
@@ -789,7 +810,7 @@ bool ESSM_EWSB_NewtonShooter(genericE6SSM_soft_parameters const & r, DoubleVecto
       cout << "#    f2                    = " << f2 << endl;
       cout << "#    f2/mHdSq Scale Factor = " << f1/mHuSqScaleFactor << endl;
       cout << "#    f3                    = " << f3 << endl;
-      cout << "#    f3/mSSq Scale Factor  = " << f3 << endl;
+      cout << "#    f3/mSSq Scale Factor  = " << f3/mSSqScaleFactor << endl;
       cout << "#    f4                    = " << f4 << endl; 
     }
 
@@ -818,6 +839,10 @@ double a0Peter(double mSq, double Q)
 void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVector & mstopsq, DoubleVector & mD1sq, DoubleVector & mD2sq, double s, double tb)
 {
   bool speak = false;
+
+  // cout << "mq2 = " << r.get_mq2(2,2) << endl;
+  // cout << "mu2 = " << r.get_mu2(2,2) << endl;
+  // cout << "stop mass matrix: " << endl;
 
   double yt = r.get_Yu(2, 2);
 
@@ -954,6 +979,8 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
   //Note that the heavier stop is stop1 this matches Roman's notation.
 
   mstopsq(1) = 0.5*(mQlsq +  mUrsq + 2*mtop*mtop +0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) +0.125*3.0*Sqr(g1)*(Sqr(v1) - Sqr(v2))/5.0 + oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  + Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
+  //      cout << "mstopsq(1) = "  << mstopsq(1) << endl;
+  
 
   if (mstopsq(1) >= 0.0)
     {
@@ -965,6 +992,8 @@ void physical_ESSM(genericE6SSM_soft_parameters r,DoubleVector & mstop, DoubleVe
     }
 
   mstopsq(2) = 0.5*(mQlsq + mUrsq + 2*mtop*mtop +0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) +0.125*3.0*Sqr(g1)*(Sqr(v1) - Sqr(v2))/5.0 + oneO40*Sqr(g1p)*(-3.0*Sqr(v1) - 2.0*Sqr(v2) + 5.0*Sqr(s))  - Sqrt(Sqr(mQlsq- mUrsq+0.125*Sqr(g2)*(Sqr(v1) - Sqr(v2)) - 0.125*Sqr(g1)*(Sqr(v1) - Sqr(v2))) + 4.0*mtop*mtop*Sqr(At - lambda(3)*s*oneOrt2*v1/v2)));
+  //cout << "mstopsq(2) = "  << mstopsq(2) << endl;
+  
 
   if (mstopsq(2) >= 0.0)
     { 

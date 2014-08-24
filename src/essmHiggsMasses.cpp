@@ -456,7 +456,7 @@ int main(int argc, const char* argv[])
   
   // Lower bounds
   const double lambda3_low = 1.1;
-  const double Alambda3_low = 40000.0; // GeV
+  const double Alambda3_low = 50000.0; // GeV
   const double At_low = -1000.0; // GeV
   const double mqL3_low = 2000.0; // GeV
   const double mtR_low = 2000.0; // GeV
@@ -649,7 +649,7 @@ int main(int argc, const char* argv[])
       model.set_mHd2(ewsb_guess(1));
       model.set_mHu2(ewsb_guess(2));
       model.set_ms2(ewsb_guess(3));
-      
+
       model.run_to(ewsb_guess(4), PRECISION);
 
       DoubleVector mstop(2), mstopsq(2), mD1sq(3), mD2sq(3);
@@ -671,7 +671,7 @@ int main(int argc, const char* argv[])
       DoubleMatrix mhmix(3,3), msq(3,3);
 
       bool poleHiggsTachyons = HiggsMasses(model, model.get_vs(), model.get_vu()/model.get_vd(), mstop, mstopsq, WhatCorrections, 
-					   false, false, expBounds, ExpValid, mh, mhmix, msq, sing);
+      					   false, false, expBounds, ExpValid, mh, mhmix, msq, sing);
 
       // FlexibleSUSY routines. Assume M_{SUSY} does not change substantially 
       // when using the exact routines for simplicity.
@@ -680,12 +680,16 @@ int main(int argc, const char* argv[])
       model.calculate_MStop();
       // Check to see if M_{SUSY} has changed much
       double scale_change = Abs(ewsb_guess(4)-Sqrt(model.get_MStop()(0)*model.get_MStop()(1)))
-	/(0.5*(ewsb_guess(4)+Sqrt(model.get_MStop()(0)*model.get_MStop()(1))));
+      	/(0.5*(ewsb_guess(4)+Sqrt(model.get_MStop()(0)*model.get_MStop()(1))));
       model.solve_ewsb();
       model.calculate_Mhh_pole();
       //model.calculate_MAh_pole();
 
       Problems<genericE6SSM_info::NUMBER_OF_PARTICLES> model_problems = model.get_problems();
+
+      // cout << ewsb_guess(4) << endl;
+      cout << model.get_mq2(2,2) << endl;
+      cout << model.get_mu2(2,2) << endl;
 
       if (!model_problems.have_problem() && !model_problems.have_serious_problem() && !poleHiggsTachyons && !hasEWSBProblem)
 	{
@@ -698,21 +702,18 @@ int main(int argc, const char* argv[])
 	  cout << model.get_physical().Mhh.minCoeff() << " ";
 	  cout << scale_change << endl;
 	}
-      else
+      if (model_problems.have_problem() || model_problems.have_serious_problem())
 	{
-	  if (model_problems.have_problem() || model_problems.have_serious_problem())
-	    {
-	      cout << "# " << model_problems;
-	      cout << "lambda = " << lambda3 << ", Alambda = " << Alambda3 << ", At = " << At << endl;
-	    }
-	  else if (hasEWSBProblem)
-	    {
-	      cout << "# Problems: impose approximate EWSB conditions failed" << endl;
-	    }
-	  else if (poleHiggsTachyons)
-	    {
-	      cout << "# Problems: tachyon approximate Higgs masses" << endl;
-	    }
+	  cout << "# " << model_problems;
+	  cout << "lambda = " << lambda3 << ", Alambda = " << Alambda3 << ", At = " << At << endl;
+	}
+      if (hasEWSBProblem)
+	{
+	  cout << "# Problems: impose approximate EWSB conditions failed" << endl;
+	}
+      if (poleHiggsTachyons)
+	{
+	  cout << "# Problems: tachyon approximate Higgs masses" << endl;
 	}
     } //< M2 scan
     } //< At scan

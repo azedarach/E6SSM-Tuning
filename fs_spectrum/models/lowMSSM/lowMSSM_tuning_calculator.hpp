@@ -8,17 +8,10 @@
 #define lowMSSM_TUNING_CALCULATOR_H
 
 #include "lowMSSM_two_scale_model.hpp"
-#include "lowMSSM_two_scale_susy_scale_constraint.hpp"
-#include "lowMSSM_two_scale_low_scale_constraint.hpp"
-#include "lowMSSM_two_scale_convergence_tester.hpp"
-#include "lowMSSM_two_scale_initial_guesser.hpp"
 #include "lowMSSM_utilities.hpp"
 
-#include "coupling_monitor.hpp"
 #include "error.hpp"
 #include "numerics.hpp"
-#include "two_scale_running_precision.hpp"
-#include "two_scale_solver.hpp"
 
 namespace flexiblesusy {
 
@@ -58,7 +51,19 @@ private:
    unsigned beta_loop_order; ///< beta-function loop order
    unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
 
-  /// Useful helper methods in analytic tuning expressions
+   /// Helper methods in analytic tuning expressions.
+   double gbar() const; ///< for convenience
+   double MQQ2() const; ///< for convenience
+   double RQQ() const;  ///< for convenience
+   double rt() const; ///< for convenience
+   /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,
+   /// and therefore to that used in our expressions. Also A0 takes as input
+   /// the mass, NOT the mass squared, and is evaluated at the current scale
+   double deriv_d2DeltaV_dvd_dvd() const;
+   double deriv_d2DeltaV_dvu_dvu() const;
+   double deriv_d2DeltaV_dvu_dvd() const;
+
+   /// Unit tests, to be removed later.
 
 };
 

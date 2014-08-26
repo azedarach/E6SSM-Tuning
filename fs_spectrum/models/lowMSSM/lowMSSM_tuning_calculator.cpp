@@ -113,9 +113,7 @@ double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvd_dvd() const
 
    double mu = model.get_Mu();
    double vd = model.get_vd();
-   double vu = model.get_vu();
    double yt = model.get_Yu(2,2);
-   double at = model.get_TYu(2,2);
    double g1 = model.get_g1();
    double g2 = model.get_g2();
 
@@ -149,12 +147,85 @@ double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvd_dvd() const
 
 double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvu_dvu() const
 {
+   double scale = model.get_scale();
 
+   double vu = model.get_vu();
+   double yt = model.get_Yu(2,2);
+   double at = model.get_TYu(2,2);
+   double g1 = model.get_g1();
+   double g2 = model.get_g2();
+
+   double gbar_val = gbar();
+   double stop_mixing = 1.4142135623730951*stop_mass_matrix_LR_entry();
+   double RQQ_val = RQQ();
+   double rt = stop_discriminant();
+   double mt = MFtop_DRbar();
+
+   double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+   double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+   double a0_mtop = passarino_veltman::ReA0(Sqr(mt), Sqr(scale));
+
+   double tmp_1 = 0.;
+   tmp_1 += Sqr(yt*yt-0.125*Sqr(gbar_val)) 
+     + Sqr(8.0*at*stop_mixing/vu-RQQ_val)/(64.0*rt);
+   tmp_1 *= Sqr(vu)*Log(Sqr(MStop(0)*MStop(1))/Sqr(scale*scale));
+
+   double tmp_2 = 0.;
+   tmp_2 += Sqr(vu)*(yt*yt-0.125*Sqr(gbar_val))
+     *(8.0*at*stop_mixing/vu-RQQ_val)/(4.0*Sqrt(rt));
+   tmp_2 *= Log(Sqr(MStop(1))/Sqr(MStop(0)));
+
+   double tmp_3 = -(yt*yt-0.125*Sqr(gbar_val))*(a0_mstop1+a0_mstop2);
+
+   double tmp_4 = 0.;
+   tmp_4 += (0.03125*Sqr(vu*(g2*g2-g1*g1)) - 0.125*RQQ_val+Sqr(at)
+	     - 0.03125*Sqr(vu)*Sqr(8.0*at*stop_mixing/vu-RQQ_val)/rt)/Sqrt(rt);
+   tmp_4 *= (a0_mstop1 - a0_mstop2);
+
+   double tmp_5 = -2.0*Sqr(yt*yt*vu)*Log(Sqr(mt)/Sqr(scale)) 
+     + 2.0*Sqr(yt)*a0_mtop;
+
+   return (3.0*oneOver16PiSqr*(tmp_1+tmp_2+tmp_3+tmp_4+tmp_5));
 }
 
 double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvu_dvd() const
 {
+   double scale = model.get_scale();
 
+   double mu = model.get_Mu();
+   double vd = model.get_vd();
+   double vu = model.get_vu();
+   double yt = model.get_Yu(2,2);
+   double at = model.get_TYu(2,2);
+   double g1 = model.get_g1();
+   double g2 = model.get_g2();
+
+   double gbar_val = gbar();
+   double stop_mixing = 1.4142135623730951*stop_mass_matrix_LR_entry();
+   double RQQ_val = RQQ();
+   double rt = stop_discriminant();
+
+   double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+   double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+   double tmp_1 = 0.;
+   tmp_1 += 0.125*Sqr(gbar_val)*(yt*yt-0.125*Sqr(gbar_val))
+     + ((0.125*RQQ_val-yt*mu*stop_mixing/vd)
+	*(at*stop_mixing/vu-0.125*RQQ_val))/rt;
+   tmp_1 *= vu*vd*Log(Sqr(MStop(0)*MStop(1))/Sqr(scale*scale));
+
+   double tmp_2 = 0.;
+   tmp_2 += 0.125*Sqr(gbar_val)*(at*stop_mixing/vu-0.125*RQQ_val)
+     + (yt*yt-0.125*Sqr(gbar_val))*(0.125*RQQ_val-yt*mu*stop_mixing/vd);
+   tmp_2 *= vu*vd*Log(Sqr(MStop(1))/Sqr(MStop(0)))/Sqrt(rt);
+
+   double tmp_3 = 0.;
+   tmp_3 += 0.03125*vu*vd*Sqr(g2*g2-g1*g1) + yt*mu*at
+     +2.0*vu*vd*((0.125*RQQ_val-yt*mu*stop_mixing/vd)
+		 *(at*stop_mixing/vu-0.125*RQQ_val))/rt;
+   tmp_3 *= (a0_mstop2-a0_mstop1)/Sqrt(rt);
+
+   return (3.0*oneOver16PiSqr*(tmp_1+tmp_2+tmp_3));
 }
 
 } // namespace flexiblesusy

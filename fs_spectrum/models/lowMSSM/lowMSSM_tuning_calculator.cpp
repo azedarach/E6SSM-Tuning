@@ -53,22 +53,63 @@ double lowMSSM_tuning_calculator::rt() const
    return (mqq4 + 2.0*Sqr(vu)*Sqr(at-yt*mu*vd/vu));
 }
 
-// double deriv_d2DeltaV_dvd_dvd() const
-// {
-//   double tmp_1;
-//   double tmp_2;
-//   double tmp_3;
-//   double tmp_4;
-// }
+void lowMSSM_tuning_calculator::calculate_MStop() 
+{
+   // For now just use the explicit solutions for the mass
+   // eigenvalues; avoids any mass ordering issues.
+   double mq2_22 = model.get_mq2(2,2);
+   double mu2_22 = model.get_mu2(2,2);
+   double vd = model.get_vd();
+   double vu = model.get_vu();
+   double yt = model.get_Yu(2,2);
+   
+   MStop(0) = 0.5*(mq2_22 + mu2_22 + 0.125*Sqr(gbar())*(Sqr(vd)-Sqr(vu))
+		   + Sqr(yt*vu) - Sqrt(rt()));
+   MStop(1) = 0.5*(mq2_22 + mu2_22 + 0.125*Sqr(gbar())*(Sqr(vd)-Sqr(vu))
+		   + Sqr(yt*vu) + Sqrt(rt()));
 
-// double deriv_d2DeltaV_dvu_dvu() const
-// {
+   /// DH:: Check that this is appropriate
+   if (MStop.minCoeff() < 0.) model.get_problems().flag_tachyon(Su);
 
-// }
+   MStop = AbsSqrt(MStop);
+}
 
-// double deriv_d2DeltaV_dvu_dvd() const
-// {
+double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvd_dvd() const
+{
+   double mu = model.get_Mu();
+   double mq2_22 = model.get_mq2(2,2);
+   double mu2_22 = model.get_mu2(2,2);
+   double vd = model.get_vd();
+   double vu = model.get_vu();
+   double yt = model.get_Yu(2,2);
+   double at = model.get_TYu(2,2);
+   double g1 = model.get_g1();
+   double g2 = model.get_g2();
+   double gbar_val = gbar();
+   double scale = model.get_scale();
+   double RQQ_val = RQQ();
+   double rt_val = rt();
 
-// }
+   double tmp_1 = 0.;
+   tmp_1 += Sqr(0.125*Sqr(gbar_val)*vd) 
+     + Sqr(0.125*vd*RQQ_val-yt*mu*(at*vu-yt*mu*vd))/rt_val;
+   tmp_1 *= Log(Sqr(MStop(0)*MStop(1))/Sqr(scale*scale));
+
+   double tmp_2 = 0.;
+   tmp_2 += (0.03125*vd*Sqr(gbar_val)/Sqrt(rt_val))
+     *(vd*RQQ_val-8.0*yt*mu*(at*vu-yt*mu*vd))
+   double tmp_3 = 0.;
+   double tmp_4 = 0.;
+}
+
+double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvu_dvu() const
+{
+
+}
+
+double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvu_dvd() const
+{
+
+}
 
 } // namespace flexiblesusy

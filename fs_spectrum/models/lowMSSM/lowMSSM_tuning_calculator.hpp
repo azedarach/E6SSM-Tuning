@@ -19,7 +19,6 @@
 
 namespace flexiblesusy {
 
-template <class T>
 class lowMSSM_tuning_calculator {
 public:
    lowMSSM_tuning_calculator()
@@ -29,12 +28,12 @@ public:
       , precision_goal(1.0e-4)
       , max_iterations(0)
       , beta_loop_order(2)
-      , threshold_corrections_loop_order(1)
-   ~lowMSSM_spectrum_generator() {}
+      , threshold_corrections_loop_order(1) {}
+   ~lowMSSM_tuning_calculator() {}
 
    double get_tuning_scale() const { return tuning_scale; }
    double get_input_scale()  const { return input_scale;  }
-   const lowMSSM<T>& get_model() const { return model; }
+   const lowMSSM<Two_scale>& get_model() const { return model; }
    const Problems<lowMSSM_info::NUMBER_OF_PARTICLES>& get_problems() const {
       return model.get_problems();
    }
@@ -48,7 +47,7 @@ public:
    void set_threshold_corrections_loop_order(unsigned t) { threshold_corrections_loop_order = t; }
 
 private:
-   lowMSSM<T> model;
+   lowMSSM<Two_scale> model;
    double input_scale, tuning_scale;
    double precision_goal; ///< precision goal
    unsigned max_iterations; ///< maximum number of iterations
@@ -58,10 +57,14 @@ private:
    Eigen::Array<double,2,1> MStop; 
 
    /// Helper methods in analytic tuning expressions.
-   double gbar() const; ///< for convenience
-   double MQQ2() const; ///< for convenience
-   double RQQ() const;  ///< for convenience
-   double rt() const;   ///< for convenience
+   double gbar() const; 
+   double MFtop_DRbar() const;
+   double stop_mass_matrix_LL_entry() const; ///< note LL = (0,0) entry
+   double stop_mass_matrix_RR_entry() const; ///< note RR = (1,1) entry
+   double stop_mass_matrix_LR_entry() const; ///< note LR = (0,1) entry
+   double MQQ2() const; 
+   double RQQ() const;  
+   double stop_discriminant() const;   
 
    void calculate_MStop();
 

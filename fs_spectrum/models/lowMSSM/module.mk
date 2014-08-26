@@ -39,7 +39,8 @@ LIBlowMSSM_SRC += \
 		$(DIR)/lowMSSM_two_scale_model.cpp \
 		$(DIR)/lowMSSM_two_scale_susy_parameters.cpp \
 		$(DIR)/lowMSSM_two_scale_soft_parameters.cpp \
-		$(DIR)/lowMSSM_two_scale_susy_scale_constraint.cpp
+		$(DIR)/lowMSSM_two_scale_susy_scale_constraint.cpp \
+		$(DIR)/lowMSSM_tuning_calculator.cpp
 EXElowMSSM_SRC += \
 		$(DIR)/run_lowMSSM.cpp \
 		$(DIR)/scan_lowMSSM.cpp
@@ -63,7 +64,8 @@ LIBlowMSSM_HDR += \
 		$(DIR)/lowMSSM_two_scale_model.hpp \
 		$(DIR)/lowMSSM_two_scale_soft_parameters.hpp \
 		$(DIR)/lowMSSM_two_scale_susy_parameters.hpp \
-		$(DIR)/lowMSSM_two_scale_susy_scale_constraint.hpp
+		$(DIR)/lowMSSM_two_scale_susy_scale_constraint.hpp \
+		$(DIR)/lowMSSM_tuning_calculator.hpp
 
 ifneq ($(MAKECMDGOALS),showbuild)
 ifneq ($(MAKECMDGOALS),tag)

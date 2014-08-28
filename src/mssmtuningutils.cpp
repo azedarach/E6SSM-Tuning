@@ -1,6 +1,7 @@
 /*
   mssmtuningutils contains all of the functions needed for calculating the
   fine tuning in the (p)MSSM.
+  NOTE THIS WILL ONLY RUN FOR PMSSM MODELS
  */
 
 #include "mssmtuningutils.h"
@@ -75,7 +76,7 @@ static SoftParsMssm *tempSoftRunner; //< assumed to be at the input scale MX
 static double currentMsusy;
 static int lowParNum;
 static int numTuningPars;
-static DoubleVector currentPars(5); // 5/5/2014 current parameters
+static DoubleVector currentPars(NUMPMSSMPARS); // 5/5/2014 current parameters
 static int parChoice;
 static void (*currentFTBCs)(SoftParsMssm &, DoubleVector &); // Modified 5/5/2014
 
@@ -88,12 +89,28 @@ double rgeDerivCalc(double x)
 
   double lowVal;
 
+  if (PRINTOUT > 1)
+    {
+      cout << *tempSoftRunner;
+    }
+
   // 5/5/2014 Update parameter value
   currentPars(parChoice) = x;
 
   currentFTBCs(*tempSoftRunner, currentPars);
 
+  if (PRINTOUT > 1)
+    {
+      cout << "Applied boundary conditions at MX." << endl;
+      cout << *tempSoftRunner;
+    }
+
   tempSoftRunner->runto(currentMsusy);
+
+  if (PRINTOUT > 1)
+    {
+      cout << *tempSoftRunner;
+    }
 
   switch(lowParNum)
     {
@@ -273,8 +290,11 @@ DoubleVector doCalcRHSTuningVector(SoftParsMssm r, void (*ftBCatMX)(SoftParsMssm
 
       // Run to MX
       r.runto(mx);
-      
+
       currentPars = pars;
+
+      if (PRINTOUT > 1) cout << currentPars;
+
       tempSoftRunner = &r;
       parChoice = i;
       currentMsusy = ms;
@@ -5218,6 +5238,39 @@ DoubleVector doCalcRHSTuningVector_pMSSM_Approx(SoftParsMssm r, void (*ftBCatMX)
 
 void pMSSMftBCs(SoftParsMssm & m, DoubleVector & tuningPars)
 {
+  if (PRINTOUT > 1)
+    {
+      cout << "Applying pMSSM fine tuning boundary condition" << endl;
+      cout << "Model to apply to is:" << endl;
+      cout << m;
+      cout << "Setting the following parameters:" << endl;
+      for (int i = 1; i <= 3; i++)
+	{
+	  cout << "M_" << i << " = " << tuningPars(i) << endl;
+	}
+      cout << "y_t = " << m.displayYukawaElement(YU, 3, 3) << endl;
+      cout << "A_t = " << tuningPars(4) << endl;
+      cout << "y_b = " << m.displayYukawaElement(YD, 3, 3) << endl;
+      cout << "A_b = " << tuningPars(5) << endl;
+      cout << "y_tau = " << m.displayYukawaElement(YE, 3, 3) << endl;
+      cout << "A_tau = " << tuningPars(6) << endl;
+      cout << "m_Hd^2 = " << tuningPars(7) << endl;
+      cout << "m_Hu^2 = " << tuningPars(8) << endl;
+      cout << "mu = " << tuningPars(9) << endl;
+      cout << "B = " << tuningPars(10) << endl;
+      cout << "m_Ll12^2 = " << tuningPars(11) << endl;
+      cout << "m_Er12^2 = " << tuningPars(12) << endl;
+      cout << "m_Ql12^2 = " << tuningPars(13) << endl;
+      cout << "m_Ur12^2 = " << tuningPars(14) << endl;
+      cout << "m_Dr12^2 = " << tuningPars(15) << endl;
+      cout << "m_Ll3^2 = " << tuningPars(16) << endl;
+      cout << "m_Er3^2 = " << tuningPars(17) << endl;
+      cout << "m_Ql3^2 = " << tuningPars(18) << endl;
+      cout << "m_Ur3^2 = " << tuningPars(19) << endl;
+      cout << "m_Dr3^2 = " << tuningPars(20) << endl;
+      cout << "Applying..." << endl;
+    }
+
   // In the pMSSM, first and second generation Yukawas
   // and trilinears are zero.
   m.setYukawaElement(YU, 1, 1, 0.0);
@@ -5511,6 +5564,8 @@ DoubleVector doCalcpMSSMFineTuning(SoftParsMssm r, double ms, bool & ewsbProblem
 
   if (fabs(MSSM_EWSBCondition1(s)) > tol || fabs(MSSM_EWSBCondition2(s)) > tol)
     {
+      if (PRINTOUT > 1) cout << "Reapplying EWSB conditions for fine tuning calculation..." << endl;
+
       ewsbProblem = MSSM_ImplementEWSBConstraints_SoftMasses(r, mx, ms, MxEqualsMs, updatedMasses, tol);
 
       r.setMh1Squared(updatedMasses(1));
@@ -5541,6 +5596,35 @@ DoubleVector doCalcpMSSMFineTuning(SoftParsMssm r, double ms, bool & ewsbProblem
   tuningPars(18) = r.displaySoftMassSquared(mQl, 3, 3);
   tuningPars(19) = r.displaySoftMassSquared(mUr, 3, 3);
   tuningPars(20) = r.displaySoftMassSquared(mDr, 3, 3);
+
+  if (PRINTOUT > 1)
+    {
+      cout << "Using the following high scale values: " << endl;
+   for (int i = 1; i <= 3; i++)
+	{
+	  cout << "M_" << i << " = " << tuningPars(i) << endl;
+	}
+      cout << "y_t = " << r.displayYukawaElement(YU, 3, 3) << endl;
+      cout << "A_t = " << tuningPars(4) << endl;
+      cout << "y_b = " << r.displayYukawaElement(YD, 3, 3) << endl;
+      cout << "A_b = " << tuningPars(5) << endl;
+      cout << "y_tau = " << r.displayYukawaElement(YE, 3, 3) << endl;
+      cout << "A_tau = " << tuningPars(6) << endl;
+      cout << "m_Hd^2 = " << tuningPars(7) << endl;
+      cout << "m_Hu^2 = " << tuningPars(8) << endl;
+      cout << "mu = " << tuningPars(9) << endl;
+      cout << "B = " << tuningPars(10) << endl;
+      cout << "m_Ll12^2 = " << tuningPars(11) << endl;
+      cout << "m_Er12^2 = " << tuningPars(12) << endl;
+      cout << "m_Ql12^2 = " << tuningPars(13) << endl;
+      cout << "m_Ur12^2 = " << tuningPars(14) << endl;
+      cout << "m_Dr12^2 = " << tuningPars(15) << endl;
+      cout << "m_Ll3^2 = " << tuningPars(16) << endl;
+      cout << "m_Er3^2 = " << tuningPars(17) << endl;
+      cout << "m_Ql3^2 = " << tuningPars(18) << endl;
+      cout << "m_Ur3^2 = " << tuningPars(19) << endl;
+      cout << "m_Dr3^2 = " << tuningPars(20) << endl;
+    }
 
   DoubleVector highScaleCouplings(6);
   highScaleCouplings(1) = r.displayGaugeCoupling(1);

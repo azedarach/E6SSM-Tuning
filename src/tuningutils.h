@@ -58,12 +58,15 @@ DoubleVector doCalcFineTuning(SoftPars susyModel, void (*BCatMX)(SoftPars &, Dou
     {
       QR_decomp(lhs_mat, Q_mat, n, sing);
       bool hasError = false;
+      DoubleVector rhs_vec(n);
       // Now loop over the given parameters and calculate the fine tuning for each.
       for (int i = pars.displayStart(); i <= pars.displayEnd(); i++)
   	{
 	  hasError = false;
 
-  	  QR_solve(Q_mat, lhs_mat, n, rhsVector(susyModel, BCatMX, pars, vevs, i, mx, hasError), dVevs, sing);
+	  rhs_vec = rhsVector(susyModel, BCatMX, pars, vevs, i, mx, hasError);
+
+  	  QR_solve(Q_mat, lhs_mat, n, rhs_vec, dVevs, sing);
 
 	  if (hasError)
 	    {
@@ -103,7 +106,9 @@ DoubleVector doCalcFineTuning(SoftPars susyModel, void (*BCatMX)(SoftPars &, Dou
   
   // Also create a vector to store the derivatives of the VEVs.
   DoubleVector dVevs = vevs;
-     
+
+  DoubleVector rhs_vec(n);     
+
   if (n != lhs_mat.displayCols()) // matrix should be square
     {
       cerr << "WARNING: non-square matrix passed to fine tuning calculation: skipping calculating tunings." << endl;
@@ -116,7 +121,9 @@ DoubleVector doCalcFineTuning(SoftPars susyModel, void (*BCatMX)(SoftPars &, Dou
       // Now loop over the given parameters and calculate the fine tuning for each.
       for (int i = pars.displayStart(); i <= pars.displayEnd(); i++)
 	{
-	  QR_solve(Q_mat, lhs_mat, n, rhsVector(susyModel, BCatMX, pars, vevs, i, mx, hasError, auxData), dVevs, sing);
+	  rhs_vec = rhsVector(susyModel, BCatMX, pars, vevs, i, mx, hasError, auxData);
+
+	  QR_solve(Q_mat, lhs_mat, n, rhs_vec, dVevs, sing);
 
 	  if (hasError)
 	    {

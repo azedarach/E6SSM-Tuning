@@ -75,7 +75,6 @@ private:
    double deriv_d2DeltaV_dvu_dvu() const;
    double deriv_d2DeltaV_dvu_dvd() const;
 
-   /// Unit tests, to be removed later.
 
 };
 

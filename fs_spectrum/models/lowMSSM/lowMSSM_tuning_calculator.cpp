@@ -96,10 +96,10 @@ void lowMSSM_tuning_calculator::calculate_MStop()
    // eigenvalues; avoids any mass ordering issues.
    double stop_mass_matrix_trace = stop_mass_matrix_LL_entry() 
      + stop_mass_matrix_RR_entry();
-   double rt = stop_discriminant();
+   double disc = stop_discriminant();
 
-   MStop(0) = 0.5*(stop_mass_matrix_trace - Sqrt(rt));
-   MStop(1) = 0.5*(stop_mass_matrix_trace + Sqrt(rt));
+   MStop(0) = 0.5*(stop_mass_matrix_trace - Sqrt(disc));
+   MStop(1) = 0.5*(stop_mass_matrix_trace + Sqrt(disc));
 
    /// DH:: Check that this is appropriate action
    if (MStop.minCoeff() < 0.) model.get_problems().flag_tachyon(lowMSSM_info::Su);

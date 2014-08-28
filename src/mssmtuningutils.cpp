@@ -2057,7 +2057,7 @@ double doCalcMSSMd2DeltaVdmUrSqdv2(SoftParsMssm r, double tb)
 static SoftParsMssm *tempsoftTuning; // < a SoftParsMssm object given at the input scale MX
 static double ftMsusy; // < the value of M_{SUSY} for the above object
 static int ftParChoice; // < index labelling the current parameter we are varying
-static DoubleVector ftPars(3); // < vector containing the parameters varied as part of the fine tuning
+static DoubleVector ftPars(NUMPMSSMPARS); // < vector containing the parameters varied as part of the fine tuning
 static void (*currentftBC)(SoftParsMssm & , DoubleVector &);
 
 
@@ -5585,7 +5585,7 @@ DoubleVector doCalcpMSSMFineTuning(SoftParsMssm r, double ms, bool & ewsbProblem
   tuningPars(7) = r.displayMh1Squared();
   tuningPars(8) = r.displayMh2Squared();
   tuningPars(9) = r.displaySusyMu();
-  tuningPars(10) = r.displayM3Squared()/s.displaySusyMu();
+  tuningPars(10) = r.displayM3Squared()/r.displaySusyMu();
   tuningPars(11) = r.displaySoftMassSquared(mLl, 1, 1);
   tuningPars(12) = r.displaySoftMassSquared(mEr, 1, 1);
   tuningPars(13) = r.displaySoftMassSquared(mQl, 1, 1);

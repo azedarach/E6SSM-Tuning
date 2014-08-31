@@ -47,6 +47,9 @@ public:
    void set_threshold_corrections_loop_order(unsigned t) { threshold_corrections_loop_order = t; }
 
 private:
+
+   enum class stop_mass : char {mstop_1, mstop_2};
+
    lowMSSM<Two_scale> model;
    double input_scale, tuning_scale;
    double precision_goal; ///< precision goal
@@ -67,6 +70,11 @@ private:
    double stop_discriminant() const;   
 
    void calculate_MStop();
+
+   /// Derivatives of DR bar stop masses - these are the basic quantities
+   /// entering into the simplified 1-loop tuning measures.
+   double deriv_dMStop2_dv1(stop_mass which_stop) const;
+   double deriv_dMStop2_dv2(stop_mass which_stop) const;
 
    /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,
    /// and therefore to that used in our expressions. Also A0 takes as input

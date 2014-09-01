@@ -76,6 +76,7 @@ private:
    double deriv_dMStop2_dv1(stop_mass which_stop) const;
    double deriv_dMStop2_dv2(stop_mass which_stop) const;
 
+
    /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,
    /// and therefore to that used in our expressions. Also A0 takes as input
    /// the mass, NOT the mass squared, and is evaluated at the current scale

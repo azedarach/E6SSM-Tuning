@@ -107,7 +107,7 @@ namespace flexiblesusy {
       MStop = AbsSqrt(MStop);
    }
 
-   double lowMSSM_tuning_calculator::deriv_dMStop2_dv1(stop_mass which_stop) const
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dvd(stop_mass which_stop) const
    {
       double mu = model.get_Mu();
       double vd = model.get_vd();
@@ -124,12 +124,12 @@ namespace flexiblesusy {
 
       if (which_stop == stop_mass::mstop_1) {
          return 0.5 * vd * (deriv - split);
-      }
-
+      } else {
       return 0.5 * vd * (deriv + split);
+      }
    }
 
-   double lowMSSM_tuning_calculator::deriv_dMStop2_dv2(stop_mass which_stop) const
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dvu(stop_mass which_stop) const
    {
       double at = model.get_TYu(2, 2);
       double vu = model.get_vu();
@@ -146,9 +146,86 @@ namespace flexiblesusy {
 
       if (which_stop == stop_mass::mstop_1) {
          return 0.5 * vu * (deriv - split);
+      } else {
+         return 0.5 * vu * (deriv + split);
       }
+   }
 
-      return 0.5 * vu * (deriv + split);
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dmq222(stop_mass which_stop) const
+   {
+      double mqqsq = MQQ2();
+      double rt = stop_discriminant();
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (1.0 - mqqsq / Sqrt(rt));
+      } else {
+         return 0.5 * (1.0 + mqqsq / Sqrt(rt));
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dmu222(stop_mass which_stop) const
+   {
+      double mqqsq = MQQ2();
+      double rt = stop_discriminant();
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (1.0 + mqqsq / Sqrt(rt));
+      } else {
+         return 0.5 * (1.0 - mqqsq / Sqrt(rt));
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dMu(stop_mass which_stop) const
+   {
+      double yt = model.get_Yu(2, 2);
+      double vd = model.get_vd();
+      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
+      double rt = stop_discriminant();
+      double deriv = yt * vd * stop_mixing / Sqrt(rt);
+      if (which_stop == stop_mass::mstop_1) {
+         return deriv;
+      } else {
+         return -deriv; 
+      }
+   }
+
+   // Note this equals the derivative w.r.t. A_t up to a factor of y_t 
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dTYu22(stop_mass which_stop) const
+   {
+      double vu = model.get_vu();
+      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
+      double rt = stop_discriminant();
+      double deriv = vu * stop_mixing / Sqrt(rt);
+      if (which_stop == stop_mass::mstop_1) {
+         return -deriv;
+      } else {
+         return deriv;
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dparam(stop_mass which_stop, lowMSSM_info::Parameters p) const
+   {
+      switch(p) {
+      case lowMSSM_info::mq222: {
+         return deriv_dMStop2_dmq222(which_stop);
+      }
+      case lowMSSM_info::mu222: {
+         return deriv_dMStop2_dmu222(which_stop);
+      }
+      case lowMSSM_info::Mu: {
+         return deriv_dMStop2_dMu(which_stop);
+      }
+      case lowMSSM_info::vd: {
+         return deriv_dMStop2_dvd(which_stop);
+      }
+      case lowMSSM_info::vu: {
+         return deriv_dMStop2_dvu(which_stop);
+      }
+      case lowMSSM_info::TYu22: {
+         return deriv_dMStop2_dTYu22(which_stop);
+      }
+      default: {
+         return 0.;
+      }
+      }
    }
 
    double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvd_dvd() const

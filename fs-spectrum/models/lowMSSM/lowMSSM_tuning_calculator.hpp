@@ -73,8 +73,14 @@ namespace flexiblesusy {
 
       /// Derivatives of DR bar stop masses - these are the basic quantities
       /// entering into the simplified 1-loop tuning measures.
-      double deriv_dMStop2_dv1(stop_mass which_stop) const;
-      double deriv_dMStop2_dv2(stop_mass which_stop) const;
+      double deriv_dMStop2_dvd(stop_mass which_stop) const;
+      double deriv_dMStop2_dvu(stop_mass which_stop) const;
+      double deriv_dMStop2_dmq222(stop_mass which_stop) const;
+      double deriv_dMStop2_dmu222(stop_mass which_stop) const;
+      double deriv_dMStop2_dMu(stop_mass which_stop) const;
+      double deriv_dMStop2_dTYu22(stop_mass which_stop) const;
+      /// Makes use of parameters defined in lowMSSM_info
+      double deriv_dMStop2_dparam(stop_mass which_stop, lowMSSM_info::Parameters p) const;
 
 
       /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,

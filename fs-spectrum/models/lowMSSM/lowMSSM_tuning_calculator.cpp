@@ -240,6 +240,141 @@ namespace flexiblesusy {
       }
    }
 
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dvd_dvd(stop_mass which_stop) const
+   {
+      double mu = model.get_Mu();
+      double vd = model.get_vd();
+      double yt = model.get_Yu(2, 2);
+      double g1 = model.get_g1();
+      double g2 = model.get_g2();
+
+      double gbar_val = gbar();
+      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
+      double RQQ_val = RQQ();
+      double rt = stop_discriminant();
+
+      double split = 0.03125 * ((4.0 * RQQ_val + Sqr((g2 * g2 - g1 * g1) * vd) + 32.0 * Sqr(yt * mu)) / Sqrt(rt)
+                                - Sqr(vd * RQQ_val - 8.0 * yt * mu * stop_mixing) / (rt * Sqrt(rt)));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.125 * Sqr(gbar_val) - split;
+      } else {
+         return 0.125 * Sqr(gbar_val) + split;
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dvu_dvu(stop_mass which_stop) const
+   {
+      double vu = model.get_vu();
+      double yt = model.get_Yu(2, 2);
+      double at = model.get_TYu(2, 2);
+      double g1 = model.get_g1();
+      double g2 = model.get_g2();
+
+      double gbar_val = gbar();
+      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
+      double RQQ_val = RQQ();
+      double rt = stop_discriminant();
+
+      double split = (0.03125 * Sqr(vu * (g2 * g2 - g1 * g1)) - 0.125 * RQQ_val + Sqr(at)
+                      - 0.03125 * Sqr(vu) * Sqr(8.0 * at * stop_mixing / vu - RQQ_val) / rt) / Sqrt(rt);
+
+      if (which_stop == stop_mass::mstop_1) {
+         return Sqr(yt) - 0.125 * Sqr(gbar_val) - split;
+      } else {
+         return Sqr(yt) - 0.125 * Sqr(gbar_val) + split;
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dvd_dvu(stop_mass which_stop) const
+   {
+      double mu = model.get_Mu();
+      double vd = model.get_vd();
+      double vu = model.get_vu();
+      double yt = model.get_Yu(2, 2);
+      double at = model.get_TYu(2, 2);
+      double g1 = model.get_g1();
+      double g2 = model.get_g2();
+
+      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
+      double RQQ_val = RQQ();
+      double rt = stop_discriminant();
+
+      double deriv = 0.03125 * vu * vd * Sqr(g2 * g2 - g1 * g1) + yt * mu * at
+         + 2.0 * vu * vd * ((0.125 * RQQ_val - yt * mu * stop_mixing / vd)
+                            * (at * stop_mixing / vu - 0.125 * RQQ_val)) / rt;
+
+      if (which_stop == stop_mass::mstop_1) {
+         return deriv / Sqrt(rt);
+      } else {
+         return -deriv / Sqrt(rt);
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dmq222_dvd(stop_mass which_stop) const
+   {
+      double mu = model.get_Mu();
+      double vd = model.get_vd();
+      double yt = model.get_Yu(2, 2);
+      double g1 = model.get_g1();
+      double g2 = model.get_g2();
+
+      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
+      double mqqsq = MQQ2();
+      double RQQ_val = RQQ();
+      double rt = stop_discriminant();
+
+      double deriv = mqqsq * (0.125 * RQQ_val - yt * mu * stop_mixing / vd) / rt
+         - 0.125 * ( g2 * g2 - g1 * g1);
+
+      if (which_stop == stop_mass::mstop_1) {
+         return vd * deriv / Sqrt(rt);
+      } else {
+         return -vd * deriv / Sqrt(rt);
+      }
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dmu222_dvd(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dMu_dvd(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dTYu22_dvd(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dmq222_dvu(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dmu222_dvu(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2MStop2_dMu_dvu(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dTYu22_dvu(stop_mass which_stop) const
+   {
+      return 0.;
+   }
+
+   double lowMSSM_tuning_calculator::deriv_dMStop2_dparam_dparam(stop_mass which_stop, lowMSSM_info::Parameters p1, 
+                                                                 lowMSSM_info::Parameters p2) const
+   {
+      return 0.;
+   }
+
    double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvd_dvd() const
    {
       double scale = model.get_scale();

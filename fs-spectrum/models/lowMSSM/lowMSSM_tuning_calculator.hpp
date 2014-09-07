@@ -87,6 +87,19 @@ namespace flexiblesusy {
       double deriv_dMStop2_dparam(stop_mass which_stop, lowMSSM_info::Parameters p) const;
 
       /// Second derivatives of DR bar stop masses.
+      double deriv_d2MStop2_dvd_dvd(stop_mass which_stop) const;
+      double deriv_d2MStop2_dvu_dvu(stop_mass which_stop) const;
+      double deriv_d2MStop2_dvd_dvu(stop_mass which_stop) const;
+      double deriv_d2MStop2_dmq222_dvd(stop_mass which_stop) const;
+      double deriv_d2MStop2_dmu222_dvd(stop_mass which_stop) const;
+      double deriv_d2MStop2_dMu_dvd(stop_mass which_stop) const;
+      double deriv_dMStop2_dTYu22_dvd(stop_mass which_stop) const;
+      double deriv_d2MStop2_dmq222_dvu(stop_mass which_stop) const;
+      double deriv_d2MStop2_dmu222_dvu(stop_mass which_stop) const;
+      double deriv_d2MStop2_dMu_dvu(stop_mass which_stop) const;
+      double deriv_dMStop2_dTYu22_dvu(stop_mass which_stop) const;
+      double deriv_dMStop2_dparam_dparam(stop_mass which_stop, lowMSSM_info::Parameters p1, 
+                                         lowMSSM_info::Parameters p2) const;
 
       /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,
       /// and therefore to that used in our expressions. Also A0 takes as input

@@ -71,7 +71,12 @@ namespace flexiblesusy {
 
       void calculate_MStop();
 
-      /// Derivatives of DR bar stop masses - these are the basic quantities
+      /// First derivatives of DR bar top mass - trivial, but useful to have
+      /// for consistency with stop mass derivatives below.
+      /// Makes use of parameters defined in lowMSSM_info
+      double deriv_dMFtop2_dparam(lowMSSM_info::Parameters p) const;
+
+      /// First derivatives of DR bar stop masses - these are the basic quantities
       /// entering into the simplified 1-loop tuning measures.
       double deriv_dMStop2_dvd(stop_mass which_stop) const;
       double deriv_dMStop2_dvu(stop_mass which_stop) const;
@@ -79,9 +84,9 @@ namespace flexiblesusy {
       double deriv_dMStop2_dmu222(stop_mass which_stop) const;
       double deriv_dMStop2_dMu(stop_mass which_stop) const;
       double deriv_dMStop2_dTYu22(stop_mass which_stop) const;
-      /// Makes use of parameters defined in lowMSSM_info
       double deriv_dMStop2_dparam(stop_mass which_stop, lowMSSM_info::Parameters p) const;
 
+      /// Second derivatives of DR bar stop masses.
 
       /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,
       /// and therefore to that used in our expressions. Also A0 takes as input

@@ -107,6 +107,18 @@ namespace flexiblesusy {
       MStop = AbsSqrt(MStop);
    }
 
+   double lowMSSM_tuning_calculator::deriv_dMFtop2_dparam(lowMSSM_info::Parameters p) const
+   {
+      switch (p) {
+      case lowMSSM_info::vu: {
+         return Sqr(model.get_Yu(2, 2)) * model.get_vu();
+      }
+      default: {
+         return 0.;
+      }   
+      }
+   }
+
    double lowMSSM_tuning_calculator::deriv_dMStop2_dvd(stop_mass which_stop) const
    {
       double mu = model.get_Mu();

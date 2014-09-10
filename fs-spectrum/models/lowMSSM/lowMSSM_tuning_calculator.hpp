@@ -56,6 +56,24 @@ namespace flexiblesusy {
       /// For now, while just using stops, save the result for later use
       Eigen::Array<double, 2, 1> MStop;
 
+      /// Contain the 1-loop derivatives appearing in the Taylor series approximation
+      /// to the RGE solutions. Note these derivatives currently are specific
+      /// to the pMSSM parameter set, i.e. non-zero couplings in the third family only, 
+      /// B instead of B\mu, A_t instead of TYu etc.
+      struct Beta_first_derivs {
+         double dbeta1mHu2dmHu2;
+         double dbeta1mHu2dmHd2;
+         double dbeta1mHu2dMu;
+         double dbeta1mHu2dMassB;
+         double dbeta1mHu2dMassWB;
+         double dbeta1mHu2dMassG;
+
+      };
+
+      struct Beta_second_derivs {
+
+      };
+
       /// Helper methods in analytic tuning expressions.
       double gbar() const;
       double MFtop_DRbar() const;

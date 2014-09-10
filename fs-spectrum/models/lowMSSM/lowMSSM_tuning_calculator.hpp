@@ -27,8 +27,7 @@ namespace flexiblesusy {
          , tuning_scale(0.)
          , precision_goal(1.0e-4)
          , max_iterations(0)
-         , beta_loop_order(2)
-         , threshold_corrections_loop_order(1) {}
+         , tuning_loop_order(1) {}
       ~lowMSSM_tuning_calculator() {}
 
       double get_tuning_scale() const { return tuning_scale; }
@@ -42,9 +41,8 @@ namespace flexiblesusy {
       void set_tuning_scale(double s) { tuning_scale = s; }
       void set_precision_goal(double precision_goal_) { precision_goal = precision_goal_; }
       void set_ewsb_loop_order(unsigned l) { model.set_ewsb_loop_order(l); }
-      void set_beta_loop_order(unsigned l) { beta_loop_order = l; }
+      void set_tuning_loop_order(unsigned l) { tuning_loop_order = l; }
       void set_max_iterations(unsigned n) { max_iterations = n; }
-      void set_threshold_corrections_loop_order(unsigned t) { threshold_corrections_loop_order = t; }
 
    private:
 
@@ -54,8 +52,7 @@ namespace flexiblesusy {
       double input_scale, tuning_scale;
       double precision_goal; ///< precision goal
       unsigned max_iterations; ///< maximum number of iterations
-      unsigned beta_loop_order; ///< beta-function loop order
-      unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
+      unsigned tuning_loop_order; ///< order of CW loop corrections included in tuning calculation (<= 1)
       /// For now, while just using stops, save the result for later use
       Eigen::Array<double, 2, 1> MStop;
 
@@ -86,6 +83,9 @@ namespace flexiblesusy {
       double deriv_dMStop2_dTYu22(stop_mass which_stop) const;
       double deriv_dMStop2_dparam(stop_mass which_stop, lowMSSM_info::Parameters p) const;
 
+      /// Second derivatives of DR bar top mass
+      double deriv_d2MFtop2_dparam_dparam(lowMSSM_info::Parameters p1, lowMSSM_info::Parameters p2) const; 
+
       /// Second derivatives of DR bar stop masses.
       double deriv_d2MStop2_dvd_dvd(stop_mass which_stop) const;
       double deriv_d2MStop2_dvu_dvu(stop_mass which_stop) const;
@@ -101,13 +101,20 @@ namespace flexiblesusy {
       double deriv_d2MStop2_dparam_dparam(stop_mass which_stop, lowMSSM_info::Parameters p1, 
                                          lowMSSM_info::Parameters p2) const;
 
-      /// DH:: Note a0 has OPPOSITE sign convention to that used in cE6SSM paper,
+      /// Note a_0 has OPPOSITE sign convention to that used in cE6SSM paper,
       /// and therefore to that used in our expressions. Also A0 takes as input
       /// the mass, NOT the mass squared, and is evaluated at the current scale
       double deriv_d2DeltaV_dvd_dvd() const;
       double deriv_d2DeltaV_dvu_dvu() const;
       double deriv_d2DeltaV_dvu_dvd() const;
-
+      double deriv_d2DeltaV_dmq222_dvd() const;
+      double deriv_d2DeltaV_dmu222_dvd() const;
+      double deriv_d2DeltaV_dMu_dvd() const;
+      double deriv_d2DeltaV_dTYu22_dvd() const;
+      double deriv_d2DeltaV_dmq222_dvu() const;
+      double deriv_d2DeltaV_dmu222_dvu() const;
+      double deriv_d2DeltaV_dMu_dvu() const;
+      double deriv_d2DeltaV_dTYu22_dvu() const;
 
    };
 

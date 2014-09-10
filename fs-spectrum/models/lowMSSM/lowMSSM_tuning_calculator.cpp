@@ -240,6 +240,16 @@ namespace flexiblesusy {
       }
    }
 
+   double lowMSSM_tuning_calculator::deriv_d2MFtop2_dparam_dparam(lowMSSM_info::Parameters p1, 
+                                                                  lowMSSM_info::Parameters p2) const
+   {
+      if (p1 == lowMSSM_info::vu && p2 == lowMSSM_info::vu) {
+         return Sqr(model.get_Yu(2, 2));
+      } else {
+         return 0.;
+      }
+   }
+
    double lowMSSM_tuning_calculator::deriv_d2MStop2_dvd_dvd(stop_mass which_stop) const
    {
       double mu = model.get_Mu();
@@ -525,36 +535,18 @@ namespace flexiblesusy {
    {
       double scale = model.get_scale();
 
-      double mu = model.get_Mu();
-      double vd = model.get_vd();
-      double yt = model.get_Yu(2, 2);
-      double g1 = model.get_g1();
-      double g2 = model.get_g2();
-
-      double gbar_val = gbar();
-      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
-      double RQQ_val = RQQ();
-      double rt = stop_discriminant();
+      double dMStop20_dvd = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vd);
+      double d2MStop20_dvd_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::vd, lowMSSM_info::vd);
+      double dMStop21_dvd = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vd);
+      double d2MStop21_dvd_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::vd, lowMSSM_info::vd);
 
       double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
       double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
 
-      double tmp_1 = 0.;
-      tmp_1 += Sqr(0.125 * Sqr(gbar_val) * vd)
-               + Sqr(0.125 * vd * RQQ_val - yt * mu * stop_mixing) / rt;
-      tmp_1 *= Log(Sqr(MStop(0) * MStop(1)) / Sqr(scale * scale));
-
-      double tmp_2 = 0.;
-      tmp_2 += (0.03125 * vd * Sqr(gbar_val) / Sqrt(rt))
-               * (vd * RQQ_val - 8.0 * yt * mu * stop_mixing);
-      tmp_2 *= Log(Sqr(MStop(1)) / Sqr(MStop(0)));
-
-      double tmp_3 = -0.125 * Sqr(gbar_val) * (a0_mstop1 + a0_mstop2);
-
-      double tmp_4 = 0.;
-      tmp_4 += 0.03125 * ((4.0 * RQQ_val + Sqr((g2 * g2 - g1 * g1) * vd) + 32.0 * Sqr(yt * mu)) / Sqrt(rt)
-                          - Sqr(vd * RQQ_val - 8.0 * yt * mu * stop_mixing) / (rt * Sqrt(rt)));
-      tmp_4 *= (a0_mstop1 - a0_mstop2);
+      double tmp_1 = Sqr(dMStop20_dvd) * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dvd_dvd;
+      double tmp_3 = Sqr(dMStop21_dvd) * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dvd_dvd;
 
       return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
    }
@@ -563,83 +555,225 @@ namespace flexiblesusy {
    {
       double scale = model.get_scale();
 
-      double vu = model.get_vu();
-      double yt = model.get_Yu(2, 2);
-      double at = model.get_TYu(2, 2);
-      double g1 = model.get_g1();
-      double g2 = model.get_g2();
+      double dMStop20_dvu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vu);
+      double d2MStop20_dvu_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::vu, lowMSSM_info::vu);
+      double dMStop21_dvu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vu);
+      double d2MStop21_dvu_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::vu, lowMSSM_info::vu);
+      double dMFtop2_dvu = deriv_dMFtop2_dparam(lowMSSM_info::vu);
+      double d2MFtop2_dvu_dvu = deriv_d2MFtop2_dparam_dparam(lowMSSM_info::vu, lowMSSM_info::vu); 
 
-      double gbar_val = gbar();
-      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
-      double RQQ_val = RQQ();
-      double rt = stop_discriminant();
       double mt = MFtop_DRbar();
 
       double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
       double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
       double a0_mtop = passarino_veltman::ReA0(Sqr(mt), Sqr(scale));
 
-      double tmp_1 = 0.;
-      tmp_1 += Sqr(yt * yt - 0.125 * Sqr(gbar_val))
-               + Sqr(8.0 * at * stop_mixing / vu - RQQ_val) / (64.0 * rt);
-      tmp_1 *= Sqr(vu) * Log(Sqr(MStop(0) * MStop(1)) / Sqr(scale * scale));
+      double tmp_1 = Sqr(dMStop20_dvu) * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dvu_dvu;
+      double tmp_3 = Sqr(dMStop21_dvu) * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dvu_dvu;
+      double tmp_5 = -2.0 * Sqr(dMFtop2_dvu) * Log(Sqr(mt / scale));
+      double tmp_6 = 2.0 * a0_mtop * d2MFtop2_dvu_dvu;
 
-      double tmp_2 = 0.;
-      tmp_2 += Sqr(vu) * (yt * yt - 0.125 * Sqr(gbar_val))
-               * (8.0 * at * stop_mixing / vu - RQQ_val) / (4.0 * Sqrt(rt));
-      tmp_2 *= Log(Sqr(MStop(1)) / Sqr(MStop(0)));
-
-      double tmp_3 = -(yt * yt - 0.125 * Sqr(gbar_val)) * (a0_mstop1 + a0_mstop2);
-
-      double tmp_4 = 0.;
-      tmp_4 += (0.03125 * Sqr(vu * (g2 * g2 - g1 * g1)) - 0.125 * RQQ_val + Sqr(at)
-                - 0.03125 * Sqr(vu) * Sqr(8.0 * at * stop_mixing / vu - RQQ_val) / rt) / Sqrt(rt);
-      tmp_4 *= (a0_mstop1 - a0_mstop2);
-
-      double tmp_5 = -2.0 * Sqr(yt * yt * vu) * Log(Sqr(mt) / Sqr(scale))
-                     + 2.0 * Sqr(yt) * a0_mtop;
-
-      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4 + tmp_5));
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4 + tmp_5 + tmp_6));
    }
 
    double lowMSSM_tuning_calculator::deriv_d2DeltaV_dvu_dvd() const
    {
       double scale = model.get_scale();
 
-      double mu = model.get_Mu();
-      double vd = model.get_vd();
-      double vu = model.get_vu();
-      double yt = model.get_Yu(2, 2);
-      double at = model.get_TYu(2, 2);
-      double g1 = model.get_g1();
-      double g2 = model.get_g2();
-
-      double gbar_val = gbar();
-      double stop_mixing = 1.4142135623730951 * stop_mass_matrix_LR_entry();
-      double RQQ_val = RQQ();
-      double rt = stop_discriminant();
+      double dMStop20_dvd = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vd);
+      double dMStop20_dvu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vu);
+      double d2MStop20_dvd_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::vd, lowMSSM_info::vu);
+      double dMStop21_dvd = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vd);
+      double dMStop21_dvu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vu);
+      double d2MStop21_dvd_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::vd, lowMSSM_info::vu);
 
       double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
       double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
 
-      double tmp_1 = 0.;
-      tmp_1 += 0.125 * Sqr(gbar_val) * (yt * yt - 0.125 * Sqr(gbar_val))
-               + ((0.125 * RQQ_val - yt * mu * stop_mixing / vd)
-                  * (at * stop_mixing / vu - 0.125 * RQQ_val)) / rt;
-      tmp_1 *= vu * vd * Log(Sqr(MStop(0) * MStop(1)) / Sqr(scale * scale));
+      double tmp_1 = dMStop20_dvd * dMStop20_dvu * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dvd_dvu;
+      double tmp_3 = dMStop21_dvd * dMStop21_dvu * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dvd_dvu;
 
-      double tmp_2 = 0.;
-      tmp_2 += 0.125 * Sqr(gbar_val) * (at * stop_mixing / vu - 0.125 * RQQ_val)
-               + (yt * yt - 0.125 * Sqr(gbar_val)) * (0.125 * RQQ_val - yt * mu * stop_mixing / vd);
-      tmp_2 *= vu * vd * Log(Sqr(MStop(1)) / Sqr(MStop(0))) / Sqrt(rt);
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
 
-      double tmp_3 = 0.;
-      tmp_3 += 0.03125 * vu * vd * Sqr(g2 * g2 - g1 * g1) + yt * mu * at
-               + 2.0 * vu * vd * ((0.125 * RQQ_val - yt * mu * stop_mixing / vd)
-                                  * (at * stop_mixing / vu - 0.125 * RQQ_val)) / rt;
-      tmp_3 *= (a0_mstop2 - a0_mstop1) / Sqrt(rt);
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dmq222_dvd() const
+   {
+      double scale = model.get_scale();
 
-      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3));
+      double dMStop20_dvd = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vd);
+      double dMStop20_dmq222 = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::mq222);
+      double d2MStop20_dmq222_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::mq222, lowMSSM_info::vd);
+      double dMStop21_dvd = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vd);
+      double dMStop21_dmq222 = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::mq222);
+      double d2MStop21_dmq222_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::mq222, lowMSSM_info::vd);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dmq222 * dMStop20_dvd * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dmq222_dvd;
+      double tmp_3 = dMStop21_dmq222 * dMStop21_dvd * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dmq222_dvd;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dmu222_dvd() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvd = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vd);
+      double dMStop20_dmu222 = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::mu222);
+      double d2MStop20_dmu222_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::mu222, lowMSSM_info::vd);
+      double dMStop21_dvd = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vd);
+      double dMStop21_dmu222 = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::mu222);
+      double d2MStop21_dmu222_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::mu222, lowMSSM_info::vd);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dmu222 * dMStop20_dvd * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dmu222_dvd;
+      double tmp_3 = dMStop21_dmu222 * dMStop21_dvd * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dmu222_dvd;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dMu_dvd() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvd = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vd);
+      double dMStop20_dMu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::Mu);
+      double d2MStop20_dMu_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::Mu, lowMSSM_info::vd);
+      double dMStop21_dvd = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vd);
+      double dMStop21_dMu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::Mu);
+      double d2MStop21_dMu_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::Mu, lowMSSM_info::vd);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dMu * dMStop20_dvd * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dMu_dvd;
+      double tmp_3 = dMStop21_dMu * dMStop21_dvd * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dMu_dvd;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dTYu22_dvd() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvd = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vd);
+      double dMStop20_dTYu22 = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::TYu22);
+      double d2MStop20_dTYu22_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::TYu22, lowMSSM_info::vd);
+      double dMStop21_dvd = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vd);
+      double dMStop21_dTYu22 = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::TYu22);
+      double d2MStop21_dTYu22_dvd = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::TYu22, lowMSSM_info::vd);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dTYu22 * dMStop20_dvd * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dTYu22_dvd;
+      double tmp_3 = dMStop21_dTYu22 * dMStop21_dvd * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dTYu22_dvd;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dmq222_dvu() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vu);
+      double dMStop20_dmq222 = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::mq222);
+      double d2MStop20_dmq222_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::mq222, lowMSSM_info::vu);
+      double dMStop21_dvu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vu);
+      double dMStop21_dmq222 = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::mq222);
+      double d2MStop21_dmq222_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::mq222, lowMSSM_info::vu);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dmq222 * dMStop20_dvu * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dmq222_dvu;
+      double tmp_3 = dMStop21_dmq222 * dMStop21_dvu * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dmq222_dvu;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dmu222_dvu() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vu);
+      double dMStop20_dmu222 = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::mu222);
+      double d2MStop20_dmu222_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::mu222, lowMSSM_info::vu);
+      double dMStop21_dvu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vu);
+      double dMStop21_dmu222 = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::mu222);
+      double d2MStop21_dmu222_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::mu222, lowMSSM_info::vu);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dmu222 * dMStop20_dvu * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dmu222_dvu;
+      double tmp_3 = dMStop21_dmu222 * dMStop21_dvu * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dmu222_dvu;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dMu_dvu() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vu);
+      double dMStop20_dMu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::Mu);
+      double d2MStop20_dMu_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::Mu, lowMSSM_info::vu);
+      double dMStop21_dvu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vu);
+      double dMStop21_dMu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::Mu);
+      double d2MStop21_dMu_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::Mu, lowMSSM_info::vu);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dMu * dMStop20_dvu * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dMu_dvu;
+      double tmp_3 = dMStop21_dMu * dMStop21_dvu * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dMu_dvu;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
+   }
+
+   double lowMSSM_tuning_calculator::deriv_d2DeltaV_dTYu22_dvu() const
+   {
+      double scale = model.get_scale();
+
+      double dMStop20_dvu = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::vu);
+      double dMStop20_dTYu22 = deriv_dMStop2_dparam(stop_mass::mstop_1, lowMSSM_info::TYu22);
+      double d2MStop20_dTYu22_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_1, lowMSSM_info::TYu22, lowMSSM_info::vu);
+      double dMStop21_dvu = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::vu);
+      double dMStop21_dTYu22 = deriv_dMStop2_dparam(stop_mass::mstop_2, lowMSSM_info::TYu22);
+      double d2MStop21_dTYu22_dvu = deriv_d2MStop2_dparam_dparam(stop_mass::mstop_2, lowMSSM_info::TYu22, lowMSSM_info::vu);
+
+      double a0_mstop1 = passarino_veltman::ReA0(Sqr(MStop(0)), Sqr(scale));
+      double a0_mstop2 = passarino_veltman::ReA0(Sqr(MStop(1)), Sqr(scale));
+
+      double tmp_1 = dMStop20_dTYu22 * dMStop20_dvu * Log(Sqr(MStop(0) / scale));
+      double tmp_2 = -a0_mstop1 * d2MStop20_dTYu22_dvu;
+      double tmp_3 = dMStop21_dTYu22 * dMStop21_dvu * Log(Sqr(MStop(1) / scale));
+      double tmp_4 = -a0_mstop2 * d2MStop21_dTYu22_dvu;
+
+      return (3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4));
    }
 
 } // namespace flexiblesusy

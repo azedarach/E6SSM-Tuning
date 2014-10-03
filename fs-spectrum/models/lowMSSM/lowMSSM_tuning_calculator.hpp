@@ -18,11 +18,12 @@
 #include <Eigen/Core>
 
 namespace flexiblesusy {
-
+   
+   template <class T>
    class lowMSSM_tuning_calculator {
    public:
       lowMSSM_tuning_calculator()
-         : model()
+         : model(0)
          , input_scale(0.)
          , tuning_scale(0.)
          , precision_goal(1.0e-4)
@@ -48,7 +49,7 @@ namespace flexiblesusy {
 
       enum class stop_mass : char {mstop_1, mstop_2};
 
-      lowMSSM<Two_scale> model;
+      lowMSSM<T> model;
       double input_scale, tuning_scale;
       double precision_goal; ///< precision goal
       unsigned max_iterations; ///< maximum number of iterations

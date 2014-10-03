@@ -28,6 +28,7 @@ LIBlowMSSM_HDR :=
 
 ifneq ($(findstring two_scale,$(ALGORITHMS)),)
 LIBlowMSSM_SRC += \
+		$(DIR)/lowMSSM_ewsb_conditions.cpp \
 		$(DIR)/lowMSSM_info.cpp \
 		$(DIR)/lowMSSM_slha_io.cpp \
 		$(DIR)/lowMSSM_physical.cpp \
@@ -40,11 +41,16 @@ LIBlowMSSM_SRC += \
 		$(DIR)/lowMSSM_two_scale_susy_parameters.cpp \
 		$(DIR)/lowMSSM_two_scale_soft_parameters.cpp \
 		$(DIR)/lowMSSM_two_scale_susy_scale_constraint.cpp \
-		$(DIR)/lowMSSM_tuning_calculator.cpp
+		$(DIR)/lowMSSM_two_scale_bottom_mass_derivs.cpp \
+		$(DIR)/lowMSSM_two_scale_sbottom_mass_derivs.cpp \
+		$(DIR)/lowMSSM_two_scale_stop_mass_derivs.cpp \
+		$(DIR)/lowMSSM_two_scale_top_mass_derivs.cpp
+
 EXElowMSSM_SRC += \
 		$(DIR)/run_lowMSSM.cpp \
 		$(DIR)/scan_lowMSSM.cpp
 LIBlowMSSM_HDR += \
+		$(DIR)/lowMSSM_ewsb_conditions.hpp \
 		$(DIR)/lowMSSM_convergence_tester.hpp \
 		$(DIR)/lowMSSM_high_scale_constraint.hpp \
 		$(DIR)/lowMSSM_info.hpp \

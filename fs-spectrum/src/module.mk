@@ -12,6 +12,7 @@ LIBFLEXI_SRC := \
 		$(DIR)/dilog.f \
 		$(DIR)/error.cpp \
 		$(DIR)/gsl_utils.cpp \
+		$(DIR)/grid_scanner.cpp \
 		$(DIR)/linalg.cpp \
 		$(DIR)/lowe.cpp \
 		$(DIR)/sfermions.cpp \
@@ -42,6 +43,7 @@ LIBFLEXI_HDR := \
 		$(DIR)/dilog.h \
 		$(DIR)/error.hpp \
 		$(DIR)/ew_input.hpp \
+		$(DIR)/grid_scanner.hpp \
 		$(DIR)/gsl_utils.hpp \
 		$(DIR)/gut_scale_calculator.hpp \
 		$(DIR)/initial_guesser.hpp \

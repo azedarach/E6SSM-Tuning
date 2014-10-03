@@ -3,7 +3,7 @@
 namespace flexiblesusy {
    
    lowMSSM_ewsb_conditions::lowMSSM_ewsb_conditions(const lowMSSM<Two_scale>& m)
-      : model(m)
+      : model(m), include_sbottom_loops(false)
    {
 
    }
@@ -33,6 +33,16 @@ namespace flexiblesusy {
    int lowMSSM_ewsb_conditions::solve_ewsb_conditions_for_vevs()
    {
       return 0;
+   }
+
+   bool lowMSSM_ewsb_conditions::equal_as_unordered_pairs(lowMSSM_info::Parameters p1, lowMSSM_info::Parameters p2,
+                                                          lowMSSM_info::Parameters q1,lowMSSM_info::Parameters q2)
+   {
+      if ((p1 == q1 && p2 == q2) || (p1 == q2 && p2 == q1)) {
+         return true;
+      } else {
+         return false;
+      }
    }
 
    double lowMSSM_ewsb_conditions::gbar() const

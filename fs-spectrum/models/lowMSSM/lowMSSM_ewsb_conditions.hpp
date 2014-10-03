@@ -12,6 +12,7 @@
 #include "lowMSSM_two_scale_model.hpp"
 
 #include <Eigen/Core>
+#include <utility>
 
 namespace flexiblesusy {
 
@@ -68,6 +69,10 @@ namespace flexiblesusy {
 
       Eigen::Matrix<double,2,1> MStop;
       Eigen::Matrix<double,2,1> MSbottom;
+
+      /// Useful for second derivatives
+      bool equal_as_unordered_pairs(lowMSSM_info::Parameters p1, lowMSSM_info::Parameters p2,
+                                    lowMSSM_info::Parameters q1,lowMSSM_info::Parameters q2);
 
       double gbar() const;
       double MFtop_DRbar() const;

@@ -16,6 +16,7 @@
 #include "error.hpp"
 #include "numerics.hpp"
 #include <Eigen/Core>
+#include <map>
 
 namespace flexiblesusy {
    
@@ -28,96 +29,79 @@ namespace flexiblesusy {
          , tuning_scale(0.)
          , precision_goal(1.0e-4)
          , max_iterations(0)
-         , tuning_loop_order(1) {}
+         , tuning_loop_order(1)
+         , num_tuning_pars(0) {}
       ~lowMSSM_tuning_calculator() {}
 
       double get_tuning_scale() const { return tuning_scale; }
       double get_input_scale()  const { return input_scale;  }
-      const lowMSSM<Two_scale> &get_model() const { return model; }
       const Problems<lowMSSM_info::NUMBER_OF_PARTICLES> &get_problems() const {
-         return model.get_problems();
+         return model->get_problems();
       }
-      int get_exit_code() const { return get_problems().have_serious_problem(); };
+      const std::map<lowMSSM_info::Parameters,double>& get_fine_tunings() const
+         {
+            return fine_tunings;
+         }
+      void set_model(lowMSSM<T>* m) { model = m; }
       void set_input_scale(double s) { input_scale = s; }
       void set_tuning_scale(double s) { tuning_scale = s; }
-      void set_precision_goal(double precision_goal_) { precision_goal = precision_goal_; }
-      void set_ewsb_loop_order(unsigned l) { model.set_ewsb_loop_order(l); }
+      void set_tolerance(double t) { tolerance = t; }
       void set_tuning_loop_order(unsigned l) { tuning_loop_order = l; }
       void set_max_iterations(unsigned n) { max_iterations = n; }
+      void add_fine_tuning_parameter(lowMSSM_info::Parameters p);
+
+      void calculate_fine_tunings_numerically();
+      void calculate_fine_tunings_approximately();
 
    private:
 
-      enum class stop_mass : char {mstop_1, mstop_2};
-
-      lowMSSM<T> model;
-      double input_scale, tuning_scale;
-      double precision_goal; ///< precision goal
-      unsigned max_iterations; ///< maximum number of iterations
+      lowMSSM<T>* model;
+      double input_scale; ///< parameter input scale
+      double tuning_scale; ///< scale to calculate tuning at
+      double tolerance; ///< tolerance in numerical derivatives
+      std::size_t max_iterations; ///< maximum number of iterations
       unsigned tuning_loop_order; ///< order of CW loop corrections included in tuning calculation (<= 1)
-      /// For now, while just using stops, save the result for later use
-      Eigen::Array<double, 2, 1> MStop;
-
-      /// Helper methods in analytic tuning expressions.
-      double gbar() const;
-      double MFtop_DRbar() const;
-      double stop_mass_matrix_LL_entry() const; ///< note LL = (0,0) entry
-      double stop_mass_matrix_RR_entry() const; ///< note RR = (1,1) entry
-      double stop_mass_matrix_LR_entry() const; ///< note LR = (0,1) entry
-      double MQQ2() const;
-      double RQQ() const;
-      double stop_discriminant() const;
-
-      void calculate_MStop();
-
-      /// First derivatives of DR bar top mass - trivial, but useful to have
-      /// for consistency with stop mass derivatives below.
-      /// Makes use of parameters defined in lowMSSM_info
-      double deriv_dMFtop2_dparam(lowMSSM_info::Parameters p) const;
-
-      /// First derivatives of DR bar stop masses - these are the basic quantities
-      /// entering into the simplified 1-loop tuning measures.
-      double deriv_dMStop2_dvd(stop_mass which_stop) const;
-      double deriv_dMStop2_dvu(stop_mass which_stop) const;
-      double deriv_dMStop2_dmq222(stop_mass which_stop) const;
-      double deriv_dMStop2_dmu222(stop_mass which_stop) const;
-      double deriv_dMStop2_dMu(stop_mass which_stop) const;
-      double deriv_dMStop2_dTYu22(stop_mass which_stop) const;
-      double deriv_dMStop2_dparam(stop_mass which_stop, lowMSSM_info::Parameters p) const;
-
-      /// Second derivatives of DR bar top mass
-      double deriv_d2MFtop2_dparam_dparam(lowMSSM_info::Parameters p1, lowMSSM_info::Parameters p2) const; 
-
-      /// Second derivatives of DR bar stop masses.
-      double deriv_d2MStop2_dvd_dvd(stop_mass which_stop) const;
-      double deriv_d2MStop2_dvu_dvu(stop_mass which_stop) const;
-      double deriv_d2MStop2_dvd_dvu(stop_mass which_stop) const;
-      double deriv_d2MStop2_dmq222_dvd(stop_mass which_stop) const;
-      double deriv_d2MStop2_dmu222_dvd(stop_mass which_stop) const;
-      double deriv_d2MStop2_dMu_dvd(stop_mass which_stop) const;
-      double deriv_d2MStop2_dTYu22_dvd(stop_mass which_stop) const;
-      double deriv_d2MStop2_dmq222_dvu(stop_mass which_stop) const;
-      double deriv_d2MStop2_dmu222_dvu(stop_mass which_stop) const;
-      double deriv_d2MStop2_dMu_dvu(stop_mass which_stop) const;
-      double deriv_d2MStop2_dTYu22_dvu(stop_mass which_stop) const;
-      double deriv_d2MStop2_dparam_dparam(stop_mass which_stop, lowMSSM_info::Parameters p1, 
-                                         lowMSSM_info::Parameters p2) const;
-
-      /// Note a_0 has OPPOSITE sign convention to that used in cE6SSM paper,
-      /// and therefore to that used in our expressions. Also A0 takes as input
-      /// the mass, NOT the mass squared, and is evaluated at the current scale
-      double deriv_d2DeltaV_dvd_dvd() const;
-      double deriv_d2DeltaV_dvu_dvu() const;
-      double deriv_d2DeltaV_dvu_dvd() const;
-      double deriv_d2DeltaV_dmq222_dvd() const;
-      double deriv_d2DeltaV_dmu222_dvd() const;
-      double deriv_d2DeltaV_dMu_dvd() const;
-      double deriv_d2DeltaV_dTYu22_dvd() const;
-      double deriv_d2DeltaV_dmq222_dvu() const;
-      double deriv_d2DeltaV_dmu222_dvu() const;
-      double deriv_d2DeltaV_dMu_dvu() const;
-      double deriv_d2DeltaV_dTYu22_dvu() const;
-
+      std::size_t num_tuning_pars;
+      std::map<lowMSSM_info::Parameters,double> fine_tunings;
    };
+
+   template <class T>
+   void lowMSSM_tuning_calculator<T>::add_fine_tuning_parameter(lowMSSM_info::Parameters p)
+   {
+      std::pair<std::map<lowMSSM_info::Parameters,double>,bool> result;
+      result = fine_tunings.insert(std::pair<lowMSSM_info::Parameters,double>(p, 0.0));
+
+      if (result.second == true) {
+         ++num_tuning_pars;
+      }
+   }
+
+   template <class T>
+   void lowMSSM_tuning_calculator<T>::calculate_fine_tunings_numerically()
+   {
+
+   }
+
+   template <class T>
+   void lowMSSM_tuning_calculator<T>::calculate_fine_tunings_approximately()
+   {
+      lowMSSM_ewsb_conditions ewsb_cond;
+      // Get unrotated CP-even Higgs mass matrix at given
+      // loop order
+      if (model->get_scale() == tuning_scale) {
+         ewsb_cond = lowMSSM_ewsb_conditions(cast_model<lowMSSM<Two_scale> >(*model));
+         model->run_to(input_scale);
+
+      } else if (model->get_scale() == input_scale) {
+
+      } else {
+
+      }
+
+      Eigen::Matrix<double,2,2> mass_matrix_hh = ewsb_cond.calculate_unrotated_mass_matrix_hh();
+
+
+   }
 
 } // namespace flexiblesusy
 

@@ -376,11 +376,11 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 
   bool hasProblem = false;
 
-  cout << "In here" << endl;
+  
 
   if (fabs(q-mx) > TOLERANCE)
     {
-      cout << "q not mx" << endl;
+  
       ostringstream ii;
       ii << "WARNING: trying to calculate required soft masses at inappropriate scale q = " << q << " GeV,\n"
 	 << "         instead of at MX = " << mx << " GeV: exiting." << endl;
@@ -388,7 +388,7 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
     }
   else
     {
-      cout << "in else" << endl;
+     
       // If MX = M_{SUSY} there is no need to use the shooting approach; just
       // rearrange the EWSB conditions to solve for m_Hu^2 and m_Hd^2.
       if (useMxEqualsMs)
@@ -410,7 +410,7 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  double lambda = r.get_Lambdax();
 	  double Alambda;
 	  
-	  cout << "Getting Alambda..." << endl;
+	  
 
 	  if (Abs(Tlambda) < EPSTOL)
 	    {
@@ -454,10 +454,7 @@ bool ESSM_ImplementEWSBConstraints_SoftMasses(genericE6SSM_soft_parameters r, do
 	  double Qtilde_2 = input.QH2p;
 	  double Qtilde_s = input.QSp;
 
-	  cout << "About to do cout statements..." << endl;
-	  cout << doCalcTadpolesESSMS(r, s, tb) << endl;
-	  cout << doCalcTadpoleESSMH1(r, s, tb) << endl;
-	  cout << doCalcTadpoleESSMH2(r, s, tb) << endl;
+
 
 	  if (!INCLUDE1LPTADPOLES)
 	    {

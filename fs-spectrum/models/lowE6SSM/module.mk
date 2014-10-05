@@ -39,7 +39,8 @@ LIBlowE6SSM_SRC += \
 		$(DIR)/lowE6SSM_two_scale_model.cpp \
 		$(DIR)/lowE6SSM_two_scale_susy_parameters.cpp \
 		$(DIR)/lowE6SSM_two_scale_soft_parameters.cpp \
-		$(DIR)/lowE6SSM_two_scale_susy_scale_constraint.cpp
+		$(DIR)/lowE6SSM_two_scale_susy_scale_constraint.cpp \
+		$(DIR)/lowE6SSM_two_scale_tuning_calculator.cpp
 EXElowE6SSM_SRC += \
 		$(DIR)/run_lowE6SSM.cpp \
 		$(DIR)/scan_lowE6SSM.cpp
@@ -63,7 +64,8 @@ LIBlowE6SSM_HDR += \
 		$(DIR)/lowE6SSM_two_scale_model.hpp \
 		$(DIR)/lowE6SSM_two_scale_soft_parameters.hpp \
 		$(DIR)/lowE6SSM_two_scale_susy_parameters.hpp \
-		$(DIR)/lowE6SSM_two_scale_susy_scale_constraint.hpp
+		$(DIR)/lowE6SSM_two_scale_susy_scale_constraint.hpp \
+		$(DIR)/lowE6SSM_two_scale_tuning_calculator.hpp
 
 ifneq ($(MAKECMDGOALS),showbuild)
 ifneq ($(MAKECMDGOALS),tag)

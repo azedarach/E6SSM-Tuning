@@ -89,7 +89,7 @@ void QR_solve(DoubleMatrix const & Q, DoubleMatrix const & R, int n, DoubleVecto
 	{
 	  x.set(k, (rhs.display(k)-sum)/R(k,k));
 	}
-      else if (R(k,k) == 0.0 & sum == 0.0 && rhs.display(k) == 0.0)
+      else if (R(k,k) == 0.0 && sum == 0.0 && rhs.display(k) == 0.0)
 	{
 	  sing = 1;
 	  x.set(k,1.0);

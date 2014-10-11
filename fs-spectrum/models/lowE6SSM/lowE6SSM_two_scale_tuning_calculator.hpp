@@ -75,18 +75,18 @@ namespace flexiblesusy {
 
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs(std::size_t num_pars) const;
 
-      Eigen::VectorXd calculate_deriv_dbeta_dLambdax(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dTLambdax(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dTYu22(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dmq222(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dmHd2(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dmHu2(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dmu222(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dms2(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dMassB(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dMassWB(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dMassG(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dbeta_dMassBp(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dLambdax(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dTLambdax(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dTYu22(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dmq222(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dmHd2(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dmHu2(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dmu222(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dms2(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dMassB(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dMassWB(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dMassG(std::size_t num_pars) const;
+      Eigen::VectorXd calculate_deriv_dlowscale_dMassBp(std::size_t num_pars) const;
 
    };
 

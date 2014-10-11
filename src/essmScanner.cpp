@@ -1896,8 +1896,9 @@ int main(int argc, const char* argv[])
 	      pars(tuning_parameters::mqL3Sq) = mQlSq(2,2);
 	      pars(tuning_parameters::mtRSq) = mUrSq(2,2);
 
-	      tunings = doCalcESSMTuningApprox(m, MS, MX, pars, hasTuningError, false);
-
+	      //tunings = doCalcESSMTuningApprox(m, MS, MX, pars, hasTuningError, false);
+              //tunings = doCalcESSMTuningNumerically(m, MS, MX, pars, pE6SSMftBCs);
+              tunings = doCalcESSMTuningSemianalytic(m, MS, MX, hasTuningError);
 	      // Possible numerical errors here in running should be accounted for.
 	      // if (!hasEWSBProblem && tuningEWSBProblem) //< tuning calculation hasn't found solution satisfies tolerance
 	      // 	{

@@ -74,8 +74,8 @@ namespace flexiblesusy {
       int solve_ewsb_for_soft_masses();
       void ewsb_initial_guess_for_vevs(double x_init[number_of_ewsb_eqs]) const;
 
-   int solve_ewsb_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
-                                                                const double x_init[number_of_ewsb_eqs]);
+      int solve_ewsb_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
+                                               const double x_init[number_of_ewsb_eqs]);
       /// Useful for second derivatives
       bool equal_as_unordered_pairs(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2,
                                     lowE6SSM_info::Parameters q1, lowE6SSM_info::Parameters q2) const;
@@ -83,12 +83,6 @@ namespace flexiblesusy {
       double gbar() const;
       double MFtop_DRbar() const;
 
-      double stop_mass_matrix_LL_entry() const;
-      double stop_mass_matrix_RR_entry() const;
-      double stop_mass_matrix_LR_entry() const;
-
-      double stop_MQQ2() const;
-      double stop_RQQ() const;
       double stop_discriminant() const;
 
       double deriv_dMFtop2_dvu() const;

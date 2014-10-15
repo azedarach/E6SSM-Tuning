@@ -36,7 +36,6 @@ extern const double Isospin[NUMBER_OF_MSSM_SPARTICLES];
 extern const double Hypercharge_left[NUMBER_OF_MSSM_SPARTICLES];
 extern const double Hypercharge_right[NUMBER_OF_MSSM_SPARTICLES];
 
-
 /**
  * data needed to fill 2 x 2 sfermion mass matrix 
  */ 
@@ -53,7 +52,33 @@ struct Mass_data {
    double Yr;     ///< Hypercharge of right-handed sfermion
 };
 
+/**
+ * data needed to fill 2 x 2 sfermion mass matrix in U(1)
+ * extended model
+ */
+struct Extended_mass_data {
+   double ml2;           ///< soft mass of left-handed sfermion
+   double mr2;           ///< soft mass of right-handed sfermion
+   double yf;            ///< Yukawa coupling
+   double vd, vu;        ///< Higgs VEVs
+   double vs;            ///< Singlet VEVs
+   double gY, g2, gN;    ///< gauge couplings (not GUT normalized)
+   double Tyf;           ///< trilinear coupling
+   double mu;            ///< Superpotential parameter
+   double T3;            ///< weak isospin
+   double Yl;            ///< Hypercharge of left-handed sfermion
+   double Yr;            ///< Hypercharge of right-handed sfermion
+   double Ql;            ///< U(1)' charge of left-handed sfermion
+   double Qr;            ///< U(1)' charge of right-handed sfermion
+   double QHd;           ///< U(1)' charge of down-type Higgs
+   double QHu;           ///< U(1)' charge of up-type Higgs
+   double QS;            ///< U(1)' charge of singlet
+};
+
 double diagonalize_sfermions_2x2(const Mass_data&,
+                                 Eigen::Array<double,2,1>&);
+
+double diagonalize_sfermions_2x2(const Extended_mass_data&,
                                  Eigen::Array<double,2,1>&);
 
 } // namespace sfermions

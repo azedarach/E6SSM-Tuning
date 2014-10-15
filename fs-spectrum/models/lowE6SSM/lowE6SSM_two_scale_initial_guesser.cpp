@@ -129,6 +129,9 @@ void lowE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    calculate_Yd_DRbar();
    calculate_Ye_DRbar();
 
+   MODEL->set_mHd2(Power(SM(MZ),3));
+   MODEL->set_mHu2(Power(SM(MZ),3));
+   MODEL->set_ms2(Power(SM(MZ),3));
 }
 
 void lowE6SSM_initial_guesser<Two_scale>::calculate_DRbar_yukawa_couplings()

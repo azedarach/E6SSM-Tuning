@@ -109,5 +109,76 @@ double diagonalize_sfermions_2x2(const Mass_data& pars,
    return theta;
 }
 
+double diagonalize_sfermions_2x2(const Extended_mass_data& pars,
+                                 Eigen::Array<double,2,1>& msf)
+{
+   const double ml2    = pars.ml2;
+   const double mr2    = pars.mr2;
+   const double yf     = pars.yf;
+   const double vd     = pars.vd;
+   const double vu     = pars.vu;
+   const double vs     = pars.vs;
+   const double gY     = pars.gY;
+   const double g2     = pars.g2;
+   const double gN     = pars.gN;
+   const double Tyf    = pars.Tyf;
+   const double mu     = pars.mu;
+   const double T3     = pars.T3;
+   const double Yl     = pars.Yl;
+   const double Yr     = pars.Yr;
+   const double Ql     = pars.Ql;
+   const double Qr     = pars.Qr;
+   const double QHd    = pars.QHd;
+   const double QHu    = pars.QHu;
+   const double QS     = pars.QS;
+   const double vev2   = 0.25 * (Sqr(vd) - Sqr(vu));
+   Eigen::Matrix<double,2,2> mass_matrix;
+   /// fill sfermion phi in mass matix in basis (phi_L phi_R)
+   if (Sign(T3) > 0) {
+      mass_matrix(0,0) = ml2 + 0.5 * AbsSqr(yf) * Sqr(vu)
+         + (T3 * Sqr(g2) - 0.5 * Yl * Sqr(gY)) * vev2
+         + 0.5 * Ql * Sqr(gN) * (QHd * Sqr(vd) + QHu * Sqr(vu) + QS * Sqr(vs));
+      mass_matrix(0,1) = oneOverRoot2 * (vu*Conj(Tyf) - vd*Conj(yf)*mu);
+      mass_matrix(1,0) = Conj(mass_matrix(0,1));
+      mass_matrix(1,1) = mr2 + 0.5 * AbsSqr(yf) * Sqr(vu)
+         - 0.5 * Yr * Sqr(gY) * vev2
+         + 0.5 * Qr * Sqr(gN) * (QHd * Sqr(vd) + QHu * Sqr(vu) + QS * Sqr(vs));
+   } else {
+      mass_matrix(0,0) = ml2 + 0.5 * AbsSqr(yf) * Sqr(vd)
+         + (T3 * Sqr(g2) - 0.5 * Yl * Sqr(gY)) * vev2
+         + 0.5 * Ql * Sqr(gN) * (QHd * Sqr(vd) + QHu * Sqr(vu) + QS * Sqr(vs));
+      mass_matrix(0,1) = oneOverRoot2 * (vd*Conj(Tyf) - vu*Conj(yf)*mu);
+      mass_matrix(1,0) = Conj(mass_matrix(0,1));
+      mass_matrix(1,1) = mr2 + 0.5 * AbsSqr(yf) * Sqr(vd)
+         - 0.5 * Yr * Sqr(gY) * vev2
+         + 0.5 * Qr * Sqr(gN) * (QHd * Sqr(vd) + QHu * Sqr(vu) + QS * Sqr(vs));
+   }
+   
+   Eigen::Matrix<double, 2, 2> Zf;
+   diagonalize_hermitian(mass_matrix, msf, Zf);
+
+#ifdef ENABLE_VERBOSE
+   if (msf.minCoeff() < 0.)
+      WARNING("diagonalize_sfermions_2x2: sfermion tachyon");
+#endif
+
+   msf = AbsSqrt(msf);
+
+   double theta;
+
+   if (Sign(Zf(0,0)) == Sign(Zf(1,1))) {
+      theta = ArcCos(Abs(Zf(0,0)));
+   } else {
+      theta = ArcCos(Abs(Zf(0,1)));
+      Zf.col(0).swap(Zf.col(1));
+      std::swap(msf(0), msf(1));
+   }
+
+   theta = Sign(mass_matrix(0,1) / (mass_matrix(0,0) - mass_matrix(1,1)))
+      * Abs(theta);
+
+   return theta;
+}
+
 } // namespace sfermions
 } // namespace flexiblesusy

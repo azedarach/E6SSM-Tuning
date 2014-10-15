@@ -15,12 +15,16 @@
 #include "lowE6SSM_two_scale_model.hpp"
 
 #include <Eigen/Core>
+#include <gsl/gsl_vector.h>
+#include <gsl/gsl_multiroots.h>
 #include <utility>
 
 namespace flexiblesusy {
 
    class lowE6SSM_ew_derivs {
    public:
+
+      enum class stop_mass : char {mstop_1, mstop_2};
 
       explicit lowE6SSM_ew_derivs(const lowE6SSM<Two_scale>&);
 
@@ -30,7 +34,7 @@ namespace flexiblesusy {
       void set_number_of_ewsb_iterations(std::size_t i) { number_of_ewsb_iterations = i; }
       void set_ewsb_iteration_precision(double p) { ewsb_iteration_precision = p; }
 
-      lowE6SSM<Two_scale>& get_model() const { return model; }
+      lowE6SSM<Two_scale>& get_model() { return model; }
       std::size_t get_number_of_ewsb_iterations() const { return number_of_ewsb_iterations; }
       double get_ewsb_iteration_precision() const { return ewsb_iteration_precision; }
 
@@ -38,6 +42,12 @@ namespace flexiblesusy {
       double get_ewsb_condition_1() const;
       double get_ewsb_condition_2() const;
       double get_ewsb_condition_3() const;
+
+      /// Values of parameters needed for fine tuning calculation
+      double get_g1() const { return model.get_g1(); }
+      double get_g2() const { return model.get_g2(); }
+      double get_vd() const { return model.get_vd(); }
+      double get_vu() const { return model.get_vu(); }
 
       /// Derivatives of EWSB conditions w.r.t VEVs
       Eigen::Matrix<double,3,3> calculate_unrotated_mass_matrix_hh() const;
@@ -53,14 +63,19 @@ namespace flexiblesusy {
       double deriv_dDeltaV_dparam(lowE6SSM_info::Parameters p) const;
       double deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const;
 
+      double deriv_dMFtop2_dparam(lowE6SSM_info::Parameters p) const;
+      double deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::Parameters p1, 
+                                          lowE6SSM_info::Parameters p2) const;
+      double deriv_dMStop2_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p) const;
+      double deriv_d2MStop2_dparam_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const;
+
    private:
-      enum class stop_mass : char {mstop_1, mstop_2};
 
       static const std::size_t number_of_ewsb_eqs = 3;
 
       struct Ewsb_vev_parameters {
-         lowE6SSM_ew_derivs derivs;
-         std::size_t ewsb_loop_order;
+         lowE6SSM_ew_derivs* derivs;
+         unsigned ewsb_loop_order;
       };
 
       lowE6SSM<Two_scale> model;
@@ -70,15 +85,12 @@ namespace flexiblesusy {
       Eigen::Matrix<double,2,1> MStop;
 
       void set_MStop(double msf1, double msf2) { MStop(0) = msf1; MStop(1) = msf2; } 
-      int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f);
+      static int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f);
       int solve_ewsb_for_soft_masses();
       void ewsb_initial_guess_for_vevs(double x_init[number_of_ewsb_eqs]) const;
 
       int solve_ewsb_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
                                                const double x_init[number_of_ewsb_eqs]);
-      /// Useful for second derivatives
-      bool equal_as_unordered_pairs(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2,
-                                    lowE6SSM_info::Parameters q1, lowE6SSM_info::Parameters q2) const;
 
       double gbar() const;
       double MFtop_DRbar() const;
@@ -87,6 +99,7 @@ namespace flexiblesusy {
 
       double deriv_dMFtop2_dvu() const;
       double deriv_dMFtop2_dYu22() const;
+
       double deriv_d2MFtop2_dvu_dvu() const;
       double deriv_d2MFtop2_dYu22_dvu() const;
       double deriv_d2MFtop2_dYu22_dYu22() const;
@@ -99,11 +112,9 @@ namespace flexiblesusy {
       double deriv_dMStop2_dgN(stop_mass which_stop) const;
       double deriv_dMStop2_dYu22(stop_mass which_stop) const;
       double deriv_dMStop2_dmq222(stop_mass which_stop) const;
-      double deriv_dMStop2_mu222(stop_mass which_stop) const;
+      double deriv_dMStop2_dmu222(stop_mass which_stop) const;
       double deriv_dMStop2_dLambdax(stop_mass which_stop) const;
       double deriv_dMStop2_dTYu22(stop_mass which_stop) const;
-
-      double deriv_dMStop2_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p) const;
 
       double deriv_d2MStop2_dvd_dvd(stop_mass which_stop) const;
       double deriv_d2MStop2_dvd_dvu(stop_mass which_stop) const;
@@ -171,8 +182,6 @@ namespace flexiblesusy {
       double deriv_d2MStop2_dLambdax_dLambdax(stop_mass which_stop) const;
       double deriv_d2MStop2_dTYu22_dLambdax(stop_mass which_stop) const;
       double deriv_d2MStop2_dTYu22_dTYu22(stop_mass which_stop) const;
-      double deriv_d2MStop2_dparam_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const;
-
    };
 
 } // namespace flexiblesusy

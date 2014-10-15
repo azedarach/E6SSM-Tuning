@@ -11,6 +11,7 @@
 #ifndef lowE6SSM_TUNING_CALCULATOR_H
 #define lowE6SSM_TUNING_CALCULATOR_H
 
+#include "lowE6SSM_two_scale_ew_derivs.hpp"
 #include "lowE6SSM_two_scale_model.hpp"
 #include "lowE6SSM_utilities.hpp"
 

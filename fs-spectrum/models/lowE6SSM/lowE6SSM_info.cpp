@@ -20,6 +20,8 @@
 
 #include "lowE6SSM_info.hpp"
 
+#include "wrappers.hpp"
+
 #include <iostream>
 
 namespace flexiblesusy {
@@ -74,6 +76,42 @@ namespace lowE6SSM_info {
       "mDxbar2(1,2)", "mDxbar2(2,0)", "mDxbar2(2,1)", "mDxbar2(2,2)", "mHp2",
       "mHpbar2", "MassB", "MassWB", "MassG", "MassBp"};
 
+   const double e6_chi_charges[NUMBER_OF_SUPERFIELDS] = {
+      -1.0 * oneOver2Sqrt10, 
+      3.0 * oneOver2Sqrt10,
+      -2.0 * oneOver2Sqrt10,
+      2.0 * oneOver2Sqrt10, 
+      3.0 * oneOver2Sqrt10,
+      -1.0 * oneOver2Sqrt10,
+      -1.0 * oneOver2Sqrt10,
+      0.0,
+      -2.0 * oneOver2Sqrt10,
+      2.0 * oneOver2Sqrt10,
+      0.0,
+      2.0 * oneOver2Sqrt10,
+      -2.0 * oneOver2Sqrt10,
+      3.0 * oneOver2Sqrt10,
+      -3.0 * oneOver2Sqrt10
+   };
+   
+   const double e6_psi_charges[NUMBER_OF_SUPERFIELDS] = {
+      oneOver2Sqrt6,
+      oneOver2Sqrt6,
+      -2.0 * oneOver2Sqrt6,
+      -2.0 * oneOver2Sqrt6, 
+      oneOver2Sqrt6, 
+      oneOver2Sqrt6, 
+      oneOver2Sqrt6, 
+      4.0 * oneOver2Sqrt6, 
+      -2.0 * oneOver2Sqrt6, 
+      -2.0 * oneOver2Sqrt6,
+      4.0 * oneOver2Sqrt6,
+      -2.0 * oneOver2Sqrt6, 
+      -2.0 * oneOver2Sqrt6,
+      oneOver2Sqrt6, 
+      -1.0 * oneOver2Sqrt6
+   };
+   
    const char* model_name = "lowE6SSM";
    const bool is_low_energy_model = true;
 
@@ -107,6 +145,11 @@ void print(std::ostream& ostr)
    }
    ostr << '\n';
 }
+
+   double get_e6_charge(Superfields f, double theta)
+   {
+      return e6_chi_charges[f] * Cos(theta) + e6_psi_charges[f] * Sin(theta);
+   }
 
 } // namespace lowE6SSM_info
 

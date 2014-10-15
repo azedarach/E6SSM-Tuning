@@ -23,6 +23,7 @@
 #include <cmath>
 #include <functional>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <Eigen/Core>
 #include <boost/lexical_cast.hpp>
@@ -32,6 +33,9 @@ namespace flexiblesusy {
 static const double Pi = M_PI;
 static const double oneOver16PiSqr = 1./(16. * M_PI * M_PI);
 static const double twoLoop = oneOver16PiSqr * oneOver16PiSqr;
+// DH:: for U(1)' charges
+static const double oneOver2Sqrt6 = 0.5 / std::sqrt(6.);
+static const double oneOver2Sqrt10 = 0.5 / std::sqrt(10.);
 
 inline double Abs(double z)
 {
@@ -137,6 +141,19 @@ inline int Delta(int i, int j)
    return i == j;
 }
 
+// DH:: added comparison routine useful for getting 
+// e.g. mixed second derivatives without having
+// to resort to unordered_set
+template <typename T>
+bool equal_as_unordered_pairs(T p1, T p2, T q1, T q2)
+{
+   if ((p1 == q1 && p2 == q2) || (p1 == q2 && p2 == q1)) {
+      return true;
+   } else {
+      return false;
+   }
+}
+
 inline int KroneckerDelta(int i, int j)
 {
    return i == j;
@@ -196,6 +213,17 @@ double MaxRelDiff(const Eigen::ArrayBase<Derived>& a,
                   const Eigen::ArrayBase<Derived>& b)
 {
    return MaxRelDiff(a.matrix(), b.matrix());
+}
+
+// DH:: added narrow cast wrapper from Stroustrup, 
+// "The C++ Programming Language", 4th edn.
+template <typename Target, typename Source>
+Target narrow_cast(Source v)
+{
+   auto r = static_cast<Target>(v);
+   if (static_cast<Source>(r) != v)
+      throw std::runtime_error("narrow_cast<>() failed");
+   return r;
 }
 
 inline int Sign(double x)

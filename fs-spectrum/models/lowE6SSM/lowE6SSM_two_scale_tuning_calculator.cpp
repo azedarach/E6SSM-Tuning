@@ -63,7 +63,7 @@ namespace flexiblesusy {
    {
       bool tuning_problem = false;
       
-      lowE6SSM_ew_derivs ew_derivs;
+      lowE6SSM_ew_derivs ew_derivs(model);
       Eigen::Matrix<double,num_ewsb_eqs,num_tuning_pars> beta_derivs;
       
       double scale = model.get_scale();
@@ -273,61 +273,73 @@ namespace flexiblesusy {
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTLambdax(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTYu22(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmq222(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHd2(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHu2(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmu222(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dms2(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassB(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassWB(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassG(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 
    Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassBp(std::size_t num_pars) const
    {
-
+      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
+      return result;
    }
 } // namespace flexiblesusy

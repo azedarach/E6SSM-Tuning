@@ -33,19 +33,23 @@ LIBlowE6SSM_SRC += \
 		$(DIR)/lowE6SSM_physical.cpp \
 		$(DIR)/lowE6SSM_utilities.cpp \
 		$(DIR)/lowE6SSM_two_scale_convergence_tester.cpp \
+		$(DIR)/lowE6SSM_two_scale_ew_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_high_scale_constraint.cpp \
 		$(DIR)/lowE6SSM_two_scale_initial_guesser.cpp \
 		$(DIR)/lowE6SSM_two_scale_low_scale_constraint.cpp \
 		$(DIR)/lowE6SSM_two_scale_model.cpp \
 		$(DIR)/lowE6SSM_two_scale_susy_parameters.cpp \
 		$(DIR)/lowE6SSM_two_scale_soft_parameters.cpp \
+		$(DIR)/lowE6SSM_two_scale_stop_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_susy_scale_constraint.cpp \
+		$(DIR)/lowE6SSM_two_scale_top_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_tuning_calculator.cpp
 EXElowE6SSM_SRC += \
 		$(DIR)/run_lowE6SSM.cpp \
 		$(DIR)/scan_lowE6SSM.cpp
 LIBlowE6SSM_HDR += \
 		$(DIR)/lowE6SSM_convergence_tester.hpp \
+		$(DIR)/lowE6SSM_two_scale_ew_derivs.hpp \
 		$(DIR)/lowE6SSM_high_scale_constraint.hpp \
 		$(DIR)/lowE6SSM_info.hpp \
 		$(DIR)/lowE6SSM_initial_guesser.hpp \

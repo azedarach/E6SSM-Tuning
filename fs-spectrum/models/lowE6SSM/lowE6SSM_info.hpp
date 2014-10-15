@@ -50,6 +50,12 @@ namespace lowE6SSM_info {
       mDxbar211, mDxbar212, mDxbar220, mDxbar221, mDxbar222, mHp2, mHpbar2, MassB,
       MassWB, MassG, MassBp, NUMBER_OF_PARAMETERS};
 
+   enum Superfields : unsigned {QL, LL, Hd, Hu, dR, uR, eR, S, H1I, 
+         H2I, SI, Dx, Dxbar, Hp, Hpbar, NUMBER_OF_SUPERFIELDS};
+   
+   extern const double e6_chi_charges[NUMBER_OF_SUPERFIELDS];
+   extern const double e6_psi_charges[NUMBER_OF_SUPERFIELDS];
+   
    extern const unsigned particle_multiplicities[NUMBER_OF_PARTICLES];
    extern const char* particle_names[NUMBER_OF_PARTICLES];
    extern const char* particle_latex_names[NUMBER_OF_PARTICLES];
@@ -58,6 +64,7 @@ namespace lowE6SSM_info {
    extern const bool is_low_energy_model;
 
    void print(std::ostream&);
+   double get_e6_charge(Superfields,double);
 }
 
 } // namespace flexiblesusy

@@ -1,5 +1,13 @@
 #include "lowE6SSM_two_scale_ew_derivs.hpp"
 
+#include "error.hpp"
+#include "gsl_utils.hpp"
+#include "logger.hpp"
+#include "pv.hpp"
+#include "root_finder.hpp"
+#include "wrappers.hpp"
+
+
 namespace flexiblesusy {
    lowE6SSM_ew_derivs::lowE6SSM_ew_derivs(const lowE6SSM<Two_scale>& m)
       : model(m)
@@ -102,77 +110,77 @@ namespace flexiblesusy {
          double d2DeltaV_dvu_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::vs);
          double d2DeltaV_dvs_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vs, lowE6SSM_info::vs);
 
-         mass_matrix(0,0) += deriv_d2DeltaV_dvd_dvd;
-         mass_matrix(0,1) += deriv_d2DeltaV_dvd_dvu;
-         mass_matrix(0,2) += deriv_d2DeltaV_dvd_dvs;
-         mass_matrix(1,0) += deriv_d2DeltaV_dvd_dvu;
-         mass_matrix(1,1) += deriv_d2DeltaV_dvu_dvu;
-         mass_matrix(1,2) += deriv_d2DeltaV_dvu_dvs;
-         mass_matrix(2,0) += deriv_d2DeltaV_dvd_dvs;
-         mass_matrix(2,1) += deriv_d2DeltaV_dvu_dvs;
-         mass_matrix(2,2) += deriv_d2DeltaV_dvs_dvs;
+         mass_matrix(0,0) += d2DeltaV_dvd_dvd;
+         mass_matrix(0,1) += d2DeltaV_dvd_dvu;
+         mass_matrix(0,2) += d2DeltaV_dvd_dvs;
+         mass_matrix(1,0) += d2DeltaV_dvd_dvu;
+         mass_matrix(1,1) += d2DeltaV_dvu_dvu;
+         mass_matrix(1,2) += d2DeltaV_dvu_dvs;
+         mass_matrix(2,0) += d2DeltaV_dvd_dvs;
+         mass_matrix(2,1) += d2DeltaV_dvu_dvs;
+         mass_matrix(2,2) += d2DeltaV_dvs_dvs;
       }
-
+      
       return mass_matrix;
    }
-
+   
    Eigen::Matrix<double,3,Eigen::Dynamic> lowE6SSM_ew_derivs::calculate_ewsb_parameter_derivs() const
    {
-
+      return Eigen::Matrix<double,3,3>::Zero();
    }
-
+   
    int lowE6SSM_ew_derivs::ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f)
-      {
-         if (contains_nan(x, number_of_eqsb_eqs)) {
-            for (std::size_t i = 0; i < number_of_ewsb_eqs; ++i)
-               gsl_vector_set(f, i, std::numeric_limits<double>::max());
-            return GSL_EDOM;
-         }
-
-         const lowE6SSM_ew_derivs::Ewsb_vev_parameters* ewsb_params
-            = static_cast<lowE6SSM_ew_derivs::Ewsb_vev_parameters*>(params);
-         lowE6SSM_ew_derivs* derivs = ewsb_params->derivs;
-         const std::size_t ewsb_loop_order = ewsb_params->ewsb_loop_order;
-
-         double tadpole[number_of_ewsb_eqs];
-
-         model->get_model().set_vd(gsl_vector_get(x, 0));
-         model->get_model().set_vu(gsl_vector_get(x, 1));
-         model->get_model().set_vs(gsl_vector_get(x, 2));
-
-         tadpole[0] = model->get_model().get_ewsb_eq_hh_1();
-         tadpole[1] = model->get_model().get_ewsb_eq_hh_2();
-         tadpole[2] = model->get_model().get_ewsb_eq_hh_3();
-
-         if (ewsb_loop_order > 0) {
-            double msf1;
-            double msf2;
-            double theta;
-            model->get_model.calculate_MSu_3rd_generation(msf1, msf2, theta);
-
-            model->set_MStop(msf1, msf2);
-            tadpole[0] += model->deriv_dDeltaV_dparam(lowE6SSM_info::vd);
-            tadpole[1] += model->deriv_dDeltaV_dparam(lowE6SSM_info::vu);
-            tadpole[2] += model->deriv_dDeltaV_dparam(lowE6SSM_info::vs);
-         }
-
-         for (std::size_t i = 0; i < number_of_ewsb_ews; ++i) 
-            gsl_vector_set(f, i, tadpole[i]);
-
-         return GSL_SUCCESS;
+   {
+      if (contains_nan(x, number_of_ewsb_eqs)) {
+         for (std::size_t i = 0; i < number_of_ewsb_eqs; ++i)
+            gsl_vector_set(f, i, std::numeric_limits<double>::max());
+         return GSL_EDOM;
       }
+      
+      const lowE6SSM_ew_derivs::Ewsb_vev_parameters* ewsb_params
+         = static_cast<lowE6SSM_ew_derivs::Ewsb_vev_parameters*>(params);
+      lowE6SSM_ew_derivs* derivs = ewsb_params->derivs;
+      const std::size_t ewsb_loop_order = ewsb_params->ewsb_loop_order;
+      
+      double tadpole[number_of_ewsb_eqs];
 
+      derivs->get_model().set_vd(gsl_vector_get(x, 0));
+      derivs->get_model().set_vu(gsl_vector_get(x, 1));
+      derivs->get_model().set_vs(gsl_vector_get(x, 2));
+      
+      tadpole[0] = derivs->get_model().get_ewsb_eq_hh_1();
+      tadpole[1] = derivs->get_model().get_ewsb_eq_hh_2();
+      tadpole[2] = derivs->get_model().get_ewsb_eq_hh_3();
+      
+      if (ewsb_loop_order > 0) {
+         double msf1;
+         double msf2;
+         double theta;
+         derivs->get_model().calculate_MSu_3rd_generation(msf1, msf2, theta);
+         
+         derivs->set_MStop(msf1, msf2);
+         tadpole[0] += derivs->deriv_dDeltaV_dparam(lowE6SSM_info::vd);
+         tadpole[1] += derivs->deriv_dDeltaV_dparam(lowE6SSM_info::vu);
+         tadpole[2] += derivs->deriv_dDeltaV_dparam(lowE6SSM_info::vs);
+      }
+      
+      for (std::size_t i = 0; i < number_of_ewsb_eqs; ++i) 
+         gsl_vector_set(f, i, tadpole[i]);
+      
+      return GSL_SUCCESS;
+   }
+   
    void lowE6SSM_ew_derivs::ewsb_initial_guess_for_vevs(double x_init[number_of_ewsb_eqs]) const
    {
       x_init[0] = model.get_vd();
       x_init[1] = model.get_vu();
       x_init[2] = model.get_vs();
    }
-
+   
    int lowE6SSM_ew_derivs::solve_ewsb_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
                                                                 const double x_init[number_of_ewsb_eqs])
    {
-      Ewsb_vev_parameters params = {this, model.get_ewsb_loop_order()};
+      Ewsb_vev_parameters params = {this, narrow_cast<unsigned>(model.get_ewsb_loop_order())};
       Root_finder<number_of_ewsb_eqs> root_finder(lowE6SSM_ew_derivs::ewsb_conditions,
                                                   &params,
                                                   number_of_ewsb_iterations,
@@ -187,7 +195,7 @@ namespace flexiblesusy {
    {
       const gsl_multiroot_fsolver_type* solvers[] = {
          gsl_multiroot_fsolver_hybrid,
-         gsl_multiroot_fsolver_hyrbids,
+         gsl_multiroot_fsolver_hybrids,
          gsl_multiroot_fsolver_broyden,
          gsl_multiroot_fsolver_dnewton
       };
@@ -289,17 +297,7 @@ namespace flexiblesusy {
       return result;
    }
 
-   bool lowE6SSM_ewsb_conditions::equal_as_unordered_pairs(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2,
-                                                          lowE6SSM_info::Parameters q1,lowE6SSM_info::Parameters q2) const
-   {
-      if ((p1 == q1 && p2 == q2) || (p1 == q2 && p2 == q1)) {
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   double lowE6SSM_ewsb_conditions::gbar() const
+   double lowE6SSM_ew_derivs::gbar() const
    {
       double g1  = model.get_g1();
       double g2  = model.get_g2();
@@ -308,7 +306,7 @@ namespace flexiblesusy {
       return (g2 * Cos(thW) + 0.7745966692414834 * g1 * Sin(thW));
    }
 
-   double lowE6SSM_ewsb_conditions::MFtop_DRbar() const
+   double lowE6SSM_ew_derivs::MFtop_DRbar() const
    {
       double yt = model.get_Yu(2, 2);
       double vu = model.get_vu();

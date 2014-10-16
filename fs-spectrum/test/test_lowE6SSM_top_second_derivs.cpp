@@ -1,5 +1,5 @@
 // ====================================================================
-// Test suite for implementation of first derivatives of DR bar
+// Test suite for implementation of second derivatives of DR bar
 // top mass
 // ====================================================================
 
@@ -14,7 +14,7 @@
 #include "lowE6SSM_two_scale_ew_derivs.hpp"
 
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE test_lowE6SSM_top_first_derivs
+#define BOOST_TEST_MODULE test_lowE6SSM_top_second_derivs
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
@@ -201,15 +201,17 @@ void initialize_model(const lowE6SSM_input_parameters& input,
 struct mtop_params {
    lowE6SSM_ew_derivs* derivs;
    lowE6SSM_info::Parameters p;
+   lowE6SSM_info::Parameters q;
 };
 
-double mt2(double x, void * params)
+double dmt2_dparam(double x, void * params)
 {
-   const mtop_params* pars 
+   const mtop_params* pars
       = static_cast<mtop_params*>(params);
 
    lowE6SSM_ew_derivs* derivs = pars->derivs;
    lowE6SSM_info::Parameters p = pars->p;
+   lowE6SSM_info::Parameters q = pars->q;
 
    switch(p) {
    case lowE6SSM_info::Yu22 : {
@@ -225,11 +227,11 @@ double mt2(double x, void * params)
    }
    }
 
-   return 0.5 * Sqr(derivs->get_model().get_Yu(2,2) * derivs->get_model().get_vu());
+   return derivs->deriv_dMFtop2_dparam(q);
 
 }
 
-BOOST_AUTO_TEST_CASE( test_dMFtop2_dYu22 )
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dYu22_dYu22 )
 {
    double theta = ArcTan(Sqrt(15.));
 
@@ -241,11 +243,11 @@ BOOST_AUTO_TEST_CASE( test_dMFtop2_dYu22 )
 
    lowE6SSM_ew_derivs ew_derivs(model);
 
-   double analytic_deriv = ew_derivs.deriv_dMFtop2_dparam(lowE6SSM_info::Yu22);
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::Yu22, lowE6SSM_info::Yu22);
 
-   mtop_params pars = {&ew_derivs, lowE6SSM_info::Yu22 };
+   mtop_params pars = { &ew_derivs, lowE6SSM_info::Yu22, lowE6SSM_info::Yu22 };
 
-   gsl_function func = { mt2, &pars };
+   gsl_function func = { dmt2_dparam, &pars };
 
    double numeric_deriv;
    double abs_err;
@@ -256,7 +258,7 @@ BOOST_AUTO_TEST_CASE( test_dMFtop2_dYu22 )
 
 }
 
-BOOST_AUTO_TEST_CASE( test_dMFtop2_dvu )
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dvu_dvu )
 {
    double theta = ArcTan(Sqrt(15.));
 
@@ -268,11 +270,11 @@ BOOST_AUTO_TEST_CASE( test_dMFtop2_dvu )
 
    lowE6SSM_ew_derivs ew_derivs(model);
 
-   double analytic_deriv = ew_derivs.deriv_dMFtop2_dparam(lowE6SSM_info::vu);
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::vu);
 
-   mtop_params pars = {&ew_derivs, lowE6SSM_info::vu };
+   mtop_params pars = { &ew_derivs, lowE6SSM_info::vu, lowE6SSM_info::vu };
 
-   gsl_function func = { mt2, &pars };
+   gsl_function func = { dmt2_dparam, &pars };
 
    double numeric_deriv;
    double abs_err;
@@ -283,7 +285,7 @@ BOOST_AUTO_TEST_CASE( test_dMFtop2_dvu )
 
 }
 
-BOOST_AUTO_TEST_CASE( test_dMFtop2_dvd )
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dvu_dYu22 )
 {
    double theta = ArcTan(Sqrt(15.));
 
@@ -295,11 +297,11 @@ BOOST_AUTO_TEST_CASE( test_dMFtop2_dvd )
 
    lowE6SSM_ew_derivs ew_derivs(model);
 
-   double analytic_deriv = ew_derivs.deriv_dMFtop2_dparam(lowE6SSM_info::vd);
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::Yu22, lowE6SSM_info::vu);
 
-   mtop_params pars = {&ew_derivs, lowE6SSM_info::vd };
+   mtop_params pars = {&ew_derivs, lowE6SSM_info::vu , lowE6SSM_info::Yu22 };
 
-   gsl_function func = { mt2, &pars };
+   gsl_function func = { dmt2_dparam, &pars };
 
    double numeric_deriv;
    double abs_err;
@@ -310,3 +312,111 @@ BOOST_AUTO_TEST_CASE( test_dMFtop2_dvd )
 
 }
 
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dYu22_dvu )
+{
+   double theta = ArcTan(Sqrt(15.));
+
+   lowE6SSM_input_parameters inputs = get_test_inputs(theta);
+
+   lowE6SSM<Two_scale> model;
+
+   initialize_model(inputs, model);
+
+   lowE6SSM_ew_derivs ew_derivs(model);
+
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::Yu22);
+
+   mtop_params pars = {&ew_derivs, lowE6SSM_info::Yu22, lowE6SSM_info::vu };
+
+   gsl_function func = { dmt2_dparam, &pars };
+
+   double numeric_deriv;
+   double abs_err;
+
+   gsl_deriv_central(&func, model.get_Yu(2,2), 1.0e-3, &numeric_deriv, &abs_err);
+
+   BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
+
+}
+
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dYu22_dmq222 )
+{
+   double theta = ArcTan(Sqrt(15.));
+
+   lowE6SSM_input_parameters inputs = get_test_inputs(theta);
+
+   lowE6SSM<Two_scale> model;
+
+   initialize_model(inputs, model);
+
+   lowE6SSM_ew_derivs ew_derivs(model);
+
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::mq222, lowE6SSM_info::Yu22);
+
+   mtop_params pars = {&ew_derivs, lowE6SSM_info::mq222 , lowE6SSM_info::Yu22 };
+
+   gsl_function func = { dmt2_dparam, &pars };
+
+   double numeric_deriv;
+   double abs_err;
+
+   gsl_deriv_central(&func, model.get_mq2(2,2), 1.0e-3, &numeric_deriv, &abs_err);
+
+   BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
+
+}
+
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dvu_dMassB )
+{
+   double theta = ArcTan(Sqrt(15.));
+
+   lowE6SSM_input_parameters inputs = get_test_inputs(theta);
+
+   lowE6SSM<Two_scale> model;
+
+   initialize_model(inputs, model);
+
+   lowE6SSM_ew_derivs ew_derivs(model);
+
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::MassB, lowE6SSM_info::vu);
+
+   mtop_params pars = {&ew_derivs, lowE6SSM_info::MassB, lowE6SSM_info::vu };
+
+   gsl_function func = { dmt2_dparam, &pars };
+
+   double numeric_deriv;
+   double abs_err;
+
+   gsl_deriv_central(&func, model.get_MassB(), 1.0e-3, &numeric_deriv, &abs_err);
+
+   BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
+
+}
+
+BOOST_AUTO_TEST_CASE( test_d2MFtop2_dLambdax_dMassG )
+{
+   double theta = ArcTan(Sqrt(15.));
+
+   lowE6SSM_input_parameters inputs = get_test_inputs(theta);
+
+   lowE6SSM<Two_scale> model;
+
+   initialize_model(inputs, model);
+
+   lowE6SSM_ew_derivs ew_derivs(model);
+
+   double analytic_deriv = ew_derivs.deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::MassB, lowE6SSM_info::vu);
+
+   mtop_params pars = {&ew_derivs, lowE6SSM_info::MassG, lowE6SSM_info::Lambdax };
+
+   gsl_function func = { dmt2_dparam, &pars };
+
+   double numeric_deriv;
+   double abs_err;
+
+   gsl_deriv_central(&func, model.get_MassG(), 1.0e-3, &numeric_deriv, &abs_err);
+   std::cout.precision(12);
+
+   BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
+
+}

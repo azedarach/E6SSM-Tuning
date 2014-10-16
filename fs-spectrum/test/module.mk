@@ -14,7 +14,8 @@ LIBTEST_DEP := \
 LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 TEST_SRC := \
-		$(DIR)/test_lowE6SSM_top_first_derivs.cpp
+		$(DIR)/test_lowE6SSM_top_first_derivs.cpp \
+		$(DIR)/test_lowE6SSM_top_second_derivs.cpp
 
 ifneq ($(findstring lattice,$(ALGORITHMS)),)
 TEST_SRC +=
@@ -81,6 +82,9 @@ clean:: clean-$(MODNAME)
 distclean:: distclean-$(MODNAME)
 
 $(DIR)/test_lowE6SSM_top_first_derivs.x: $(DIR)/test_lowE6SSM_top_first_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
+
+$(DIR)/test_lowE6SSM_top_second_derivs.x: $(DIR)/test_lowE6SSM_top_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
 $(DIR)/test_%.x: $(DIR)/test_%.o

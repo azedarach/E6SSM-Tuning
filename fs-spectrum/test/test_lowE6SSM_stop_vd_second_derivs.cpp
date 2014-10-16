@@ -247,10 +247,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dvd_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -283,10 +279,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dvd_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -319,10 +311,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dvu_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -355,10 +343,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dvu_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -391,10 +375,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dvs_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -427,10 +407,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dvs_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -463,10 +439,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dg1_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -499,10 +471,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dg1_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -535,10 +503,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dg2_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -571,10 +535,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dg2_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -607,10 +567,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dgN_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -643,10 +599,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dgN_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -679,10 +631,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dYu22_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -715,10 +663,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dYu22_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -751,10 +695,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dmq222_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -787,10 +727,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dmq222_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -823,10 +759,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dmu222_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -859,10 +791,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dmu222_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -895,10 +823,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dLambdax_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -931,10 +855,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dLambdax_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -967,10 +887,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dTYu22_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -1003,10 +919,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dTYu22_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -1039,10 +951,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dTYd22_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -1075,10 +983,6 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dTYd22_dvd )
    double abs_err;
 
    gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-   std::cout.precision(12);
-   std::cout << "analytic = " << analytic_deriv << "\n";
-   std::cout << "numeric  = " << numeric_deriv << "\n";
-   std::cout << "err      = " << abs_err << "\n";
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);

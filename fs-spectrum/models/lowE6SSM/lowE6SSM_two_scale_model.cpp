@@ -933,6 +933,730 @@ void CLASSNAME::run_to(double scale, double eps)
    lowE6SSM_soft_parameters::run_to(scale, eps);
 }
 
+double CLASSNAME::get_parameter(unsigned parameter) const
+{
+   if (parameter >= lowE6SSM_info::NUMBER_OF_PARAMETERS)
+      throw UnknownModelParameterError(parameter);
+
+   switch (parameter) {
+   case lowE6SSM_info::Yd00:
+      return Yd(0,0);
+   case lowE6SSM_info::Yd01: 
+      return Yd(0,1);
+   case lowE6SSM_info::Yd02:
+      return Yd(0,2);
+   case lowE6SSM_info::Yd10:
+      return Yd(1,0);
+   case lowE6SSM_info::Yd11:
+      return Yd(1,1);
+   case lowE6SSM_info::Yd12:
+      return Yd(1,2);
+   case lowE6SSM_info::Yd20:
+      return Yd(2,0);
+   case lowE6SSM_info::Yd21:
+      return Yd(2,1);
+   case lowE6SSM_info::Yd22:
+      return Yd(2,2);
+   case lowE6SSM_info::Ye00:
+      return Ye(0,0);
+   case lowE6SSM_info::Ye01:
+      return Ye(0,1);
+   case lowE6SSM_info::Ye02:
+      return Ye(0,2);
+   case lowE6SSM_info::Ye10:
+      return Ye(1,0);
+   case lowE6SSM_info::Ye11:
+      return Ye(1,1);
+   case lowE6SSM_info::Ye12:
+      return Ye(1,2);
+   case lowE6SSM_info::Ye20:
+      return Ye(2,0);
+   case lowE6SSM_info::Ye21:
+      return Ye(2,1);
+   case lowE6SSM_info::Ye22:
+      return Ye(2,2);
+   case lowE6SSM_info::Kappa00:
+      return Kappa(0,0);
+   case lowE6SSM_info::Kappa01:
+      return Kappa(0,1);
+   case lowE6SSM_info::Kappa02:
+      return Kappa(0,2);
+   case lowE6SSM_info::Kappa10:
+      return Kappa(1,0); 
+   case lowE6SSM_info::Kappa11:
+      return Kappa(1,1);
+   case lowE6SSM_info::Kappa12:
+      return Kappa(1,2); 
+   case lowE6SSM_info::Kappa20:
+      return Kappa(2,0);
+   case lowE6SSM_info::Kappa21:
+      return Kappa(2,1);
+   case lowE6SSM_info::Kappa22:
+      return Kappa(2,2);
+   case lowE6SSM_info::Lambda1200:
+      return Lambda12(0,0);
+   case lowE6SSM_info::Lambda1201:
+      return Lambda12(0,1);
+   case lowE6SSM_info::Lambda1210:
+      return Lambda12(1,0);
+   case lowE6SSM_info::Lambda1211:
+      return Lambda12(1,1);
+   case lowE6SSM_info::Lambdax:
+      return Lambdax;
+   case lowE6SSM_info::Yu00:
+      return Yu(0,0);
+   case lowE6SSM_info::Yu01:
+      return Yu(0,1);
+   case lowE6SSM_info::Yu02:
+      return Yu(0,2);
+   case lowE6SSM_info::Yu10:
+      return Yu(1,0);
+   case lowE6SSM_info::Yu11:
+      return Yu(1,1);
+   case lowE6SSM_info::Yu12:
+      return Yu(1,2); 
+   case lowE6SSM_info::Yu20:
+      return Yu(2,0); 
+   case lowE6SSM_info::Yu21:
+      return Yu(2,1); 
+   case lowE6SSM_info::Yu22:
+      return Yu(2,2);
+   case lowE6SSM_info::MuPr:
+      return MuPr; 
+   case lowE6SSM_info::g1:
+      return g1; 
+   case lowE6SSM_info::g2:
+      return g2; 
+   case lowE6SSM_info::g3:
+      return g3; 
+   case lowE6SSM_info::gN:
+      return gN;
+   case lowE6SSM_info::vd:
+      return vd; 
+   case lowE6SSM_info::vu:
+      return vu; 
+   case lowE6SSM_info::vs:
+      return vs; 
+   case lowE6SSM_info::TYd00:
+      return TYd(0,0); 
+   case lowE6SSM_info::TYd01:
+      return TYd(0,1);
+   case lowE6SSM_info::TYd02:
+      return TYd(0,2);
+   case lowE6SSM_info::TYd10:
+      return TYd(1,0);
+   case lowE6SSM_info::TYd11:
+      return TYd(1,1); 
+   case lowE6SSM_info::TYd12:
+      return TYd(1,2);
+   case lowE6SSM_info::TYd20:
+      return TYd(2,0);
+   case lowE6SSM_info::TYd21:
+      return TYd(2,1);
+   case lowE6SSM_info::TYd22:
+      return TYd(2,2); 
+   case lowE6SSM_info::TYe00:
+      return TYe(0,0);
+   case lowE6SSM_info::TYe01:
+      return TYe(0,1); 
+   case lowE6SSM_info::TYe02:
+      return TYe(0,2);
+   case lowE6SSM_info::TYe10:
+      return TYe(1,0);
+   case lowE6SSM_info::TYe11:
+      return TYe(1,1);
+   case lowE6SSM_info::TYe12:
+      return TYe(1,2); 
+   case lowE6SSM_info::TYe20:
+      return TYe(2,0);
+   case lowE6SSM_info::TYe21:
+      return TYe(2,1);
+   case lowE6SSM_info::TYe22:
+      return TYe(2,2); 
+   case lowE6SSM_info::TKappa00:
+      return TKappa(0,0);
+   case lowE6SSM_info::TKappa01:
+      return TKappa(0,1);
+   case lowE6SSM_info::TKappa02:
+      return TKappa(0,2); 
+   case lowE6SSM_info::TKappa10:
+      return TKappa(1,0);
+   case lowE6SSM_info::TKappa11:
+      return TKappa(1,1); 
+   case lowE6SSM_info::TKappa12:
+      return TKappa(1,2); 
+   case lowE6SSM_info::TKappa20:
+      return TKappa(2,0); 
+   case lowE6SSM_info::TKappa21:
+      return TKappa(2,1);
+   case lowE6SSM_info::TKappa22:
+      return TKappa(2,2); 
+   case lowE6SSM_info::TLambda1200:
+      return TLambda12(0,0); 
+   case lowE6SSM_info::TLambda1201:
+      return TLambda12(0,1);
+   case lowE6SSM_info::TLambda1210:
+      return TLambda12(1,0); 
+   case lowE6SSM_info::TLambda1211:
+      return TLambda12(1,1);
+   case lowE6SSM_info::TLambdax:
+      return TLambdax;
+   case lowE6SSM_info::TYu00:
+      return TYu(0,0);
+   case lowE6SSM_info::TYu01:
+      return TYu(0,1); 
+   case lowE6SSM_info::TYu02:
+      return TYu(0,2); 
+   case lowE6SSM_info::TYu10:
+      return TYu(1,0); 
+   case lowE6SSM_info::TYu11:
+      return TYu(1,1); 
+   case lowE6SSM_info::TYu12:
+      return TYu(1,2);
+   case lowE6SSM_info::TYu20:
+      return TYu(2,0);
+   case lowE6SSM_info::TYu21:
+      return TYu(2,1);
+   case lowE6SSM_info::TYu22:
+      return TYu(2,2);
+   case lowE6SSM_info::BMuPr:
+      return BMuPr; 
+   case lowE6SSM_info::mq200:
+      return mq2(0,0);
+   case lowE6SSM_info::mq201:
+      return mq2(0,1); 
+   case lowE6SSM_info::mq202:
+      return mq2(0,2); 
+   case lowE6SSM_info::mq210:
+      return mq2(1,0);
+   case lowE6SSM_info::mq211:
+      return mq2(1,1); 
+   case lowE6SSM_info::mq212:
+      return mq2(1,2);
+   case lowE6SSM_info::mq220:
+      return mq2(2,0); 
+   case lowE6SSM_info::mq221:
+      return mq2(2,1);
+   case lowE6SSM_info::mq222:
+      return mq2(2,2);
+   case lowE6SSM_info::ml200:
+      return ml2(0,0);
+   case lowE6SSM_info::ml201:
+      return ml2(0,1); 
+   case lowE6SSM_info::ml202:
+      return ml2(0,2);
+   case lowE6SSM_info::ml210:
+      return ml2(1,0); 
+   case lowE6SSM_info::ml211:
+      return ml2(1,1); 
+   case lowE6SSM_info::ml212:
+      return ml2(1,2); 
+   case lowE6SSM_info::ml220:
+      return ml2(2,0); 
+   case lowE6SSM_info::ml221:
+      return ml2(2,1);
+   case lowE6SSM_info::ml222:
+      return ml2(2,2);
+   case lowE6SSM_info::mHd2:
+      return mHd2;
+   case lowE6SSM_info::mHu2:
+      return mHu2; 
+   case lowE6SSM_info::md200:
+      return md2(0,0);
+   case lowE6SSM_info::md201:
+      return md2(0,1);
+   case lowE6SSM_info::md202:
+      return md2(0,2); 
+   case lowE6SSM_info::md210:
+      return md2(1,0); 
+   case lowE6SSM_info::md211:
+      return md2(1,1); 
+   case lowE6SSM_info::md212:
+      return md2(1,2); 
+   case lowE6SSM_info::md220:
+      return md2(2,0);
+   case lowE6SSM_info::md221:
+      return md2(2,1);
+   case lowE6SSM_info::md222:
+      return md2(2,2); 
+   case lowE6SSM_info::mu200:
+      return mu2(0,0); 
+   case lowE6SSM_info::mu201:
+      return mu2(0,1); 
+   case lowE6SSM_info::mu202:
+      return mu2(0,2); 
+   case lowE6SSM_info::mu210:
+      return mu2(1,0); 
+   case lowE6SSM_info::mu211:
+      return mu2(1,1);
+   case lowE6SSM_info::mu212:
+      return mu2(1,2); 
+   case lowE6SSM_info::mu220:
+      return mu2(2,0);
+   case lowE6SSM_info::mu221:
+      return mu2(2,1); 
+   case lowE6SSM_info::mu222:
+      return mu2(2,2); 
+   case lowE6SSM_info::me200:
+      return me2(0,0);
+   case lowE6SSM_info::me201:
+      return me2(0,1); 
+   case lowE6SSM_info::me202:
+      return me2(0,2); 
+   case lowE6SSM_info::me210:
+      return me2(1,0); 
+   case lowE6SSM_info::me211:
+      return me2(1,1); 
+   case lowE6SSM_info::me212:
+      return me2(1,2); 
+   case lowE6SSM_info::me220:
+      return me2(2,0); 
+   case lowE6SSM_info::me221:
+      return me2(2,1); 
+   case lowE6SSM_info::me222:
+      return me2(2,2); 
+   case lowE6SSM_info::ms2:
+      return ms2; 
+   case lowE6SSM_info::mH1I200:
+      return mH1I2(0,0);
+   case lowE6SSM_info::mH1I201:
+      return mH1I2(0,1); 
+   case lowE6SSM_info::mH1I210:
+      return mH1I2(1,0); 
+   case lowE6SSM_info::mH1I211:
+      return mH1I2(1,1); 
+   case lowE6SSM_info::mH2I200:
+      return mH2I2(0,0); 
+   case lowE6SSM_info::mH2I201:
+      return mH2I2(0,1); 
+   case lowE6SSM_info::mH2I210:
+      return mH2I2(1,0); 
+   case lowE6SSM_info::mH2I211:
+      return mH2I2(1,1); 
+   case lowE6SSM_info::msI200:
+      return msI2(0,0);
+   case lowE6SSM_info::msI201:
+      return msI2(0,1); 
+   case lowE6SSM_info::msI210:
+      return msI2(1,0); 
+   case lowE6SSM_info::msI211:
+      return msI2(1,1); 
+   case lowE6SSM_info::mDx200:
+      return mDx2(0,0); 
+   case lowE6SSM_info::mDx201:
+      return mDx2(0,1); 
+   case lowE6SSM_info::mDx202:
+      return mDx2(0,2); 
+   case lowE6SSM_info::mDx210:
+      return mDx2(1,0); 
+   case lowE6SSM_info::mDx211:
+      return mDx2(1,1);
+   case lowE6SSM_info::mDx212:
+      return mDx2(1,2);
+   case lowE6SSM_info::mDx220:
+      return mDx2(2,0); 
+   case lowE6SSM_info::mDx221:
+      return mDx2(2,1); 
+   case lowE6SSM_info::mDx222:
+      return mDx2(2,2); 
+   case lowE6SSM_info::mDxbar200:
+      return mDxbar2(0,0); 
+   case lowE6SSM_info::mDxbar201:
+      return mDxbar2(0,1); 
+   case lowE6SSM_info::mDxbar202:
+      return mDxbar2(0,2); 
+   case lowE6SSM_info::mDxbar210:
+      return mDxbar2(1,0);
+   case lowE6SSM_info::mDxbar211:
+      return mDxbar2(1,1); 
+   case lowE6SSM_info::mDxbar212:
+      return mDxbar2(1,2);
+   case lowE6SSM_info::mDxbar220:
+      return mDxbar2(2,0); 
+   case lowE6SSM_info::mDxbar221:
+      return mDxbar2(2,1); 
+   case lowE6SSM_info::mDxbar222:
+      return mDxbar2(2,2); 
+   case lowE6SSM_info::mHp2:
+      return mHp2; 
+   case lowE6SSM_info::mHpbar2:
+      return mHpbar2; 
+   case lowE6SSM_info::MassB:
+      return MassB;
+   case lowE6SSM_info::MassWB:
+      return MassWB; 
+   case lowE6SSM_info::MassG:
+      return MassG; 
+   case lowE6SSM_info::MassBp:
+      return MassBp;
+
+   default:
+      throw UnknownModelParameterError(parameter);
+   }
+}
+
+void CLASSNAME::set_parameter(unsigned parameter, double x)
+{
+   if (parameter >= lowE6SSM_info::NUMBER_OF_PARAMETERS)
+      throw UnknownModelParameterError(parameter);
+
+   switch (parameter) {
+   case lowE6SSM_info::Yd00:
+      Yd(0,0) = x; break;
+   case lowE6SSM_info::Yd01: 
+      Yd(0,1) = x; break;
+   case lowE6SSM_info::Yd02:
+      Yd(0,2) = x; break;
+   case lowE6SSM_info::Yd10:
+      Yd(1,0) = x; break;
+   case lowE6SSM_info::Yd11:
+      Yd(1,1) = x; break;
+   case lowE6SSM_info::Yd12:
+      Yd(1,2) = x; break;
+   case lowE6SSM_info::Yd20:
+      Yd(2,0) = x; break;
+   case lowE6SSM_info::Yd21:
+      Yd(2,1) = x; break;
+   case lowE6SSM_info::Yd22:
+      Yd(2,2) = x; break;
+   case lowE6SSM_info::Ye00:
+      Ye(0,0) = x; break;
+   case lowE6SSM_info::Ye01:
+      Ye(0,1) = x; break;
+   case lowE6SSM_info::Ye02:
+      Ye(0,2) = x; break;
+   case lowE6SSM_info::Ye10:
+      Ye(1,0) = x; break;
+   case lowE6SSM_info::Ye11:
+      Ye(1,1) = x; break;
+   case lowE6SSM_info::Ye12:
+      Ye(1,2) = x; break;
+   case lowE6SSM_info::Ye20:
+      Ye(2,0) = x; break;
+   case lowE6SSM_info::Ye21:
+      Ye(2,1) = x; break;
+   case lowE6SSM_info::Ye22:
+      Ye(2,2) = x; break;
+   case lowE6SSM_info::Kappa00:
+      Kappa(0,0) = x; break;
+   case lowE6SSM_info::Kappa01:
+      Kappa(0,1) = x; break;
+   case lowE6SSM_info::Kappa02:
+      Kappa(0,2) = x; break;
+   case lowE6SSM_info::Kappa10:
+      Kappa(1,0) = x; break; 
+   case lowE6SSM_info::Kappa11:
+      Kappa(1,1) = x; break;
+   case lowE6SSM_info::Kappa12:
+      Kappa(1,2) = x; break; 
+   case lowE6SSM_info::Kappa20:
+      Kappa(2,0) = x; break;
+   case lowE6SSM_info::Kappa21:
+      Kappa(2,1) = x; break;
+   case lowE6SSM_info::Kappa22:
+      Kappa(2,2) = x; break;
+   case lowE6SSM_info::Lambda1200:
+      Lambda12(0,0) = x; break;
+   case lowE6SSM_info::Lambda1201:
+      Lambda12(0,1) = x; break;
+   case lowE6SSM_info::Lambda1210:
+      Lambda12(1,0) = x; break;
+   case lowE6SSM_info::Lambda1211:
+      Lambda12(1,1) = x; break;
+   case lowE6SSM_info::Lambdax:
+      Lambdax = x; break;
+   case lowE6SSM_info::Yu00:
+      Yu(0,0) = x; break;
+   case lowE6SSM_info::Yu01:
+      Yu(0,1) = x; break;
+   case lowE6SSM_info::Yu02:
+      Yu(0,2) = x; break;
+   case lowE6SSM_info::Yu10:
+      Yu(1,0) = x; break;
+   case lowE6SSM_info::Yu11:
+      Yu(1,1) = x; break;
+   case lowE6SSM_info::Yu12:
+      Yu(1,2) = x; break; 
+   case lowE6SSM_info::Yu20:
+      Yu(2,0) = x; break; 
+   case lowE6SSM_info::Yu21:
+      Yu(2,1) = x; break; 
+   case lowE6SSM_info::Yu22:
+      Yu(2,2) = x; break;
+   case lowE6SSM_info::MuPr:
+      MuPr = x; break; 
+   case lowE6SSM_info::g1:
+      g1 = x; break; 
+   case lowE6SSM_info::g2:
+      g2 = x; break; 
+   case lowE6SSM_info::g3:
+      g3 = x; break; 
+   case lowE6SSM_info::gN:
+      gN = x; break;
+   case lowE6SSM_info::vd:
+      vd = x; break; 
+   case lowE6SSM_info::vu:
+      vu = x; break; 
+   case lowE6SSM_info::vs:
+      vs = x; break; 
+   case lowE6SSM_info::TYd00:
+      TYd(0,0) = x; break; 
+   case lowE6SSM_info::TYd01:
+      TYd(0,1) = x; break;
+   case lowE6SSM_info::TYd02:
+      TYd(0,2) = x; break;
+   case lowE6SSM_info::TYd10:
+      TYd(1,0) = x; break;
+   case lowE6SSM_info::TYd11:
+      TYd(1,1) = x; break; 
+   case lowE6SSM_info::TYd12:
+      TYd(1,2) = x; break;
+   case lowE6SSM_info::TYd20:
+      TYd(2,0) = x; break;
+   case lowE6SSM_info::TYd21:
+      TYd(2,1) = x; break;
+   case lowE6SSM_info::TYd22:
+      TYd(2,2) = x; break; 
+   case lowE6SSM_info::TYe00:
+      TYe(0,0) = x; break;
+   case lowE6SSM_info::TYe01:
+      TYe(0,1) = x; break; 
+   case lowE6SSM_info::TYe02:
+      TYe(0,2) = x; break;
+   case lowE6SSM_info::TYe10:
+      TYe(1,0) = x; break;
+   case lowE6SSM_info::TYe11:
+      TYe(1,1) = x; break;
+   case lowE6SSM_info::TYe12:
+      TYe(1,2) = x; break; 
+   case lowE6SSM_info::TYe20:
+      TYe(2,0) = x; break;
+   case lowE6SSM_info::TYe21:
+      TYe(2,1) = x; break;
+   case lowE6SSM_info::TYe22:
+      TYe(2,2) = x; break; 
+   case lowE6SSM_info::TKappa00:
+      TKappa(0,0) = x; break;
+   case lowE6SSM_info::TKappa01:
+      TKappa(0,1) = x; break;
+   case lowE6SSM_info::TKappa02:
+      TKappa(0,2) = x; break; 
+   case lowE6SSM_info::TKappa10:
+      TKappa(1,0) = x; break;
+   case lowE6SSM_info::TKappa11:
+      TKappa(1,1) = x; break; 
+   case lowE6SSM_info::TKappa12:
+      TKappa(1,2) = x; break; 
+   case lowE6SSM_info::TKappa20:
+      TKappa(2,0) = x; break; 
+   case lowE6SSM_info::TKappa21:
+      TKappa(2,1) = x; break;
+   case lowE6SSM_info::TKappa22:
+      TKappa(2,2) = x; break; 
+   case lowE6SSM_info::TLambda1200:
+      TLambda12(0,0) = x; break; 
+   case lowE6SSM_info::TLambda1201:
+      TLambda12(0,1) = x; break;
+   case lowE6SSM_info::TLambda1210:
+      TLambda12(1,0) = x; break; 
+   case lowE6SSM_info::TLambda1211:
+      TLambda12(1,1) = x; break;
+   case lowE6SSM_info::TLambdax:
+      TLambdax = x; break;
+   case lowE6SSM_info::TYu00:
+      TYu(0,0) = x; break;
+   case lowE6SSM_info::TYu01:
+      TYu(0,1) = x; break; 
+   case lowE6SSM_info::TYu02:
+      TYu(0,2) = x; break; 
+   case lowE6SSM_info::TYu10:
+      TYu(1,0) = x; break; 
+   case lowE6SSM_info::TYu11:
+      TYu(1,1) = x; break; 
+   case lowE6SSM_info::TYu12:
+      TYu(1,2) = x; break;
+   case lowE6SSM_info::TYu20:
+      TYu(2,0) = x; break;
+   case lowE6SSM_info::TYu21:
+      TYu(2,1) = x; break;
+   case lowE6SSM_info::TYu22:
+      TYu(2,2) = x; break;
+   case lowE6SSM_info::BMuPr:
+      BMuPr = x; break; 
+   case lowE6SSM_info::mq200:
+      mq2(0,0) = x; break;
+   case lowE6SSM_info::mq201:
+      mq2(0,1) = x; break; 
+   case lowE6SSM_info::mq202:
+      mq2(0,2) = x; break; 
+   case lowE6SSM_info::mq210:
+      mq2(1,0) = x; break;
+   case lowE6SSM_info::mq211:
+      mq2(1,1) = x; break; 
+   case lowE6SSM_info::mq212:
+      mq2(1,2) = x; break;
+   case lowE6SSM_info::mq220:
+      mq2(2,0) = x; break; 
+   case lowE6SSM_info::mq221:
+      mq2(2,1) = x; break;
+   case lowE6SSM_info::mq222:
+      mq2(2,2) = x; break;
+   case lowE6SSM_info::ml200:
+      ml2(0,0) = x; break;
+   case lowE6SSM_info::ml201:
+      ml2(0,1) = x; break; 
+   case lowE6SSM_info::ml202:
+      ml2(0,2) = x; break;
+   case lowE6SSM_info::ml210:
+      ml2(1,0) = x; break; 
+   case lowE6SSM_info::ml211:
+      ml2(1,1) = x; break; 
+   case lowE6SSM_info::ml212:
+      ml2(1,2) = x; break; 
+   case lowE6SSM_info::ml220:
+      ml2(2,0) = x; break; 
+   case lowE6SSM_info::ml221:
+      ml2(2,1) = x; break;
+   case lowE6SSM_info::ml222:
+      ml2(2,2) = x; break;
+   case lowE6SSM_info::mHd2:
+      mHd2 = x; break;
+   case lowE6SSM_info::mHu2:
+      mHu2 = x; break; 
+   case lowE6SSM_info::md200:
+      md2(0,0) = x; break;
+   case lowE6SSM_info::md201:
+      md2(0,1) = x; break;
+   case lowE6SSM_info::md202:
+      md2(0,2) = x; break; 
+   case lowE6SSM_info::md210:
+      md2(1,0) = x; break; 
+   case lowE6SSM_info::md211:
+      md2(1,1) = x; break; 
+   case lowE6SSM_info::md212:
+      md2(1,2) = x; break; 
+   case lowE6SSM_info::md220:
+      md2(2,0) = x; break;
+   case lowE6SSM_info::md221:
+      md2(2,1) = x; break;
+   case lowE6SSM_info::md222:
+      md2(2,2) = x; break; 
+   case lowE6SSM_info::mu200:
+      mu2(0,0) = x; break; 
+   case lowE6SSM_info::mu201:
+      mu2(0,1) = x; break; 
+   case lowE6SSM_info::mu202:
+      mu2(0,2) = x; break; 
+   case lowE6SSM_info::mu210:
+      mu2(1,0) = x; break; 
+   case lowE6SSM_info::mu211:
+      mu2(1,1) = x; break;
+   case lowE6SSM_info::mu212:
+      mu2(1,2) = x; break; 
+   case lowE6SSM_info::mu220:
+      mu2(2,0) = x; break;
+   case lowE6SSM_info::mu221:
+      mu2(2,1) = x; break; 
+   case lowE6SSM_info::mu222:
+      mu2(2,2) = x; break; 
+   case lowE6SSM_info::me200:
+      me2(0,0) = x; break;
+   case lowE6SSM_info::me201:
+      me2(0,1) = x; break; 
+   case lowE6SSM_info::me202:
+      me2(0,2) = x; break; 
+   case lowE6SSM_info::me210:
+      me2(1,0) = x; break; 
+   case lowE6SSM_info::me211:
+      me2(1,1) = x; break; 
+   case lowE6SSM_info::me212:
+      me2(1,2) = x; break; 
+   case lowE6SSM_info::me220:
+      me2(2,0) = x; break; 
+   case lowE6SSM_info::me221:
+      me2(2,1) = x; break; 
+   case lowE6SSM_info::me222:
+      me2(2,2) = x; break; 
+   case lowE6SSM_info::ms2:
+      ms2 = x; break; 
+   case lowE6SSM_info::mH1I200:
+      mH1I2(0,0) = x; break;
+   case lowE6SSM_info::mH1I201:
+      mH1I2(0,1) = x; break; 
+   case lowE6SSM_info::mH1I210:
+      mH1I2(1,0) = x; break; 
+   case lowE6SSM_info::mH1I211:
+      mH1I2(1,1) = x; break; 
+   case lowE6SSM_info::mH2I200:
+      mH2I2(0,0) = x; break; 
+   case lowE6SSM_info::mH2I201:
+      mH2I2(0,1) = x; break; 
+   case lowE6SSM_info::mH2I210:
+      mH2I2(1,0) = x; break; 
+   case lowE6SSM_info::mH2I211:
+      mH2I2(1,1) = x; break; 
+   case lowE6SSM_info::msI200:
+      msI2(0,0) = x; break;
+   case lowE6SSM_info::msI201:
+      msI2(0,1) = x; break; 
+   case lowE6SSM_info::msI210:
+      msI2(1,0) = x; break; 
+   case lowE6SSM_info::msI211:
+      msI2(1,1) = x; break; 
+   case lowE6SSM_info::mDx200:
+      mDx2(0,0) = x; break; 
+   case lowE6SSM_info::mDx201:
+      mDx2(0,1) = x; break; 
+   case lowE6SSM_info::mDx202:
+      mDx2(0,2) = x; break; 
+   case lowE6SSM_info::mDx210:
+      mDx2(1,0) = x; break; 
+   case lowE6SSM_info::mDx211:
+      mDx2(1,1) = x; break;
+   case lowE6SSM_info::mDx212:
+      mDx2(1,2) = x; break;
+   case lowE6SSM_info::mDx220:
+      mDx2(2,0) = x; break; 
+   case lowE6SSM_info::mDx221:
+      mDx2(2,1) = x; break; 
+   case lowE6SSM_info::mDx222:
+      mDx2(2,2) = x; break; 
+   case lowE6SSM_info::mDxbar200:
+      mDxbar2(0,0) = x; break; 
+   case lowE6SSM_info::mDxbar201:
+      mDxbar2(0,1) = x; break; 
+   case lowE6SSM_info::mDxbar202:
+      mDxbar2(0,2) = x; break; 
+   case lowE6SSM_info::mDxbar210:
+      mDxbar2(1,0) = x; break;
+   case lowE6SSM_info::mDxbar211:
+      mDxbar2(1,1) = x; break; 
+   case lowE6SSM_info::mDxbar212:
+      mDxbar2(1,2) = x; break;
+   case lowE6SSM_info::mDxbar220:
+      mDxbar2(2,0) = x; break; 
+   case lowE6SSM_info::mDxbar221:
+      mDxbar2(2,1) = x; break; 
+   case lowE6SSM_info::mDxbar222:
+      mDxbar2(2,2) = x; break; 
+   case lowE6SSM_info::mHp2:
+      mHp2 = x; break; 
+   case lowE6SSM_info::mHpbar2:
+      mHpbar2 = x; break; 
+   case lowE6SSM_info::MassB:
+      MassB = x; break;
+   case lowE6SSM_info::MassWB:
+      MassWB = x; break; 
+   case lowE6SSM_info::MassG:
+      MassG = x; break; 
+   case lowE6SSM_info::MassBp:
+      MassBp = x; break;
+
+   default:
+      throw UnknownModelParameterError(parameter);
+   }
+}
+
 /**
  * @brief finds the LSP and returns it's mass
  *

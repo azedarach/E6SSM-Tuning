@@ -30,6 +30,7 @@
 #include "lowE6SSM_two_scale_soft_parameters.hpp"
 #include "lowE6SSM_physical.hpp"
 #include "lowE6SSM_info.hpp"
+#include "model.hpp"
 #include "two_scale_model.hpp"
 #include "problems.hpp"
 #include "config.h"
@@ -53,7 +54,10 @@ class Two_scale;
  * @brief model class with routines for determing masses and mixinga and EWSB
  */
 template<>
-class lowE6SSM<Two_scale> : public Two_scale_model, public lowE6SSM_soft_parameters {
+class lowE6SSM<Two_scale> 
+   : public Model
+   , public Two_scale_model 
+   , public lowE6SSM_soft_parameters {
 public:
    explicit lowE6SSM(const lowE6SSM_input_parameters& input_ = lowE6SSM_input_parameters());
    virtual ~lowE6SSM();
@@ -88,6 +92,10 @@ public:
    virtual void run_to(double scale, double eps = -1.0);
    virtual void print(std::ostream&) const;
    virtual void set_precision(double);
+
+   // Model interface
+   double get_parameter(unsigned) const;
+   void set_parameter(unsigned, double);
 
    double get_lsp(lowE6SSM_info::Particles&) const;
 

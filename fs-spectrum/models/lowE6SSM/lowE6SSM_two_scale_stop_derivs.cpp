@@ -587,7 +587,7 @@ namespace flexiblesusy {
                       + 2.0 * vd * vs * Sqr(yt) * Sqr(Lambdax) 
                       - 2.8284271247461903 * yt * Lambdax * 
                       (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)) / (2.0 * Sqrt(rt));
-      double tmp_3 = ((2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vd) *
+      double tmp_3 = ((2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) *
                        (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
                         Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
                         Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
@@ -601,7 +601,8 @@ namespace flexiblesusy {
                        (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
                         Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
                         Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
-                        (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
+                        (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                        - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
                        - 2.8284271247461903 * vs * yt * Lambdax *
                        (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
          / (4.0 * rt * Sqrt(rt));
@@ -692,7 +693,7 @@ namespace flexiblesusy {
 
       double tmp_1 = 0.5 * g2 * vd;
       double tmp_2 = (0.5 * g2 * (0.25 * Sqr(g2) * vd - 0.25 * Sqr(g1) * vd + QH1p * QQp * Sqr(gN)
-                                   * vd - QH1p * Qup * Sqr(gN) * vd) * (Sqr(vd) - Sqr(vu)) - g2 * vd
+                                   * vd - QH1p * Qup * Sqr(gN) * vd) * (Sqr(vd) - Sqr(vu)) + g2 * vd
                       * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
                          Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
                          Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
@@ -750,7 +751,7 @@ namespace flexiblesusy {
                              * vd - QH1p * Qup * Sqr(gN) * vd) * 
                       (QQp * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
                        - Qup * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))) 
-                      + 2.0 * (2.0 * QH1p * QQp * gN * vd - 2.0 * QH1p * Qup * vd) *
+                      + 2.0 * (2.0 * QH1p * QQp * gN * vd - 2.0 * QH1p * Qup * gN * vd) *
                       (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
                        Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
                        Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
@@ -758,21 +759,21 @@ namespace flexiblesusy {
                        - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu)
                                                 + QSp * Sqr(vs)))) / (2.0 * Sqrt(rt));
       double tmp_3 = ((QQp * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
-                          - Qup * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))) * 
-                         (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
-                          Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
-                          Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
-                          (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
-                          - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
-                       * (2.0 * (0.25 * Sqr(g2) * vd - 0.25 * Sqr(g1) * vd + QH1p * QQp * Sqr(gN) * vd 
-                                 - QH1p * Qup * Sqr(gN) * vd) * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
-                                                                 Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
-                                                                 Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
-                                                                 (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
-                                                                 - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
-                                                                                          Sqr(vu) + QSp * Sqr(vs)))
-                          - 2.8284271247461903 * vs * yt * Lambdax *
-                          (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+                       - Qup * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))) * 
+                      (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                       Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                       Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                       (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                       - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
+                      * (2.0 * (0.25 * Sqr(g2) * vd - 0.25 * Sqr(g1) * vd + QH1p * QQp * Sqr(gN) * vd 
+                                - QH1p * Qup * Sqr(gN) * vd) * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                                                                Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                                                                Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                                                                (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                                                                - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                                                                         Sqr(vu) + QSp * Sqr(vs)))
+                         - 2.8284271247461903 * vs * yt * Lambdax *
+                         (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
          / (2.0 * rt * Sqrt(rt));
 
       if (which_stop == stop_mass::mstop_1) {
@@ -948,7 +949,7 @@ namespace flexiblesusy {
 
       double tmp_1 = 0.;
       double tmp_2 = (2.0 * vd * Sqr(vs) * Sqr(yt) * Lambdax 
-                      - 2.8284271247461903 * vs * yt * Lambdax *
+                      - 2.8284271247461903 * vs * yt *
                       (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)) / (2.0 * Sqrt(rt));
       double tmp_3 = -0.7071067811865475 * 
       (vd * vs * yt * (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax) 
@@ -961,7 +962,7 @@ namespace flexiblesusy {
                                                                           Sqr(vu) + QSp * Sqr(vs)))
           - 2.8284271247461903 * vs * yt * Lambdax *
           (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
-      / (2.0 * rt * Sqrt(rt));
+      / (rt * Sqrt(rt));
 
       if (which_stop == stop_mass::mstop_1) {
          return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
@@ -993,7 +994,7 @@ namespace flexiblesusy {
       const double rt = stop_discriminant();
 
       double tmp_1 = 0.;
-      double tmp_2 = -(0.7071067811865475 * vs * vu * yt * Lambdax) / Sqrt(rt);
+      double tmp_2 = -(1.4142135623730951 * vs * vu * yt * Lambdax) / Sqrt(rt);
       double tmp_3 = (vu * (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax) 
        * (2.0 * (0.25 * Sqr(g2) * vd - 0.25 * Sqr(g1) * vd + QH1p * QQp * Sqr(gN) * vd 
                  - QH1p * Qup * Sqr(gN) * vd) * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 

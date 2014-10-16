@@ -18,6 +18,7 @@ TEST_SRC := \
 		$(DIR)/test_lowE6SSM_stop_gN_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_g1_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_g2_second_derivs.cpp \
+		$(DIR)/test_lowE6SSM_stop_Lambdax_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_mq222_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_mu222_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_vd_second_derivs.cpp \
@@ -101,6 +102,9 @@ $(DIR)/test_lowE6SSM_stop_g1_second_derivs.x: $(DIR)/test_lowE6SSM_stop_g1_secon
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_stop_g2_second_derivs.x: $(DIR)/test_lowE6SSM_stop_g2_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_stop_Lambdax_second_derivs.x: $(DIR)/test_lowE6SSM_stop_Lambdax_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_stop_mq222_second_derivs.x: $(DIR)/test_lowE6SSM_stop_mq222_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))

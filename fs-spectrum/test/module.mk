@@ -16,6 +16,7 @@ LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 TEST_SRC := \
 		$(DIR)/test_lowE6SSM_stop_first_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_vd_second_derivs.cpp \
+		$(DIR)/test_lowE6SSM_stop_vu_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_top_first_derivs.cpp \
 		$(DIR)/test_lowE6SSM_top_second_derivs.cpp
 
@@ -87,6 +88,9 @@ $(DIR)/test_lowE6SSM_stop_first_derivs.x: $(DIR)/test_lowE6SSM_stop_first_derivs
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
 $(DIR)/test_lowE6SSM_stop_vd_second_derivs.x: $(DIR)/test_lowE6SSM_stop_vd_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_stop_vu_second_derivs.x: $(DIR)/test_lowE6SSM_stop_vu_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
 $(DIR)/test_lowE6SSM_top_first_derivs.x: $(DIR)/test_lowE6SSM_top_first_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))

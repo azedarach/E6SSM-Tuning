@@ -1519,56 +1519,436 @@ namespace flexiblesusy {
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dvs_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = QSp * QQp * Sqr(gN) + QSp * Qup * Sqr(gN);
+      double tmp_2 = (2.0 * Sqr(vd) * Sqr(yt) * Sqr(Lambdax) 
+                      + 2.0 * Sqr(QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) + 
+                      2.0 * (QSp * QQp * Sqr(gN) - QSp * Qup * Sqr(gN))
+                      * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                         Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                         Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                         (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                         - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu)
+                                                  + QSp * Sqr(vs))))/ (2.0 * Sqrt(rt));
+      double tmp_3 = Sqr(2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                         * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                            Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                            Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                            (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                            - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu)
+                                                     + QSp * Sqr(vs)))
+                         - 2.8284271247461903 * vd * yt * Lambdax * 
+                         (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)) 
+         / (4.0 * rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dg1_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0;
+      double tmp_2 = (-0.25 * g1 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                       * (Sqr(vd) - Sqr(vu))) / Sqrt(rt);
+      double tmp_3 = -(0.125 * g1 * (Sqr(vd) - Sqr(vu)) * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                                                           Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                                                           Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                                                           (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                                                           - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu)
+                                                                                    + QSp * Sqr(vs)))
+                       * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                          * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                             Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                             Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                             (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                             - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                                      Sqr(vu) + QSp * Sqr(vs)))
+                          - 2.8284271247461903 * vd * yt * Lambdax *
+                          (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+         / (rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dg2_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = (0.25 * g2 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                      * (Sqr(vd) - Sqr(vu))) / Sqrt(rt);
+      double tmp_3 = (0.125 * g2 * (Sqr(vd) - Sqr(vu)) * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                                                           Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                                                           Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                                                           (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                                                           - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu)
+                                                                                    + QSp * Sqr(vs)))
+                       * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                          * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                             Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                             Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                             (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                             - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                                      Sqr(vu) + QSp * Sqr(vs)))
+                          - 2.8284271247461903 * vd * yt * Lambdax *
+                          (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+         / (rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dgN_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 2.0 * QSp * QQp * gN * vs + 2.0 * QSp * Qup * gN * vs;
+      double tmp_2 = ((QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) * 
+                      (QQp * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                       - Qup * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))) 
+                      + 2.0 * (2.0 * QSp * QQp * gN * vs - 2.0 * QSp * Qup * gN * vs) *
+                      (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                       Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                       Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                       (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                       - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu)
+                                                + QSp * Sqr(vs)))) / (2.0 * Sqrt(rt));
+      double tmp_3 = ((QQp * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                       - Qup * gN * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))) * 
+                      (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                       Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                       Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                       (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                       - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
+                      * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                         * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                            Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                            Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                            (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                            - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                                     Sqr(vu) + QSp * Sqr(vs)))
+                         - 2.8284271247461903 * vd * yt * Lambdax *
+                         (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+         / (2.0 * rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dYu22_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = (2.0 * vs * Sqr(vd) * yt * Sqr(Lambdax) - 
+                      2.8284271247461903 * vd * Lambdax * 
+                      (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)) / (2.0 * Sqrt(rt));
+      double tmp_3 = -0.7071067811865475 * (vd * vs * Lambdax * 
+                                            (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)
+                                            * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) * 
+                                               (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                                                Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                                                Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                                                (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                                                - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
+                                               - 2.8284271247461903 * vd * yt * Lambdax *
+                                               (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+         / (rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dmq222_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) / Sqrt(rt);
+      double tmp_3 = ((mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                       Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                       Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                       (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                       - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
+                      * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                         * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                            Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                            Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                            (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                            - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                                     Sqr(vu) + QSp * Sqr(vs)))
+                         - 2.8284271247461903 * vd * yt * Lambdax *
+                         (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+         / (2.0 * rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dmu222_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = -(QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) / Sqrt(rt);
+      double tmp_3 = -((mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                        Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                        Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                        (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                        - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)))
+                       * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+                          * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+                             Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+                             Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+                             (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+                             - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                                      Sqr(vu) + QSp * Sqr(vs)))
+                          - 2.8284271247461903 * vd * yt * Lambdax *
+                          (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+      / (2.0 * rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dLambdax_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = (2.0 * vs * Sqr(vd) * Sqr(yt) * Lambdax 
+                      - 2.8284271247461903 * vd * yt *
+                      (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)) / (2.0 * Sqrt(rt));
+      double tmp_3 = -0.7071067811865475 * 
+      (vd * vs * yt * (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax) 
+       * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+          * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+             Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+             Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+             (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+             - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                      Sqr(vu) + QSp * Sqr(vs)))
+          - 2.8284271247461903 * vd * yt * Lambdax *
+          (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+      / (rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dTYu22_dvs(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double QH1p = model.get_input().QH1p;
+      const double QH2p = model.get_input().QH2p;
+      const double QSp = model.get_input().QSp;
+      const double QQp = model.get_input().QQp;
+      const double Qup = model.get_input().Qup;
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gN = model.get_gN();
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double Lambdax = model.get_Lambdax();
+      const double mq222 = model.get_mq2(2,2);
+      const double mu222 = model.get_mu2(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = -(1.4142135623730951 * vd * vu * yt * Lambdax) / Sqrt(rt);
+      double tmp_3 = (vu * (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax) 
+       * (2.0 * (QSp * QQp * Sqr(gN) * vs - QSp * Qup * Sqr(gN) * vs) 
+          * (mq222 - mu222 + 0.125 * Sqr(g2) * Sqr(vd) - 0.125 * 
+             Sqr(g1) * Sqr(vd) - 0.125 * Sqr(g2) * Sqr(vu) + 0.125 *
+             Sqr(g1) * Sqr(vu) + 0.5 * QQp * Sqr(gN) *
+             (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs))
+             - 0.5 * Qup * Sqr(gN) * (QH1p * Sqr(vd) + QH2p * 
+                                      Sqr(vu) + QSp * Sqr(vs)))
+          - 2.8284271247461903 * vd * yt * Lambdax *
+          (TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax)))
+      / (rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dg1_dg1(stop_mass which_stop) const

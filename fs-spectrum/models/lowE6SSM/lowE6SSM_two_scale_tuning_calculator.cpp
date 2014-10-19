@@ -9,9 +9,10 @@ namespace flexiblesusy {
          , tuning_scale(0.)
          , tolerance(1.0e-4)
          , max_iterations(100)
-         , tuning_ewsb_loop_order(1)
-         , tuning_beta_loop_order(2)
    {
+      tuning_ewsb_loop_order = m.get_ewsb_loop_order();
+      tuning_beta_loop_order = m.get_loops();
+
       fine_tunings[lowE6SSM_info::Lambdax] = 0.0;
       fine_tunings[lowE6SSM_info::TLambdax] = 0.0;
       fine_tunings[lowE6SSM_info::TYu22] = 0.0;
@@ -94,7 +95,7 @@ namespace flexiblesusy {
       Eigen::Matrix<double,num_ewsb_eqs,num_ewsb_eqs> mass_matrix = ew_derivs.calculate_unrotated_mass_matrix_hh();
 
       // N.B. extra minus sign
-      Eigen::Matrix<double, num_ewsb_eqs, Eigen::Dynamic> ewsb_derivs = -1.0 * ew_derivs.calculate_ewsb_parameter_derivs();
+      Eigen::Matrix<double, num_ewsb_eqs, Eigen::Dynamic> ewsb_derivs = -1.0 * calculate_ewsb_parameter_derivs(ew_derivs);
 
       // Solve system. Use inverse directly since mass matrix is small in the E6SSM (3 x 3),
       // but note this has to change for matrices larger than 4 x 4.
@@ -112,10 +113,10 @@ namespace flexiblesusy {
 
       // Additional solution check here?
 
-      double g1_at_tuning_scale = ew_derivs.get_g1();
-      double g2_at_tuning_scale = ew_derivs.get_g2();
-      double vd_at_tuning_scale = ew_derivs.get_vd();
-      double vu_at_tuning_scale = ew_derivs.get_vu();
+      double g1_at_tuning_scale = ew_derivs.get_model().get_g1();
+      double g2_at_tuning_scale = ew_derivs.get_model().get_g2();
+      double vd_at_tuning_scale = ew_derivs.get_model().get_vd();
+      double vu_at_tuning_scale = ew_derivs.get_model().get_vu();
       const Eigen::Array<double,num_tuning_pars,1> g1_derivs = beta_derivs.row(get_g1_row());
       const Eigen::Array<double,num_tuning_pars,1> g2_derivs = beta_derivs.row(get_g2_row());
       const Eigen::Array<double,num_tuning_pars,1> vd_derivs = vev_derivs.row(0);
@@ -248,6 +249,45 @@ namespace flexiblesusy {
       default: {
          return 0.0;
       }
+      }
+   }
+
+   Eigen::Matrix<double,lowE6SSM_tuning_calculator::num_ewsb_eqs,Eigen::Dynamic> lowE6SSM_tuning_calculator::calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs & ew_derivs) const
+   {
+
+      if (tuning_ewsb_loop_order == 0) {
+
+         Eigen::Matrix<double,num_ewsb_eqs,num_tree_level_ewsb_pars> derivs;
+
+         derivs.col(0) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::Lambdax);
+         derivs.col(1) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::g1);
+         derivs.col(2) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::g2);
+         derivs.col(3) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::gN);
+         derivs.col(4) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::TLambdax);
+         derivs.col(5) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::mHd2);
+         derivs.col(6) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::mHu2);
+         derivs.col(7) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::ms2);
+
+         return derivs;
+
+      } else {
+
+         Eigen::Matrix<double,num_ewsb_eqs,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars> derivs;
+         
+         derivs.col(0) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::Lambdax);
+         derivs.col(1) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::Yu22);
+         derivs.col(2) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::g1);
+         derivs.col(3) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::g2);
+         derivs.col(4) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::gN);
+         derivs.col(5) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::TLambdax);
+         derivs.col(6) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::TYu22);
+         derivs.col(7) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::mq222);
+         derivs.col(8) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::mHd2);
+         derivs.col(9) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::mHu2);
+         derivs.col(10) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::mu222);
+         derivs.col(11) = ew_derivs.calculate_ewsb_parameter_derivs(lowE6SSM_info::ms2);
+
+         return derivs;
       }
    }
 

@@ -43,17 +43,12 @@ namespace flexiblesusy {
       double get_ewsb_condition_2() const;
       double get_ewsb_condition_3() const;
 
-      /// Values of parameters needed for fine tuning calculation
-      double get_g1() const { return model.get_g1(); }
-      double get_g2() const { return model.get_g2(); }
-      double get_vd() const { return model.get_vd(); }
-      double get_vu() const { return model.get_vu(); }
-
       /// Derivatives of EWSB conditions w.r.t VEVs
       Eigen::Matrix<double,3,3> calculate_unrotated_mass_matrix_hh() const;
 
-      /// Derivatives of EWSB conditions w.r.t. model parameters
-      Eigen::Matrix<double,3,Eigen::Dynamic> calculate_ewsb_parameter_derivs() const;
+      /// Derivatives of EWSB conditions w.r.t. model parameters at
+      /// the SUSY scale
+      Eigen::Matrix<double,3,1> calculate_ewsb_parameter_derivs(lowE6SSM_info::Parameters p) const;
 
       /// Function to solve for VEVs given parameters
       int solve_ewsb_conditions_for_vevs();
@@ -92,7 +87,6 @@ namespace flexiblesusy {
       int solve_ewsb_for_vevs_iteratively_with(const gsl_multiroot_fsolver_type* solver,
                                                const double x_init[number_of_ewsb_eqs]);
 
-      double gbar() const;
       double MFtop_DRbar() const;
 
       double stop_discriminant() const;

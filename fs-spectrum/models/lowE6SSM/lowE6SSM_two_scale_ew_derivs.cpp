@@ -124,9 +124,111 @@ namespace flexiblesusy {
       return mass_matrix;
    }
    
-   Eigen::Matrix<double,3,Eigen::Dynamic> lowE6SSM_ew_derivs::calculate_ewsb_parameter_derivs() const
+   Eigen::Matrix<double,3,1> lowE6SSM_ew_derivs::calculate_ewsb_parameter_derivs(lowE6SSM_info::Parameters p) const
    {
-      return Eigen::Matrix<double,3,3>::Zero();
+      Eigen::Matrix<double,3,1> derivs(Eigen::Matrix<double,3,1>::Zero());
+
+      switch (p) {
+      case lowE6SSM_info::Lambdax: {
+         const double Lambdax = model.get_Lambdax();
+         const double vd = model.get_vd();
+         const double vu = model.get_vu();
+         const double vs = model.get_vs();
+
+         derivs(0) += Lambdax * vd * (Sqr(vu) + Sqr(vs));
+         derivs(1) += Lambdax * vu * (Sqr(vd) + Sqr(vs));
+         derivs(2) += Lambdax * vs * (Sqr(vd) + Sqr(vu));
+
+         break;
+      }
+      case lowE6SSM_info::g1: {
+         const double g1 = model.get_g1();
+         const double vd = model.get_vd();
+         const double vu = model.get_vu();
+
+         derivs(0) += -0.15 * g1 * vd * (Sqr(vu) - Sqr(vd));
+         derivs(1) += 0.15 * g1 * vu * (Sqr(vu) - Sqr(vd));
+
+         break;
+      }
+      case lowE6SSM_info::g2: {
+         const double g2 = model.get_g2();
+         const double vd = model.get_vd();
+         const double vu = model.get_vu();
+
+         derivs(0) += -0.25 * g2 * vd * (Sqr(vu) - Sqr(vd));
+         derivs(1) += 0.25 * g2 * vu * (Sqr(vu) - Sqr(vd));
+
+         break;
+      }
+      case lowE6SSM_info::gN: {
+         const double QH1p = model.get_input().QH1p;
+         const double QH2p = model.get_input().QH2p;
+         const double QSp = model.get_input().QSp;
+
+         const double gN = model.get_gN();
+         const double vd = model.get_vd();
+         const double vu = model.get_vu();
+         const double vs = model.get_vs();
+
+         derivs(0) += QH1p * gN * vd * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs));
+         derivs(1) += QH2p * gN * vu * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs));
+         derivs(2) += QSp * gN * vs * (QH1p * Sqr(vd) + QH2p * Sqr(vu) + QSp * Sqr(vs)); 
+
+         break;
+      }
+      case lowE6SSM_info::vd: {
+
+         derivs = model.get_mass_matrix_hh().col(0);
+
+         break;
+      }
+      case lowE6SSM_info::vu: {
+
+         derivs = model.get_mass_matrix_hh().col(1);
+
+         break;
+      }
+      case lowE6SSM_info::vs: {
+
+         derivs = model.get_mass_matrix_hh().col(2);
+
+         break;
+      }
+      case lowE6SSM_info::TLambdax: {
+         const double vd = model.get_vd();
+         const double vu = model.get_vu();
+         const double vs = model.get_vs();
+
+         derivs(0) += -0.7071067811865475 * vu * vs;
+         derivs(1) += -0.7071067811865475 * vd * vs;
+         derivs(2) += -0.7071067811865475 * vd * vu;
+
+         break;
+      }
+      case lowE6SSM_info::mHd2: {
+         derivs(0) += model.get_vd();
+         break;
+      }
+      case lowE6SSM_info::mHu2: {
+         derivs(1) += model.get_vu();
+         break;
+      }
+      case lowE6SSM_info::ms2: {
+         derivs(2) += model.get_vs();
+         break;
+      }
+      default :
+         break;
+      }
+
+      if (model.get_ewsb_loop_order() > 0) {
+         derivs(0) += deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, p);
+         derivs(1) += deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vu, p);
+         derivs(2) += deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vs, p);
+      }
+
+      return derivs;
    }
    
    int lowE6SSM_ew_derivs::ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f)
@@ -295,15 +397,6 @@ namespace flexiblesusy {
       double result = 3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4 + tmp_5 + tmp_6);
 
       return result;
-   }
-
-   double lowE6SSM_ew_derivs::gbar() const
-   {
-      double g1  = model.get_g1();
-      double g2  = model.get_g2();
-      double thW = model.ThetaW();
-
-      return (g2 * Cos(thW) + 0.7745966692414834 * g1 * Sin(thW));
    }
 
    double lowE6SSM_ew_derivs::MFtop_DRbar() const

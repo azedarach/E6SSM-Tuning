@@ -42,8 +42,8 @@ namespace flexiblesusy {
       void set_input_scale(double s) { input_scale = s; }
       void set_tuning_scale(double s) { tuning_scale = s; }
       void set_tolerance(double t) { tolerance = t; }
-      void set_tuning_ewsb_loop_order(unsigned l) { tuning_ewsb_loop_order = l; }
-      void set_tuning_beta_loop_order(unsigned l) { tuning_beta_loop_order = l; }
+      void set_tuning_ewsb_loop_order(unsigned l) { tuning_ewsb_loop_order = l; model.set_ewsb_loop_order(l); }
+      void set_tuning_beta_loop_order(unsigned l) { tuning_beta_loop_order = l; model.set_loops(l); }
       void set_max_iterations(unsigned n) { max_iterations = n; }
 
       /// Calculate the fine tunings. Returns true if there is a problem.
@@ -52,7 +52,7 @@ namespace flexiblesusy {
 
    private:
       static const std::size_t num_ewsb_eqs = 3;
-      static const std::size_t num_tree_level_ewsb_pars = 7;
+      static const std::size_t num_tree_level_ewsb_pars = 8;
       static const std::size_t num_one_loop_ewsb_pars = 4;
       static const std::size_t num_tuning_pars = 12;
 
@@ -74,6 +74,7 @@ namespace flexiblesusy {
       
       double get_deriv(lowE6SSM_info::Parameters p, const Eigen::Array<double,num_tuning_pars,1>& derivs) const;
 
+      Eigen::Matrix<double,num_ewsb_eqs,Eigen::Dynamic> calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs&) const;
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs(std::size_t num_pars) const;
 
       Eigen::VectorXd calculate_deriv_dlowscale_dLambdax(std::size_t num_pars) const;

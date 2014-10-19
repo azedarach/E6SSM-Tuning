@@ -3282,8 +3282,26 @@ namespace flexiblesusy {
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dTYu22_dTYu22(stop_mass which_stop) const
    {
-      double result = (which_stop == stop_mass::mstop_1 ? 1.0 : 2.0);
-      return result;
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vs = model.get_vs();
+      const double yt = model.get_Yu(2,2);
+      const double TYu22 = model.get_TYu(2,2);
+      const double Lambdax = model.get_Lambdax();
+
+      const double rt = stop_discriminant();
+
+      double tmp_1 = 0.;
+      double tmp_2 = (2.0 * Sqr(vu)) / Sqrt(rt);
+      double tmp_3 = (4.0 * Sqr(vu)
+                      * Sqr(TYu22 * vu - 0.7071067811865475 * vd * vs * yt * Lambdax))
+         / (rt * Sqrt(rt));
+
+      if (which_stop == stop_mass::mstop_1) {
+         return 0.5 * (tmp_1 - (tmp_2 - tmp_3));
+      } else {
+         return 0.5 * (tmp_1 + (tmp_2 - tmp_3));
+      }
    }
 
    double lowE6SSM_ew_derivs::deriv_d2MStop2_dparam_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const

@@ -310,7 +310,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dvu_dg1 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -342,8 +342,8 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dvu_dg1 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
-
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
+   
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
 
@@ -502,7 +502,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dg2_dg1 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -534,7 +534,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dg2_dg1 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -758,7 +758,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dmu222_dg1 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);

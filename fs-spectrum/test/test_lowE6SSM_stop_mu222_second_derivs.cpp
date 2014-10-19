@@ -287,7 +287,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dvd_dmu222 )
 
 BOOST_AUTO_TEST_CASE( test_dMFstop21_dvu_dmu222 )
 {
-   const double max_err = 1.0e-4;
+   const double max_err = 1.0e-6;
    const double theta = ArcTan(Sqrt(15.));
    const lowE6SSM_info::Parameters p = lowE6SSM_info::vu;
    const lowE6SSM_info::Parameters q = lowE6SSM_info::mu222;
@@ -310,7 +310,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dvu_dmu222 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);
@@ -319,7 +319,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop21_dvu_dmu222 )
 
 BOOST_AUTO_TEST_CASE( test_dMFstop22_dvu_dmu222 )
 {
-   const double max_err = 1.0e-4;
+   const double max_err = 1.0e-6;
    const double theta = ArcTan(Sqrt(15.));
    const lowE6SSM_info::Parameters p = lowE6SSM_info::vu;
    const lowE6SSM_info::Parameters q = lowE6SSM_info::mu222;
@@ -342,7 +342,7 @@ BOOST_AUTO_TEST_CASE( test_dMFstop22_dvu_dmu222 )
    double numeric_deriv;
    double abs_err;
 
-   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-3, &numeric_deriv, &abs_err);
+   gsl_deriv_central(&func, model.get_parameter(p), 1.0e-4, &numeric_deriv, &abs_err);
 
    BOOST_REQUIRE(Abs(abs_err) < max_err);
    BOOST_CHECK_LE(Abs(analytic_deriv - numeric_deriv), abs_err);

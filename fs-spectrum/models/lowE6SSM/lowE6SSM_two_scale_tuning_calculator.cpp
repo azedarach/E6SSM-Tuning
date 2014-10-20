@@ -252,8 +252,10 @@ namespace flexiblesusy {
       }
    }
 
-   Eigen::Matrix<double,lowE6SSM_tuning_calculator::num_ewsb_eqs,Eigen::Dynamic> lowE6SSM_tuning_calculator::calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs & ew_derivs) const
+   Eigen::Matrix<double,lowE6SSM_tuning_calculator::num_ewsb_eqs,Eigen::Dynamic> lowE6SSM_tuning_calculator::calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs & derivs) const
    {
+
+      lowE6SSM_ew_derivs ew_derivs(derivs);
 
       if (tuning_ewsb_loop_order == 0) {
 

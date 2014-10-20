@@ -39,24 +39,24 @@ namespace flexiblesusy {
       double get_ewsb_iteration_precision() const { return ewsb_iteration_precision; }
 
       /// Values of EWSB conditions
-      double get_ewsb_condition_1() const;
-      double get_ewsb_condition_2() const;
-      double get_ewsb_condition_3() const;
+      double get_ewsb_condition_1();
+      double get_ewsb_condition_2();
+      double get_ewsb_condition_3();
 
       /// Derivatives of EWSB conditions w.r.t VEVs
-      Eigen::Matrix<double,3,3> calculate_unrotated_mass_matrix_hh() const;
+      Eigen::Matrix<double,3,3> calculate_unrotated_mass_matrix_hh();
 
       /// Derivatives of EWSB conditions w.r.t. model parameters at
       /// the SUSY scale
-      Eigen::Matrix<double,3,1> calculate_ewsb_parameter_derivs(lowE6SSM_info::Parameters p) const;
+      Eigen::Matrix<double,3,1> calculate_ewsb_parameter_derivs(lowE6SSM_info::Parameters p);
 
       /// Function to solve for VEVs given parameters
       int solve_ewsb_conditions_for_vevs();
 
       /// Derivatives of the Coleman-Weinbery loop contributions.
       /// By default only top and stop loops are included.
-      double deriv_dDeltaV_dparam(lowE6SSM_info::Parameters p) const;
-      double deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const;
+      double deriv_dDeltaV_dparam(lowE6SSM_info::Parameters p);
+      double deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2);
 
       double deriv_dMFtop2_dparam(lowE6SSM_info::Parameters p) const;
       double deriv_d2MFtop2_dparam_dparam(lowE6SSM_info::Parameters p1, 

@@ -16,6 +16,9 @@ namespace flexiblesusy {
    {
       double theta = 0.0;
       model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+      if (MStop(0) > MStop(1)) {
+         MStop = MStop.reverse();
+      }
       solve_ewsb_for_soft_masses();
    }
 
@@ -30,10 +33,13 @@ namespace flexiblesusy {
       model = m;
       double theta = 0.0;
       model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+      if (MStop(0) > MStop(1)) {
+         MStop = MStop.reverse();
+      }
       solve_ewsb_for_soft_masses();
    }
 
-   double lowE6SSM_ew_derivs::get_ewsb_condition_1() const
+   double lowE6SSM_ew_derivs::get_ewsb_condition_1()
    {
       double result = model.get_ewsb_eq_hh_1();
 
@@ -44,7 +50,7 @@ namespace flexiblesusy {
       return result;
    }
 
-   double lowE6SSM_ew_derivs::get_ewsb_condition_2() const
+   double lowE6SSM_ew_derivs::get_ewsb_condition_2()
    {
       double result = model.get_ewsb_eq_hh_2();
 
@@ -55,7 +61,7 @@ namespace flexiblesusy {
       return result;
    }
 
-   double lowE6SSM_ew_derivs::get_ewsb_condition_3() const
+   double lowE6SSM_ew_derivs::get_ewsb_condition_3()
    {
       double result = model.get_ewsb_eq_hh_3();
 
@@ -97,7 +103,7 @@ namespace flexiblesusy {
       return error;
    }
 
-   Eigen::Matrix<double,3,3> lowE6SSM_ew_derivs::calculate_unrotated_mass_matrix_hh() const
+   Eigen::Matrix<double,3,3> lowE6SSM_ew_derivs::calculate_unrotated_mass_matrix_hh()
    {
       Eigen::Matrix<double,3,3> mass_matrix(model.get_mass_matrix_hh());
 
@@ -124,7 +130,7 @@ namespace flexiblesusy {
       return mass_matrix;
    }
    
-   Eigen::Matrix<double,3,1> lowE6SSM_ew_derivs::calculate_ewsb_parameter_derivs(lowE6SSM_info::Parameters p) const
+   Eigen::Matrix<double,3,1> lowE6SSM_ew_derivs::calculate_ewsb_parameter_derivs(lowE6SSM_info::Parameters p)
    {
       Eigen::Matrix<double,3,1> derivs(Eigen::Matrix<double,3,1>::Zero());
 
@@ -259,7 +265,11 @@ namespace flexiblesusy {
          double msf2;
          double theta;
          derivs->get_model().calculate_MSu_3rd_generation(msf1, msf2, theta);
-         
+         if (msf1 > msf2) {
+            double temp = msf1;
+            msf1 = msf2;
+            msf2 = temp;
+         }
          derivs->set_MStop(msf1, msf2);
          tadpole[0] += derivs->deriv_dDeltaV_dparam(lowE6SSM_info::vd);
          tadpole[1] += derivs->deriv_dDeltaV_dparam(lowE6SSM_info::vu);
@@ -342,10 +352,16 @@ namespace flexiblesusy {
       return status;
    }
 
-   double lowE6SSM_ew_derivs::deriv_dDeltaV_dparam(lowE6SSM_info::Parameters p) const
+   double lowE6SSM_ew_derivs::deriv_dDeltaV_dparam(lowE6SSM_info::Parameters p)
    {
       double scale = model.get_scale();
       
+      double theta = 0.0;
+      model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+      if (MStop(0) > MStop(1)) {
+         MStop = MStop.reverse();
+      }
+
       double dMStop20_dp = deriv_dMStop2_dparam(stop_mass::mstop_1, p);
       double dMStop21_dp = deriv_dMStop2_dparam(stop_mass::mstop_2, p);
       double dMFtop2_dp = deriv_dMFtop2_dparam(p);
@@ -365,9 +381,15 @@ namespace flexiblesusy {
       return result;
    }
 
-   double lowE6SSM_ew_derivs::deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const
+   double lowE6SSM_ew_derivs::deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2)
    {
       double scale = model.get_scale();
+
+      double theta = 0.0;
+      model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+      if (MStop(0) > MStop(1)) {
+         MStop = MStop.reverse();
+      }
 
       double dMStop20_dp1 = deriv_dMStop2_dparam(stop_mass::mstop_1, p1);
       double dMStop20_dp2 = deriv_dMStop2_dparam(stop_mass::mstop_1, p2);

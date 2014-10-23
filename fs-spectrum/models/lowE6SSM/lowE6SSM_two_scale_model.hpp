@@ -80,6 +80,7 @@ public:
    double get_ewsb_loop_order() const;
    const lowE6SSM_physical& get_physical() const;
    lowE6SSM_physical& get_physical();
+   double get_pole_mass_loop_order() const;
    const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const;
    Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& get_problems();
    int solve_ewsb_tree_level();

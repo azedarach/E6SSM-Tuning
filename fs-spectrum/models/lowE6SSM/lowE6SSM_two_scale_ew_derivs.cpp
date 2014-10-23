@@ -13,6 +13,7 @@ namespace flexiblesusy {
       : model(m)
       , number_of_ewsb_iterations(100)
       , ewsb_iteration_precision(1.0e-5)
+      , must_recalculate(false)
    {
       double theta = 0.0;
       model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
@@ -37,6 +38,12 @@ namespace flexiblesusy {
          MStop = MStop.reverse();
       }
       solve_ewsb_for_soft_masses();
+   }
+
+   lowE6SSM<Two_scale>& lowE6SSM_ew_derivs::get_model() 
+   { 
+      must_recalculate = true;
+      return model; 
    }
 
    double lowE6SSM_ew_derivs::get_ewsb_condition_1()
@@ -356,10 +363,13 @@ namespace flexiblesusy {
    {
       double scale = model.get_scale();
       
-      double theta = 0.0;
-      model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
-      if (MStop(0) > MStop(1)) {
-         MStop = MStop.reverse();
+      if (must_recalculate) {
+         double theta = 0.0;
+         model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+         if (MStop(0) > MStop(1)) {
+            MStop = MStop.reverse();
+         }
+         must_recalculate = false;
       }
 
       double dMStop20_dp = deriv_dMStop2_dparam(stop_mass::mstop_1, p);
@@ -385,10 +395,13 @@ namespace flexiblesusy {
    {
       double scale = model.get_scale();
 
-      double theta = 0.0;
-      model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
-      if (MStop(0) > MStop(1)) {
-         MStop = MStop.reverse();
+      if (must_recalculate) {
+         double theta = 0.0;
+         model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+         if (MStop(0) > MStop(1)) {
+            MStop = MStop.reverse();
+         }
+         must_recalculate = false;
       }
 
       double dMStop20_dp1 = deriv_dMStop2_dparam(stop_mass::mstop_1, p1);
@@ -419,6 +432,107 @@ namespace flexiblesusy {
       double result = 3.0 * oneOver16PiSqr * (tmp_1 + tmp_2 + tmp_3 + tmp_4 + tmp_5 + tmp_6);
 
       return result;
+   }
+
+   bool lowE6SSM_ew_derivs::calculate_MHiggs()
+   {
+      bool has_tachyon = false;
+
+      bool recalculated = false;
+      if (must_recalculate) {
+         double theta = 0.0;
+         model.calculate_MSu_3rd_generation(MStop(0), MStop(1), theta);
+         if (MStop(0) > MStop(1)) {
+            MStop = MStop.reverse();
+         }
+         must_recalculate = false;
+         recalculated = true;
+      }
+
+      if (recalculated)
+         solve_ewsb_for_soft_masses();
+
+      // Get tree level mass matrix
+      Eigen::Matrix<double,3,3> mass_matrix_hh(model.get_mass_matrix_hh());
+
+      // Add in 1-loop corrections
+      if (model.get_pole_mass_loop_order() > 0.) {
+         double d2DeltaV_dvd_dvd = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, lowE6SSM_info::vd);
+         double d2DeltaV_dvd_dvu = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, lowE6SSM_info::vu);
+         double d2DeltaV_dvd_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, lowE6SSM_info::vs);
+         double d2DeltaV_dvu_dvu = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::vu);
+         double d2DeltaV_dvu_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::vs);
+         double d2DeltaV_dvs_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vs, lowE6SSM_info::vs);
+
+         mass_matrix_hh(0,0) += d2DeltaV_dvd_dvd;
+         mass_matrix_hh(0,1) += d2DeltaV_dvd_dvu;
+         mass_matrix_hh(0,2) += d2DeltaV_dvd_dvs;
+         mass_matrix_hh(1,0) += d2DeltaV_dvd_dvu;
+         mass_matrix_hh(1,1) += d2DeltaV_dvu_dvu;
+         mass_matrix_hh(1,2) += d2DeltaV_dvu_dvs;
+         mass_matrix_hh(2,0) += d2DeltaV_dvd_dvs;
+         mass_matrix_hh(2,1) += d2DeltaV_dvu_dvs;
+         mass_matrix_hh(2,2) += d2DeltaV_dvs_dvs;
+
+         // Rotate into new basis
+         const double vu = model.get_vu();
+         const double vd = model.get_vd();
+         const double tb = vu / vd;
+         const double cb = 1.0 / Sqrt(1.0 + Sqr(tb));
+         const double sb = tb * cb;
+         
+         Eigen::Matrix<double,3,3> rot_matrix;
+         rot_matrix << cb, -sb, 0.,
+                       sb, cb, 0.,
+                       0., 0., 1.;
+         
+         mass_matrix_hh = rot_matrix.transpose() * mass_matrix_hh * rot_matrix;
+         
+         // Add in leading 2-loop corrections
+         if (model.get_pole_mass_loop_order() > 1.) {
+            // Subtract off 1-loop corrections to (0,0) element
+            double old_1loop = Sqr(cb) * d2DeltaV_dvd_dvd 
+               + 2.0 * sb * cb * d2DeltaV_dvd_dvu + Sqr(sb) * d2DeltaV_dvu_dvu;
+
+            mass_matrix_hh(0,0) -= old_1loop;
+
+            // Replace with 2-loop
+            const double mtop_at_thresh = 165.; //< matches Peter's code
+            const double MS = MStop(0) * MStop(1);
+            //DH::note may have to change to match mtop_at_thresh
+            const double yt = model.get_Yu(2,2);
+            const double yt4 = Power(yt, 4); 
+            const double g3 = model.get_g3();
+            const double at = model.get_TYu(2,2);
+            const double Lambdax = model.get_Lambdax();
+            const double vs = model.get_vs();
+            const double vev2 = Sqr(vu) + Sqr(vd);
+            const double oneOrt2 = 1. / Sqrt(2.0);
+
+            // X_t as in Theory and Phenomenology paper, multiplied by y_t
+            double Xtp = at - oneOrt2 * yt * Lambdax * vs;
+
+            // 2-loop contributions
+            double l = Log(MS / Sqr(mtop_at_thresh));
+            double Utp = 2.0 * Sqr(Xtp / MS) * (Sqr(yt) - Sqr(Xtp / MS) / 12.0);
+
+            mass_matrix_hh(0,0) *= (1.0 - 1.5 * oneOver16PiSqr * Sqr(yt) * l);
+            mass_matrix_hh(0,0) += 1.5 * oneOver16PiSqr * vev2 * Power(sb, 4)
+               * (0.5 * Utp + yt4 + oneOver16PiSqr * (1.5 * Sqr(yt) - 8.0 * Sqr(g3)) 
+                  * (Utp + yt4 * l) * l);
+         }
+      }
+      
+      fs_diagonalize_hermitian(mass_matrix_hh, MHiggs, ZH);
+
+      if (MHiggs.minCoeff() < 0.) {
+         model.get_problems().flag_tachyon(lowE6SSM_info::hh);
+         has_tachyon = true;
+      }
+
+      MHiggs = AbsSqrt(MHiggs);
+
+      return has_tachyon;
    }
 
    double lowE6SSM_ew_derivs::MFtop_DRbar() const

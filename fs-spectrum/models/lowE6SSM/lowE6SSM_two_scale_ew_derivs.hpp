@@ -34,9 +34,11 @@ namespace flexiblesusy {
       void set_number_of_ewsb_iterations(std::size_t i) { number_of_ewsb_iterations = i; }
       void set_ewsb_iteration_precision(double p) { ewsb_iteration_precision = p; }
 
-      lowE6SSM<Two_scale>& get_model() { return model; }
+      lowE6SSM<Two_scale>& get_model();
       std::size_t get_number_of_ewsb_iterations() const { return number_of_ewsb_iterations; }
       double get_ewsb_iteration_precision() const { return ewsb_iteration_precision; }
+      const Eigen::Array<double,3,1>& get_MHiggs() const { return MHiggs; }
+      const Eigen::Matrix<double,3,3>& get_ZH() const { return ZH; }
 
       /// Values of EWSB conditions
       double get_ewsb_condition_1();
@@ -53,7 +55,7 @@ namespace flexiblesusy {
       /// Function to solve for VEVs given parameters
       int solve_ewsb_conditions_for_vevs();
 
-      /// Derivatives of the Coleman-Weinbery loop contributions.
+      /// Derivatives of the Coleman-Weinberg loop contributions.
       /// By default only top and stop loops are included.
       double deriv_dDeltaV_dparam(lowE6SSM_info::Parameters p);
       double deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2);
@@ -63,6 +65,11 @@ namespace flexiblesusy {
                                           lowE6SSM_info::Parameters p2) const;
       double deriv_dMStop2_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p) const;
       double deriv_d2MStop2_dparam_dparam(stop_mass which_stop, lowE6SSM_info::Parameters p1, lowE6SSM_info::Parameters p2) const;
+
+      /// Rewritten version of Peter's Higgs code to allow for arbitrary U(1)'
+      /// charges. Includes 1-loop effective potential corrections and leading
+      /// 2-loop contributions. Returns true if tachyonic Higgs found.
+      bool calculate_MHiggs();
 
    private:
 
@@ -76,8 +83,11 @@ namespace flexiblesusy {
       lowE6SSM<Two_scale> model;
       std::size_t number_of_ewsb_iterations;
       double ewsb_iteration_precision;
+      bool must_recalculate;
 
-      Eigen::Matrix<double,2,1> MStop;
+      Eigen::Array<double,2,1> MStop;
+      Eigen::Array<double,3,1> MHiggs;
+      Eigen::Matrix<double,3,3> ZH;
 
       void set_MStop(double msf1, double msf2) { MStop(0) = msf1; MStop(1) = msf2; } 
       static int ewsb_conditions(const gsl_vector* x, void* params, gsl_vector* f);

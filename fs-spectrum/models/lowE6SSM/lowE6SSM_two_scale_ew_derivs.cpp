@@ -3,6 +3,7 @@
 #include "error.hpp"
 #include "gsl_utils.hpp"
 #include "logger.hpp"
+#include "numerics.hpp"
 #include "pv.hpp"
 #include "root_finder.hpp"
 #include "wrappers.hpp"
@@ -462,6 +463,7 @@ namespace flexiblesusy {
          const double vd = model.get_vd();
          const double mtop_at_thresh = 165.; //< matches Peter's code
          double Atop;
+         const double underflow = 1.0e-100;
          if (is_zero(model.get_TYu(2, 2))) {
             Atop = 0.0;
          } else if (Abs(model.get_Yu(2, 2)) < underflow) {

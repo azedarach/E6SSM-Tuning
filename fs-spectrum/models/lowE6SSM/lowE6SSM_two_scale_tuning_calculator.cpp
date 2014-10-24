@@ -69,22 +69,19 @@ namespace flexiblesusy {
       
       double scale = model.get_scale();
 
-      const std::size_t num_pars = (tuning_ewsb_loop_order > 0 ? num_tree_level_ewsb_pars + num_one_loop_ewsb_pars
-                                    : num_tree_level_ewsb_pars );
-
       if (is_equal_rel(scale, tuning_scale)) {
          ew_derivs.set_model(model);
          model.run_to(input_scale);
-         beta_derivs = calculate_beta_derivs(num_pars);
+         beta_derivs = calculate_beta_derivs();
          get_input_scale_pars();
       } else if (is_equal_rel(scale, input_scale)) {
-         beta_derivs = calculate_beta_derivs(num_pars);
+         beta_derivs = calculate_beta_derivs();
          get_input_scale_pars();
          model.run_to(tuning_scale);
          ew_derivs.set_model(model);
       } else {
          model.run_to(input_scale);
-         beta_derivs = calculate_beta_derivs(num_pars);
+         beta_derivs = calculate_beta_derivs();
          get_input_scale_pars();
          model.run_to(tuning_scale);
          ew_derivs.set_model(model);
@@ -293,95 +290,156 @@ namespace flexiblesusy {
       }
    }
 
-   Eigen::Matrix<double,Eigen::Dynamic,lowE6SSM_tuning_calculator::num_tuning_pars> lowE6SSM_tuning_calculator::calculate_beta_derivs(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,lowE6SSM_tuning_calculator::num_tuning_pars> lowE6SSM_tuning_calculator::calculate_beta_derivs() const
    {
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> derivs;
 
-      derivs.col(0) = calculate_deriv_dlowscale_dLambdax(num_pars);
-      derivs.col(1) = calculate_deriv_dlowscale_dTLambdax(num_pars);
-      derivs.col(2) = calculate_deriv_dlowscale_dTYu22(num_pars);
-      derivs.col(3) = calculate_deriv_dlowscale_dmq222(num_pars);
-      derivs.col(4) = calculate_deriv_dlowscale_dmHd2(num_pars);
-      derivs.col(5) = calculate_deriv_dlowscale_dmHu2(num_pars);
-      derivs.col(6) = calculate_deriv_dlowscale_dmu222(num_pars);
-      derivs.col(7) = calculate_deriv_dlowscale_dms2(num_pars);
-      derivs.col(8) = calculate_deriv_dlowscale_dMassB(num_pars);
-      derivs.col(9) = calculate_deriv_dlowscale_dMassWB(num_pars);
-      derivs.col(10) = calculate_deriv_dlowscale_dMassG(num_pars);
-      derivs.col(11) = calculate_deriv_dlowscale_dMassBp(num_pars);
+      derivs.col(0) = calculate_deriv_dlowscale_dLambdax();
+      derivs.col(1) = calculate_deriv_dlowscale_dTLambdax();
+      derivs.col(2) = calculate_deriv_dlowscale_dTYu22();
+      derivs.col(3) = calculate_deriv_dlowscale_dmq222();
+      derivs.col(4) = calculate_deriv_dlowscale_dmHd2();
+      derivs.col(5) = calculate_deriv_dlowscale_dmHu2();
+      derivs.col(6) = calculate_deriv_dlowscale_dmu222();
+      derivs.col(7) = calculate_deriv_dlowscale_dms2();
+      derivs.col(8) = calculate_deriv_dlowscale_dMassB();
+      derivs.col(9) = calculate_deriv_dlowscale_dMassWB();
+      derivs.col(10) = calculate_deriv_dlowscale_dMassG();
+      derivs.col(11) = calculate_deriv_dlowscale_dMassBp();
 
       return derivs;
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTLambdax(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTLambdax() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTYu22(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTYu22() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmq222(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmq222() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHd2(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHd2() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHu2(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHu2() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmu222(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmu222() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dms2(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dms2() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassB(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassB() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassWB(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassWB() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassG(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassG() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
 
-   Eigen::VectorXd lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassBp(std::size_t num_pars) const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassBp() const
    {
-      Eigen::Matrix<double,3,1> result = {1.0*num_pars, 1.0*num_pars, 1.0*num_pars};
-      return result;
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         return derivs;
+      }
    }
+
 } // namespace flexiblesusy

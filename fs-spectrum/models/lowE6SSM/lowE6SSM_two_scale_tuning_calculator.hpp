@@ -75,20 +75,20 @@ namespace flexiblesusy {
       double get_deriv(lowE6SSM_info::Parameters p, const Eigen::Array<double,num_tuning_pars,1>& derivs) const;
 
       Eigen::Matrix<double,num_ewsb_eqs,Eigen::Dynamic> calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs&) const;
-      Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs(std::size_t num_pars) const;
+      Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs() const;
 
-      Eigen::VectorXd calculate_deriv_dlowscale_dLambdax(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dTLambdax(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dTYu22(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dmq222(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dmHd2(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dmHu2(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dmu222(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dms2(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dMassB(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dMassWB(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dMassG(std::size_t num_pars) const;
-      Eigen::VectorXd calculate_deriv_dlowscale_dMassBp(std::size_t num_pars) const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dLambdax() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dTLambdax() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dTYu22() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmq222() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmHd2() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmHu2() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmu222() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dms2() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassB() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassWB() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassG() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassBp() const;
 
    };
 

@@ -164,7 +164,7 @@ Block MSOFTIN
     3   2.000000000e+03      # MassG
     4   1.000000000e+02      # MassBp
    24   2.500000000e+07      # mHp2
-   25   2.50000000 e+07      # mHpbar2
+   25   2.500000000e+07      # mHpbar2
 Block ESIXRUNIN
     0   1.000000000e+04      # MuPr
     1   5.000000000e-01      # Lambdax

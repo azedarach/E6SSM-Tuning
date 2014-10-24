@@ -461,7 +461,14 @@ namespace flexiblesusy {
          const double vu = model.get_vu();
          const double vd = model.get_vd();
          const double mtop_at_thresh = 165.; //< matches Peter's code
-         const double Atop = model.get_TYu(2,2) / model.get_Yu(2,2);
+         double Atop;
+         if (is_zero(model.get_TYu(2, 2))) {
+            Atop = 0.0;
+         } else if (Abs(model.get_Yu(2, 2)) < underflow) {
+            throw DivideByZeroError("in lowE6SSM_ew_derivs::calculate_MHiggs");
+         } else {
+            Atop = model.get_TYu(2, 2) / model.get_Yu(2, 2);
+         }
          const double yt = mtop_at_thresh * Sqrt(2.0) / model.get_vu();
          model.set_Yu(2, 2, yt);
          model.set_TYu(2, 2, yt * Atop);

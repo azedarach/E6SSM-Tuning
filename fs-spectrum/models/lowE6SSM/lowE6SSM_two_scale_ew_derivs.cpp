@@ -448,7 +448,7 @@ namespace flexiblesusy {
          must_recalculate = false;
          recalculated = true;
       }
-
+      
       if (recalculated)
          solve_ewsb_for_soft_masses();
 
@@ -457,12 +457,28 @@ namespace flexiblesusy {
 
       // Add in 1-loop corrections
       if (model.get_pole_mass_loop_order() > 0.) {
+         const double MS2 = MStop(0) * MStop(1);
+         const double vu = model.get_vu();
+         const double vd = model.get_vd();
+         const double mtop_at_thresh = 165.; //< matches Peter's code
+         const double Atop = model.get_TYu(2,2) / model.get_Yu(2,2);
+         const double yt = mtop_at_thresh * Sqrt(2.0) / model.get_vu();
+         model.set_Yu(2, 2, yt);
+         model.set_TYu(2, 2, yt * Atop);
+         
          double d2DeltaV_dvd_dvd = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, lowE6SSM_info::vd);
          double d2DeltaV_dvd_dvu = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, lowE6SSM_info::vu);
          double d2DeltaV_dvd_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vd, lowE6SSM_info::vs);
          double d2DeltaV_dvu_dvu = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::vu);
          double d2DeltaV_dvu_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vu, lowE6SSM_info::vs);
          double d2DeltaV_dvs_dvs = deriv_d2DeltaV_dparam_dparam(lowE6SSM_info::vs, lowE6SSM_info::vs);
+
+         // DH:: This matches Peter's code, but I'm not sure if it is meant
+         // to be this way or not (stop masses used in calculating tadpoles
+         // don't match stop masses used in calculating 1-loop Veff)
+         must_recalculate = true;
+         solve_ewsb_for_soft_masses();
+         mass_matrix_hh = model.get_mass_matrix_hh();
 
          mass_matrix_hh(0,0) += d2DeltaV_dvd_dvd;
          mass_matrix_hh(0,1) += d2DeltaV_dvd_dvu;
@@ -475,8 +491,6 @@ namespace flexiblesusy {
          mass_matrix_hh(2,2) += d2DeltaV_dvs_dvs;
 
          // Rotate into new basis
-         const double vu = model.get_vu();
-         const double vd = model.get_vd();
          const double tb = vu / vd;
          const double cb = 1.0 / Sqrt(1.0 + Sqr(tb));
          const double sb = tb * cb;
@@ -491,16 +505,14 @@ namespace flexiblesusy {
          // Add in leading 2-loop corrections
          if (model.get_pole_mass_loop_order() > 1.) {
             // Subtract off 1-loop corrections to (0,0) element
-            double old_1loop = Sqr(cb) * d2DeltaV_dvd_dvd 
-               + 2.0 * sb * cb * d2DeltaV_dvd_dvu + Sqr(sb) * d2DeltaV_dvu_dvu;
+            double dDeltaV_dvd = deriv_dDeltaV_dparam(lowE6SSM_info::vd);
+            double dDeltaV_dvu = deriv_dDeltaV_dparam(lowE6SSM_info::vu);
+            double old_1loop = Sqr(cb) * (d2DeltaV_dvd_dvd - dDeltaV_dvd / vd) 
+               + 2.0 * sb * cb * d2DeltaV_dvd_dvu + Sqr(sb) * (d2DeltaV_dvu_dvu - dDeltaV_dvu / vu);
 
             mass_matrix_hh(0,0) -= old_1loop;
 
             // Replace with 2-loop
-            const double mtop_at_thresh = 165.; //< matches Peter's code
-            const double MS = MStop(0) * MStop(1);
-            //DH::note may have to change to match mtop_at_thresh
-            const double yt = model.get_Yu(2,2);
             const double yt4 = Power(yt, 4); 
             const double g3 = model.get_g3();
             const double at = model.get_TYu(2,2);
@@ -510,15 +522,15 @@ namespace flexiblesusy {
             const double oneOrt2 = 1. / Sqrt(2.0);
 
             // X_t as in Theory and Phenomenology paper, multiplied by y_t
-            double Xtp = at - oneOrt2 * yt * Lambdax * vs;
+            double Xtp = at - oneOrt2 * yt * Lambdax * vs / tb;
 
             // 2-loop contributions
-            double l = Log(MS / Sqr(mtop_at_thresh));
-            double Utp = 2.0 * Sqr(Xtp / MS) * (Sqr(yt) - Sqr(Xtp / MS) / 12.0);
+            double l = Log(MS2 / Sqr(mtop_at_thresh));
+            double Utp = 2.0 * (Sqr(Xtp) / MS2) * (Sqr(yt) - Sqr(Xtp) / (12.0 * MS2));
 
-            mass_matrix_hh(0,0) *= (1.0 - 1.5 * oneOver16PiSqr * Sqr(yt) * l);
-            mass_matrix_hh(0,0) += 1.5 * oneOver16PiSqr * vev2 * Power(sb, 4)
-               * (0.5 * Utp + yt4 + oneOver16PiSqr * (1.5 * Sqr(yt) - 8.0 * Sqr(g3)) 
+            mass_matrix_hh(0,0) *= (1.0 - 6.0 * oneOver16PiSqr * Sqr(yt) * l);
+            mass_matrix_hh(0,0) += 6.0 * oneOver16PiSqr * vev2 * Power(sb, 4)
+               * (0.5 * Utp + yt4 * l + oneOver16PiSqr * (1.5 * Sqr(yt) - 8.0 * Sqr(g3)) 
                   * (Utp + yt4 * l) * l);
          }
       }

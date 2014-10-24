@@ -39,6 +39,7 @@ namespace flexiblesusy {
       double get_ewsb_iteration_precision() const { return ewsb_iteration_precision; }
       const Eigen::Array<double,3,1>& get_MHiggs() const { return MHiggs; }
       const Eigen::Matrix<double,3,3>& get_ZH() const { return ZH; }
+      const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& get_problems() const { return model.get_problems(); }
 
       /// Values of EWSB conditions
       double get_ewsb_condition_1();

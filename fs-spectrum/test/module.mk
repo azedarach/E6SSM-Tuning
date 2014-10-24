@@ -15,6 +15,7 @@ LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 TEST_SRC := \
 		$(DIR)/test_lowE6SSM_ew_derivs.cpp \
+		$(DIR)/test_lowE6SSM_higgs_masses.cpp \
 		$(DIR)/test_lowE6SSM_stop_first_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_gN_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_g1_second_derivs.cpp \
@@ -95,7 +96,10 @@ clean:: clean-$(MODNAME)
 distclean:: distclean-$(MODNAME)
 
 $(DIR)/test_lowE6SSM_ew_derivs.x: $(DIR)/test_lowE6SSM_ew_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
-		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_higgs_masses.x: $(DIR)/test_lowE6SSM_higgs_masses.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_stop_first_derivs.x: $(DIR)/test_lowE6SSM_stop_first_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 

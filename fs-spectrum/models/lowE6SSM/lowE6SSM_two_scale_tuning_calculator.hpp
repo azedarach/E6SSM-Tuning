@@ -56,6 +56,17 @@ namespace flexiblesusy {
       static const std::size_t num_one_loop_ewsb_pars = 4;
       static const std::size_t num_tuning_pars = 12;
 
+      const double underflow = 1.0e-100;
+
+      struct numerical_deriv_pars {
+         lowE6SSM<Two_scale> model;
+         double high_scale;
+         double low_scale;
+         unsigned ewsb_loop_order;
+         unsigned beta_loop_order;
+         lowE6SSM_info::Parameters p;
+      };
+
       lowE6SSM<Two_scale> model;
       double input_scale; ///< parameter input scale
       double tuning_scale; ///< scale to calculate tuning at
@@ -66,13 +77,15 @@ namespace flexiblesusy {
       std::map<lowE6SSM_info::Parameters,double> fine_tunings;
       std::map<lowE6SSM_info::Parameters,double> input_scale_pars;
 
+      static double calculate_MVZ2(double x, void * params);
+
       void get_input_scale_pars();
       double calculate_fine_tuning(double par, double g1, double g2, double vd, double vu, 
                                    double dg1dp, double dg2dp, double dvddp, double dvudp) const;
       std::size_t get_g1_row() const;
       std::size_t get_g2_row() const;
       
-      double get_deriv(lowE6SSM_info::Parameters p, const Eigen::Array<double,num_tuning_pars,1>& derivs) const;
+      double get_deriv(lowE6SSM_info::Parameters p, const Eigen::Array<double,1,num_tuning_pars>& derivs) const;
 
       Eigen::Matrix<double,num_ewsb_eqs,Eigen::Dynamic> calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs&) const;
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs() const;

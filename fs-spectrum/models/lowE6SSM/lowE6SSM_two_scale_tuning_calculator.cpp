@@ -1,6 +1,8 @@
 #include "lowE6SSM_two_scale_tuning_calculator.hpp"
 #include "numerics.hpp"
 
+#include <gsl/gsl_deriv.h>
+
 namespace flexiblesusy {
 
    lowE6SSM_tuning_calculator::lowE6SSM_tuning_calculator(const lowE6SSM<Two_scale>& m)
@@ -45,9 +47,133 @@ namespace flexiblesusy {
 
    }
 
+   double lowE6SSM_tuning_calculator::calculate_MVZ2(double x, void * params)
+   {
+      const numerical_deriv_pars* pars
+         = static_cast<numerical_deriv_pars*>(params);
+
+      lowE6SSM<Two_scale> model = pars->model;
+      double high_scale = pars->high_scale;
+      double low_scale = pars->low_scale;
+      unsigned ewsb_loop_order = pars->ewsb_loop_order;
+      unsigned beta_loop_order = pars->beta_loop_order;
+      lowE6SSM_info::Parameters p = pars->p;
+
+      model.set_loops(beta_loop_order);
+      model.set_ewsb_loop_order(ewsb_loop_order);
+
+      if (beta_loop_order == 0) {
+         model.set_scale(high_scale);
+      } else if (!is_equal_rel(high_scale, model.get_scale())) {
+         model.run_to(high_scale);
+      }
+
+      if (p == lowE6SSM_info::Lambdax) {
+         const double underflow = 1.0e-100;
+         double Alambda;
+         if (is_zero(model.get_TLambdax())) {
+            Alambda = 0.0;
+         } else if (Abs(model.get_Lambdax()) < underflow) {
+            throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
+         } else {
+            Alambda = model.get_TLambdax() / model.get_Lambdax();
+         }
+         model.set_parameter(lowE6SSM_info::TLambdax, x * Alambda);
+         model.set_parameter(p, x);
+      } else if (p == lowE6SSM_info::TLambdax) {
+         model.set_parameter(lowE6SSM_info::TLambdax, model.get_Lambdax() * x);
+      } else if (p == lowE6SSM_info::TYu22) {
+         model.set_parameter(lowE6SSM_info::TYu22, model.get_Yu(2, 2) * x);
+      } else {
+         model.set_parameter(p, x);
+      }
+      
+      if (beta_loop_order == 0) {
+         model.set_scale(low_scale);
+      } else {
+         model.run_to(low_scale);
+      }
+
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gbar2 = Sqr(g2) + 0.6 * Sqr(g1);
+
+      const double mHd2 = model.get_mHd2();
+      const double mHu2 = model.get_mHu2();
+      const double ms2 = model.get_ms2();
+
+      lowE6SSM_ew_derivs derivs(model);
+
+      derivs.get_model().set_mHd2(mHd2);
+      derivs.get_model().set_mHu2(mHu2);
+      derivs.get_model().set_ms2(ms2);
+
+      derivs.solve_ewsb_conditions_for_vevs();
+
+      const double vd = derivs.get_model().get_vd();
+      const double vu = derivs.get_model().get_vu();
+      const double vev2 = Sqr(vu) + Sqr(vd);
+
+      double MVZ2 = 0.25 * gbar2 * vev2;
+      
+      return MVZ2;
+   }
+
    bool lowE6SSM_tuning_calculator::calculate_fine_tunings_numerically()
    {
-      return true;
+      bool tuning_problem = false;
+
+      lowE6SSM_ew_derivs ew_derivs(model);
+      
+      double scale = model.get_scale();
+
+      if (is_equal_rel(scale, input_scale)) {
+         get_input_scale_pars();
+      } else {
+         if (tuning_beta_loop_order == 0) {
+            model.set_scale(input_scale);
+         } else {
+            model.run_to(input_scale);
+         }
+         get_input_scale_pars();
+      }
+
+      const double epsilon = 1.0e-5;
+
+      // Reference value of M_Z^2
+      const double g1 = model.get_g1();
+      const double g2 = model.get_g2();
+      const double gbar2 = Sqr(g2) + 0.6 * Sqr(g1);
+      const double vd = model.get_vd();
+      const double vu = model.get_vu();
+      const double vev2 = Sqr(vu) + Sqr(vd);
+      const double MVZ2 = 0.25 * gbar2 * vev2;
+
+      for (std::map<lowE6SSM_info::Parameters,double>::const_iterator it = input_scale_pars.begin(),
+              end = input_scale_pars.end(); it != end; ++it) {
+         numerical_deriv_pars pars = {model, input_scale, tuning_scale, 
+                                      tuning_ewsb_loop_order, tuning_beta_loop_order, it->first};
+         gsl_function calc_MVZ2 = {calculate_MVZ2, &pars};
+
+         double numeric_deriv;
+         double abs_err;
+         double h;
+         
+         h = epsilon * Abs(it->second);
+         if (h == 0.0) h = epsilon;
+         double tmp_1 = it->second;
+         double tmp_2 = tmp_1 + h;
+         h = tmp_2 - tmp_1;
+         
+         gsl_deriv_central(&calc_MVZ2, it->second, h, &numeric_deriv, &abs_err);
+
+         if (Abs(abs_err / numeric_deriv) > 1.0 && Abs(numeric_deriv) > 1.0e-10)
+            tuning_problem = true;
+
+         fine_tunings[it->first] = Abs((it->second / MVZ2) * numeric_deriv);
+      }
+
+      return tuning_problem;
    }
 
    std::vector<lowE6SSM_info::Parameters> lowE6SSM_tuning_calculator::get_fine_tuning_params() const
@@ -65,35 +191,43 @@ namespace flexiblesusy {
       bool tuning_problem = false;
       
       lowE6SSM_ew_derivs ew_derivs(model);
-      Eigen::Matrix<double,num_ewsb_eqs,num_tuning_pars> beta_derivs;
+      Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> beta_derivs;
       
       double scale = model.get_scale();
 
-      if (is_equal_rel(scale, tuning_scale)) {
-         ew_derivs.set_model(model);
-         model.run_to(input_scale);
+      if (tuning_beta_loop_order == 0) {
+         model.set_scale(input_scale);
          beta_derivs = calculate_beta_derivs();
          get_input_scale_pars();
-      } else if (is_equal_rel(scale, input_scale)) {
-         beta_derivs = calculate_beta_derivs();
-         get_input_scale_pars();
-         model.run_to(tuning_scale);
+         model.set_scale(tuning_scale);
          ew_derivs.set_model(model);
       } else {
-         model.run_to(input_scale);
-         beta_derivs = calculate_beta_derivs();
-         get_input_scale_pars();
-         model.run_to(tuning_scale);
-         ew_derivs.set_model(model);
+         if (is_equal_rel(scale, tuning_scale)) {
+            ew_derivs.set_model(model);
+            model.run_to(input_scale);
+            beta_derivs = calculate_beta_derivs();
+            get_input_scale_pars();
+         } else if (is_equal_rel(scale, input_scale)) {
+            beta_derivs = calculate_beta_derivs();
+            get_input_scale_pars();
+            model.run_to(tuning_scale);
+            ew_derivs.set_model(model);
+         } else {
+            model.run_to(input_scale);
+            beta_derivs = calculate_beta_derivs();
+            get_input_scale_pars();
+            model.run_to(tuning_scale);
+            ew_derivs.set_model(model);
+         }
       }
 
       ew_derivs.set_ewsb_loop_order(tuning_ewsb_loop_order);
-
+      
       Eigen::Matrix<double,num_ewsb_eqs,num_ewsb_eqs> mass_matrix = ew_derivs.calculate_unrotated_mass_matrix_hh();
-
+      
       // N.B. extra minus sign
       Eigen::Matrix<double, num_ewsb_eqs, Eigen::Dynamic> ewsb_derivs = -1.0 * calculate_ewsb_parameter_derivs(ew_derivs);
-
+      
       // Solve system. Use inverse directly since mass matrix is small in the E6SSM (3 x 3),
       // but note this has to change for matrices larger than 4 x 4.
       bool invertible;
@@ -114,10 +248,10 @@ namespace flexiblesusy {
       double g2_at_tuning_scale = ew_derivs.get_model().get_g2();
       double vd_at_tuning_scale = ew_derivs.get_model().get_vd();
       double vu_at_tuning_scale = ew_derivs.get_model().get_vu();
-      const Eigen::Array<double,num_tuning_pars,1> g1_derivs = beta_derivs.row(get_g1_row());
-      const Eigen::Array<double,num_tuning_pars,1> g2_derivs = beta_derivs.row(get_g2_row());
-      const Eigen::Array<double,num_tuning_pars,1> vd_derivs = vev_derivs.row(0);
-      const Eigen::Array<double,num_tuning_pars,1> vu_derivs = vev_derivs.row(1);
+      const Eigen::Array<double,1,num_tuning_pars> g1_derivs = beta_derivs.row(get_g1_row());
+      const Eigen::Array<double,1,num_tuning_pars> g2_derivs = beta_derivs.row(get_g2_row());
+      const Eigen::Array<double,1,num_tuning_pars> vd_derivs = vev_derivs.row(0);
+      const Eigen::Array<double,1,num_tuning_pars> vu_derivs = vev_derivs.row(1);
 
       for (std::map<lowE6SSM_info::Parameters,double>::iterator it = fine_tunings.begin(),
               end = fine_tunings.end(); it != end; ++it) {
@@ -132,8 +266,6 @@ namespace flexiblesusy {
 
    void lowE6SSM_tuning_calculator::get_input_scale_pars()
    {
-      const double underflow = 1.0e-100;
-
       input_scale_pars[lowE6SSM_info::Lambdax] = model.get_Lambdax();
 
       double Alambda;
@@ -204,7 +336,7 @@ namespace flexiblesusy {
       }
    }
 
-   double lowE6SSM_tuning_calculator::get_deriv(lowE6SSM_info::Parameters p, const Eigen::Array<double,num_tuning_pars,1>& derivs) const
+   double lowE6SSM_tuning_calculator::get_deriv(lowE6SSM_info::Parameters p, const Eigen::Array<double,1,num_tuning_pars>& derivs) const
    {
       switch (p) {
       case lowE6SSM_info::Lambdax: {
@@ -293,7 +425,12 @@ namespace flexiblesusy {
    Eigen::Matrix<double,Eigen::Dynamic,lowE6SSM_tuning_calculator::num_tuning_pars> lowE6SSM_tuning_calculator::calculate_beta_derivs() const
    {
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> derivs;
-
+      if (tuning_ewsb_loop_order == 0) {
+         derivs.resize(num_tree_level_ewsb_pars, num_tuning_pars);
+      } else {
+         derivs.resize(num_tree_level_ewsb_pars + num_one_loop_ewsb_pars, num_tuning_pars);
+      }
+      
       derivs.col(0) = calculate_deriv_dlowscale_dLambdax();
       derivs.col(1) = calculate_deriv_dlowscale_dTLambdax();
       derivs.col(2) = calculate_deriv_dlowscale_dTYu22();
@@ -314,9 +451,57 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 1.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            double Alambda;
+
+            if (is_zero(model.get_TLambdax())) {
+               Alambda = 0.0;
+            } else if (Abs(model.get_Lambdax()) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
+            } else {
+               Alambda = model.get_TLambdax() / model.get_Lambdax();
+            }
+
+            derivs(4) = Alambda;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 1.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            double Alambda;
+
+            if (is_zero(model.get_TLambdax())) {
+               Alambda = 0.0;
+            } else if (Abs(model.get_Lambdax()) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
+            } else {
+               Alambda = model.get_TLambdax() / model.get_Lambdax();
+            }
+
+            derivs(5) = Alambda;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -325,9 +510,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = model.get_Lambdax();
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = model.get_Lambdax();
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -336,9 +549,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = model.get_Yu(2, 2);
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -347,9 +588,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 1.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -358,9 +627,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 1.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 1.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -369,9 +666,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 1.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 1.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -380,9 +705,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 1.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -391,9 +744,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 1.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 1.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -402,9 +783,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -413,9 +822,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -424,9 +861,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }
@@ -435,9 +900,37 @@ namespace flexiblesusy {
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+         } else {
+
+         }
          return derivs;
       } else {
          Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         if (tuning_beta_loop_order == 0) {
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 0.;
+            derivs(8) = 0.;
+            derivs(9) = 0.;
+            derivs(10) = 0.;
+            derivs(11) = 0.;
+         } else {
+
+         }
          return derivs;
       }
    }

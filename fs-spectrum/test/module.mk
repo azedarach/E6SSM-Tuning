@@ -15,7 +15,15 @@ LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 TEST_SRC := \
 		$(DIR)/test_lowE6SSM_ew_derivs.cpp \
+		$(DIR)/test_lowE6SSM_gauge_derivs.cpp \
 		$(DIR)/test_lowE6SSM_higgs_masses.cpp \
+		$(DIR)/test_lowE6SSM_Lambdax_derivs.cpp \
+		$(DIR)/test_lowE6SSM_leading_log_coeffs.cpp \
+		$(DIR)/test_lowE6SSM_mHd2_derivs.cpp \
+		$(DIR)/test_lowE6SSM_mHu2_derivs.cpp \
+		$(DIR)/test_lowE6SSM_mq222_derivs.cpp \
+		$(DIR)/test_lowE6SSM_ms2_derivs.cpp \
+		$(DIR)/test_lowE6SSM_mu222_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_first_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_gN_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_g1_second_derivs.cpp \
@@ -28,9 +36,12 @@ TEST_SRC := \
 		$(DIR)/test_lowE6SSM_stop_vu_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_vs_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_stop_Yu22_second_derivs.cpp \
+		$(DIR)/test_lowE6SSM_TLambdax_derivs.cpp \
 		$(DIR)/test_lowE6SSM_top_first_derivs.cpp \
 		$(DIR)/test_lowE6SSM_top_second_derivs.cpp \
-		$(DIR)/test_lowE6SSM_tuning_calculation.cpp
+		$(DIR)/test_lowE6SSM_tuning_calculation.cpp \
+		$(DIR)/test_lowE6SSM_TYu22_derivs.cpp \
+		$(DIR)/test_lowE6SSM_Yu22_derivs.cpp
 
 ifneq ($(findstring lattice,$(ALGORITHMS)),)
 TEST_SRC +=
@@ -99,7 +110,31 @@ distclean:: distclean-$(MODNAME)
 $(DIR)/test_lowE6SSM_ew_derivs.x: $(DIR)/test_lowE6SSM_ew_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
+$(DIR)/test_lowE6SSM_gauge_derivs.x: $(DIR)/test_lowE6SSM_gauge_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
 $(DIR)/test_lowE6SSM_higgs_masses.x: $(DIR)/test_lowE6SSM_higgs_masses.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_Lambdax_derivs.x: $(DIR)/test_lowE6SSM_Lambdax_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_leading_log_coeffs.x: $(DIR)/test_lowE6SSM_leading_log_coeffs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_mHd2_derivs.x: $(DIR)/test_lowE6SSM_mHd2_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_mHu2_derivs.x: $(DIR)/test_lowE6SSM_mHu2_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_mq222_derivs.x: $(DIR)/test_lowE6SSM_mq222_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_ms2_derivs.x: $(DIR)/test_lowE6SSM_ms2_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_mu222_derivs.x: $(DIR)/test_lowE6SSM_mu222_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_stop_first_derivs.x: $(DIR)/test_lowE6SSM_stop_first_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
@@ -138,6 +173,9 @@ $(DIR)/test_lowE6SSM_stop_vs_second_derivs.x: $(DIR)/test_lowE6SSM_stop_vs_secon
 $(DIR)/test_lowE6SSM_stop_Yu22_second_derivs.x: $(DIR)/test_lowE6SSM_stop_Yu22_second_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
+$(DIR)/test_lowE6SSM_TLambdax_derivs.x: $(DIR)/test_lowE6SSM_TLambdax_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
 $(DIR)/test_lowE6SSM_top_first_derivs.x: $(DIR)/test_lowE6SSM_top_first_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
@@ -146,6 +184,12 @@ $(DIR)/test_lowE6SSM_top_second_derivs.x: $(DIR)/test_lowE6SSM_top_second_derivs
 
 $(DIR)/test_lowE6SSM_tuning_calculation.x: $(DIR)/test_lowE6SSM_tuning_calculation.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
+
+$(DIR)/test_lowE6SSM_TYu22_derivs.x: $(DIR)/test_lowE6SSM_TYu22_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_Yu22_derivs.x: $(DIR)/test_lowE6SSM_Yu22_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_%.x: $(DIR)/test_%.o
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(BOOSTTHREADLIBS) $(GSLLIBS) $(FLIBS) $(THREADLIBS) 

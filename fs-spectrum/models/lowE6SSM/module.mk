@@ -34,16 +34,39 @@ LIBlowE6SSM_SRC += \
 		$(DIR)/lowE6SSM_utilities.cpp \
 		$(DIR)/lowE6SSM_two_scale_convergence_tester.cpp \
 		$(DIR)/lowE6SSM_two_scale_ew_derivs.cpp \
+		$(DIR)/lowE6SSM_two_scale_gauge_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_high_scale_constraint.cpp \
 		$(DIR)/lowE6SSM_two_scale_initial_guesser.cpp \
+		$(DIR)/lowE6SSM_two_scale_Lambdax_derivs.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_g1.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_g2.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_gN.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_Lambdax.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_mHd2.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_mHu2.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_ms2.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_mq222.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_mu222.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_TLambdax.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_TYu22.cpp \
+		$(DIR)/lowE6SSM_two_scale_LL_Yu22.cpp \
 		$(DIR)/lowE6SSM_two_scale_low_scale_constraint.cpp \
+		$(DIR)/lowE6SSM_two_scale_mHd2_derivs.cpp \
+		$(DIR)/lowE6SSM_two_scale_mHu2_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_model.cpp \
+		$(DIR)/lowE6SSM_two_scale_mq222_derivs.cpp \
+		$(DIR)/lowE6SSM_two_scale_ms2_derivs.cpp \
+		$(DIR)/lowE6SSM_two_scale_mu222_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_susy_parameters.cpp \
 		$(DIR)/lowE6SSM_two_scale_soft_parameters.cpp \
 		$(DIR)/lowE6SSM_two_scale_stop_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_susy_scale_constraint.cpp \
+		$(DIR)/lowE6SSM_two_scale_TLambdax_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_top_derivs.cpp \
-		$(DIR)/lowE6SSM_two_scale_tuning_calculator.cpp
+		$(DIR)/lowE6SSM_two_scale_tuning_calculator.cpp \
+		$(DIR)/lowE6SSM_two_scale_TYu22_derivs.cpp \
+		$(DIR)/lowE6SSM_two_scale_Yu22_derivs.cpp
+
 EXElowE6SSM_SRC += \
 		$(DIR)/run_lowE6SSM.cpp \
 		$(DIR)/scan_lowE6SSM.cpp

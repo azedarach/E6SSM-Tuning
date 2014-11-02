@@ -48,7 +48,7 @@ lowE6SSM_input_parameters get_test_inputs(double theta)
    input.Lambda12Input(0,0) = 0.1;
    input.Lambda12Input(1,1) = 0.1;
 
-   input.LambdaxInput = 0.5;
+   input.LambdaxInput = 0.3;
 
    input.MuPrInput = 10132.2;
 
@@ -121,7 +121,7 @@ lowE6SSM_input_parameters get_test_inputs(double theta)
   
    input.MassBInput = 253.2;
    input.MassWBInput = 1324.2;
-   input.MassGInput = 5329.3;
+   input.MassGInput = 2000.0;
    input.MassBpInput = 300.0;
 
    return input;
@@ -134,7 +134,7 @@ void set_susy_parameters_from_input(const lowE6SSM_input_parameters& input,
 
    model.set_Yd(0, 0, 0.);
    model.set_Yd(1, 1, 0.);
-   model.set_Yd(2, 2,0.1);
+   model.set_Yd(2, 2, 0.1);
 
    model.set_Ye(0, 0, 0.);
    model.set_Ye(1, 1, 0.);
@@ -362,4 +362,98 @@ BOOST_AUTO_TEST_CASE( test_fine_tuning_one_loop_no_running )
                       - numerical_tunings[lowE6SSM_info::MassG]), max_err);
    BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::MassBp]
                       - numerical_tunings[lowE6SSM_info::MassBp]), max_err);
+}
+
+BOOST_AUTO_TEST_CASE( test_fine_tuning_one_loop_with_running )
+{
+   const double max_err = 1.0e-1; //< i.e. 10% agreement
+   const double theta = ArcTan(Sqrt(15.));
+   const double input_scale = 20000.0;
+
+   lowE6SSM_input_parameters inputs = get_test_inputs(theta);
+
+   lowE6SSM<Two_scale> model;
+
+   initialize_model(inputs, model);
+
+   model.set_ewsb_loop_order(1);
+   model.set_loops(2);
+
+   double msf1;
+   double msf2;
+   double mix;
+   model.calculate_MSu_3rd_generation(msf1, msf2, mix);
+
+   const double tuning_scale = Sqrt(msf1 * msf2);
+
+   model.set_scale(tuning_scale);
+
+   lowE6SSM_ew_derivs ew_derivs(model);
+
+   model.set_mHd2(ew_derivs.get_model().get_mHd2());
+   model.set_mHu2(ew_derivs.get_model().get_mHu2());
+   model.set_ms2(ew_derivs.get_model().get_ms2());
+
+   lowE6SSM_tuning_calculator tuning_calc(model);
+   
+   tuning_calc.set_input_scale(input_scale);
+   tuning_calc.set_tuning_scale(tuning_scale);
+
+   bool numerical_problem = tuning_calc.calculate_fine_tunings_numerically();
+
+   std::map<lowE6SSM_info::Parameters, double> numerical_tunings = tuning_calc.get_fine_tunings();
+
+   bool approximate_problem = tuning_calc.calculate_fine_tunings_approximately();
+
+   std::map<lowE6SSM_info::Parameters, double> approximate_tunings = tuning_calc.get_fine_tunings();
+
+   BOOST_REQUIRE(numerical_problem == false && approximate_problem == false);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::Lambdax]
+                      - numerical_tunings[lowE6SSM_info::Lambdax]) / 
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::Lambdax]
+                             + numerical_tunings[lowE6SSM_info::Lambdax])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::TLambdax]
+                      - numerical_tunings[lowE6SSM_info::TLambdax]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::TLambdax]
+                             + numerical_tunings[lowE6SSM_info::TLambdax])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::TYu22]
+                      - numerical_tunings[lowE6SSM_info::TYu22]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::TYu22]
+                             + numerical_tunings[lowE6SSM_info::TYu22])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::mq222]
+                      - numerical_tunings[lowE6SSM_info::mq222]) / 
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::mq222]
+                             + numerical_tunings[lowE6SSM_info::mq222])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::mHd2]
+                      - numerical_tunings[lowE6SSM_info::mHd2]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::mHd2]
+                             + numerical_tunings[lowE6SSM_info::mHd2])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::mHu2]
+                      - numerical_tunings[lowE6SSM_info::mHu2]) / 
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::mHu2]
+                             + numerical_tunings[lowE6SSM_info::mHu2])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::mu222]
+                      - numerical_tunings[lowE6SSM_info::mu222]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::mu222]
+                             + numerical_tunings[lowE6SSM_info::mu222])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::ms2]
+                      - numerical_tunings[lowE6SSM_info::ms2]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::ms2]
+                             + numerical_tunings[lowE6SSM_info::ms2])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::MassB]
+                      - numerical_tunings[lowE6SSM_info::MassB]) / 
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::MassB]
+                             + numerical_tunings[lowE6SSM_info::MassB])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::MassWB]
+                      - numerical_tunings[lowE6SSM_info::MassWB]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::MassWB]
+                             + numerical_tunings[lowE6SSM_info::MassWB])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::MassG]
+                      - numerical_tunings[lowE6SSM_info::MassG]) / 
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::MassG]
+                             + numerical_tunings[lowE6SSM_info::MassG])), max_err);
+   BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::MassBp]
+                      - numerical_tunings[lowE6SSM_info::MassBp]) /
+                  Abs(0.5 * (approximate_tunings[lowE6SSM_info::MassBp]
+                             + numerical_tunings[lowE6SSM_info::MassBp])), max_err);
 }

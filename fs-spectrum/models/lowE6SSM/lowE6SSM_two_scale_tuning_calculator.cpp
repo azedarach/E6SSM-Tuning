@@ -71,13 +71,15 @@ namespace flexiblesusy {
       if (p == lowE6SSM_info::Lambdax) {
          const double underflow = 1.0e-100;
          double Alambda;
+
          if (is_zero(model.get_TLambdax())) {
             Alambda = 0.0;
          } else if (Abs(model.get_Lambdax()) < underflow) {
-            throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
+            throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_ALambdax");
          } else {
             Alambda = model.get_TLambdax() / model.get_Lambdax();
          }
+         
          model.set_parameter(lowE6SSM_info::TLambdax, x * Alambda);
          model.set_parameter(p, x);
       } else if (p == lowE6SSM_info::TLambdax) {
@@ -186,6 +188,17 @@ namespace flexiblesusy {
       return params;
    }
    
+   bool lowE6SSM_tuning_calculator::is_fine_tuning_parameter(lowE6SSM_info::Parameters p) const
+   {
+      std::vector<lowE6SSM_info::Parameters> tuning_pars = get_fine_tuning_params();
+      for (std::vector<lowE6SSM_info::Parameters>::const_iterator it = tuning_pars.begin(),
+              end = tuning_pars.end(); it != end; ++it) {
+         if (p == *it)
+            return true;
+      }
+      return false;
+   }
+
    bool lowE6SSM_tuning_calculator::calculate_fine_tunings_approximately()
    {
       bool tuning_problem = false;
@@ -264,30 +277,737 @@ namespace flexiblesusy {
       return tuning_problem;
    }
 
-   void lowE6SSM_tuning_calculator::get_input_scale_pars()
+   double lowE6SSM_tuning_calculator::calculate_leading_log_coefficient(lowE6SSM_info::Parameters p) const
    {
-      input_scale_pars[lowE6SSM_info::Lambdax] = model.get_Lambdax();
+      switch (p) {
+      case lowE6SSM_info::Lambdax: 
+         return leading_log_coefficient_Lambdax();
+      case lowE6SSM_info::Yu22:
+         return leading_log_coefficient_Yu22();
+      case lowE6SSM_info::g1:
+         return leading_log_coefficient_g1();
+      case lowE6SSM_info::g2:
+         return leading_log_coefficient_g2();
+      case lowE6SSM_info::gN:
+         return leading_log_coefficient_gN();
+      case lowE6SSM_info::TLambdax:
+         return leading_log_coefficient_TLambdax();
+      case lowE6SSM_info::TYu22:
+         return leading_log_coefficient_TYu22();
+      case lowE6SSM_info::mq222:
+         return leading_log_coefficient_mq222();
+      case lowE6SSM_info::mHd2:
+         return leading_log_coefficient_mHd2();
+      case lowE6SSM_info::mHu2:
+         return leading_log_coefficient_mHu2();
+      case lowE6SSM_info::mu222:
+         return leading_log_coefficient_mu222();
+      case lowE6SSM_info::ms2:
+         return leading_log_coefficient_ms2();
+      default :
+         throw UnknownModelParameterError(p);
+      }   
+   }
 
+   double lowE6SSM_tuning_calculator::deriv_dbeta_one_loop_param_dparam(lowE6SSM_info::Parameters p, lowE6SSM_info::Parameters ftp)
+   {
+      // check that the fine tuning parameter requested is really
+      // a parameter we calculate fine tuning for
+      if (!is_fine_tuning_parameter(ftp))
+         throw UnknownModelParameterError(ftp);
+
+      if (p == lowE6SSM_info::Lambdax) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_Lambdax_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::Yu22) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_Yu22_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::g1) {
+         return 0.;
+      } else if (p == lowE6SSM_info::g2) {
+         return 0.;
+      } else if (p == lowE6SSM_info::gN) {
+         return 0.;
+      } else if (p == lowE6SSM_info::TLambdax) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_TLambdax_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_TLambdax_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_TLambdax_dAYu22();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_TLambdax_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_TLambdax_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_TLambdax_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_TLambdax_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::TYu22) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_TYu22_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_TYu22_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_TYu22_dAYu22();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_TYu22_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_TYu22_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_TYu22_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_TYu22_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mq222) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_mq222_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_mq222_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_mq222_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_one_loop_mq222_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_one_loop_mq222_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_one_loop_mq222_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_one_loop_mq222_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_one_loop_mq222_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_mq222_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_mq222_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_mq222_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_mq222_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mHd2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_mHd2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_mHd2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_mHd2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_one_loop_mHd2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_one_loop_mHd2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_one_loop_mHd2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_one_loop_mHd2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_one_loop_mHd2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_mHd2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_mHd2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_mHd2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_mHd2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mHu2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_mHu2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_mHu2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_mHu2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_one_loop_mHu2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_one_loop_mHu2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_one_loop_mHu2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_one_loop_mHu2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_one_loop_mHu2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_mHu2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_mHu2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_mHu2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_mHu2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mu222) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_mu222_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_mu222_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_mu222_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_one_loop_mu222_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_one_loop_mu222_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_one_loop_mu222_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_one_loop_mu222_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_one_loop_mu222_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_mu222_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_mu222_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_mu222_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_mu222_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::ms2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_one_loop_ms2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_one_loop_ms2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_one_loop_ms2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_one_loop_ms2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_one_loop_ms2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_one_loop_ms2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_one_loop_ms2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_one_loop_ms2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_one_loop_ms2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_one_loop_ms2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_one_loop_ms2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_one_loop_ms2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else {
+         throw UnknownModelParameterError(p);
+      }
+   }
+   
+   double lowE6SSM_tuning_calculator::deriv_dbeta_two_loop_param_dparam(lowE6SSM_info::Parameters p, lowE6SSM_info::Parameters ftp)
+   {
+      // check that the fine tuning parameter requested is really
+      // a parameter we calculate fine tuning for
+      if (!is_fine_tuning_parameter(ftp))
+         throw UnknownModelParameterError(ftp);
+
+      if (p == lowE6SSM_info::Lambdax) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_Lambdax_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::Yu22) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_Yu22_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::g1) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_g1_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::g2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_g2_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::gN) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_gN_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::TLambdax) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_TLambdax_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_TLambdax_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_TLambdax_dAYu22();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_TLambdax_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_TLambdax_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_TLambdax_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_TLambdax_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::TYu22) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_TYu22_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_TYu22_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_TYu22_dAYu22();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_TYu22_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_TYu22_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_TYu22_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_TYu22_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mq222) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_mq222_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_mq222_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_mq222_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_two_loop_mq222_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_two_loop_mq222_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_two_loop_mq222_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_two_loop_mq222_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_two_loop_mq222_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_mq222_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_mq222_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_mq222_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_mq222_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mHd2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_mHd2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_mHd2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_mHd2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_two_loop_mHd2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_two_loop_mHd2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_two_loop_mHd2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_two_loop_mHd2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_two_loop_mHd2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_mHd2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_mHd2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_mHd2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_mHd2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mHu2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_mHu2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_mHu2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_mHu2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_two_loop_mHu2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_two_loop_mHu2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_two_loop_mHu2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_two_loop_mHu2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_two_loop_mHu2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_mHu2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_mHu2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_mHu2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_mHu2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mu222) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_mu222_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_mu222_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_mu222_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_two_loop_mu222_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_two_loop_mu222_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_two_loop_mu222_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_two_loop_mu222_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_two_loop_mu222_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_mu222_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_mu222_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_mu222_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_mu222_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::ms2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dbeta_two_loop_ms2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dbeta_two_loop_ms2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dbeta_two_loop_ms2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dbeta_two_loop_ms2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dbeta_two_loop_ms2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dbeta_two_loop_ms2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dbeta_two_loop_ms2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dbeta_two_loop_ms2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dbeta_two_loop_ms2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dbeta_two_loop_ms2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dbeta_two_loop_ms2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dbeta_two_loop_ms2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else {
+         throw UnknownModelParameterError(p);
+      }
+   }
+   
+   double lowE6SSM_tuning_calculator::deriv_dlead_log_one_loop_param_dparam(lowE6SSM_info::Parameters p, lowE6SSM_info::Parameters ftp)
+   {
+      // check that the fine tuning parameter requested is really
+      // a parameter we calculate fine tuning for
+      if (!is_fine_tuning_parameter(ftp))
+         throw UnknownModelParameterError(ftp);
+
+      if (p == lowE6SSM_info::Lambdax) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_Lambdax_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::Yu22) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_Yu22_dLambdax();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::g1) {
+         return 0.;
+      } else if (p == lowE6SSM_info::g2) {
+         return 0.;
+      } else if (p == lowE6SSM_info::gN) {
+         return 0.;
+      } else if (p == lowE6SSM_info::TLambdax) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_TLambdax_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_TLambdax_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_TLambdax_dAYu22();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_TLambdax_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_TLambdax_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_TLambdax_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_TLambdax_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::TYu22) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_TYu22_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_TYu22_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_TYu22_dAYu22();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_TYu22_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_TYu22_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_TYu22_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_TYu22_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mq222) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_mq222_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_mq222_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_mq222_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dlead_log_one_loop_mq222_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dlead_log_one_loop_mq222_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dlead_log_one_loop_mq222_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dlead_log_one_loop_mq222_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dlead_log_one_loop_mq222_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_mq222_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_mq222_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_mq222_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_mq222_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mHd2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_mHd2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_mHd2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_mHd2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dlead_log_one_loop_mHd2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dlead_log_one_loop_mHd2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dlead_log_one_loop_mHd2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dlead_log_one_loop_mHd2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dlead_log_one_loop_mHd2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_mHd2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_mHd2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_mHd2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_mHd2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mHu2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_mHu2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_mHu2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_mHu2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dlead_log_one_loop_mHu2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dlead_log_one_loop_mHu2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dlead_log_one_loop_mHu2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dlead_log_one_loop_mHu2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dlead_log_one_loop_mHu2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_mHu2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_mHu2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_mHu2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_mHu2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::mu222) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_mu222_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_mu222_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_mu222_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dlead_log_one_loop_mu222_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dlead_log_one_loop_mu222_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dlead_log_one_loop_mu222_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dlead_log_one_loop_mu222_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dlead_log_one_loop_mu222_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_mu222_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_mu222_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_mu222_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_mu222_dMassBp();
+         default :
+            return 0.;
+         }
+      } else if (p == lowE6SSM_info::ms2) {
+         switch (ftp) {
+         case lowE6SSM_info::Lambdax:
+            return deriv_dlead_log_one_loop_ms2_dLambdax();
+         case lowE6SSM_info::TLambdax:
+            return deriv_dlead_log_one_loop_ms2_dALambdax();
+         case lowE6SSM_info::TYu22:
+            return deriv_dlead_log_one_loop_ms2_dAYu22();
+         case lowE6SSM_info::mq222:
+            return deriv_dlead_log_one_loop_ms2_dmq222();
+         case lowE6SSM_info::mHd2:
+            return deriv_dlead_log_one_loop_ms2_dmHd2();
+         case lowE6SSM_info::mHu2:
+            return deriv_dlead_log_one_loop_ms2_dmHu2();
+         case lowE6SSM_info::mu222:
+            return deriv_dlead_log_one_loop_ms2_dmu222();
+         case lowE6SSM_info::ms2:
+            return deriv_dlead_log_one_loop_ms2_dms2();
+         case lowE6SSM_info::MassB:
+            return deriv_dlead_log_one_loop_ms2_dMassB();
+         case lowE6SSM_info::MassWB:
+            return deriv_dlead_log_one_loop_ms2_dMassWB();
+         case lowE6SSM_info::MassG:
+            return deriv_dlead_log_one_loop_ms2_dMassG();
+         case lowE6SSM_info::MassBp:
+            return deriv_dlead_log_one_loop_ms2_dMassBp();
+         default :
+            return 0.;
+         }
+      } else {
+         throw UnknownModelParameterError(p);
+      }
+   }
+
+   double lowE6SSM_tuning_calculator::get_ALambdax() const
+   {
       double Alambda;
 
       if (is_zero(model.get_TLambdax())) {
          Alambda = 0.0;
       } else if (Abs(model.get_Lambdax()) < underflow) {
-         throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
+         throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_ALambdax");
       } else {
          Alambda = model.get_TLambdax() / model.get_Lambdax();
       }
 
-      input_scale_pars[lowE6SSM_info::TLambdax] = Alambda;
-
+      return Alambda;
+   }
+   
+   double lowE6SSM_tuning_calculator::get_AYu22() const
+   {
       double At;
+
       if (is_zero(model.get_TYu(2, 2))) {
          At = 0.0;
       } else if (Abs(model.get_Yu(2, 2)) < underflow) {
-         throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
+         throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_AYu22");
       } else {
          At = model.get_TYu(2, 2) / model.get_Yu(2, 2);
       }
+
+      return At;
+   }
+
+   void lowE6SSM_tuning_calculator::get_input_scale_pars()
+   {
+      input_scale_pars[lowE6SSM_info::Lambdax] = model.get_Lambdax();
+
+      const double Alambda = get_ALambdax();
+
+      input_scale_pars[lowE6SSM_info::TLambdax] = Alambda;
+
+      const double At = get_AYu22();
 
       input_scale_pars[lowE6SSM_info::TYu22] = At;
       input_scale_pars[lowE6SSM_info::mq222] = model.get_mq2(2, 2);
@@ -432,8 +1152,8 @@ namespace flexiblesusy {
       }
       
       derivs.col(0) = calculate_deriv_dlowscale_dLambdax();
-      derivs.col(1) = calculate_deriv_dlowscale_dTLambdax();
-      derivs.col(2) = calculate_deriv_dlowscale_dTYu22();
+      derivs.col(1) = calculate_deriv_dlowscale_dALambdax();
+      derivs.col(2) = calculate_deriv_dlowscale_dAYu22();
       derivs.col(3) = calculate_deriv_dlowscale_dmq222();
       derivs.col(4) = calculate_deriv_dlowscale_dmHd2();
       derivs.col(5) = calculate_deriv_dlowscale_dmHu2();
@@ -449,6 +1169,8 @@ namespace flexiblesusy {
 
    Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax() const
    {
+      const double Alambda = get_ALambdax();
+
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
          if (tuning_beta_loop_order == 0) {
@@ -456,22 +1178,34 @@ namespace flexiblesusy {
             derivs(1) = 0.;
             derivs(2) = 0.;
             derivs(3) = 0.;
-            double Alambda;
-
-            if (is_zero(model.get_TLambdax())) {
-               Alambda = 0.0;
-            } else if (Abs(model.get_Lambdax()) < underflow) {
-               throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
-            } else {
-               Alambda = model.get_TLambdax() / model.get_Lambdax();
-            }
-
             derivs(4) = Alambda;
             derivs(5) = 0.;
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 1.0 + t * deriv_dbeta_one_loop_Lambdax_dLambdax();
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = Alambda + t * deriv_dbeta_one_loop_TLambdax_dLambdax();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dLambdax();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dLambdax();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dLambdax();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(0) += t * deriv_dbeta_two_loop_Lambdax_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_Lambdax_dLambdax();
+               derivs(1) += t * deriv_dbeta_two_loop_g1_dLambdax();
+               derivs(2) += t * deriv_dbeta_two_loop_g2_dLambdax();
+               derivs(3) += t * deriv_dbeta_two_loop_gN_dLambdax();
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dLambdax();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dLambdax();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dLambdax();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dLambdax();
+            }
          }
          return derivs;
       } else {
@@ -482,16 +1216,6 @@ namespace flexiblesusy {
             derivs(2) = 0.;
             derivs(3) = 0.;
             derivs(4) = 0.;
-            double Alambda;
-
-            if (is_zero(model.get_TLambdax())) {
-               Alambda = 0.0;
-            } else if (Abs(model.get_Lambdax()) < underflow) {
-               throw DivideByZeroError("in lowE6SSM_tuning_calculator::get_input_scale_pars");
-            } else {
-               Alambda = model.get_TLambdax() / model.get_Lambdax();
-            }
-
             derivs(5) = Alambda;
             derivs(6) = 0.;
             derivs(7) = 0.;
@@ -500,13 +1224,44 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 1.0 + t * deriv_dbeta_one_loop_Lambdax_dLambdax();
+            derivs(1) = t * deriv_dbeta_one_loop_Yu22_dLambdax();
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = Alambda + t * deriv_dbeta_one_loop_TLambdax_dLambdax();
+            derivs(6) = t * deriv_dbeta_one_loop_TYu22_dLambdax();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dLambdax();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dLambdax();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dLambdax();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dLambdax();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dLambdax();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(0) += t * deriv_dbeta_two_loop_Lambdax_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_Lambdax_dLambdax();
+               derivs(1) += t * deriv_dbeta_two_loop_Yu22_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_Yu22_dLambdax();
+               derivs(2) += t * deriv_dbeta_two_loop_g1_dLambdax();
+               derivs(3) += t * deriv_dbeta_two_loop_g2_dLambdax();
+               derivs(4) += t * deriv_dbeta_two_loop_gN_dLambdax();
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dLambdax();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dLambdax();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dLambdax();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dLambdax();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dLambdax();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dLambdax();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dLambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dLambdax();
+            }
          }
          return derivs;
       }
    }
 
-   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTLambdax() const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dALambdax() const
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
@@ -520,7 +1275,25 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dALambdax");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = model.get_Lambdax() + t * deriv_dbeta_one_loop_TLambdax_dALambdax();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dALambdax();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dALambdax();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dALambdax();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dALambdax();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dALambdax();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dALambdax();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dALambdax();
+            }
          }
          return derivs;
       } else {
@@ -539,13 +1312,39 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dALambdax");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = model.get_Lambdax() + t * deriv_dbeta_one_loop_TLambdax_dALambdax();
+            derivs(6) = t * deriv_dbeta_one_loop_TYu22_dALambdax();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dALambdax();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dALambdax();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dALambdax();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dALambdax();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dALambdax();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dALambdax();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dALambdax();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dALambdax();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dALambdax();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dALambdax();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dALambdax();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dALambdax() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dALambdax();
+            }
          }
          return derivs;
       }
    }
 
-   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dTYu22() const
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dAYu22() const
    {
       if (tuning_ewsb_loop_order == 0) {
          Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
@@ -559,7 +1358,25 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dAYu22");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = t * deriv_dbeta_one_loop_TLambdax_dAYu22();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dAYu22();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dAYu22();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dAYu22();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dAYu22();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dAYu22();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dAYu22();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dAYu22();
+            }
          }
          return derivs;
       } else {
@@ -578,7 +1395,33 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dAYu22");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_TLambdax_dAYu22();
+            derivs(6) = model.get_Yu(2,2) + t * deriv_dbeta_one_loop_TYu22_dAYu22();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dAYu22();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dAYu22();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dAYu22();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dAYu22();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dAYu22();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dAYu22();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dAYu22();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dAYu22();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dAYu22();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dAYu22();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dAYu22();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dAYu22() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dAYu22();
+            }
          }
          return derivs;
       }
@@ -598,7 +1441,24 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmq222");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dmq222();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dmq222();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dmq222();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmq222();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmq222();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmq222();
+            }
          }
          return derivs;
       } else {
@@ -617,7 +1477,31 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmq222");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = 1.0 + t * deriv_dbeta_one_loop_mq222_dmq222();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dmq222();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dmq222();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dmq222();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dmq222();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dmq222();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmq222();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmq222();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dmq222();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dmq222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmq222();
+            }
          }
          return derivs;
       }
@@ -637,7 +1521,24 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHd2");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 1.0 + t * deriv_dbeta_one_loop_mHd2_dmHd2();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dmHd2();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dmHd2();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmHd2();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmHd2();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmHd2();
+            }
          }
          return derivs;
       } else {
@@ -656,7 +1557,31 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHd2");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dmHd2();
+            derivs(8) = 1.0 + t * deriv_dbeta_one_loop_mHd2_dmHd2();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dmHd2();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dmHd2();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dmHd2();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dmHd2();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmHd2();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmHd2();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dmHd2();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dmHd2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmHd2();
+            }
          }
          return derivs;
       }
@@ -676,7 +1601,24 @@ namespace flexiblesusy {
             derivs(6) = 1.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHu2");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dmHu2();
+            derivs(6) = 1.0 + t * deriv_dbeta_one_loop_mHu2_dmHu2();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dmHu2();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmHu2();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmHu2();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmHu2();
+            }
          }
          return derivs;
       } else {
@@ -695,7 +1637,31 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmHu2");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dmHu2();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dmHu2();
+            derivs(9) = 1.0 + t * deriv_dbeta_one_loop_mHu2_dmHu2();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dmHu2();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dmHu2();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dmHu2();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmHu2();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmHu2();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dmHu2();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dmHu2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmHu2();
+            }
          }
          return derivs;
       }
@@ -715,7 +1681,24 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmu222");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dmu222();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dmu222();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dmu222();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmu222();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmu222();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmu222();
+            }
          }
          return derivs;
       } else {
@@ -734,7 +1717,31 @@ namespace flexiblesusy {
             derivs(10) = 1.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dmu222");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dmu222();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dmu222();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dmu222();
+            derivs(10) = 1.0 + t * deriv_dbeta_one_loop_mu222_dmu222();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dmu222();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dmu222();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dmu222();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dmu222();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dmu222();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dmu222() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dmu222();
+            }
          }
          return derivs;
       }
@@ -754,7 +1761,24 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 1.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dms2");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dms2();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dms2();
+            derivs(7) = 1.0 + t * deriv_dbeta_one_loop_ms2_dms2();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dms2();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dms2();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dms2();
+            }
          }
          return derivs;
       } else {
@@ -773,7 +1797,31 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 1.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dms2");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = 0.;
+            derivs(6) = 0.;
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dms2();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dms2();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dms2();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dms2();
+            derivs(11) = 1.0 + t * deriv_dbeta_one_loop_ms2_dms2();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dms2();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dms2();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dms2();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dms2();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dms2() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dms2();
+            }
          }
          return derivs;
       }
@@ -793,7 +1841,25 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassB");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = t * deriv_dbeta_one_loop_TLambdax_dMassB();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dMassB();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dMassB();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dMassB();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassB();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassB();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassB();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassB();
+            }
          }
          return derivs;
       } else {
@@ -812,7 +1878,33 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassB");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_TLambdax_dMassB();
+            derivs(6) = t * deriv_dbeta_one_loop_TYu22_dMassB();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dMassB();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dMassB();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dMassB();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dMassB();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dMassB();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassB();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dMassB();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dMassB();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassB();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassB();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dMassB();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dMassB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassB();
+            }
          }
          return derivs;
       }
@@ -832,7 +1924,25 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassWB");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = t * deriv_dbeta_one_loop_TLambdax_dMassWB();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dMassWB();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dMassWB();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dMassWB();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassWB();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassWB();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassWB();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassWB();
+            }
          }
          return derivs;
       } else {
@@ -851,7 +1961,33 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassWB");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_TLambdax_dMassWB();
+            derivs(6) = t * deriv_dbeta_one_loop_TYu22_dMassWB();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dMassWB();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dMassWB();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dMassWB();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dMassWB();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dMassWB();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassWB();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dMassWB();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dMassWB();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassWB();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassWB();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dMassWB();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dMassWB() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassWB();
+            }
          }
          return derivs;
       }
@@ -871,7 +2007,25 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassG");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = t * deriv_dbeta_one_loop_TLambdax_dMassG();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dMassG();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dMassG();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dMassG();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassG();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassG();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassG();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassG();
+            }
          }
          return derivs;
       } else {
@@ -890,7 +2044,33 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassG");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_TLambdax_dMassG();
+            derivs(6) = t * deriv_dbeta_one_loop_TYu22_dMassG();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dMassG();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dMassG();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dMassG();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dMassG();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dMassG();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassG();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dMassG();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dMassG();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassG();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassG();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dMassG();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dMassG() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassG();
+            }
          }
          return derivs;
       }
@@ -910,7 +2090,25 @@ namespace flexiblesusy {
             derivs(6) = 0.;
             derivs(7) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassBp");
+            }
+            const double t = Log(tuning_scale / input_scale);
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = t * deriv_dbeta_one_loop_TLambdax_dMassBp();
+            derivs(5) = t * deriv_dbeta_one_loop_mHd2_dMassBp();
+            derivs(6) = t * deriv_dbeta_one_loop_mHu2_dMassBp();
+            derivs(7) = t * deriv_dbeta_one_loop_ms2_dMassBp();
 
+            if (tuning_beta_loop_order > 1) {
+               derivs(4) += t * deriv_dbeta_two_loop_TLambdax_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassBp();
+               derivs(5) += t * deriv_dbeta_two_loop_mHd2_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassBp();
+               derivs(6) += t * deriv_dbeta_two_loop_mHu2_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassBp();
+               derivs(7) += t * deriv_dbeta_two_loop_ms2_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassBp();
+            }
          }
          return derivs;
       } else {
@@ -929,7 +2127,33 @@ namespace flexiblesusy {
             derivs(10) = 0.;
             derivs(11) = 0.;
          } else {
+            if (Abs(input_scale) < underflow) {
+               throw DivideByZeroError("in lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dMassBp");
+            }
+            const double t = Log(tuning_scale / input_scale);
 
+            derivs(0) = 0.;
+            derivs(1) = 0.;
+            derivs(2) = 0.;
+            derivs(3) = 0.;
+            derivs(4) = 0.;
+            derivs(5) = t * deriv_dbeta_one_loop_TLambdax_dMassBp();
+            derivs(6) = t * deriv_dbeta_one_loop_TYu22_dMassBp();
+            derivs(7) = t * deriv_dbeta_one_loop_mq222_dMassBp();
+            derivs(8) = t * deriv_dbeta_one_loop_mHd2_dMassBp();
+            derivs(9) = t * deriv_dbeta_one_loop_mHu2_dMassBp();
+            derivs(10) = t * deriv_dbeta_one_loop_mu222_dMassBp();
+            derivs(11) = t * deriv_dbeta_one_loop_ms2_dMassBp();
+
+            if (tuning_beta_loop_order > 1) {
+               derivs(5) += t * deriv_dbeta_two_loop_TLambdax_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TLambdax_dMassBp();
+               derivs(6) += t * deriv_dbeta_two_loop_TYu22_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_TYu22_dMassBp();
+               derivs(7) += t * deriv_dbeta_two_loop_mq222_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mq222_dMassBp();
+               derivs(8) += t * deriv_dbeta_two_loop_mHd2_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHd2_dMassBp();
+               derivs(9) += t * deriv_dbeta_two_loop_mHu2_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mHu2_dMassBp();
+               derivs(10) += t * deriv_dbeta_two_loop_mu222_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_mu222_dMassBp();
+               derivs(11) += t * deriv_dbeta_two_loop_ms2_dMassBp() + 0.5 * Sqr(t) * deriv_dlead_log_one_loop_ms2_dMassBp();
+            }
          }
          return derivs;
       }

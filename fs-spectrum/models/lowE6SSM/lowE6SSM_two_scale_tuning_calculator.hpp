@@ -38,6 +38,7 @@ namespace flexiblesusy {
             return fine_tunings;
          }
       std::vector<lowE6SSM_info::Parameters> get_fine_tuning_params() const;
+      bool is_fine_tuning_parameter(lowE6SSM_info::Parameters p) const;
       void set_model(const lowE6SSM<Two_scale>& m) { model = m; }
       void set_input_scale(double s) { input_scale = s; }
       void set_tuning_scale(double s) { tuning_scale = s; }
@@ -46,9 +47,26 @@ namespace flexiblesusy {
       void set_tuning_beta_loop_order(unsigned l) { tuning_beta_loop_order = l; model.set_loops(l); }
       void set_max_iterations(unsigned n) { max_iterations = n; }
 
+      /// Helper methods for getting SUGRA style trilinears
+      double get_ALambdax() const;
+      double get_AYu22() const;
+
       /// Calculate the fine tunings. Returns true if there is a problem.
       bool calculate_fine_tunings_numerically();
       bool calculate_fine_tunings_approximately();
+
+      /// Coefficients at leading log order; useful for constructing
+      /// Taylor series approximation to the RGE solutions
+      double calculate_leading_log_coefficient(lowE6SSM_info::Parameters p) const;
+
+      /// Derivatives of one loop beta functions w.r.t fine tuning parameters
+      double deriv_dbeta_one_loop_param_dparam(lowE6SSM_info::Parameters p, lowE6SSM_info::Parameters ftp);
+
+      /// Derivatives of two loop beta functions w.r.t fine tuning parameters
+      double deriv_dbeta_two_loop_param_dparam(lowE6SSM_info::Parameters p, lowE6SSM_info::Parameters ftp);
+
+      /// Derivatives of one loop leading log coefficients w.r.t fine tuning parameters
+      double deriv_dlead_log_one_loop_param_dparam(lowE6SSM_info::Parameters p, lowE6SSM_info::Parameters ftp);
 
    private:
       static const std::size_t num_ewsb_eqs = 3;
@@ -91,8 +109,8 @@ namespace flexiblesusy {
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs() const;
 
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dLambdax() const;
-      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dTLambdax() const;
-      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dTYu22() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dALambdax() const;
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dAYu22() const;
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmq222() const;
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmHd2() const;
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dmHu2() const;
@@ -102,6 +120,292 @@ namespace flexiblesusy {
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassWB() const;
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassG() const;
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dMassBp() const;
+
+      double leading_log_coefficient_Lambdax() const;
+      double leading_log_coefficient_Yu22() const;
+      double leading_log_coefficient_g1() const;
+      double leading_log_coefficient_g2() const;
+      double leading_log_coefficient_gN() const;
+      double leading_log_coefficient_TLambdax() const;
+      double leading_log_coefficient_TYu22() const;
+      double leading_log_coefficient_mq222() const;
+      double leading_log_coefficient_mHd2() const;
+      double leading_log_coefficient_mHu2() const;
+      double leading_log_coefficient_mu222() const;
+      double leading_log_coefficient_ms2() const;
+
+      /// Derivatives of Lambdax
+      double deriv_dbeta_one_loop_Lambdax_dLambdax() const;
+
+      double deriv_dbeta_two_loop_Lambdax_dLambdax() const;
+
+      double deriv_dlead_log_one_loop_Lambdax_dLambdax() const;
+
+      /// Derivatives of Yu22
+      double deriv_dbeta_one_loop_Yu22_dLambdax() const;
+
+      double deriv_dbeta_two_loop_Yu22_dLambdax() const;
+
+      double deriv_dlead_log_one_loop_Yu22_dLambdax() const;
+
+      /// Derivatives of g1
+      double deriv_dbeta_two_loop_g1_dLambdax() const;
+
+      /// Derivatives of g2
+      double deriv_dbeta_two_loop_g2_dLambdax() const;
+
+      /// Derivatives of gN
+      double deriv_dbeta_two_loop_gN_dLambdax() const;
+
+      /// Derivatives of TLambdax
+      double deriv_dbeta_one_loop_TLambdax_dLambdax() const;
+      double deriv_dbeta_one_loop_TLambdax_dALambdax() const;
+      double deriv_dbeta_one_loop_TLambdax_dAYu22() const;
+      double deriv_dbeta_one_loop_TLambdax_dMassB() const;
+      double deriv_dbeta_one_loop_TLambdax_dMassWB() const;
+      double deriv_dbeta_one_loop_TLambdax_dMassG() const;
+      double deriv_dbeta_one_loop_TLambdax_dMassBp() const;
+
+      double deriv_dbeta_two_loop_TLambdax_dLambdax() const;
+      double deriv_dbeta_two_loop_TLambdax_dALambdax() const;
+      double deriv_dbeta_two_loop_TLambdax_dAYu22() const;
+      double deriv_dbeta_two_loop_TLambdax_dMassB() const;
+      double deriv_dbeta_two_loop_TLambdax_dMassWB() const;
+      double deriv_dbeta_two_loop_TLambdax_dMassG() const;
+      double deriv_dbeta_two_loop_TLambdax_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_TLambdax_dLambdax() const;
+      double deriv_dlead_log_one_loop_TLambdax_dALambdax() const;
+      double deriv_dlead_log_one_loop_TLambdax_dAYu22() const;
+      double deriv_dlead_log_one_loop_TLambdax_dMassB() const;
+      double deriv_dlead_log_one_loop_TLambdax_dMassWB() const;
+      double deriv_dlead_log_one_loop_TLambdax_dMassG() const;
+      double deriv_dlead_log_one_loop_TLambdax_dMassBp() const;
+
+      /// Derivatives of TYu22
+      double deriv_dbeta_one_loop_TYu22_dLambdax() const;
+      double deriv_dbeta_one_loop_TYu22_dALambdax() const;
+      double deriv_dbeta_one_loop_TYu22_dAYu22() const;
+      double deriv_dbeta_one_loop_TYu22_dMassB() const;
+      double deriv_dbeta_one_loop_TYu22_dMassWB() const;
+      double deriv_dbeta_one_loop_TYu22_dMassG() const;
+      double deriv_dbeta_one_loop_TYu22_dMassBp() const;
+
+      double deriv_dbeta_two_loop_TYu22_dLambdax() const;
+      double deriv_dbeta_two_loop_TYu22_dALambdax() const;
+      double deriv_dbeta_two_loop_TYu22_dAYu22() const;
+      double deriv_dbeta_two_loop_TYu22_dMassB() const;
+      double deriv_dbeta_two_loop_TYu22_dMassWB() const;
+      double deriv_dbeta_two_loop_TYu22_dMassG() const;
+      double deriv_dbeta_two_loop_TYu22_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_TYu22_dLambdax() const;
+      double deriv_dlead_log_one_loop_TYu22_dALambdax() const;
+      double deriv_dlead_log_one_loop_TYu22_dAYu22() const;
+      double deriv_dlead_log_one_loop_TYu22_dMassB() const;
+      double deriv_dlead_log_one_loop_TYu22_dMassWB() const;
+      double deriv_dlead_log_one_loop_TYu22_dMassG() const;
+      double deriv_dlead_log_one_loop_TYu22_dMassBp() const;
+
+      /// Derivatives of mq222
+      double deriv_dbeta_one_loop_mq222_dLambdax() const;
+      double deriv_dbeta_one_loop_mq222_dALambdax() const;
+      double deriv_dbeta_one_loop_mq222_dAYu22() const;
+      double deriv_dbeta_one_loop_mq222_dmq222() const;
+      double deriv_dbeta_one_loop_mq222_dmHd2() const;
+      double deriv_dbeta_one_loop_mq222_dmHu2() const;
+      double deriv_dbeta_one_loop_mq222_dmu222() const;
+      double deriv_dbeta_one_loop_mq222_dms2() const;
+      double deriv_dbeta_one_loop_mq222_dMassB() const;
+      double deriv_dbeta_one_loop_mq222_dMassWB() const;
+      double deriv_dbeta_one_loop_mq222_dMassG() const;
+      double deriv_dbeta_one_loop_mq222_dMassBp() const;
+
+      double deriv_dbeta_two_loop_mq222_dLambdax() const;
+      double deriv_dbeta_two_loop_mq222_dALambdax() const;
+      double deriv_dbeta_two_loop_mq222_dAYu22() const;
+      double deriv_dbeta_two_loop_mq222_dmq222() const;
+      double deriv_dbeta_two_loop_mq222_dmHd2() const;
+      double deriv_dbeta_two_loop_mq222_dmHu2() const;
+      double deriv_dbeta_two_loop_mq222_dmu222() const;
+      double deriv_dbeta_two_loop_mq222_dms2() const;
+      double deriv_dbeta_two_loop_mq222_dMassB() const;
+      double deriv_dbeta_two_loop_mq222_dMassWB() const;
+      double deriv_dbeta_two_loop_mq222_dMassG() const;
+      double deriv_dbeta_two_loop_mq222_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_mq222_dLambdax() const;
+      double deriv_dlead_log_one_loop_mq222_dALambdax() const;
+      double deriv_dlead_log_one_loop_mq222_dAYu22() const;
+      double deriv_dlead_log_one_loop_mq222_dmq222() const;
+      double deriv_dlead_log_one_loop_mq222_dmHd2() const;
+      double deriv_dlead_log_one_loop_mq222_dmHu2() const;
+      double deriv_dlead_log_one_loop_mq222_dmu222() const;
+      double deriv_dlead_log_one_loop_mq222_dms2() const;
+      double deriv_dlead_log_one_loop_mq222_dMassB() const;
+      double deriv_dlead_log_one_loop_mq222_dMassWB() const;
+      double deriv_dlead_log_one_loop_mq222_dMassG() const;
+      double deriv_dlead_log_one_loop_mq222_dMassBp() const;
+
+      /// Derivatives of mHd2
+      double deriv_dbeta_one_loop_mHd2_dLambdax() const;
+      double deriv_dbeta_one_loop_mHd2_dALambdax() const;
+      double deriv_dbeta_one_loop_mHd2_dAYu22() const;
+      double deriv_dbeta_one_loop_mHd2_dmq222() const;
+      double deriv_dbeta_one_loop_mHd2_dmHd2() const;
+      double deriv_dbeta_one_loop_mHd2_dmHu2() const;
+      double deriv_dbeta_one_loop_mHd2_dmu222() const;
+      double deriv_dbeta_one_loop_mHd2_dms2() const;
+      double deriv_dbeta_one_loop_mHd2_dMassB() const;
+      double deriv_dbeta_one_loop_mHd2_dMassWB() const;
+      double deriv_dbeta_one_loop_mHd2_dMassG() const;
+      double deriv_dbeta_one_loop_mHd2_dMassBp() const;
+
+      double deriv_dbeta_two_loop_mHd2_dLambdax() const;
+      double deriv_dbeta_two_loop_mHd2_dALambdax() const;
+      double deriv_dbeta_two_loop_mHd2_dAYu22() const;
+      double deriv_dbeta_two_loop_mHd2_dmq222() const;
+      double deriv_dbeta_two_loop_mHd2_dmHd2() const;
+      double deriv_dbeta_two_loop_mHd2_dmHu2() const;
+      double deriv_dbeta_two_loop_mHd2_dmu222() const;
+      double deriv_dbeta_two_loop_mHd2_dms2() const;
+      double deriv_dbeta_two_loop_mHd2_dMassB() const;
+      double deriv_dbeta_two_loop_mHd2_dMassWB() const;
+      double deriv_dbeta_two_loop_mHd2_dMassG() const;
+      double deriv_dbeta_two_loop_mHd2_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_mHd2_dLambdax() const;
+      double deriv_dlead_log_one_loop_mHd2_dALambdax() const;
+      double deriv_dlead_log_one_loop_mHd2_dAYu22() const;
+      double deriv_dlead_log_one_loop_mHd2_dmq222() const;
+      double deriv_dlead_log_one_loop_mHd2_dmHd2() const;
+      double deriv_dlead_log_one_loop_mHd2_dmHu2() const;
+      double deriv_dlead_log_one_loop_mHd2_dmu222() const;
+      double deriv_dlead_log_one_loop_mHd2_dms2() const;
+      double deriv_dlead_log_one_loop_mHd2_dMassB() const;
+      double deriv_dlead_log_one_loop_mHd2_dMassWB() const;
+      double deriv_dlead_log_one_loop_mHd2_dMassG() const;
+      double deriv_dlead_log_one_loop_mHd2_dMassBp() const;
+
+      /// Derivatives of mHu2
+      double deriv_dbeta_one_loop_mHu2_dLambdax() const;
+      double deriv_dbeta_one_loop_mHu2_dALambdax() const;
+      double deriv_dbeta_one_loop_mHu2_dAYu22() const;
+      double deriv_dbeta_one_loop_mHu2_dmq222() const;
+      double deriv_dbeta_one_loop_mHu2_dmHd2() const;
+      double deriv_dbeta_one_loop_mHu2_dmHu2() const;
+      double deriv_dbeta_one_loop_mHu2_dmu222() const;
+      double deriv_dbeta_one_loop_mHu2_dms2() const;
+      double deriv_dbeta_one_loop_mHu2_dMassB() const;
+      double deriv_dbeta_one_loop_mHu2_dMassWB() const;
+      double deriv_dbeta_one_loop_mHu2_dMassG() const;
+      double deriv_dbeta_one_loop_mHu2_dMassBp() const;
+
+      double deriv_dbeta_two_loop_mHu2_dLambdax() const;
+      double deriv_dbeta_two_loop_mHu2_dALambdax() const;
+      double deriv_dbeta_two_loop_mHu2_dAYu22() const;
+      double deriv_dbeta_two_loop_mHu2_dmq222() const;
+      double deriv_dbeta_two_loop_mHu2_dmHd2() const;
+      double deriv_dbeta_two_loop_mHu2_dmHu2() const;
+      double deriv_dbeta_two_loop_mHu2_dmu222() const;
+      double deriv_dbeta_two_loop_mHu2_dms2() const;
+      double deriv_dbeta_two_loop_mHu2_dMassB() const;
+      double deriv_dbeta_two_loop_mHu2_dMassWB() const;
+      double deriv_dbeta_two_loop_mHu2_dMassG() const;
+      double deriv_dbeta_two_loop_mHu2_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_mHu2_dLambdax() const;
+      double deriv_dlead_log_one_loop_mHu2_dALambdax() const;
+      double deriv_dlead_log_one_loop_mHu2_dAYu22() const;
+      double deriv_dlead_log_one_loop_mHu2_dmq222() const;
+      double deriv_dlead_log_one_loop_mHu2_dmHd2() const;
+      double deriv_dlead_log_one_loop_mHu2_dmHu2() const;
+      double deriv_dlead_log_one_loop_mHu2_dmu222() const;
+      double deriv_dlead_log_one_loop_mHu2_dms2() const;
+      double deriv_dlead_log_one_loop_mHu2_dMassB() const;
+      double deriv_dlead_log_one_loop_mHu2_dMassWB() const;
+      double deriv_dlead_log_one_loop_mHu2_dMassG() const;
+      double deriv_dlead_log_one_loop_mHu2_dMassBp() const;
+
+      /// Derivatives of mu222
+      double deriv_dbeta_one_loop_mu222_dLambdax() const;
+      double deriv_dbeta_one_loop_mu222_dALambdax() const;
+      double deriv_dbeta_one_loop_mu222_dAYu22() const;
+      double deriv_dbeta_one_loop_mu222_dmq222() const;
+      double deriv_dbeta_one_loop_mu222_dmHd2() const;
+      double deriv_dbeta_one_loop_mu222_dmHu2() const;
+      double deriv_dbeta_one_loop_mu222_dmu222() const;
+      double deriv_dbeta_one_loop_mu222_dms2() const;
+      double deriv_dbeta_one_loop_mu222_dMassB() const;
+      double deriv_dbeta_one_loop_mu222_dMassWB() const;
+      double deriv_dbeta_one_loop_mu222_dMassG() const;
+      double deriv_dbeta_one_loop_mu222_dMassBp() const;
+
+      double deriv_dbeta_two_loop_mu222_dLambdax() const;
+      double deriv_dbeta_two_loop_mu222_dALambdax() const;
+      double deriv_dbeta_two_loop_mu222_dAYu22() const;
+      double deriv_dbeta_two_loop_mu222_dmq222() const;
+      double deriv_dbeta_two_loop_mu222_dmHd2() const;
+      double deriv_dbeta_two_loop_mu222_dmHu2() const;
+      double deriv_dbeta_two_loop_mu222_dmu222() const;
+      double deriv_dbeta_two_loop_mu222_dms2() const;
+      double deriv_dbeta_two_loop_mu222_dMassB() const;
+      double deriv_dbeta_two_loop_mu222_dMassWB() const;
+      double deriv_dbeta_two_loop_mu222_dMassG() const;
+      double deriv_dbeta_two_loop_mu222_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_mu222_dLambdax() const;
+      double deriv_dlead_log_one_loop_mu222_dALambdax() const;
+      double deriv_dlead_log_one_loop_mu222_dAYu22() const;
+      double deriv_dlead_log_one_loop_mu222_dmq222() const;
+      double deriv_dlead_log_one_loop_mu222_dmHd2() const;
+      double deriv_dlead_log_one_loop_mu222_dmHu2() const;
+      double deriv_dlead_log_one_loop_mu222_dmu222() const;
+      double deriv_dlead_log_one_loop_mu222_dms2() const;
+      double deriv_dlead_log_one_loop_mu222_dMassB() const;
+      double deriv_dlead_log_one_loop_mu222_dMassWB() const;
+      double deriv_dlead_log_one_loop_mu222_dMassG() const;
+      double deriv_dlead_log_one_loop_mu222_dMassBp() const;
+
+      /// Derivatives of ms2
+      double deriv_dbeta_one_loop_ms2_dLambdax() const;
+      double deriv_dbeta_one_loop_ms2_dALambdax() const;
+      double deriv_dbeta_one_loop_ms2_dAYu22() const;
+      double deriv_dbeta_one_loop_ms2_dmq222() const;
+      double deriv_dbeta_one_loop_ms2_dmHd2() const;
+      double deriv_dbeta_one_loop_ms2_dmHu2() const;
+      double deriv_dbeta_one_loop_ms2_dmu222() const;
+      double deriv_dbeta_one_loop_ms2_dms2() const;
+      double deriv_dbeta_one_loop_ms2_dMassB() const;
+      double deriv_dbeta_one_loop_ms2_dMassWB() const;
+      double deriv_dbeta_one_loop_ms2_dMassG() const;
+      double deriv_dbeta_one_loop_ms2_dMassBp() const;
+
+      double deriv_dbeta_two_loop_ms2_dLambdax() const;
+      double deriv_dbeta_two_loop_ms2_dALambdax() const;
+      double deriv_dbeta_two_loop_ms2_dAYu22() const;
+      double deriv_dbeta_two_loop_ms2_dmq222() const;
+      double deriv_dbeta_two_loop_ms2_dmHd2() const;
+      double deriv_dbeta_two_loop_ms2_dmHu2() const;
+      double deriv_dbeta_two_loop_ms2_dmu222() const;
+      double deriv_dbeta_two_loop_ms2_dms2() const;
+      double deriv_dbeta_two_loop_ms2_dMassB() const;
+      double deriv_dbeta_two_loop_ms2_dMassWB() const;
+      double deriv_dbeta_two_loop_ms2_dMassG() const;
+      double deriv_dbeta_two_loop_ms2_dMassBp() const;
+
+      double deriv_dlead_log_one_loop_ms2_dLambdax() const;
+      double deriv_dlead_log_one_loop_ms2_dALambdax() const;
+      double deriv_dlead_log_one_loop_ms2_dAYu22() const;
+      double deriv_dlead_log_one_loop_ms2_dmq222() const;
+      double deriv_dlead_log_one_loop_ms2_dmHd2() const;
+      double deriv_dlead_log_one_loop_ms2_dmHu2() const;
+      double deriv_dlead_log_one_loop_ms2_dmu222() const;
+      double deriv_dlead_log_one_loop_ms2_dms2() const;
+      double deriv_dlead_log_one_loop_ms2_dMassB() const;
+      double deriv_dlead_log_one_loop_ms2_dMassWB() const;
+      double deriv_dlead_log_one_loop_ms2_dMassG() const;
+      double deriv_dlead_log_one_loop_ms2_dMassBp() const;
 
    };
 

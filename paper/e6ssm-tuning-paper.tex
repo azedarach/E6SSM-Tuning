@@ -1,0 +1,243 @@
+\documentclass[preprint,amsmath,amssymb,aps,superscriptaddress,prd,showpacs,floatfix]{revtex4-1}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}
+\usepackage{hyperref}
+
+%\nofiles
+% For draft, uncomment to avoid huge spaces
+\raggedbottom
+%
+\begin{document}
+
+\title{Fine tuning in the E$_6$SSM}
+
+\author{P. Athron}
+ \email{peter.athron@adelaide.edu.au}
+ \affiliation{
+ARC Centre of Excellence for Particle Physics at the Terascale, School of Chemistry and Physics, The University of Adelaide,
+Adelaide, South Australia 5005, Australia}
+
+\author{D. Harries}
+ \email{dylan.harries@adelaide.edu.au}
+ \affiliation{
+ARC Centre of Excellence for Particle Physics at the Terascale, School of Chemistry and Physics, The University of Adelaide,
+Adelaide, South Australia 5005, Australia}
+
+\author{A. G. Williams}
+ \email{anthony.williams@adelaide.edu.au}
+ \affiliation{
+ARC Centre of Excellence for Particle Physics at the Terascale, School of Chemistry and Physics, The University of Adelaide,
+Adelaide, South Australia 5005, Australia}
+
+\date{\today}% It is always \today, today,
+             %  but any date may be explicitly specified
+
+\begin{abstract}
+% Copied SUSY2014 abstract as placeholder
+With the discovery of a 125 GeV Standard Model (SM) like Higgs boson
+and rising lower bounds on the masses of superpartners, minimal models
+of low energy supersymmetry (SUSY) appear to be increasingly fine
+tuned. In the Minimal Supersymmetric Standard Model (MSSM) large stop
+masses, needed to obtain the observed Higgs mass, give a significant
+contribution to fine tuning. $U(1)$ extensions of the MSSM that solve
+the $\mu$-problem have new F- and D-term contributions to the Higgs mass,
+allowing a 125 GeV Higgs with lighter stops and so alleviating the
+associated fine tuning. However, it was recently demonstrated, within
+a constrained version of the Exceptional Supersymmetric Standard Model (E$_6$SSM)
+defined at the Grand Unification (GUT) scale, that the presence of a massive $Z'$ boson introduces a 
+substantial new source of tuning in these theories at tree level. Here we
+consider the impact of this tuning when we remove the fine tuning that depends
+on assumptions about the SUSY breaking scale, by setting the SUSY
+breaking parameters at low energies. We find that the existing
+experimental bounds on the $Z'$ mass impose an effective lower bound on
+the fine tuning, which does not depend on assumptions about SUSY breaking. 
+We compare our results against the tuning in
+the phenomenological MSSM (pMSSM), where the SUSY breaking terms are also
+defined at low energies.
+
+\end{abstract}
+
+\pacs{12.60.Jv, 11.30.Pb, 12.60.-i, 14.80.Bn}
+\keywords{naturalness, fine tuning, supersymmetry}%Use showkeys class option if keyword
+                              %display desired
+\maketitle
+
+\section{\label{sec:intro}Introduction}
+\section{\label{sec:model}The Model}
+% Table of U(1)' charges, which may or may not be useful to include.
+\begin{table}[h]
+\centering
+\begin{ruledtabular}
+\begin{tabular}{cccccccccccccc}
+ & $\hat{Q}$ & $\hat{u}^C$ & $\hat{d}^C$ & $\hat{L}$ & $\hat{e}^C$ & $\hat{N}^C$ & $\hat{S}$ & $\hat{H}_2$ & $\hat{H}_1$ & $\hat{D}$ & $\hat{\overline{D}}$ & $\hat{H}'$ & $\hat{\overline{H'}}$ \\[1mm]
+\hline
+$\sqrt{\frac{5}{3}}Q_i^Y$ & $\frac{1}{6}$ & $-\frac{2}{3}$ & $\frac{1}{3}$ & $-\frac{1}{2}$ & $1$ & $0$ & $0$ & $\frac{1}{2}$ & $-\frac{1}{2}$ & $-\frac{1}{3}$ & $\frac{1}{3}$ & $-\frac{1}{2}$ & $\frac{1}{2}$ \\[1mm]
+%\hline
+$2\sqrt{6}Q_i^\psi$ & $1$ & $1$ & $1$ & $1$ & $1$ & $1$ & $4$ & $-2$ & $-2$ & $-2$ & $-2$ & $1$ & $-1$\\[1mm]
+%\hline
+$2\sqrt{10}Q_i^\chi$ & $-1$ & $-1$ & $3$ & $3$ & $-1$ & $-5$ & $0$ & $2$ & $-2$ & $2$ & $-2$ & $3$ & $-3$\\[1mm]
+%\hline
+$\sqrt{40}Q_i^N$ & $1$ & $1$ & $2$ & $2$ & $1$ & $0$ & $5$ & $-2$ & $-3$ & $-2$ & $-3$ & $2$ & $-2$ \\[1mm]
+\end{tabular}
+\end{ruledtabular}
+\caption{The $U(1)_Y$, $U(1)_\psi$, $U(1)_\chi$ and $U(1)_N$ charges of the chiral superfields in the $E_6$ model. The specific case of $U(1)_N$, corresponding to the E$_6$SSM, is obtained for $\theta_{E_6}=\arctan\sqrt{15}$.}
+\label{tab:E6charges}
+\end{table}
+\section{\label{sec:ewsb}Electroweak Symmetry Breaking}
+% EWSB conditions in E6SSM
+The Higgs scalar potential for the E$_6$ model considered is \cite{King:2005jy} 
+\begin{equation}\label{eq:E6VeffOneLoop}
+V_{E_6}=V_{E_6}^F+V_{E_6}^D+V_{E_6}^{\textrm{soft}}+\Delta V_{E_6}.
+\end{equation}
+where
+\begin{align}
+V_{E_6}^F&=\lambda^2|S|^2(|H_1|^2+|H_2|^2)+\lambda^2|(H_1\cdot H_2)|^2,\label{eq:E6VFterms}\\
+V_{E_6}^D&=\frac{\bar{g}^2}{8}\left ( |H_2|^2-|H_1|^2\right )^2+\frac{g_2^2}{2}|H_1^\dagger H_2|^2+\frac{g_1'^2}{2}(\tilde{Q}_1|H_1|^2+\tilde{Q}_2|H_2|^2+\tilde{Q}_S|S|^2)^2,\label{eq:E6VDterms}\\
+V_{E_6}^{\textrm{soft}}&=m_S^2|S|^2+m_{H_d}^2|H_1|^2+m_{H_u}^2|H_2|^2+\Big [\lambda A_\lambda S(H_1\cdot H_2)+\textrm{h.c.}\Big ].\label{eq:E6Vsoft}
+\end{align}
+In these expressions $g_2$, $g'=\sqrt{3/5}g_1$, and $g_1'$ are the $SU(2)$, (non-GUT normalized) $U(1)_Y$ and $U(1)'$ gauge couplings, respectively, and $\bar{g}^2=g_2^2+g'^2$. The charges $\tilde{Q}_1$, $\tilde{Q}_2$ and $\tilde{Q}_S$ are effective $U(1)'$ charges for $H_1$, $H_2$ and $S$, respectively. Note that the $SU(2)$ dot product is defined by $A\cdot B\equiv \epsilon_{\alpha\beta}A^\alpha B^\beta=A^2B^1-A^1B^2$. The term $\Delta V_{E_6}$ contains the Coleman-Weinberg contributions to the effective potential. In the case of the $U(1)_\chi$ model, $V_{E_6}^F$ may also contain an elementary $\mu$ term contribution, as occurs in the MSSM.\\ \\
+Demanding that the Higgs fields $H_1$, $H_2$ and the singlet $S$ acquire real VEVs of the form
+\begin{equation}\label{eq:E6vevs}
+\langle H_1 \rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} v_1 \\ 0\end{pmatrix}, \; \langle H_2 \rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} 0 \\ v_2 \end{pmatrix}, \; \langle S \rangle =\frac{s}{\sqrt{2}}
+\end{equation}
+at the physical minimum leads to the minimization conditions
+\begin{subequations}\label{eq:E6EWSBConditions}
+\begin{align}
+&f_1=m_{H_d}^2v_1+\frac{\lambda^2}{2}(v_2^2+s^2)v_1-\frac{\lambda A_\lambda}{\sqrt{2}}sv_2-\frac{\bar{g}^2}{8}
+(v_2^2-v_1^2)v_1+D_{H_d}v_1+\frac{\partial \Delta V_{E_6}}{\partial v_1}=0,\label{eq:E6EWSBcondition1} \\
+&f_2=m_{H_u}^2v_2+\frac{\lambda^2}{2}(v_1^2+s^2)v_2-\frac{\lambda A_\lambda}{\sqrt{2}}sv_1+\frac{\bar{g}^2}{8}
+(v_2^2-v_1^2)v_2+D_{H_u}v_2+\frac{\partial \Delta V_{E_6}}{\partial v_2}=0,\label{eq:E6EWSBcondition2} \\
+&f_3=m_S^2s+\frac{\lambda^2}{2}(v_2^2+v_1^2)s-\frac{\lambda A_\lambda}{\sqrt{2}}v_2v_1+D_Ss+\frac{\partial \Delta V_{E_6}}{\partial s}=0.\label{eq:E6EWSBcondition3}
+\end{align}
+\end{subequations}
+The quantities $D_{H_1}$, $D_{H_2}$ and $D_S$ appearing above are $U(1)'$ $D$-term contributions that are absent in the MSSM and NMSSM and are given by
+\begin{equation}\label{eq:E6Dterms}
+D_\phi\equiv \frac{g_1'^2}{2}\left ( \tilde{Q}_1v_1^2+\tilde{Q}_2v_2^2+\tilde{Q}_Ss^2\right )\tilde{Q}_\phi.
+\end{equation}
+As was noted in \cite{Athron:2013ipa}, the first two of these conditions may be rewritten in the form
+\begin{equation}\label{eq:E6MZequation}
+\frac{M_Z^2}{2}=-\frac{\lambda^2s^2}{2}+\frac{\tilde{m}_{H_d}^2-\tilde{m}_{H_u}^2\tan^2\beta}{\tan^2\beta-1}+\frac{D_{H_d}-D_{H_u}\tan^2\beta}{\tan^2\beta-1},
+\end{equation}
+\begin{equation}\label{eq:E6sin2bequation}
+\sin 2\beta=\frac{\sqrt{2}\lambda A_{\lambda} s}{\tilde{m}_{H_d}^2+\tilde{m}_{H_u}^2+\lambda^2s^2+D_{H_d}+D_{H_u}},
+\end{equation}
+with $M_Z^2=\bar{g}^2v^2/4$, $v^2=v_1^2+v_2^2$ and $\tan\beta = v_2/v_1$ and where we have for convenience absorbed the effects of the loop corrections into the soft masses, 
+\begin{align*}
+\tilde{m}_{H_d}^2&=m_{H_d}^2+\frac{1}{v_1}\frac{\partial \Delta V_{E_6}}{\partial v_1},\\
+\tilde{m}_{H_u}^2&=m_{H_u}^2+\frac{1}{v_2}\frac{\partial \Delta V_{E_6}}{\partial v_2}.
+\end{align*}
+Written in the form of Eq. (\ref{eq:E6MZequation}) we see the potential new source of fine tuning alluded to above, in the form of the third term on the right-hand side. For large values of the VEV $s$, the $D$-term contributions can be quite a bit larger than $M_Z^2$. In particular, recent experimental limits \cite{Aad:2014cka} require that the $Z'$ mass be large, with bounds of $M_{Z'}\gtrsim 2.51$ TeV in $U(1)_\psi$ models and $M_{Z'}\gtrsim 2.62$ TeV in $U(1)_\chi$ models. To satisfy these limits typically requires large values of $s$, for example $s\gtrsim 6$ TeV is required in the E$_6$SSM with $U(1)'=U(1)_N$, so that $|D_{H_u}|,|D_{H_d}|\gg M_Z^2$ for $E_6$ models with $\tilde{Q}_S\neq 0$. As a result the remaining terms on the right-hand side of Eq. (\ref{eq:E6MZequation}) must be tuned to cancel the resulting very large contribution to $M_Z$. Moreover, because this is a large \textit{tree level} fine tuning, it may negate the increase in naturalness that is associated with having a reduced need for heavy superpartners.
+\section{\label{sec:tuning}Fine Tuning}
+% Introduce tuning measure - BG measure (maybe Peter will add in a justification
+% here).
+% Explain that we derived the master formula in the E6SSM as given in Maien's 
+% paper, but including extra effects not in that formula. 
+% Full result is given in appendix.
+% Numerical technique for calculating 1-loop tunings and including RG effects
+% Outline is given here, full equations for RGE effects etc. given in appendix.
+% How we calculate the tuning using spectrum generator, for E6SSM uses
+% FlexibleSUSY (cite FlexibleSUSY and SARAH).
+\subsection{\label{subsec:tuningmeasure}The Fine Tuning Measure}
+To quantify the resulting fine tuning we apply the traditional Ellis-Barbieri-Giudice measure \cite{Ellis:1986yg,Barbieri:1987fn}. A specific model is characterised by a set of $n$ model parameters $\{p_i\}$ and is defined at some input scale $M_X$. For a given parameter $p$ in this set, one computes an associated sensitivity coefficient \cite{Feng:2013pwa}
+\begin{equation}\label{eq:bgmeasure}
+\Delta_p=\left | \frac{\partial \log M_Z^2}{\partial \log p}\right |=\left | \frac{p}{M_Z^2}\frac{\partial M_Z^2}{\partial p}\right |,
+\end{equation}
+where $M_Z^2=\bar{g}^2v^2/4$. The coefficient $\Delta_p$ measures the fractional variation in $M_Z^2$ resulting from a given variation in the parameter $p$. The overall fine tuning is then taken to be $\Delta = \underset{i}{\max}\,\{\Delta_{p_i}\}$.\\ \\
+The sensitivity coefficients $\Delta_p$ may be calculated directly from the expression for $M_Z^2$ in terms of the $p_i$ for a particular model, which leads to a so-called master formula for calculating the fine tuning. A master formula for the E$_6$SSM, obtained from the tree level scalar potential, was presented in \cite{Athron:2013ipa}. In order to derive the expression presented there, the fact that $s \gg v$ was made use of to neglect certain $\mathcal{O}(v^2)$ terms in the EWSB conditions, greatly simplifying the final result.
+% Important question:
+% Impact of varying charges, is it picked up by the approximate CE6SSM master formula?
+% e.g. how different are things in the limit Q_S --> 0?
+For the purposes of exploring a wider class of $E_6$ inspired models, we have derived the master formula without neglecting any $\mathcal{O}(v^2)$ terms. The more complete tree-level master formula is somewhat complicated. This is because, unlike in the MSSM, even at tree level it is not possible to solve explicitly for the VEVs $v_1$, $v_2$ in terms of the Lagrangian parameters. It may be written in the form
+\begin{equation}\label{eq:E6masterformula}
+\frac{\Delta_p}{2|p|}=\bigg|\tilde{\Delta}_\lambda\frac{\partial\lambda}{\partial p}+\tilde{\Delta}_{A_\lambda}\frac{\partial A_\lambda}{\partial p}+\tilde{\Delta}_{m_{H_d}^2}\frac{\partial m_{H_d}^2}{\partial p}+\tilde{\Delta}_{m_{H_u}^2}\frac{\partial m_{H_u}^2}{\partial p}+\tilde{\Delta}_{m_S^2}\frac{\partial m_S^2}{\partial p}\bigg|.
+\end{equation}
+Explicit expressions for the $\tilde{\Delta}_i$ appearing above are given in Appendix \ref{app:masterformula}. It should be noted that variations in the gauge couplings are neglected in Eq. (\ref{eq:E6masterformula}), so that the formula above is valid at the level of 1-loop RG running and provided that the gauge couplings are excluded from the set $\{p_i\}$. In general, any dimensionless SUSY parameters in $\{p_i\}$ will contribute to the running of the gauge couplings at 2-loops and so terms proportional to $\partial g_i /\partial p$ are also present. For dimensionless $p$, the resulting contributions are $\mathcal{O}(g_1^2p^2)$, $\mathcal{O}(g_1'^2p^2)$, $\mathcal{O}(g_2^2p^2)$ or higher order, and can therefore usually be safely neglected.\\ \\
+Evaluating the fine tuning directly using a master formula approach rapidly becomes impractical, as a brief inspection of the expressions for the $\tilde{\Delta}_i$ should make clear. It is well known in the MSSM that radiative corrections can significantly change (indeed, reduce) the fine tuning \cite{Cassel:2010px}. It is therefore important when studying the fine tuning to include 1- and 2-loop corrections in the fine tuning measure. To do so it is most convenient to work in terms of the EWSB conditions Eq. (\ref{eq:E6EWSBConditions}), rather than Eq. (\ref{eq:E6MZequation}). The general procedure is as follows \cite{Ellwanger:2011mu}. For a model in which $m$ fields develop real VEVs (e.g. $m=2$ in the MSSM, $m=3$ in the NMSSM and in the $E_6$ models considered), we require that the $m$ minimization conditions
+\begin{equation}\label{eq:EWSBconditions}
+f_1=f_2=\dotsb=f_m=0
+\end{equation}
+continue to hold under an arbitrary variation in a model parameters $p\rightarrow p+\delta p$, so that the variations $\delta f_i$ satisfy
+\begin{equation}\label{eq:EWSBvariations}
+\delta f_1 = \delta f_2=\dotsb =\delta f_m =0.
+\end{equation}
+Each $f_i$ is a function of the VEVs $v_j$ and $l$ running parameters $q_k$ evaluated at the scale of EWSB, $f_i=f_i(v_j,q_k)$. Thus for each $f_i$ we have that
+\begin{equation}\label{eq:EWSBchainrule}
+\delta f_i = \sum_{j=1}^m \frac{\partial f_i}{\partial v_j}\frac{\partial v_j}{\partial p}+\sum_{k=1}^l \frac{\partial f_i}{\partial q_k}\frac{\partial q_k}{\partial p}=0.
+\end{equation}
+The quantities $\frac{\partial f_i}{\partial v_j}$ are the elements of the CP-even Higgs squared mass matrix $M_h^2$ of the model before rotating into the mass eigenstate basis. When evaluated for all $n$ model parameters, the above system of equations can be concisely expressed as
+\begin{equation}\label{eq:tuningsystem}
+M_h^2\begin{pmatrix}
+\frac{\partial v_1}{\partial p_1} & \cdots & \frac{\partial v_1}{\partial p_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial v_m}{\partial p_1} & \cdots & \frac{\partial v_m}{\partial p_n}
+\end{pmatrix}=
+-\begin{pmatrix}
+\frac{\partial f_1}{\partial q_1} & \cdots & \frac{\partial f_1}{\partial q_l} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_m}{\partial q_1} & \cdots & \frac{\partial f_m}{\partial q_l}
+\end{pmatrix}
+\begin{pmatrix}
+\frac{\partial q_1}{\partial p_1} & \cdots & \frac{\partial q_1}{\partial p_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial q_l}{\partial p_1} & \cdots & \frac{\partial q_l}{\partial p_n}
+\end{pmatrix}.
+\end{equation} 
+The quantities forming the first matrix on the right-hand side, along with $M_h^2$, are easily calculated analytically. The remaining derivatives $\partial q_k /\partial p$ must be determined using the RGEs. Once these have been obtained, it is straightforward to solve for the $\partial v_i /\partial p$. The sensitivity coefficients $\Delta_p$ are then simply linear combinations of the $\partial v_i/\partial p$ and $\partial q_k/\partial p$. Radiative corrections may be easily incorporated by including the Coleman-Weinberg potential contributions in the EWSB conditions.\\ \\
+The most involved step in the process of getting $\Delta_p$ is evaluating the matrix containing the derivatives $\partial q_k/\partial p$. In general this must be done numerically, by evaluating the running using the 1- and 2-loop RGEs. This is an obstacle to doing large scans of the parameter space, as the process of numerically evaluating $n\times l$ derivatives is computationally expensive. In general, for example for models defined at the GUT scale, accurately calculating the fine tuning is better done by numerically differentiating $M_Z^2$ directly to reduce the number of derivatives that must be computed. For studying models defined at low energies, as we do here, we can take advantage of the fact that the amount of running involved is small. This makes it possible to use approximate analytic solutions to the RGEs that exhibit good accuracy over the range of scales considered. Given the 2-loop RG equation for a parameter $q$,
+\begin{equation}\label{eq:rge}
+\frac{\textrm{d}q}{\mathrm{d}t}=\frac{1}{16\pi^2}\beta_q^{(1)}+\frac{1}{(16\pi^2)^2}\beta_q^{(2)},\qquad t\equiv \log\frac{Q}{M_X},
+\end{equation}
+a Taylor series expansion of the solution may be used to obtain the parameter at the scale $Q$,
+\begin{align}\label{eq:rgeapproxsoln}
+q(Q)&=q(M_X)+\int_0^t q(t')\;\textrm{d}t'\approx q(M_X)+\frac{t}{16\pi^2}\left ( \beta_q^{(1)}+\frac{\beta_q^{(2)}}{16\pi^2}\right )+\frac{t^2}{32\pi^2}\frac{\textrm{d}\beta_q^{(1)}}{\textrm{d}t}+\mathcal{O}(t^2).
+\end{align}
+Expanded to this order we obtain the leading log (LL) and next-to-LL (NLL) contributions at 2-loop order. The $\mathcal{O}(t^2)$ terms not displayed above are formally of 3-loop order and are neglected. The derivative of the 1-loop $\beta$ function is given by
+\begin{equation}\label{eq:1loopbetaderivative}
+\frac{\textrm{d}\beta_q^{(1)}}{\textrm{d}t}=\frac{1}{16\pi^2}\sum_{q_k}\beta_{q_k}^{(1)}\frac{\partial \beta_q^{(1)}}{\partial q_k},
+\end{equation}
+where the sum is over all running parameters appearing in $\beta_q^{(1)}$. The $\beta$ functions appearing on the right hand side of Eqs. (\ref{eq:rgeapproxsoln}) and (\ref{eq:1loopbetaderivative}) are evaluated at the input scale $M_X$, giving a simple analytic expression for the parameters at the scale of EWSB in terms of the model parameters at $M_X$. Explicit results for the relevant series expansions in the MSSM and $E_6$ models are presented in Appendix \ref{app:rges}.
+\subsection{\label{subsec:numericalprocedure}Numerical Procedure}
+Using the approach outlined above, we have scanned the low energy parameter space of the MSSM and E$_6$SSM and calculated the fine tuning in each of the models considered. To do so, we implemented the above expressions for computing the fine tuning in a modified version of the E$_6$SSM spectrum generator that was used in \cite{Athron:2013ipa}. In order to include effects coming from 2-loop RG running, the 2-loop RGEs generated by SARAH \cite{Staub:2009bi,Staub:2010jh,Staub:2012pb,Staub:2013tta} and FlexibleSUSY \cite{Athron:2014yba} were used instead of the 1-loop results that had previously been implemented. The CP-even Higgs masses are calculated including the leading 1-loop effective potential contributions given in \cite{Athron:2009bs}. To scan over the MSSM parameter space, the equivalent MSSM fine tuning expressions were implemented into a modifed version of SOFTSUSY 3.3.10 \cite{Allanach:2001kg,Allanach:2013kza}. For consistency with the results produced in the $E_6$ models, and for computational speed, for our main scans only the dominant 1- and 2-loop corrections to the CP-even Higgs masses were included. The parameter ranges that were scanned over are presented in Table \ref{tab:scanranges}. With the exception of the stop mixing $A_t$, which was logarithmically scanned, all parameters were linearly scanned. In order to ensure the validity of the approximate RGE solutions, the input scale $M_X$ was set to $M_X=20$ TeV for both the MSSM and the $E_6$ models. Finally, the fine tuning was evaluated at the scale $Q=M_{\textrm{SUSY}}=\sqrt{m_{\tilde{t}_1}m_{\tilde{t}_2}}$, where $m_{\tilde{t}_{1,2}}$ are the running $\overline{\textrm{DR}}$ stop masses evaluated at $Q=M_{\textrm{SUSY}}$. 
+\begin{table}[h]
+\centering
+\begin{ruledtabular}
+\begin{tabular}{cc}
+MSSM & E$_6$SSM \\
+\hline
+$2 \leq \tan\beta \leq 50$& $2 \leq \tan\beta \leq 50$ \\
+$-1\textrm{ TeV } \leq \mu \leq 1 \textrm{ TeV}$ & $-3 \leq \lambda \leq 3$\\
+$-1\textrm{ TeV } \leq B \leq 1\textrm{ TeV}$ & $-10\textrm{ TeV } \leq A_\lambda \leq 10\textrm{ TeV}$ \\
+$ 200 \textrm{ GeV } \leq m_{Q_3} \leq 2000 \textrm { GeV}$ & $ 200 \textrm{ GeV } \leq m_{Q_3} \leq 2000 \textrm { GeV}$\\
+$ 200 \textrm{ GeV } \leq m_{u_3} \leq 2000 \textrm { GeV}$ & $ 200 \textrm{ GeV } \leq m_{u_3} \leq 2000 \textrm { GeV}$\\
+$ -10 \textrm{ TeV } \leq A_t \leq 10 \textrm { TeV}$ & $ -10 \textrm{ TeV } \leq A_t \leq 10 \textrm { TeV}$\\
+$M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ & $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ \\
+\end{tabular}
+\end{ruledtabular}
+\caption{The parameters scanned over and the ranges of values used in the MSSM and the $E_6$ models.}
+\label{tab:scanranges}
+\end{table}
+\section{\label{sec:results}Results}
+% Our results. Plots to go in here:
+%    - tuning as a function of stop mass for the MSSM and E6SSM
+%    - full scatter plots of MSSM and E6SSM, including different
+%      M_Z' values
+%    - plots of chargino bound impacts
+%    - if room, plots for different U(1)' charges
+\section{\label{sec:conclusion}Conclusions}
+% Our conclusions: at low scales stops are not a big contributor,
+% Z' causes a significant fine tuning in the E6SSM (dominant -> lower
+% bound), chargino bounds will be important for fine tuning in the MSSM
+% but not as much for the E6SSM, and possibly discuss different U(1)' charges.
+\appendix
+\section{\label{app:masterformula}Fine Tuning Master Formula}
+% Tree level master formula for the E6SSM
+\section{\label{app:rges}RGE Contributions}
+% List the derivatives needed in the Taylor series approximation
+% to the RGE solutions.
+
+% NB before submission replace this with a copy-paste of the bbl file?
+\bibliography{bibliography}
+\end{document}

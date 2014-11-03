@@ -1245,6 +1245,8 @@ int main()
                std::cout << "cpu time  = " << cpu_end - cpu_start << " second\n";
                   }
          }
+         // of course, this would help with program termination...
+         scan.step_forward();
       }
 
    }

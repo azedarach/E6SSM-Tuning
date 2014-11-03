@@ -1052,6 +1052,7 @@ int main()
                          << std::setw(12) << std::left << "tachyon(VZp)" << ' '
                          << std::setw(12) << std::left << "tachyon(hh)" << ' '
                          << std::setw(12) << std::left << "tachyon(Ah)" << ' '
+                         << std::setw(12) << std::left << "tachyon(Hpm)" << ' '
                          << std::setw(12) << std::left << "tuning_err" << ' '
                          << std::setw(12) << std::left << "error"
                          << '\n';
@@ -1065,8 +1066,7 @@ int main()
 
       std::vector<std::size_t> position;
       while (!scan.has_finished()) {
-         double wall_start = get_wall_time();
-         double cpu_start = get_cpu_time();
+
          bool has_serious_problem = false;
          position = scan.get_position();
          input.TanBeta = TanBeta_vals(position.at(0));
@@ -1143,6 +1143,7 @@ int main()
             model.calculate_MCha();
             model.calculate_Mhh();
             model.calculate_MAh();
+            model.calculate_MHpm();
 
             model.set_mHd2(mHd2);
             model.set_mHu2(mHu2);
@@ -1236,13 +1237,10 @@ int main()
                          << std::setw(12) << std::left << problems.is_tachyon(lowE6SSM_info::VZp) << ' '
                          << std::setw(12) << std::left << problems.is_tachyon(lowE6SSM_info::hh) << ' '
                          << std::setw(12) << std::left << problems.is_tachyon(lowE6SSM_info::Ah) << ' '
+                         << std::setw(12) << std::left << problems.is_tachyon(lowE6SSM_info::Hpm) << ' '
                          << std::setw(12) << std::left << tuning_problem << ' '
                          << std::setw(12) << std::left << (problems.have_serious_problem() || has_serious_problem)
                          << '\n';
-               double wall_end = get_wall_time();
-               double cpu_end = get_cpu_time();
-               std::cout << "wall time = " << wall_end - wall_start << " seconds\n";
-               std::cout << "cpu time  = " << cpu_end - cpu_start << " second\n";
                   }
          }
          // of course, this would help with program termination...

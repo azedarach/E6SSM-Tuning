@@ -76,7 +76,7 @@ namespace flexiblesusy {
       static const std::size_t num_one_loop_ewsb_pars = 4;
       static const std::size_t num_tuning_pars = 12;
 
-      const double underflow = 1.0e-100;
+      const double underflow;
 
       struct numerical_deriv_pars {
          lowE6SSM<Two_scale> model;

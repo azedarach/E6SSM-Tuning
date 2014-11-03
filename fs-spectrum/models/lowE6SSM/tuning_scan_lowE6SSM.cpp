@@ -1065,7 +1065,8 @@ int main()
 
       std::vector<std::size_t> position;
       while (!scan.has_finished()) {
-
+         double wall_start = get_wall_time();
+         double cpu_start = get_cpu_time();
          bool has_serious_problem = false;
          position = scan.get_position();
          input.TanBeta = TanBeta_vals(position.at(0));
@@ -1238,6 +1239,10 @@ int main()
                          << std::setw(12) << std::left << tuning_problem << ' '
                          << std::setw(12) << std::left << (problems.have_serious_problem() || has_serious_problem)
                          << '\n';
+               double wall_end = get_wall_time();
+               double cpu_end = get_cpu_time();
+               std::cout << "wall time = " << wall_end - wall_start << " seconds\n";
+               std::cout << "cpu time  = " << cpu_end - cpu_start << " second\n";
                   }
          }
       }

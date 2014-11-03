@@ -6,11 +6,12 @@
 namespace flexiblesusy {
 
    lowE6SSM_tuning_calculator::lowE6SSM_tuning_calculator(const lowE6SSM<Two_scale>& m)
-         : model(m)
-         , input_scale(0.)
-         , tuning_scale(0.)
-         , tolerance(1.0e-4)
-         , max_iterations(100)
+      : underflow(1.0e-100) 
+      , model(m)
+      , input_scale(0.)
+      , tuning_scale(0.)
+      , tolerance(1.0e-4)
+      , max_iterations(100)
    {
       tuning_ewsb_loop_order = m.get_ewsb_loop_order();
       tuning_beta_loop_order = m.get_loops();

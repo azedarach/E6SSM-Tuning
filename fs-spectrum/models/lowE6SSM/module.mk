@@ -69,7 +69,8 @@ LIBlowE6SSM_SRC += \
 
 EXElowE6SSM_SRC += \
 		$(DIR)/run_lowE6SSM.cpp \
-		$(DIR)/scan_lowE6SSM.cpp
+		$(DIR)/scan_lowE6SSM.cpp \
+		$(DIR)/tuning_scan_lowE6SSM.cpp
 LIBlowE6SSM_HDR += \
 		$(DIR)/lowE6SSM_convergence_tester.hpp \
 		$(DIR)/lowE6SSM_two_scale_ew_derivs.hpp \
@@ -148,6 +149,9 @@ RUN_lowE6SSM_EXE := $(DIR)/run_lowE6SSM.x
 
 SCAN_lowE6SSM_OBJ := $(DIR)/scan_lowE6SSM.o
 SCAN_lowE6SSM_EXE := $(DIR)/scan_lowE6SSM.x
+
+TUNING_SCAN_lowE6SSM_OBJ := $(DIR)/tuning_scan_lowE6SSM.o
+TUNING_SCAN_lowE6SSM_EXE := $(DIR)/tuning_scan_lowE6SSM.x
 
 METACODE_STAMP_lowE6SSM := $(DIR)/00_DELETE_ME_TO_RERUN_METACODE
 
@@ -238,7 +242,11 @@ $(RUN_lowE6SSM_EXE): $(RUN_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY)
 $(SCAN_lowE6SSM_EXE): $(SCAN_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS) 
 
+$(TUNING_SCAN_lowE6SSM_EXE): $(TUNING_SCAN_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS) 
+
+
 ALLDEP += $(LIBlowE6SSM_DEP) $(EXElowE6SSM_DEP)
 ALLSRC += $(LIBlowE6SSM_SRC) $(EXElowE6SSM_SRC)
 ALLLIB += $(LIBlowE6SSM)
-ALLEXE += $(RUN_lowE6SSM_EXE) $(SCAN_lowE6SSM_EXE)
+ALLEXE += $(RUN_lowE6SSM_EXE) $(SCAN_lowE6SSM_EXE) $(TUNING_SCAN_lowE6SSM_EXE)

@@ -50,6 +50,8 @@ namespace flexiblesusy {
       /// Helper methods for getting SUGRA style trilinears
       double get_ALambdax() const;
       double get_AYu22() const;
+      double get_Lambdax_at_input_scale();
+      const Eigen::Matrix<double,3,3>& get_Kappa_at_input_scale();
 
       /// Calculate the fine tunings. Returns true if there is a problem.
       bool calculate_fine_tunings_numerically();

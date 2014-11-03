@@ -999,6 +999,22 @@ namespace flexiblesusy {
       return At;
    }
 
+   double lowE6SSM_tuning_calculator::get_Lambdax_at_input_scale()
+   {
+      if (!is_equal_rel(input_scale, model.get_scale()))
+         model.run_to(input_scale);
+
+      return model.get_Lambdax();
+   }
+
+   const Eigen::Matrix<double,3,3>& lowE6SSM_tuning_calculator::get_Kappa_at_input_scale()
+   {
+      if (!is_equal_rel(input_scale, model.get_scale()))
+         model.run_to(input_scale);
+
+      return model.get_Kappa();
+   }
+
    void lowE6SSM_tuning_calculator::get_input_scale_pars()
    {
       input_scale_pars[lowE6SSM_info::Lambdax] = model.get_Lambdax();

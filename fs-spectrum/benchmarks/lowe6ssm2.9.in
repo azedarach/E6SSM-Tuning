@@ -27,7 +27,7 @@ Block SMINPUTS               # Standard Model inputs
    23   1.040000000e-01      # ms(2 GeV)
    24   1.270000000e+00      # mc(2 GeV)
 Block MINPAR                 # Input parameters
-    3   5.000000000e+01      # TanBeta
+    3   4.000000000e+01      # TanBeta
 Block EXTPAR
   200   1.581138830e-01      # QQp
   201   3.162277660e-01      # QLp

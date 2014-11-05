@@ -27,7 +27,7 @@ Block SMINPUTS               # Standard Model inputs
    23   1.040000000e-01      # ms(2 GeV)
    24   1.270000000e+00      # mc(2 GeV)
 Block MINPAR                 # Input parameters
-    3   5.000000000e+01      # TanBeta
+    3   6.000000000e+00      # TanBeta
 Block EXTPAR
   200   1.581138830e-01      # QQp
   201   3.162277660e-01      # QLp
@@ -112,7 +112,7 @@ Block MSU2IN
   2  3  0.000000000e+00      # mu2(2,3)
   3  1  0.000000000e+00      # mu2(3,1)
   3  2  0.000000000e+00      # mu2(3,2)
-  3  3  4.000000000e+06      # mu2(3,3)
+  3  3  2.020000000e+06      # mu2(3,3)
 Block MSD2IN
   1  1  2.500000000e+07      # md2(1,1)
   1  2  0.000000000e+00      # md2(1,2)
@@ -160,15 +160,15 @@ Block msInert2IN
   2  2  2.500000000e+07      # msI2(2,2)
 Block MSOFTIN
     1   3.000000000e+02      # MassB
-    2   1.000000000e+02      # MassWB
+    2   1.000000000e+03      # MassWB
     3   2.000000000e+03      # MassG
     4   3.000000000e+02      # MassBp
    24   2.500000000e+07      # mHp2
    25   2.500000000e+07      # mHpbar2
 Block ESIXRUNIN
     0   5.000000000e+03      # MuPr
-    1   3.000000000e-01      # Lambdax
-    2   6.000000000e+03      # TLambdax
+    1   4.200000000e-01      # Lambdax
+    2   5.000000000e+03      # TLambdax
    11   6.700000000e+03      # vs
   101   5.000000000e+03      # BMuPr
 Block ESIXKAPPAIN

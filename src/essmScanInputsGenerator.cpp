@@ -480,9 +480,9 @@ using namespace softsusy;
 	  At_ub = log(At_ub);
 	}
 
-      Alambda_lb = Alambda_vals(Alambda_indices(n));
-      Alambda_ub = Alambda_vals(Alambda_indices(n+1)-1);
-      Alambda_subnpts = Alambda_indices(n+1)-Alambda_indices(n);
+      Alambda_lb = Alambda_vals(Alambda_indices(j));
+      Alambda_ub = Alambda_vals(Alambda_indices(j+1)-1);
+      Alambda_subnpts = Alambda_indices(j+1)-Alambda_indices(j);
 
       if (alambdalogscan)
 	{

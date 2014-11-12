@@ -187,7 +187,8 @@ void lowE6SSM_spectrum_generator<T>::write_running_couplings(const std::string& 
    Coupling_monitor<lowE6SSM<T>, lowE6SSM_parameter_getter>
       coupling_monitor(tmp_model, parameter_getter);
 
-   coupling_monitor.run(low_scale, susy_scale, 100, true);
+   //coupling_monitor.run(low_scale, susy_scale, 100, true);
+   coupling_monitor.run(low_scale, 2.0e16, 1000, true);
    coupling_monitor.write_to_file(filename);
 }
 

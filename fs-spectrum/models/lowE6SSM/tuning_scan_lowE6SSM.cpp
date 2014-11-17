@@ -1156,7 +1156,8 @@ int main()
 
             bool tuning_problem;
             try {
-               tuning_problem = tuning_calc.calculate_fine_tunings_approximately();
+               //tuning_problem = tuning_calc.calculate_fine_tunings_approximately();
+               tuning_problem = tuning_calc.calculate_fine_tunings_numerically();
             } catch (const std::string & a) {
                std::cerr << "WARNING: serious numerical problem encountered in fine tuning calculation.\n";
                has_serious_problem = true;

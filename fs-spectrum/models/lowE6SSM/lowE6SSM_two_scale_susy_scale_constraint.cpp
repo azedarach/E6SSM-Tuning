@@ -82,8 +82,9 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    const auto TYeInput = INPUTPARAMETER(TYeInput);
    const auto TKappaInput = INPUTPARAMETER(TKappaInput);
    const auto TLambda12Input = INPUTPARAMETER(TLambda12Input);
-   const auto TLambdaxInput = INPUTPARAMETER(TLambdaxInput);
-   const auto TYuInput = INPUTPARAMETER(TYuInput);
+   // DH:: note changed meaning here
+   const auto ALambdaxInput = INPUTPARAMETER(TLambdaxInput);
+   const auto AYuInput = INPUTPARAMETER(AYuInput);
    const auto BMuPrInput = INPUTPARAMETER(BMuPrInput);
    const auto mq2Input = INPUTPARAMETER(mq2Input);
    const auto ml2Input = INPUTPARAMETER(ml2Input);
@@ -102,6 +103,8 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    const auto MassGInput = INPUTPARAMETER(MassGInput);
    const auto MassBpInput = INPUTPARAMETER(MassBpInput);
 
+   const auto Yu = MODELPARAMETER(Yu);
+
    MODEL->set_Kappa(KappaInput);
    MODEL->set_Lambda12(Lambda12Input);
    MODEL->set_Lambdax(LambdaxInput);
@@ -112,8 +115,8 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    MODEL->set_TYe(TYeInput);
    MODEL->set_TKappa(TKappaInput);
    MODEL->set_TLambda12(TLambda12Input);
-   MODEL->set_TLambdax(TLambdaxInput);
-   MODEL->set_TYu(TYuInput);
+   MODEL->set_TLambdax(LambdaxInput * ALambdaxInput);
+   MODEL->set_TYu((Yu.array() * AYuInput.array()).matrix());
    MODEL->set_BMuPr(BMuPrInput);
    MODEL->set_mq2(mq2Input);
    MODEL->set_ml2(ml2Input);

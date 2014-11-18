@@ -68,6 +68,7 @@ LIBlowE6SSM_SRC += \
 		$(DIR)/lowE6SSM_two_scale_Yu22_derivs.cpp
 
 EXElowE6SSM_SRC += \
+		$(DIR)/full_tuning_scan_lowE6SSM.cpp \
 		$(DIR)/estimate_gN_lowE6SSM.cpp \
 		$(DIR)/run_lowE6SSM.cpp \
 		$(DIR)/scan_lowE6SSM.cpp \
@@ -147,6 +148,9 @@ LIBlowE6SSM     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 ESTIMATE_lowE6SSM_OBJ := $(DIR)/estimate_gN_lowE6SSM.o
 ESTIMATE_lowE6SSM_EXE := $(DIR)/estimate_gN_lowE6SSM.x
+
+FULL_lowE6SSM_OBJ := $(DIR)/full_tuning_scan_lowE6SSM.o
+FULL_lowE6SSM_EXE := $(DIR)/full_tuning_scan_lowE6SSM.x
 
 RUN_lowE6SSM_OBJ := $(DIR)/run_lowE6SSM.o
 RUN_lowE6SSM_EXE := $(DIR)/run_lowE6SSM.x
@@ -243,6 +247,9 @@ $(LIBlowE6SSM): $(LIBlowE6SSM_OBJ)
 $(ESTIMATE_lowE6SSM_EXE): $(ESTIMATE_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(FULL_lowE6SSM_EXE): $(FULL_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 $(RUN_lowE6SSM_EXE): $(RUN_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
@@ -256,4 +263,4 @@ $(TUNING_SCAN_lowE6SSM_EXE): $(TUNING_SCAN_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLE
 ALLDEP += $(LIBlowE6SSM_DEP) $(EXElowE6SSM_DEP)
 ALLSRC += $(LIBlowE6SSM_SRC) $(EXElowE6SSM_SRC)
 ALLLIB += $(LIBlowE6SSM)
-ALLEXE += $(ESTIMATE_lowE6SSM_EXE) $(RUN_lowE6SSM_EXE) $(SCAN_lowE6SSM_EXE) $(TUNING_SCAN_lowE6SSM_EXE)
+ALLEXE += $(ESTIMATE_lowE6SSM_EXE) $(FULL_lowE6SSM_EXE) $(RUN_lowE6SSM_EXE) $(SCAN_lowE6SSM_EXE) $(TUNING_SCAN_lowE6SSM_EXE)

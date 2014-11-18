@@ -50,8 +50,8 @@ struct lowE6SSM_input_parameters {
    Eigen::Matrix<double,3,3> TYeInput;
    Eigen::Matrix<double,3,3> TKappaInput;
    Eigen::Matrix<double,2,2> TLambda12Input;
-   double ALambdaxInput;
-   Eigen::Matrix<double,3,3> AYuInput;
+   double TLambdaxInput;
+   Eigen::Matrix<double,3,3> TYuInput;
    double BMuPrInput;
    Eigen::Matrix<double,3,3> mq2Input;
    Eigen::Matrix<double,3,3> ml2Input;

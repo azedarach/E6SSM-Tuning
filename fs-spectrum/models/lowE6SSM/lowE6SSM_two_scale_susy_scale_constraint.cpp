@@ -84,7 +84,7 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    const auto TLambda12Input = INPUTPARAMETER(TLambda12Input);
    // DH:: note changed meaning here
    const auto ALambdaxInput = INPUTPARAMETER(TLambdaxInput);
-   const auto AYuInput = INPUTPARAMETER(AYuInput);
+   const auto AYuInput = INPUTPARAMETER(TYuInput);
    const auto BMuPrInput = INPUTPARAMETER(BMuPrInput);
    const auto mq2Input = INPUTPARAMETER(mq2Input);
    const auto ml2Input = INPUTPARAMETER(ml2Input);
@@ -109,7 +109,7 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    MODEL->set_Lambda12(Lambda12Input);
    MODEL->set_Lambdax(LambdaxInput);
    MODEL->set_MuPr(MuPrInput);
-   MODEL->set_gN(gNInput);
+   //MODEL->set_gN(gNInput);
    MODEL->set_vs(vsInput);
    MODEL->set_TYd(TYdInput);
    MODEL->set_TYe(TYeInput);
@@ -135,7 +135,7 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    MODEL->set_MassG(MassGInput);
    MODEL->set_MassBp(MassBpInput);
 
-
+   
    // the parameters, which are fixed by the EWSB eqs., will now be
    // defined at this scale (at the EWSB loop level defined in the
    // model)

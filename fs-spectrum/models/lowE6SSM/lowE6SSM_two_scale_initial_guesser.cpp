@@ -132,6 +132,7 @@ void lowE6SSM_initial_guesser<Two_scale>::guess_susy_parameters()
    MODEL->set_mHd2(Power(SM(MZ),3));
    MODEL->set_mHu2(Power(SM(MZ),3));
    MODEL->set_ms2(Power(SM(MZ),3));
+   MODEL->set_gN(model->get_g1());
 }
 
 void lowE6SSM_initial_guesser<Two_scale>::calculate_DRbar_yukawa_couplings()

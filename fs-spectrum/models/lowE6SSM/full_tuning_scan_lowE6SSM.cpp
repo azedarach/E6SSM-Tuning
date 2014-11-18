@@ -58,7 +58,7 @@ namespace flexiblesusy {
       input.TYeInput = Eigen::Matrix<double,3,3>::Zero();
       input.TKappaInput = Eigen::Matrix<double,3,3>::Zero();
       input.TLambda12Input = Eigen::Matrix<double,2,2>::Zero();
-      input.AYuInput = Eigen::Matrix<double,3,3>::Zero();
+      input.TYuInput = Eigen::Matrix<double,3,3>::Zero();
       
       input.BMuPrInput = 5000.; // GeV^2
       
@@ -180,6 +180,7 @@ int main()
    std::size_t mu222_col = 0;
    std::size_t MassWB_col = 0;
    std::size_t MX_col = 0;
+   std::size_t vs_col = 0;
 
    // header line
    std::string comment_line;
@@ -211,14 +212,68 @@ int main()
          MassWB_col = i;
       } else if (field_names[i] == "MX/GeV") {
          MX_col = i;
+      } else if (field_names[i] == "s/GeV") {
+         vs_col = i;
       }
    }
    
+      std::cout << "# "
+                << std::setw(12) << std::left << "TanBeta" << ' '
+                << std::setw(12) << std::left << "Lambdax(MS)" << ' '
+                << std::setw(12) << std::left << "ALambdax(MS)/GeV" << ' '
+                << std::setw(12) << std::left << "AYu22(MS)/GeV" << ' '
+                << std::setw(12) << std::left << "mq222(MS)/GeV^2" << ' '
+                << std::setw(12) << std::left << "mu222(MS)/GeV^2" << ' '
+                << std::setw(12) << std::left << "MassWB(MS)/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(1)/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(2)/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(3)/GeV" << ' '
+                << std::setw(12) << std::left << "mHd2/GeV^2" << ' '
+                << std::setw(12) << std::left << "mHu2/GeV^2" << ' '
+                << std::setw(12) << std::left << "ms2/GeV^2" << ' '
+                << std::setw(12) << std::left << "MS/GeV" << ' '
+                << std::setw(12) << std::left << "MX/GeV" << ' '
+                << std::setw(12) << std::left << "s/GeV" << ' '
+                << std::setw(12) << std::left << "MVZ/GeV" << ' '
+                << std::setw(12) << std::left << "MVZp/GeV" << ' '
+                << std::setw(12) << std::left << "MSu(1)/GeV" << ' '
+                << std::setw(12) << std::left << "MSu(2)/GeV" << ' '
+                << std::setw(12) << std::left << "MSd(1)/GeV" << ' '
+                << std::setw(12) << std::left << "MSd(2)/GeV" << ' '
+                << std::setw(12) << std::left << "MCha(1)/GeV" << ' '
+                << std::setw(12) << std::left << "MCha(2)/GeV" << ' '
+                << std::setw(12) << std::left << "MChi(1)/GeV" << ' '
+                << std::setw(12) << std::left << "MChi(2)/GeV" << ' '
+                << std::setw(12) << std::left << "MChi(3)/GeV" << ' '
+                << std::setw(12) << std::left << "MChi(4)/GeV" << ' '
+                << std::setw(12) << std::left << "MChi(5)/GeV" << ' '
+                << std::setw(12) << std::left << "MChi(6)/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(1)DRbar/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(2)DRbar/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(3)DRbar/GeV" << ' '
+                << std::setw(12) << std::left << "MAh(1)DRbar/GeV" << ' '
+                << std::setw(12) << std::left << "MAh(2)DRbar/GeV" << ' '
+                << std::setw(12) << std::left << "MAh(3)DRbar/GeV" << ' '
+                << std::setw(12) << std::left << "D(Max)" << ' '
+                << std::setw(12) << std::left << "D(Lambdax)" << ' '
+                << std::setw(12) << std::left << "D(ALambdax)" << ' '
+                << std::setw(12) << std::left << "D(AYu22)" << ' '
+                << std::setw(12) << std::left << "D(mq222)" << ' '
+                << std::setw(12) << std::left << "D(mHd2)" << ' '
+                << std::setw(12) << std::left << "D(mHu2)" << ' '
+                << std::setw(12) << std::left << "D(mu222)" << ' '
+                << std::setw(12) << std::left << "D(ms2)" << ' '
+                << std::setw(12) << std::left << "D(MassB)" << ' '
+                << std::setw(12) << std::left << "D(MassWB)" << ' '
+                << std::setw(12) << std::left << "D(MassG)" << ' '
+                << std::setw(12) << std::left << "D(MassBp)" << ' '
+                << std::setw(12) << std::left << "error" << '\n';
+
 // read in points from file and calculate spectrum
    std::string line;
    while (std::getline(std::cin, line)) {
       input = get_default_inputs();
-
+      
       // set scanned parameter values
       std::vector<std::string> values;
       boost::split(values, line, boost::is_any_of(" \n\t"), boost::token_compress_on);
@@ -239,15 +294,16 @@ int main()
          continue;
       }
 
+      // note different interpretation
       try {
-         inputALambdaxInput = boost::lexical_cast<double>(values[ALambdax_col]);
+         input.TLambdaxInput = boost::lexical_cast<double>(values[ALambdax_col]);
       } catch (const boost::bad_lexical_cast& error) {
          WARNING("Ignoring invalid input '" + values[ALambdax_col] + "'");
          continue;
       }
 
       try {
-         input.AYuInput(2,2) = boost::lexical_cast<double>(values[AYu22_col]);
+         input.TYuInput(2,2) = boost::lexical_cast<double>(values[AYu22_col]);
       } catch (const boost::bad_lexical_cast& error) {
          WARNING("Ignoring invalid input '" + values[AYu22_col] + "'");
          continue;
@@ -282,14 +338,14 @@ int main()
          continue;
       }
 
+      try {
+         input.vsInput = boost::lexical_cast<double>(values[vs_col]);
+      } catch (const boost::bad_lexical_cast& error) {
+         WARNING("Ignoring invalid input '" + values[vs_col] + "'");
+         continue;
+      }
+
       // calculate spectrum
-      std::cout << "TanBeta = " << input.TanBeta << "\n";
-      std::cout << "Lambdax = " << input.LambdaxInput << "\n";
-      std::cout << "TLambdax = " << input.TLambdaxInput << "\n";
-      std::cout << "TYu22 = " << input.TYuInput(2,2) << "\n";
-      std::cout << "mq222 = " << input.mq2Input(2,2) << "\n";
-      std::cout << "mu222 = " << input.mu2Input(2,2) << "\n";
-      std::cout << "MassWB = " << input.MassWBInput << "\n";
       spectrum_generator.run(oneset, input);
 
       const lowE6SSM<algorithm_type>& model = spectrum_generator.get_model();
@@ -300,15 +356,17 @@ int main()
       const bool error = problems.have_serious_problem();
 
       std::map<lowE6SSM_info::Parameters,double> fine_tunings;
-      double max_tuning;
+      double max_tuning = 0;
+      bool tuning_problem = false;
       if (!error) {
          // calculate fine tuning
          lowE6SSM_tuning_calculator tuning_calc(model);
-         tuning_calc.set_tuning_scale(model.get_scale());
+         tuning_calc.set_tuning_scale(Sqrt(model.get_MSu()(0) * model.get_MSu()(1)));
          tuning_calc.set_input_scale(mx);
-         bool tuning_problem;
+         tuning_calc.set_tuning_ewsb_loop_order(1);
+         tuning_calc.set_tuning_beta_loop_order(1);
          try {
-            tuning_problem = tuning_calc.calculate_fine_tunings_numerically();
+            tuning_problem = tuning_calc.calculate_fine_tunings_approximately();
          } catch (const std::string & a) {
             std::cerr << "WARNING: serious numerical problem encountered in fine tuning calculation.\n";
             tuning_problem = true;
@@ -322,10 +380,68 @@ int main()
          fine_tunings = tuning_calc.get_fine_tunings();
          max_tuning = maximum_tuning(fine_tunings);
       }
-
+      
       // print results
-      if (error) {
-         std::cout << problems << "\n";
+      std::cout << " "
+                << std::setw(12) << std::left << input.TanBeta << ' '
+                << std::setw(12) << std::left << model.get_Lambdax() << ' '
+                << std::setw(12) << std::left << model.get_TLambdax() / model.get_Lambdax() << ' '
+                << std::setw(12) << std::left << model.get_TYu(2,2) / model.get_Yu(2,2) << ' '
+                << std::setw(12) << std::left << model.get_mq2(2,2) << ' '
+                << std::setw(12) << std::left << model.get_mu2(2,2) << ' '
+                << std::setw(12) << std::left << model.get_MassWB() << ' '
+                << std::setw(12) << std::left << pole_masses.Mhh(0) << ' '
+                << std::setw(12) << std::left << pole_masses.Mhh(1) << ' '
+                << std::setw(12) << std::left << pole_masses.Mhh(2) << ' '
+                << std::setw(12) << std::left << model.get_mHd2() << ' '
+                << std::setw(12) << std::left << model.get_mHu2() << ' '
+                << std::setw(12) << std::left << model.get_ms2() << ' '
+                << std::setw(12) << std::left << Sqrt(model.get_MSu()(0) * model.get_MSu()(1)) << ' '
+                << std::setw(12) << std::left << mx << ' '
+                << std::setw(12) << std::left << input.vsInput << ' '
+                << std::setw(12) << std::left << model.get_MVZ() << ' '
+                << std::setw(12) << std::left << model.get_MVZp() << ' '
+                << std::setw(12) << std::left << model.get_MSu()(0) << ' '
+                << std::setw(12) << std::left << model.get_MSu()(1) << ' '
+                << std::setw(12) << std::left << model.get_MSd()(0) << ' '
+                << std::setw(12) << std::left << model.get_MSd()(1) << ' '
+                << std::setw(12) << std::left << model.get_MCha()(0) << ' '
+                << std::setw(12) << std::left << model.get_MCha()(1) << ' '
+                << std::setw(12) << std::left << model.get_MChi()(0)<< ' '
+                << std::setw(12) << std::left << model.get_MChi()(1)<< ' '
+                << std::setw(12) << std::left << model.get_MChi()(2)<< ' '
+                << std::setw(12) << std::left << model.get_MChi()(3)<< ' '
+                << std::setw(12) << std::left << model.get_MChi()(4)<< ' '
+                << std::setw(12) << std::left << model.get_MChi()(5)<< ' '
+                << std::setw(12) << std::left << model.get_Mhh()(0) << ' '
+                << std::setw(12) << std::left << model.get_Mhh()(1) << ' '
+                << std::setw(12) << std::left << model.get_Mhh()(2) << ' '
+                << std::setw(12) << std::left << model.get_MAh()(0) << ' '
+                << std::setw(12) << std::left << model.get_MAh()(1) << ' '
+                << std::setw(12) << std::left << model.get_MAh()(2) << ' '
+                << std::setw(12) << std::left << max_tuning << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::Lambdax] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::TLambdax] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::TYu22] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mq222] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mHd2] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mHu2] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mu222] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::ms2] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassB] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassWB] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassG] << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassBp] << ' '
+                << std::setw(12) << std::left << error << ' ';
+      if (error || tuning_problem) {
+         std::cout << "# " << problems;
+         if (tuning_problem) {
+            std::cout << ", tuning error\n"; 
+         } else {
+            std::cout << '\n';
+         }
+      } else {
+         std::cout << '\n';
       }
    }
 

@@ -97,6 +97,9 @@ void lowE6SSM_high_scale_constraint<Two_scale>::apply()
 
    update_scale();
 
+   const auto g1 = MODELPARAMETER(g1);
+
+   MODEL->set_gN(g1);
 
 }
 

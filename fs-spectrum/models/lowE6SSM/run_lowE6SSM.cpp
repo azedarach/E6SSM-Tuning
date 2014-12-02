@@ -95,7 +95,7 @@ int main(int argc, const char* argv[])
       = spectrum_generator.get_model();
    const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& problems
       = spectrum_generator.get_problems();
-
+   
    // output
    slha_io.set_spinfo(problems);
    slha_io.set_sminputs(oneset);

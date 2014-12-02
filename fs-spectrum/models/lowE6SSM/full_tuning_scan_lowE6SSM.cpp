@@ -366,7 +366,7 @@ int main()
          tuning_calc.set_tuning_scale(Sqrt(model.get_MSu()(0) * model.get_MSu()(1)));
          tuning_calc.set_input_scale(mx);
          tuning_calc.set_tuning_ewsb_loop_order(1);
-         tuning_calc.set_tuning_beta_loop_order(1);
+         tuning_calc.set_tuning_beta_loop_order(2);
          try {
             tuning_problem = tuning_calc.calculate_fine_tunings_approximately();
          } catch (const std::string & a) {

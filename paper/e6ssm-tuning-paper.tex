@@ -466,10 +466,11 @@ The sensitivity coefficients $\Delta_p$ may be calculated directly from the expr
 % Impact of varying charges, is it picked up by the approximate CE6SSM master formula?
 % e.g. how different are things in the limit Q_S --> 0?
 For the purposes of exploring a wider class of $E_6$ inspired models, we have derived the master formula without neglecting any $\mathcal{O}(v^2)$ terms. The more complete tree-level master formula is somewhat complicated. This is because, unlike in the MSSM, even at tree level it is not possible to solve explicitly for the VEVs $v_1$, $v_2$ in terms of the Lagrangian parameters. It may be written in the form
-\begin{equation}\label{eq:E6masterformula}
-\frac{\Delta_p}{2|p|}=\bigg|\tilde{\Delta}_\lambda\frac{\partial\lambda}{\partial p}+\tilde{\Delta}_{A_\lambda}\frac{\partial A_\lambda}{\partial p}+\tilde{\Delta}_{m_{H_d}^2}\frac{\partial m_{H_d}^2}{\partial p}+\tilde{\Delta}_{m_{H_u}^2}\frac{\partial m_{H_u}^2}{\partial p}+\tilde{\Delta}_{m_S^2}\frac{\partial m_S^2}{\partial p}\bigg|.
-\end{equation}
-Explicit expressions for the $\tilde{\Delta}_i$ appearing above are given in Appendix \ref{app:masterformula}. It should be noted that variations in the gauge couplings are neglected in Eq. (\ref{eq:E6masterformula}), so that the formula above is valid at the level of 1-loop RG running and provided that the gauge couplings are excluded from the set $\{p_i\}$. In general, any dimensionless SUSY parameters in $\{p_i\}$ will contribute to the running of the gauge couplings at 2-loops and so terms proportional to $\partial g_i /\partial p$ are also present. For dimensionless $p$, the resulting contributions are $\mathcal{O}(g_1^2p^2)$, $\mathcal{O}(g_1'^2p^2)$, $\mathcal{O}(g_2^2p^2)$ or higher order, and can therefore usually be safely neglected.\\ \\
+\be
+\Delta_p=|C|^{-1}\times \frac{|p|}{M_Z}\bigg|\sum_{q}\tilde{\Delta}_q\frac{\partial q}{\partial p}\bigg|,
+\label{eq:E6masterformula}
+\ee
+where the sum is over all low energy running parameters appearing in the tree level EWSB conditions, i.e. $q\in\{\lambda, A_\lambda, m_{H_d}^2,m_{H_u}^2,m_S^2,g_1,g_2,g_1'\}$. Explicit expressions for the function $C$ and the $\tilde{\Delta}_q$ appearing above are given in Appendix \ref{app:masterformula}. It should be noted that the effects of $U(1)$ mixing are neglected in deriving Eq. (\ref{eq:E6masterformula}).\\ \\
 Evaluating the fine tuning directly using a master formula approach rapidly becomes impractical, as a brief inspection of the expressions for the $\tilde{\Delta}_i$ should make clear. It is well known in the MSSM that radiative corrections can significantly change (indeed, reduce) the fine tuning \cite{Cassel:2010px}. It is therefore important when studying the fine tuning to include 1- and 2-loop corrections in the fine tuning measure. To do so it is most convenient to work in terms of the EWSB conditions Eq. (\ref{eq:E6EWSBConditions}), rather than Eq. (\ref{eq:E6MZequation}). The general procedure is as follows \cite{Ellwanger:2011mu}. For a model in which $m$ fields develop real VEVs (e.g. $m=2$ in the MSSM, $m=3$ in the NMSSM and in the $E_6$ models considered), we require that the $m$ minimization conditions
 \begin{equation}\label{eq:EWSBconditions}
 f_1=f_2=\dotsb=f_m=0
@@ -549,6 +550,22 @@ $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ & $M_2=100\textr
 \appendix
 \section{\label{app:masterformula}Fine Tuning Master Formula}
 % Tree level master formula for the E6SSM
+To write down the tree level master formula, it is convenient to define the quantities
+\begin{eqnarray}
+z_1 &=& \frac{\partial f_2}{\partial s}\frac{\partial f_3}{\partial \tan\beta}-\frac{\partial f_2}{\partial \tan\beta}\frac{\partial f_3}{\partial s}\nonumber\\
+z_2 &=& \frac{\partial f_3}{\partial s}\frac{\partial f_1}{\partial \tan\beta}-\frac{\partial f_3}{\partial \tan\beta}\frac{\partial f_1}{\partial s}\nonumber\\
+z_3 &=& \frac{\partial f_1}{\partial s}\frac{\partial f_2}{\partial \tan\beta}-\frac{\partial f_1}{\partial \tan\beta}\frac{\partial f_2}{\partial s}\nonumber,
+\end{eqnarray}
+with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). For a running parameter $q$ appearing in the tree level EWSB conditions, the corresponding contribution to the sensitivity coefficient may be written 
+\be
+\tilde{\Delta}_q=z_1\frac{\partial f_1}{\partial q}+z_2\frac{\partial f_2}{\partial q}+z_3\frac{\partial f_3}{\partial q}.
+\label{eq:tuningContribution}
+\ee
+Similarly, the quantity $C$ appearing in Eq. (\ref{eq:E6masterformula}) is given by
+\be
+C=\frac{1}{2}\Big ( z_1\frac{\partial f_1}{\partial M_Z}+z_2\frac{\partial f_2}{\partial M_Z}+z_3\frac{\partial f_3}{\partial M_Z}\Big ).
+\label{eq:tuningDenominator}
+\ee
 \section{\label{app:rges}RGE Contributions}
 % List the derivatives needed in the Taylor series approximation
 % to the RGE solutions.

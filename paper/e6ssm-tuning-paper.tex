@@ -81,14 +81,14 @@ the other hand it is slightly heavier than the constrained version of the
 MSSM (cMSSM) can accommodate naturally \cite{Cassel:2011zd,Ghilencea:2012gz}.
 
 The Higgs causes a naturalness problem because at tree level it has an
-upper bound of the mass of the $Z$ boson, $m_Z$. The dominant higher
+upper bound of the mass of the $Z$ boson, $M_Z$. The dominant higher
 order corrections to the Higgs mass come from stops and to obtain a
 $125$ GeV Higgs they need be rather heavy. Heavy stops will provide a
 large contribution to the soft breaking mass for the up-type Higgs
 scalar, $m_{H_u}^2$ at low energies, through the evolution of the
 renormalisation group equations (RGEs) from the grand unification
 (GUT) scale to the electroweak (EW) scale. This affects the SUSY
-prediction of the electroweak VEV, v, or $m_Z$.  This naturalness
+prediction of the electroweak VEV, $v$, or $M_Z$.  This naturalness
 problem motivates both further examination of non-minimal SUSY models
 that can raise the Higgs mass without the need for heavy stops and
 alternative possibilities for how the soft breaking parameters get
@@ -318,7 +318,7 @@ from the $Z7$-plet representation of $E_6$ survive down to low energies.
 The breaking of $E_6$ into $SO(10)$, gives rise to $E_6\to
 SO(10)\times U(1)_{\psi}$, and the subsequent breaking of $SO(10)$
 into $SU(5)$, gives $SO(10)\to SU(5)\times U(1)_{\chi}$ (this is
-reviewed in e.g.~\cite{Langacker:2008yv})). The extra $U(1)$ gauge symmetry at low energies should then be a linear combination of these in the $E_6$ inspired case,
+reviewed in e.g.~\cite{Langacker:2008yv}). The extra $U(1)$ gauge symmetry at low energies should then be a linear combination of these in the $E_6$ inspired case,
 \be
 U(1)^\prime = \cos(\theta) U(1)_{\chi} + \sin(\theta) U(1)_{\psi}.
 \ee In table \ref{tab:E6charges} the charges for several popular $E_6$ inspired $U(1)$ extensions are shown.
@@ -338,7 +338,7 @@ $2\sqrt{10}Q_i^\chi$ & $-1$ & $-1$ & $3$ & $3$ & $-1$ & $-5$ & $0$ & $2$ & $-2$ 
 $\sqrt{40}Q_i^N$ & $1$ & $1$ & $2$ & $2$ & $1$ & $0$ & $5$ & $-2$ & $-3$ & $-2$ & $-3$ & $2$ & $-2$ \\[1mm]
 \end{tabular}
 \end{ruledtabular}
-\caption{The $U(1)_Y$, $U(1)_\psi$, $U(1)_\chi$ and $U(1)_N$ charges of the chiral superfields in the $E_6$ model. The specific case of $U(1)_N$, corresponding to the E$_6$SSM, is obtained for $\theta_{E_6}=\arctan\sqrt{15}$.}
+\caption{The $U(1)_Y$, $U(1)_\psi$, $U(1)_\chi$ and $U(1)_N$ charges of the chiral superfields in the $E_6$ model. The specific case of $U(1)_N$, corresponding to the E$_6$SSM, is obtained for $\theta=\arctan\sqrt{15}$.}
 \label{tab:E6charges}
 \end{table}
 
@@ -373,7 +373,7 @@ W_2 &=& g^N_{ijk} \hat{N}^c_i \hat{D}_j \hat{d}^c_k + g^E_{ijk} \hat{e}^c_i \hat
 \label{Eq:e6-superpot-parts}
 \end{eqnarray}
 
-Nonetheless while this model is very elegant so far, the  superpotential, \ref{Eq:e6-superpot} contains dangerous terms which can induce proton decay and lead to large flavour changing neutral currents (FCNCs).  There are a number of approaches to suppress these terms, involving the use of different discrete symmetries.  Here for the purposes of renormalisation group running we will simply include the following unsuppressed superpotential terms, which follows the approach taking in work on the cE$_6$SSM \cite{Athron:2009ue, Athron:2009bs},
+Nonetheless while this model is very elegant so far, the  superpotential, (\ref{Eq:e6-superpot}) contains dangerous terms which can induce proton decay and lead to large flavour changing neutral currents (FCNCs).  There are a number of approaches to suppress these terms, involving the use of different discrete symmetries.  Here for the purposes of renormalisation group running we will simply include the following unsuppressed superpotential terms, which follows the approach taking in work on the cE$_6$SSM \cite{Athron:2009ue, Athron:2009bs},
 %
 %% \begin{align}
 %%   \begin{split}
@@ -556,20 +556,33 @@ z_1 &=& \frac{\partial f_2}{\partial s}\frac{\partial f_3}{\partial \tan\beta}-\
 z_2 &=& \frac{\partial f_3}{\partial s}\frac{\partial f_1}{\partial \tan\beta}-\frac{\partial f_3}{\partial \tan\beta}\frac{\partial f_1}{\partial s}\nonumber\\
 z_3 &=& \frac{\partial f_1}{\partial s}\frac{\partial f_2}{\partial \tan\beta}-\frac{\partial f_1}{\partial \tan\beta}\frac{\partial f_2}{\partial s}\nonumber,
 \end{eqnarray}
-with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). For a running parameter $q$ appearing in the tree level EWSB conditions, the corresponding contribution to the sensitivity coefficient may be written 
+with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). Explicitly, we find that
+\begin{eqnarray*}
+z_1&=&%\frac{M_Z\cos^2\beta}{2\bar{g}^3}\Big [ 4M_Z^2\Big ( \sqrt{2}\lambda A_\lambda \cos\beta-2s(\lambda^2+g_1'^2\tilde{Q}_2\tild%e{Q}_S )\sin\beta\Big )\nonumber\\
+%&& \times \Big ( \sqrt{2}\lambda A_\lambda \cos 2\beta+g_1'^2(\tilde{Q}_1-\tilde{Q}_2)\tilde{Q}_Ss\sin 2\beta \Big )\Big ]
+\end{eqnarray*}
+For a running parameter $q$ appearing in the tree level EWSB conditions, the corresponding contribution to the sensitivity coefficient may be written 
 \be
 \tilde{\Delta}_q=z_1\frac{\partial f_1}{\partial q}+z_2\frac{\partial f_2}{\partial q}+z_3\frac{\partial f_3}{\partial q}.
 \label{eq:tuningContribution}
 \ee
 Similarly, the quantity $C$ appearing in Eq. (\ref{eq:E6masterformula}) is given by
 \be
-C=\frac{1}{2}\Big ( z_1\frac{\partial f_1}{\partial M_Z}+z_2\frac{\partial f_2}{\partial M_Z}+z_3\frac{\partial f_3}{\partial M_Z}\Big ).
+C=\frac{1}{2}\left ( z_1\frac{\partial f_1}{\partial M_Z}+z_2\frac{\partial f_2}{\partial M_Z}+z_3\frac{\partial f_3}{\partial M_Z}\right ),
 \label{eq:tuningDenominator}
 \ee
+with 
+\ba
+\frac{\partial f_1}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\cos\beta\left ( m_{H_d}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_1\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_1^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\sin\beta\nonumber \\
+&&+\frac{3M_Z^2}{\bar{g}}\,\cos\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\sin\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left(\tilde{Q}_1\tilde{Q}_2-\tilde{Q}_1^2\right )\right ],\nonumber\\
+\frac{\partial f_2}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\sin\beta\left ( m_{H_u^2}+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_2\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_2^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\cos\beta \nonumber\\
+&&-\frac{3M_Z^2}{\bar{g}}\,\sin\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\cos\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q_2}^2\right )\right ],\nonumber \\
+\frac{\partial f_3}{\partial M_Z}&=&\frac{4M_Z}{\bar{g}^2}\left [ \lambda^2s-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin 2\beta+g_1'^2\tilde{Q}_Ss\left ( \tilde{Q}_1\,\cos^2\beta+\tilde{Q}_2\,\sin^2\beta \right )\right ].\nonumber
+\ea
 \section{\label{app:rges}RGE Contributions}
 % List the derivatives needed in the Taylor series approximation
 % to the RGE solutions.
-Provided that one does not run over the too large a range of scales, the solutions to the
+Provided that one does not run over too large a range of scales, the solutions to the
 RG equations for a model can be reasonably well approximated by a Taylor series, Eq. (\ref{eq:rgeapproxsoln}).
 Computing the first few terms of the series requires only the 1- and 2-loop RGEs, which are well known for
 the MSSM and may be obtained from general results \cite{Martin:1993zk} for other models. To calculate the fine
@@ -584,10 +597,9 @@ q(Q)=q(M_X)+\frac{t}{16\pi^2}\left ( \beta_q^{(1)}+\frac{\beta_q^{(2)}}{16\pi^2}
 \end{equation*}
 where we have for convenience defined
 \begin{equation*}
-b_q^{(2)}(M_X)=\frac{1}{2!}\left [ \sum_{q_k}\beta_{q_k}^{(1)}\frac{\partial \beta_q}{\partial q_k}\right ]_{M_X}
+b_q^{(2)}(M_X)=\frac{1}{2!}\left . \sum_{q_k}\beta_{q_k}^{(1)}\frac{\partial \beta_q}{\partial q_k}\right |_{M_X}
 \end{equation*}
-and the notation $[\ldots]_Q$ indicates that everything within the brackets is evaluated at the scale $Q$. It is straightforward 
-to get the explicit series expansions for the MSSM parameters listed above. Due to the smallness of the first and second
+It is straightforward to get the explicit series expansions for the MSSM parameters listed above. Due to the smallness of the first and second
 generation Yukawa couplings, we neglect them in our calculations. Similarly we neglect the corresponding soft SUSY breaking 
 trilinears. Additionally, all soft mass matrices are assumed diagonal, and the gaugino masses are taken to be real.
 For the MSSM, we then obtain the following results. For the parameter $\mu$, one has the coefficients

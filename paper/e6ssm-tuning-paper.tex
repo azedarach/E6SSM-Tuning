@@ -551,16 +551,23 @@ $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ & $M_2=100\textr
 \section{\label{app:masterformula}Fine Tuning Master Formula}
 % Tree level master formula for the E6SSM
 To write down the tree level master formula, it is convenient to define the quantities
-\begin{eqnarray}
-z_1 &=& \frac{\partial f_2}{\partial s}\frac{\partial f_3}{\partial \tan\beta}-\frac{\partial f_2}{\partial \tan\beta}\frac{\partial f_3}{\partial s}\nonumber\\
-z_2 &=& \frac{\partial f_3}{\partial s}\frac{\partial f_1}{\partial \tan\beta}-\frac{\partial f_3}{\partial \tan\beta}\frac{\partial f_1}{\partial s}\nonumber\\
-z_3 &=& \frac{\partial f_1}{\partial s}\frac{\partial f_2}{\partial \tan\beta}-\frac{\partial f_1}{\partial \tan\beta}\frac{\partial f_2}{\partial s}\nonumber,
-\end{eqnarray}
-with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). Explicitly, we find that
-\begin{eqnarray*}
-z_1&=&%\frac{M_Z\cos^2\beta}{2\bar{g}^3}\Big [ 4M_Z^2\Big ( \sqrt{2}\lambda A_\lambda \cos\beta-2s(\lambda^2+g_1'^2\tilde{Q}_2\tild%e{Q}_S )\sin\beta\Big )\nonumber\\
-%&& \times \Big ( \sqrt{2}\lambda A_\lambda \cos 2\beta+g_1'^2(\tilde{Q}_1-\tilde{Q}_2)\tilde{Q}_Ss\sin 2\beta \Big )\Big ]
-\end{eqnarray*}
+\begin{equation}
+z_i =\epsilon_{ijk} \frac{\partial f_j}{\partial s}\frac{\partial f_k}{\partial \tan\beta}
+\label{eq:masterformulacoefficients}
+\end{equation}
+with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). The relevant partial derivatives are
+\ba
+\frac{\partial f_1}{\partial \tan\beta}&=&-\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\cos\beta+\sin\beta \left [ m_{H_d}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2\tilde{Q}_1\tilde{Q}_S \right )\right.\right.\nonumber\\
+&&\left.\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}\tilde{Q}_1\tilde{Q}_2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_1^2\right )\right ]+3M_Z^2\,\sin^3\beta\left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\right.\nonumber\\
+&&\left.\left.+\frac{2g_1'^2}{\bar{g}^2}\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q}_1^2\right )\right ]\right \},\nonumber\\
+\frac{\partial f_1}{\partial s}&=&\frac{2M_Z}{\bar{g}}\left [ s\left ( \lambda^2+g_1'^2\tilde{Q}_1\tilde{Q}_S\right )\,\cos\beta-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin\beta \right ],\nonumber\\
+\frac{\partial f_2}{\partial \tan\beta}&=&\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\sin\beta+\cos\beta\left [ m_{H_u}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2\tilde{Q}_2\tilde{Q}_S \right )\right.\right.\nonumber\\
+&&\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}\tilde{Q}_1\tilde{Q}_2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_2^2\right )\right ]+3M_Z^2\,\cos^3\beta \left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\nonumber\\
+&&\left.\left.+\frac{2g_1'^2}{\bar{g}^2}\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q}_2^2\right )\right ]\right \},\nonumber\\
+\frac{\partial f_2}{\partial s}&=&\frac{2M_Z}{\bar{g}}\left [ s\left ( \lambda^2+g_1'^2\tilde{Q}_2\tilde{Q}_S\right )\,\sin\beta-\frac{\lambda A_\lambda}{\sqrt{2}}\,\cos\beta\right ],\nonumber\\
+\frac{\partial f_3}{\partial \tan\beta}&=&\frac{2M_Z^2}{\bar{g}^2}\,\cos^2\beta\left [ g_1'^2\tilde{Q}_Ss\left ( \tilde{Q}_2-\tilde{Q}_1\right )\,\sin 2\beta-\sqrt{2}\lambda A_\lambda\,\cos 2\beta\right ],\nonumber\\
+\frac{\partial f_3}{\partial s}&=&m_S^2+\frac{2\lambda^2M_Z^2}{\bar{g}^2}+\frac{g_1'^2}{2}\tilde{Q}_S\left [\frac{4M_Z^2}{\bar{g}^2}\left ( \tilde{Q}_1\,\cos^2\beta+\tilde{Q}_2\,\sin^2\beta\right ) +3\tilde{Q}_S s^2\right ].\nonumber
+\ea
 For a running parameter $q$ appearing in the tree level EWSB conditions, the corresponding contribution to the sensitivity coefficient may be written 
 \be
 \tilde{\Delta}_q=z_1\frac{\partial f_1}{\partial q}+z_2\frac{\partial f_2}{\partial q}+z_3\frac{\partial f_3}{\partial q}.
@@ -575,7 +582,7 @@ with
 \ba
 \frac{\partial f_1}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\cos\beta\left ( m_{H_d}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_1\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_1^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\sin\beta\nonumber \\
 &&+\frac{3M_Z^2}{\bar{g}}\,\cos\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\sin\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left(\tilde{Q}_1\tilde{Q}_2-\tilde{Q}_1^2\right )\right ],\nonumber\\
-\frac{\partial f_2}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\sin\beta\left ( m_{H_u^2}+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_2\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_2^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\cos\beta \nonumber\\
+\frac{\partial f_2}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\sin\beta\left ( m_{H_u}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_2\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_2^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\cos\beta \nonumber\\
 &&-\frac{3M_Z^2}{\bar{g}}\,\sin\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\cos\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q_2}^2\right )\right ],\nonumber \\
 \frac{\partial f_3}{\partial M_Z}&=&\frac{4M_Z}{\bar{g}^2}\left [ \lambda^2s-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin 2\beta+g_1'^2\tilde{Q}_Ss\left ( \tilde{Q}_1\,\cos^2\beta+\tilde{Q}_2\,\sin^2\beta \right )\right ].\nonumber
 \ea

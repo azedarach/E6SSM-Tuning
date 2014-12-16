@@ -467,7 +467,7 @@ The sensitivity coefficients $\Delta_p$ may be calculated directly from the expr
 \label{eq:E6masterformula}
 \ee
 where the sum is over all low energy running parameters appearing in the tree level EWSB conditions, i.e. $q\in\{\lambda, A_\lambda, m_{H_d}^2,m_{H_u}^2,m_S^2,g_1,g_2,g_1'\}$. Expressions for the quantity $C$ and the $\tilde{\Delta}_q$ appearing above are given in Appendix \ref{app:masterformula}. It should be noted that the effects of $U(1)$ mixing are neglected in deriving Eq. (\ref{eq:E6masterformula}).\\ \\
-However, it is well known in the MSSM that radiative corrections can significantly change (indeed, reduce) the fine tuning \cite{Cassel:2010px}. It is therefore important when studying the fine tuning to include 1- and 2-loop corrections to the effective potential in the fine tuning measure. To do so it is most convenient to work in terms of the EWSB conditions Eq. (\ref{eq:E6EWSBConditions}), rather than Eq. (\ref{eq:E6MZequation}). The general procedure is as follows \cite{Ellwanger:2011mu}. For a model in which $m$ fields develop real VEVs (e.g. $m=2$ in the MSSM, $m=3$ in the NMSSM and in the $E_6$ models considered), we require that the $m$ minimization conditions
+However, it is well known in the MSSM that radiative corrections can significantly change (indeed, reduce) the fine tuning \cite{Cassel:2010px}. It is therefore important when studying the fine tuning to include one- and two-loop corrections to the effective potential in the fine tuning measure. To do so it is most convenient to work in terms of the EWSB conditions Eq. (\ref{eq:E6EWSBConditions}), rather than Eq. (\ref{eq:E6MZequation}). The general procedure is as follows \cite{Ellwanger:2011mu}. For a model in which $m$ fields develop real VEVs (e.g. $m=2$ in the MSSM, $m=3$ in the NMSSM and in the $E_6$ models considered), we require that the $m$ minimization conditions
 \begin{equation}\label{eq:EWSBconditions}
 f_1=f_2=\dotsb=f_m=0
 \end{equation}
@@ -498,7 +498,7 @@ M_h^2\begin{pmatrix}
 \end{pmatrix}.
 \end{equation} 
 The quantities forming the first matrix on the right-hand side, along with $M_h^2$, are easily calculated analytically. The remaining derivatives $\partial q_k /\partial p$ must be determined using the RGEs. Once these have been obtained, it is straightforward to solve for the $\partial v_i /\partial p$. The sensitivity coefficients $\Delta_p$ are then simply linear combinations of the $\partial v_i/\partial p$ and $\partial q_k/\partial p$. Radiative corrections may be easily incorporated by including the Coleman-Weinberg potential contributions in the EWSB conditions.\\ \\
-Evaluating the derivatives $\partial q_k/\partial p$ must (in general) be done numerically, by numerically integrating the 2-loop RGEs. This is time consuming and presents an obstacle to doing large scans of the parameter space. For studying models defined at low energies, as we do here, we can take advantage of the fact that the amount of running involved is small. This makes it possible to use approximate analytic solutions to the RGEs that exhibit good accuracy over the range of scales considered. Given the 2-loop RG equation for a parameter $q$,
+Evaluating the derivatives $\partial q_k/\partial p$ must (in general) be done by numerically integrating the two-loop RGEs. This is time consuming and presents an obstacle to doing large scans of the parameter space. For studying models defined at low energies, as we do here, we can take advantage of the fact that the amount of running involved is small. This makes it possible to use approximate analytic solutions to the RGEs that exhibit good accuracy over the range of scales considered. Given the two-loop RG equation for a parameter $q$,
 \begin{equation}\label{eq:rge}
 \frac{\textrm{d}q}{\mathrm{d}t}=\frac{1}{16\pi^2}\beta_q^{(1)}+\frac{1}{(16\pi^2)^2}\beta_q^{(2)},\qquad t\equiv \log\frac{Q}{M_X},
 \end{equation}
@@ -506,13 +506,13 @@ a Taylor series expansion of the solution may be used to obtain the parameter at
 \begin{align}\label{eq:rgeapproxsoln}
 q(Q)&=q(M_X)+\int_0^t q(t')\;\textrm{d}t'\approx q(M_X)+\frac{t}{16\pi^2}\left ( \beta_q^{(1)}+\frac{\beta_q^{(2)}}{16\pi^2}\right )+\frac{t^2}{32\pi^2}\frac{\textrm{d}\beta_q^{(1)}}{\textrm{d}t}+\mathcal{O}(t^2).
 \end{align}
-Expanded to this order we obtain the leading log (LL) and next-to-LL (NLL) contributions at 2-loop order. The $\mathcal{O}(t^2)$ terms not displayed above are formally of 3-loop order and are neglected. The derivative of the 1-loop $\beta$ function is given by
+Expanded to this order we obtain the leading log (LL) and next-to-LL (NLL) contributions at two-loop order. The $\mathcal{O}(t^2)$ terms not displayed above are formally of 3-loop order and are neglected. The derivative of the one-loop $\beta$ function is given by
 \begin{equation}\label{eq:1loopbetaderivative}
 \frac{\textrm{d}\beta_q^{(1)}}{\textrm{d}t}=\frac{1}{16\pi^2}\sum_{q_k}\beta_{q_k}^{(1)}\frac{\partial \beta_q^{(1)}}{\partial q_k},
 \end{equation}
 where the sum is over all running parameters appearing in $\beta_q^{(1)}$. The $\beta$ functions appearing on the right hand side of Eqs. (\ref{eq:rgeapproxsoln}) and (\ref{eq:1loopbetaderivative}) are evaluated at the input scale $M_X$, giving a simple analytic expression for the parameters at the scale of EWSB in terms of the model parameters at $M_X$. Explicit results for the relevant series expansions in the MSSM and $E_6$ models are presented in Appendix \ref{app:rges}.
 \subsection{\label{subsec:numericalprocedure}Numerical Procedure}
-Using the approach outlined above, we have scanned the low energy parameter space of the MSSM and E$_6$SSM and calculated the fine tuning in each of the models considered. To do so, we implemented the above expressions for computing the fine tuning in a modified version of the E$_6$SSM spectrum generator that was used in \cite{Athron:2013ipa}. This code implemented 2-loop RGEs for all parameters except the soft scalar masses. In order to properly include the fine tuning impact of the $SU(3)$ gaugino soft mass $M_3$, we have extended the original code to make use of the 2-loop RGEs generated by SARAH \cite{Staub:2009bi,Staub:2010jh,Staub:2012pb,Staub:2013tta} and FlexibleSUSY \cite{Athron:2014yba}. The CP-even Higgs masses are calculated including the leading 1-loop effective potential contributions given in \cite{Athron:2009bs} and the leading 2-loop contributions. To scan over the MSSM parameter space, the equivalent MSSM fine tuning expressions were implemented into a modifed version of SOFTSUSY 3.3.10 \cite{Allanach:2001kg,Allanach:2013kza}. For consistency with the results produced in the $E_6$ models, and for computational speed, for our main scans only the dominant 1- and 2-loop corrections to the CP-even Higgs masses were included. The parameter ranges that were scanned over are presented in Table \ref{tab:scanranges}. With the exception of the stop mixing $A_t$, which was logarithmically scanned, all parameters were linearly scanned. All other parameters were decoupled by setting the remaining soft masses to values of $5$ TeV, while the first and second generation Yukawa couplings and their associated soft trilinears were taken to vanish. The $U(1)$ gaugino soft mass $M_1$ was fixed to $M_1=300$ GeV, and we fix $M_3=2000$ GeV. The input scale $M_X$ was set to $M_X=20$ TeV for both the MSSM and the $E_6$ models. Finally, the fine tuning was evaluated at the scale $Q=M_{\textrm{SUSY}}=\sqrt{m_{\tilde{t}_1}m_{\tilde{t}_2}}$, where $m_{\tilde{t}_{1,2}}$ are the running $\overline{\textrm{DR}}$ stop masses evaluated at $Q=M_{\textrm{SUSY}}$. 
+Using the approach outlined above, we have scanned the low energy parameter space of the MSSM and E$_6$SSM and calculated the fine tuning in each of the models considered. To do so, we implemented the above expressions for computing the fine tuning in a modified version of the E$_6$SSM spectrum generator that was used in \cite{Athron:2013ipa}. This code implemented two-loop RGEs for all parameters except the soft scalar masses. In order to properly include the fine tuning impact of the $SU(3)$ gaugino soft mass $M_3$, we have extended the original code to make use of the two-loop RGEs generated by SARAH \cite{Staub:2009bi,Staub:2010jh,Staub:2012pb,Staub:2013tta} and FlexibleSUSY \cite{Athron:2014yba}. The CP-even Higgs masses are calculated including the leading one-loop effective potential contributions given in \cite{Athron:2009bs} and the leading two-loop contributions. To scan over the MSSM parameter space, the equivalent MSSM fine tuning expressions were implemented into a modifed version of SOFTSUSY 3.3.10 \cite{Allanach:2001kg,Allanach:2013kza}. For consistency with the results produced in the $E_6$ models, and for computational speed, for our main scans only the dominant one- and two-loop corrections to the CP-even Higgs masses were included. The parameter ranges that were scanned over are presented in Table \ref{tab:scanranges}. With the exception of the stop mixing $A_t$, which was logarithmically scanned, all parameters were linearly scanned. All other parameters were decoupled by setting the remaining soft masses to values of $5$ TeV, while the first and second generation Yukawa couplings and their associated soft trilinears were taken to vanish. The $U(1)$ gaugino soft mass $M_1$ was fixed to $M_1=300$ GeV, and we fix $M_3=2000$ GeV. The input scale $M_X$ was set to $M_X=20$ TeV for both the MSSM and the $E_6$ models. Finally, the fine tuning was evaluated at the scale $Q=M_{\textrm{SUSY}}=\sqrt{m_{\tilde{t}_1}m_{\tilde{t}_2}}$, where $m_{\tilde{t}_{1,2}}$ are the running $\overline{\textrm{DR}}$ stop masses evaluated at $Q=M_{\textrm{SUSY}}$. 
 \begin{table}[h]
 \centering
 \begin{ruledtabular}
@@ -569,7 +569,7 @@ For a running parameter $q$ appearing in the tree level EWSB conditions, the cor
 \tilde{\Delta}_q=z_1\frac{\partial f_1}{\partial q}+z_2\frac{\partial f_2}{\partial q}+z_3\frac{\partial f_3}{\partial q}.
 \label{eq:tuningContribution}
 \ee
-Similarly, the quantity $C$ appearing in Eq. (\ref{eq:E6masterformula}) is given by
+It is straightforward to compute the appropriate derivatives directly from the EWSB conditions (\ref{eq:E6EWSBConditions}). Similarly, the quantity $C$ appearing in Eq. (\ref{eq:E6masterformula}) is given by
 \be
 C=\frac{1}{2}\left ( z_1\frac{\partial f_1}{\partial M_Z}+z_2\frac{\partial f_2}{\partial M_Z}+z_3\frac{\partial f_3}{\partial M_Z}\right ),
 \label{eq:tuningDenominator}
@@ -586,65 +586,27 @@ with
 % List the derivatives needed in the Taylor series approximation
 % to the RGE solutions.
 Provided that one does not run over too large a range of scales, the solutions to the
-RG equations for a model can be reasonably well approximated by a Taylor series, Eq. (\ref{eq:rgeapproxsoln}).
-Computing the first few terms of the series requires only the 1- and 2-loop RGEs, which are well known for
-the MSSM and may be obtained from general results \cite{Martin:1993zk} for other models. To calculate the fine
-tuning it is necessary to expand out all of the parameters appearing in the EWSB conditions in terms
-of the high scale parameters.\\ \\
-In the MSSM, the relevant parameters are $\mu$, $B$, $m_{H_u}^2$, $m_{H_d}^2$, $m_{Q3}^2$, $m_{u3}^2$ and $A_t$ when
-the 1-loop top and stop effective potential terms are included (as no dimensionless couplings are varied
-in the fine tuning calculation, we neglect expanding the gauge and Yukawa couplings). For a parameter $p$, the series expansion
-Eq. (\ref{eq:rgeapproxsoln}) reads
+RG equations for a model can be reasonably well approximated by a Taylor series, Eq. (\ref{eq:rgeapproxsoln}). 
+For a parameter $p$, this reads
 \begin{equation*}
 q(Q)=q(M_X)+\frac{t}{16\pi^2}\left ( \beta_q^{(1)}+\frac{\beta_q^{(2)}}{16\pi^2}\right )+\frac{t^2}{(16\pi^2)^2}b_q^{(2)}(M_X),
 \end{equation*}
 where we have for convenience defined
 \begin{equation*}
-b_q^{(2)}(M_X)=\frac{1}{2!}\left . \sum_{q_k}\beta_{q_k}^{(1)}\frac{\partial \beta_q}{\partial q_k}\right |_{M_X}
+b_q^{(2)}(M_X)=\frac{1}{2!}\left . \sum_{q_k}\beta_{q_k}^{(1)}\frac{\partial \beta_q}{\partial q_k}\right |_{M_X}.
 \end{equation*}
-It is straightforward to get the explicit series expansions for the MSSM parameters listed above. Due to the smallness of the first and second
-generation Yukawa couplings, we neglect them in our calculations. Similarly we neglect the corresponding soft SUSY breaking 
-trilinears. Additionally, all soft mass matrices are assumed diagonal, and the gaugino masses are taken to be real.
-For the MSSM, we then obtain the following results. For the parameter $\mu$, one has the coefficients
-\begin{subequations}\label{eq:MSSMmubetas}
+We have constructed the necessary series solutions in both the MSSM and the $U(1)$ extended models. Due to the smallness of the first and second generation Yukawa couplings, we neglect them in our calculations. The corresponding soft SUSY breaking 
+trilinears are likewise omitted. Additionally, all soft mass matrices are assumed diagonal, and the gaugino masses are taken to be real.\\ \\
+In the MSSM, the relevant parameters for the fine tuning calculation are $\mu$, $B$, $m_{H_u}^2$, $m_{H_d}^2$ at tree level. The one- and two-loop RGEs for these parameters may be found in \cite{Martin:1993zk}. The corresponding $O(t^2)$ contributions are
+\begin{subequations}\label{eq:MSSMTreeLevelCoeffs}
 \begin{align}
-\beta_\mu^{(1)}&=\mu\left ( 3y_t^2+3y_b^2+y_\tau^2-3g_2^2-\frac{3}{5}g_1^2\right ),\label{eq:MSSMmubeta1}\\
-\beta_\mu^{(2)}&=\mu \bigg ( -9y_t^4-9y_b^4-6y_t^2y_b^2-3y_\tau^4+16g_3^2y_t^2+\frac{4}{5}g_1^2y_t^2+16g_3^2y_b^2-\frac{2}{5}g_1^2y_b^2\nonumber\\
-&\qquad{}+\frac{6}{5}g_1^2y_\tau^2+\frac{15}{2}g_2^4+\frac{9}{5}g_1^2g_2^2+\frac{207}{50}g_1^4\bigg ),\label{eq:MSSMmubeta2}\\
 b_\mu^{(2)}&=\frac{\mu}{2}\Bigg [ 45y_t^4+45y_b^4+9y_\tau^2+30y_t^2y_b^2+6y_t^2y_\tau^2+18y_b^2y_\tau^2-32g_3^2(y_t^2+y_b^2)\nonumber\\
-&\quad{}-12g_2^2(3y_t^2+3y_b^2+y_\tau^2)-\frac{4}{5}g_1^2(11y_t^2+8y_b^2+6y_\tau^2)+3g_2^4-\frac{189}{25}g_1^4+\frac{18}{5}g_1^2g_2^2\Bigg ].\label{eq:MSSMmub2}
-\end{align}
-\end{subequations}
-The coefficients for $B$ are 
-\begin{subequations}\label{eq:MSSMBbetas}
-\begin{align}
-\beta_B^{(1)}&=6y_t^2A_t+6y_b^2A_b+2y_\tau^2A_\tau+6g_2^2M_2+\frac{6}{5}g_1^2M_1,\label{eq:MSSMBbeta1}\\
-\beta_B^{(2)}&=-36y_t^4A_t-36y_b^4A_b-12y_\tau^4A_\tau-12y_t^2y_b^2(A_t+A_b)+32g_3^2y_t^2(A_t-M_3)\nonumber\\
-&\quad{}+32g_3^2y_b^2(A_b-M_3)+\frac{8}{5}g_1^2y_t^2(A_t-M_1)-\frac{4}{5}g_1^2y_b^2(A_b-M_1)+\frac{12}{5}g_1^2y_\tau^2(A_\tau-M_1)\nonumber\\
-&\quad{}-30g_2^4M_2-\frac{18}{5}g_1^2g_2^2(M_1+M_2)-\frac{414}{25}g_1^4M_1,\label{eq:MSSMBbeta2}\\
+&\quad{}-12g_2^2(3y_t^2+3y_b^2+y_\tau^2)-\frac{4}{5}g_1^2(11y_t^2+8y_b^2+6y_\tau^2)+3g_2^4-\frac{189}{25}g_1^4+\frac{18}{5}g_1^2g_2^2\Bigg ],\label{eq:MSSMmub2}\\
 b_B^{(2)}&=72y_t^4A_t+72y_b^4A_b+16y_\tau^4A_\tau+12y_t^2y_b^2(A_t+A_b)+12y_\tau^2y_b^2(A_b+A_\tau)\nonumber\\
 &\quad{}-32g_3^2y_t^2(A_t-M_3)-32g_3^2y_b^2(A_b-M_3)\nonumber\\
 &\quad{}-18g_2^2y_t^2(A_t-M_2)-18g_2^2y_b^2(A_b-M_2)-6g_2^2y_\tau^2(A_\tau-M_2)\nonumber\\
 &\quad{}-\frac{26}{5}g_1^2y_t^2(A_t-M_1)-\frac{14}{5}g_1^2y_b^2(A_b-M_1)-\frac{18}{5}g_1^2y_\tau^2(A_\tau-M_1)\nonumber\\
-&\quad{}+12g_2^4M_2+\frac{396}{25}g_1^4M_1.\label{eq:MSSMBb2}
-\end{align}
-\end{subequations}
-The coefficients for $m_{H_d}^2$ and $m_{H_u}^2$ are 
-\begin{subequations}\label{eq:MSSMmHd2Betas}
-\begin{align}
-\beta_{m_{H_d}^2}^{(1)}&=6y_b^2\left (m_{H_d}^2+m_{Q3}^2+m_{d3}^2+A_b^2 \right )+2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2+m_{e3}^2+A_\tau^2\right )\nonumber\\
-&\quad{}-6g_2^2M_2^2-\frac{3}{5}g_1^2\left ( \mathcal{S}+2M_1^2\right ),\label{eq:MSSMmHd2beta1}\\
-\beta_{m_{H_d}^2}^{(2)}&=-36y_b^4\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+2A_b^2\right )\nonumber\\
-&\quad{}-6y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2\right )\nonumber\\
-&\quad{}-12y_\tau^4\left ( m_{H_d}^2+m_{L3}^2+m_{e3}^2+2A_\tau^2\right )\nonumber\\
-&\quad{}+32g_3^2y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+A_b^2-2M_3A_b+2M_3^2\right )\nonumber\\
-&\quad{}+\frac{6}{5}g_1^2y_t^2\left ( 3m_{H_u}^2+m_{Q3}^2-4m_{u3}^2\right )\nonumber\\
-&\quad{}-\frac{2}{5}g_1^2y_b^2\left ( 11m_{H_d}^2-m_{Q3}^2-4m_{d3}^2+2A_b^2-4M_1A_b+4M_1^2\right )\nonumber\\
-&\quad{}+\frac{6}{5}g_1^2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2+4m_{e3}^2+2A_\tau^2-4M_1A_\tau+4M_1^2\right )\nonumber\\
-&\quad{}-\frac{16}{5}g_3^2g_1^2\left (\sum_{i=1}^3 m_{Qi}^2-2m_{ui}^2+m_{di}^2 \right )\nonumber\\
-&\quad{}+3g_2^4\left ( 11M_2^2+m_{H_u}^2+m_{H_d}^2+\sum_{i=1}^3 [3m_{Qi}^2+m_{Li}^2]\right )\nonumber\\
-&\quad{}+\frac{9}{5}g_1^2g_2^2\left ( 2M_1^2+2M_2^2+2M_1M_2-m_{H_u}^2+m_{H_d}^2+\sum_{i=1}^3[m_{Li}^2-m_{Qi}^2]\right )\nonumber\\
-&\quad{}+\frac{1}{25}g_1^4\left ( 621M_1^2+18m_{H_d}^2+\sum_{i=1}^3[18m_{Li}^2+2m_{Qi}^2+56m_{ui}^2+2m_{di}^2-18m_{ei}^2]\right ),\label{eq:MSSMmHd2beta2}\\
+&\quad{}+12g_2^4M_2+\frac{396}{25}g_1^4M_1,\label{eq:MSSMBb2}\\
 b_{m_{H_d}^2}^{(2)}&=72y_b^4\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+2A_b^2\right )\nonumber\\
 &\quad{}+6y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2\right )\nonumber\\
 &\quad{}+12y_\tau^2y_b^2\left ( 2m_{H_d}^2+m_{Q3}^2+m_{d3}^2+m_{L3}^2+m_{e3}^2+(A_\tau+A_b)^2\right )\nonumber\\
@@ -654,21 +616,7 @@ b_{m_{H_d}^2}^{(2)}&=72y_b^4\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+2A_b^2\right )\n
 &\quad{}-6g_2^2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2+m_{e3}^2+A_\tau^2-2M_2A_\tau+2M_2^2\right )\nonumber\\
 &\quad{}-\frac{14}{5}g_1^2y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+A_b^2-2M_1A_b+2M_1^2\right )\nonumber\\
 &\quad{}-\frac{18}{5}g_1^2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2+m_{e3}^2+A_\tau^2-2M_1A_\tau+2M_1^2\right )\nonumber\\
-&\quad{}-18g_2^4M_2^2-\frac{198}{25}g_1^4\left ( \mathcal{S}+3M_1^2\right ),\label{eq:MSSMmHd2b2}
-\end{align}
-\end{subequations}
-\begin{subequations}\label{eq:MSSMmHu2Betas}
-\begin{align}
-\beta_{m_{H_u}^2}^{(1)}&=6y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2\right )-6g_2^2M_2^2+\frac{3}{5}g_1^2\left ( \mathcal{S}-2M_1^2\right ),\label{eq:MSSMmHu2beta1}\\
-\beta_{m_{H_u}^2}^{(2)}&=-36y_t^4(m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2)\nonumber\\
-&\quad{}-6y_t^2y_b^2(m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2)\nonumber\\
-&\quad{}+32g_3^2y_t^2(m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2A_tM_3+2M_3^2)\nonumber\\
-&\quad{}+\frac{2}{5}g_1^2y_t^2(-5m_{H_u}^2+m_{Q3}^2+16m_{u3}^2+4A_t^2-8A_tM_1+8M_1^2)\nonumber\\
-&\quad{}+\frac{6}{5}g_1^2y_b^2(3m_{H_d}^2-m_{Q3}^2-2m_{d3}^2)+\frac{6}{5}g_1^2y_\tau^2(m_{H_d}^2+m_{L3}^2-2m_{e3}^2)\nonumber\\
-&\quad{}+\frac{16}{5}g_1^2g_3^2\left(\sum_{i=1}^3m_{Qi}^2-2m_{ui}^2+m_{di}^2\right )\nonumber\\
-&\quad{}+\frac{9}{5}g_1^2g_2^2\left ( 2M_2^2+2M_1^2+2M_1M_2+m_{H_u}^2-m_{H_d}^2+\sum_{i=1}^3m_{Qi}^2-m_{Li}^2\right )\nonumber\\
-&\quad{}+3g_2^4\left ( 11M_2^2+m_{H_u}^2+m_{H_d}^2+\sum_{i=1}^3[3m_{Qi}^2+m_{Li}^2]\right )\nonumber\\
-&\quad{}+\frac{1}{25}g_1^4\left ( 621M_1^2+18m_{H_u}^2+\sum_{i=1}^3[4m_{Qi}^2-8m_{ui}^2+10m_{di}^2+54m_{ei}^2]\right ),\label{eq:MSSMmHu2beta2}\\
+&\quad{}-18g_2^4M_2^2-\frac{198}{25}g_1^4\left ( \mathcal{S}+3M_1^2\right ),\label{eq:MSSMmHd2b2}\\
 b_{m_{H_u}^2}^{(2)}&=72y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2\right )\nonumber\\
 &\quad{}+6y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2\right )\nonumber\\
 &\quad{}-32g_3^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2A_tM_3+2M_3^2\right )\nonumber\\
@@ -681,25 +629,10 @@ In these expressions the quantity $\mathcal{S}$ is defined by
 \begin{equation}\label{eq:MSSMgaugeBetaContribution}
 \mathcal{S}=m_{H_u}^2-m_{H_d}^2+\sum_{i=1}^3\left ( m_{Qi}^2-m_{Li}^2-2m_{ui}^2+m_{di}^2+m_{ei}^2\right ).
 \end{equation}
-If additional loop corrections are included from the 1-loop effective potential, it is also
-necessary to construct the expansions for $m_{Q3}^2$, $m_{u3}^2$ and $A_t$. The coefficients for $m_{Q3}^2$ and
-$m_{u3}^2$ are
-\begin{subequations}\label{eq:MSSMmq32Betas}
+If in addition the one-loop contributions to the effective potential from top and stop loops are included, it is also
+necessary to construct the expansions for $m_{Q3}^2$, $m_{u3}^2$ and $A_t$. The coefficients read
+\begin{subequations}\label{eq:MSSMsEffPotCoeffs}
 \begin{align}
-\beta_{m_{Q3}^2}^{(1)}&=2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2\right )+2y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+A_b^2\right )\\
-&\quad{}-\frac{32}{3}g_3^2M_3^2-6g_2^2M_2^2+\frac{1}{5}g_1^2\left ( \mathcal{S}-\frac{2}{3}M_1^2\right ),\label{eq:MSSMmQ32beta1}\\
-\beta_{m_{Q3}^2}^{(2)}&=-20y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2\right )-20y_b^4\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+2A_b^2\right )\nonumber\\
-&\quad{}-2y_\tau^2y_b^2\left ( 2m_{H_d}^2+m_{Q3}^2+m_{L3}^2+m_{d3}^2+m_{e3}^2+(A_b+A_\tau)^2\right )\nonumber\\
-&\quad{}+\frac{2}{5}g_1^2y_t^2\left ( m_{H_u}^2+3m_{Q3}^2+8m_{u3}^2+4A_t^2-8A_tM_1+8M_1^2\right )\nonumber\\
-&\quad{}+\frac{2}{5}g_1^2y_b^2\left ( 5m_{H_d}^2+m_{Q3}^2+2A_b^2-4A_bM_1+4M_1^2\right )\nonumber\\
-&\quad{}+\frac{2}{5}g_1^2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2-2m_{e3}^2\right )\nonumber\\
-&\quad{}+\frac{16}{3}g_3^4\left ( \sum_{i=1}^3 \left [ 2m_{Qi}^2+m_{ui}^2+m_{di}^2\right ]-8M_3^2\right )\nonumber\\
-&\quad{}+32g_3^2g_2^2\left ( M_2^2+M_3^2+M_2M_3\right )\nonumber\\
-&\quad{}+\frac{16}{45}g_3^2g_1^2\left ( 3\sum_{i=1}^3\left [ m_{Qi}^2-2m_{ui}^2+m_{di}^2\right ]+2M_1^2+2M_3^2+2M_1M_3\right )\nonumber\\
-&\quad{}+3g_2^4\left ( m_{H_u}^2+m_{H_d}^2+\sum_{i=1}^3\left [ 3m_{Qi}^2+m_{Li}^2\right ]+11M_2^2\right )\nonumber\\
-&\quad{}+\frac{1}{5}g_1^2g_2^2\left ( 2M_1^2+2M_2^2+2M_1M_2+3m_{H_u}^2-3m_{H_d}^2+3\sum_{i=1}^3\left [ m_{Qi}^2-m_{Li}^2\right ]\right )\nonumber\\
-&\quad{}+\frac{1}{75}g_1^4\bigg ( 199M_1^2+12m_{H_u}^2-6m_{H_d}^2\nonumber\\
-&\qquad\qquad\qquad{}+\sum_{i=1}^3\left [ 2m_{Qi}^2-6m_{Li}^2-24m_{ui}^2+6m_{di}^2+42m_{ei}^2\right ]\bigg ),\label{eq:MSSMmQ32beta2}\\
 b_{m_{Q3}^2}^{(2)}&=24y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2\right )+24y_b^4\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+2A_b^2\right )\nonumber\\
 &\quad{}+4y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2\right )\nonumber\\
 &\quad{}+2y_b^2y_\tau^2\left ( 2m_{H_d}^2+m_{Q3}^2+m_{L3}^2+m_{d3}^2+m_{e3}^2+(A_b+A_\tau)^2\right )\nonumber\\
@@ -709,58 +642,26 @@ b_{m_{Q3}^2}^{(2)}&=24y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2\right )+24
 &\quad{}-6g_2^2y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+A_b^2-2M_2A_b+2M_2^2\right )\nonumber\\
 &\quad{}-\frac{26}{15}g_1^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2M_1A_t+2M_1^2\right )\nonumber\\
 &\quad{}-\frac{14}{15}g_1^2y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2+A_b^2-2M_1A_b+2M_1^2\right )\nonumber\\
-&\quad{}+96g_3^4M_3^2-18g_2^4M_2^2+\frac{66}{25}g_1^4(\mathcal{S}-M_1^2),\label{eq:MSSMmQ32b2}
-\end{align}
-\end{subequations}
-\begin{subequations} \label{eq:MSSMmu32Betas}
-\begin{align}
-\beta_{m_{u3}^2}^{(1)}&=4y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2\right )-\frac{32}{3}g_3^2M_3^2-\frac{4}{5}g_1^2\left ( \mathcal{S}+\frac{8}{3}M_1^2\right ),\label{eq:MSSMmu32beta1}\\
-\beta_{m_{u3}^2}^{(2)}&=-32y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2\right )\nonumber\\
-&\quad{}-4y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2\right )\nonumber\\
-&\quad{}+12g_2^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2M_2A_t+2M_2^2\right )\nonumber\\
-&\quad{}-\frac{4}{5}g_1^2y_t^2\left ( 9m_{u3}^2-5m_{H_u}^2-m_{Q3}^2+A_t^2-2M_1A_t+2M_1^2\right )\nonumber\\
-&\quad{}-\frac{8}{5}g_1^2y_b^2\left ( 3m_{H_d}^2-m_{Q3}^2-2m_{d3}^2\right )-\frac{8}{5}g_1^2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2-2m_{e3}^2\right )\nonumber\\
-&\quad{}+\frac{16}{3}g_3^4\left ( \sum_{i=1}^3\left [2m_{Qi}^2+m_{ui}^2+m_{di}^2 \right ]-8M_3^2\right )\nonumber\\
-&\quad{}+\frac{64}{45}g_3^2g_1^2\left ( 8M_1^2+8M_3^2+8M_1M_3-3\sum_{i=1}^3\left [ m_{Qi}^2-2m_{ui}^2+m_{di}^2\right ]\right )\nonumber\\
-&\quad{}-\frac{12}{5}g_1^2g_2^2\left ( m_{H_u}^2-m_{H_d}^2+\sum_{i=1}^3\left [ m_{Qi}^2-m_{Li}^2\right ]\right )\nonumber\\
-&\quad{}+\frac{4}{75}g_1^4\left ( 856M_1^2+3m_{H_u}^2+21m_{H_d}^2+\sum_{i=1}^3\left [ 3m_{Qi}^2+21m_{Li}^2+64m_{ui}^2+4m_{di}^2-12m_{ei}^2\right ]\right ),\label{eq:MSSMmu32beta2}\\
+&\quad{}+96g_3^4M_3^2-18g_2^4M_2^2+\frac{66}{25}g_1^4(\mathcal{S}-M_1^2),\label{eq:MSSMmQ32b2}\\
 b_{m_{u3}^2}^{(2)}&=48y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2A_t^2\right )\nonumber\\
 &\quad{}+4y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2+(A_t+A_b)^2\right )\nonumber\\
 &\quad{}-\frac{64}{3}g_3^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2M_3A_t+2M_3^2\right )\nonumber\\
 &\quad{}-12g_2^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2M_2A_t+2M_2^2\right )\nonumber\\
 &\quad{}-\frac{52}{15}g_1^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+A_t^2-2M_1A_t+2M_1^2\right )\nonumber\\
-&\quad{}+96g_3^4M_3^2-\frac{264}{25}g_1^4\left ( \mathcal{S}+4M_1^2\right ).\label{eq:MSSMmu32b2}
-\end{align}
-\end{subequations}
-Finally, the coefficients for $A_t$ read
-\begin{subequations}\label{eq:MSSMAtBetas}
-\begin{align}
-\beta_{A_t}^{(1)}&=12y_t^2A_t+2y_b^2A_b+\frac{32}{3}g_3^2M_3+6g_2^2M_2+\frac{26}{15}g_1^2M_1,\label{eq:MSSMAtbeta1}\\
-\beta_{A_t}^{(2)}&=-88y_t^4A_t-20y_b^4A_b-10y_t^2y_b^2(A_t+A_b)-2y_b^2y_\tau^2(A_b+A_\tau)\nonumber\\
-&\quad{}+32g_3^2y_t^2(A_t-M_3)+12g_2^2y_t^2(A_t-M_2)+\frac{12}{5}g_1^2y_t^2(A_t-M_1)+\frac{4}{5}g_1^2y_b^2(A_b-M_1)\nonumber\\
-& \quad{}+\frac{64}{9}g_3^4M_3-16g_3^2g_2^2(M_2+M_3)-\frac{272}{45}g_3^2g_1^2(M_1+M_3)-30g_2^4M_2\nonumber\\
-&\quad{}-2g_2^2g_1^2(M_1+M_2)-\frac{5486}{225}g_1^4M_1,\label{eq:MSSMAtbeta2}\\
+&\quad{}+96g_3^4M_3^2-\frac{264}{25}g_1^4\left ( \mathcal{S}+4M_1^2\right ),\label{eq:MSSMmu32b2}\\
 b_{A_t}^{(2)}&=144y_t^4A_t+24y_b^4A_b+14y_t^2y_b^2(A_t+A_b)+2y_b^2y_\tau^2(A_b+A_\tau)\nonumber\\
 &\quad{}-64g_3^2y_t^2(A_t-M_3)-36g_2^2y_t^2(A_t-M_2)-\frac{52}{5}g_1^2y_t^2(A_t-M_1)\nonumber\\
 &\quad{}-\frac{32}{3}g_3^2y_b^2(A_b-M_3)-6g_2^2y_b^2(A_b-M_2)-\frac{14}{15}g_1^2y_b^2(A_b-M_1)\nonumber\\
 &\quad{}-64g_3^4M_3+12g_2^4M_2+\frac{572}{25}g_1^4M_1.\label{eq:MSSMAtb2}
 \end{align}
 \end{subequations}
-It is then trivial to extract the relevant terms for the fine tuning calculation in the MSSM from these expressions.\\ \\
-In $U(1)$ extended models the 2-loop RGEs are somewhat more lengthy even if $U(1)$ mixing effects are
-neglected. As for the MSSM, we present simplified expressions in which it is assumed that the first and 
-second generation Yukawas are zero along with the soft SUSY breaking trilinears. At tree level in the EWSB conditions
-the parameters that must be expanded are $\lambda$, $A_\lambda$, $m_{H_u}^2$, $m_{H_d}^2$, $m_S^2$ and $g_1$, $g_2$ and $g_1'$.
-The coefficients in the expansion of $\lambda$ may be written
+Similarly we can obtain the two-loop $\beta$ functions and coefficients $b_p^{(2)}$ for a general set of $U(1)'$ charges. Two-loop RGEs for the gauge and Yukawa couplings, gaugino masses and soft trilinears, along with the one-loop RGEs for the soft scalar masses, were given in \cite{Athron:2009bs} for the particular case of the E$_6$SSM. At tree level in the EWSB conditions the parameters that must be considered are $\lambda$, $A_\lambda$, $m_{H_u}^2$, $m_{H_d}^2$, $m_S^2$ and $g_1$, $g_2$ and $g_1'$. The one- and two-loop contributions to the $\beta$ function for $\lambda$ are
 \begin{subequations}\label{eq:USSMLambdaBetas}
 \begin{align}
-\beta_{\lambda}^{(1)}&=\lambda\Big (2\lambda^2+2\Sigma_\lambda +3\Sigma_\kappa+ 3y_t^2 + 3y_b^2 + y_\tau^2-\frac{3}{5}g_1^2-3g_2^2-2g_1'^2\left (\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\Big ), \label{eq:USSMLambdabeta1}
+\beta_\lambda^{(1)}&=,\label{eq:USSMLambdaBetaOneLoop}\\
+\beta_\lambda^{(2)}&=.\label{eq:USSMLambdaBetaTwoLoop}
 \end{align}
 \end{subequations}
-where
-\begin{equation*}
-\Sigma_\lambda=\lambda_1^2+\lambda_2^2+\lambda_3^2,\qquad \Sigma_\kappa=\kappa_1^2+\kappa_2^2+\kappa_3^2.
-\end{equation*}
 % NB before submission replace this with a copy-paste of the bbl file?
 \bibliography{bibliography}{}
 \end{document}

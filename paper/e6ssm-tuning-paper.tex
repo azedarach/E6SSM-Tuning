@@ -443,7 +443,16 @@ with $M_Z^2=\bar{g}^2v^2/4$, $v^2=v_1^2+v_2^2$ and $\tan\beta = v_2/v_1$ and whe
 \tilde{m}_{H_d}^2&=m_{H_d}^2+\frac{1}{v_1}\frac{\partial \Delta V_{E_6}}{\partial v_1},\\
 \tilde{m}_{H_u}^2&=m_{H_u}^2+\frac{1}{v_2}\frac{\partial \Delta V_{E_6}}{\partial v_2}.
 \end{align*}
-Written in the form of Eq. (\ref{eq:E6MZequation}) we see the potential new source of fine tuning alluded to above, in the form of the third term on the right-hand side. For large values of the VEV $s$, the $D$-term contributions can be quite a bit larger than $M_Z^2$. In particular, recent experimental limits \cite{Aad:2014cka} require that the $Z'$ mass be large, with bounds of $M_{Z'}\gtrsim 2.51$ TeV in $U(1)_\psi$ models and $M_{Z'}\gtrsim 2.62$ TeV in $U(1)_\chi$ models. To satisfy these limits typically requires large values of the singlet VEV $s$. For example $s\gtrsim 6$ TeV is required in the E$_6$SSM with $U(1)'=U(1)_N$, so that $|D_{H_u}|,|D_{H_d}|\gg M_Z^2$ for $E_6$ models with $\tilde{Q}_S\neq 0$. As a result the remaining terms on the right-hand side of Eq. (\ref{eq:E6MZequation}) must be tuned to cancel the resulting very large contribution to $M_Z$. Moreover, because this is a large \textit{tree level} fine tuning, it may negate the increase in naturalness that is associated with having a reduced need for heavy superpartners.
+Written in the form of Eq. (\ref{eq:E6MZequation}) we see the potential new source of fine tuning alluded to above, in the form of the third term on the right-hand side. For large values of the VEV $s$, the $D$-term contributions can be quite a bit larger than $M_Z^2$. In particular, recent experimental limits \cite{Aad:2014cka} require that the $Z'$ mass be large, with bounds of $M_{Z'}\gtrsim 2.51$ TeV in $U(1)_\psi$ models and $M_{Z'}\gtrsim 2.62$ TeV in $U(1)_\chi$ models. To satisfy these limits typically requires large values of the singlet VEV $s$. For example $s\gtrsim 6$ TeV is required in the E$_6$SSM with $U(1)'=U(1)_N$, so that $|D_{H_u}|,|D_{H_d}|\gg M_Z^2$ for $E_6$ models with $\tilde{Q}_S\neq 0$. As a result the remaining terms on the right-hand side of Eq. (\ref{eq:E6MZequation}) must be tuned to cancel the resulting very large contribution to $M_Z$. Moreover, because this is a large \textit{tree level} fine tuning, it may negate the increase in naturalness that is associated with having a reduced need for heavy superpartners. In $U(1)$ extended models for which $\tilde{Q}_S\neq 0$, the importance of the $Z^\prime$ mass to the fine tuning in these models can be made even clearer by writing Eq. (\ref{eq:E6MZequation}) in the form given in \cite{Athron:2013ipa},
+\begin{equation}\label{eq:originalE6MZequation}
+c(\theta,\tan\beta)\frac{M_Z^2}{2}=-\frac{\lambda^2 s^2}{2}+\frac{\tilde{m}_{H_d}^2-\tilde{m}_{H_u}^2\tan^2\beta}{\tan^2\beta-1}+d(\theta,\tan\beta)\frac{M_{Z^\prime}^2}{2}
+\end{equation}
+where 
+\begin{align}
+c(\theta,\tan\beta)&=1-\frac{4}{\left ( \tan^2\beta-1\right )}\frac{g_1'^2}{\bar{g}^2}\left ( \tilde{Q}_1-\tilde{Q}_2\tan^2\beta \right )\left ( \tilde{Q}_1\cos^2\beta+\tilde{Q}_2\sin^2\beta \right ),\label{eq:cdefn}\\
+d(\theta,\tan\beta)&= \frac{\tilde{Q}_1-\tilde{Q}_2\tan^2\beta}{\tilde{Q}_S\left ( \tan^2\beta - 1\right )}.\label{eq:ddefn}
+\end{align}
+Written like so it is evident that the fine tuning contribution coming from the new $D$-terms depends both on the $U(1)'$ charges and the $Z^\prime$ mass, and that the tuning can be expected to increase with $M_{Z^\prime}$. As shall be shown below, the exact size of this tuning then depends strongly on the choice of $U(1)'$ charges, via the coefficient $d$. 
 \section{\label{sec:tuning}Fine Tuning}
 % Introduce tuning measure - BG measure (maybe Peter will add in a justification
 % here).
@@ -618,38 +627,20 @@ the extra $U(1)$ gauge symmetry it is associated with.  In Fig \ref{}
 we look at the fine tuning for other U(1) extensions for the same
 $Z^\prime$ masses as we did for the E$_6$SSM.
 % - plots for different U(1)' charge 
-% DH:: not quite sure of the standard way of setting up subfigures...
+
+% DH:: for reference:
+%      U(1)_I \theta = \pi+\arctan\sqrt{3/5}
+%      U(1)_\psi \theta = \pi / 2
+%      U(1)_\eta \theta = -\arctan\sqrt{5/3}
+
 
 As can be seen in Fig.~\ref{} the severity of the tunings varies quite a
 bit.  This is because the charges appear as coefficients in front of
 the $Z^\prime$ mass in the EWSB condition.  These charges change the
-value of the coefficient $d$ in Eq.~\ref{}.  The values of the
-coefficient $d$ in each model is $\{-0.01, 0.40, 0.50, 0.81 \}$ for
+value of the coefficient $d$ in Eq. (\ref{eq:originalE6MZequation}).  The values of the
+coefficient $d$ in each model, for $\tan\beta = 10$, is $\{-0.01, 0.40, 0.50, 0.81 \}$ for
 $\{U(1)_I, U(1)_N, U(1)_\psi, U(1)_\eta \}$ and this determines which
 of the models are most tuned.
-
-
-% DH:: I didn't use the d notation in the section on EWSB, would this
-% work to introduce it here instead?
-While the $Z^\prime$ mass does set a lower limit on the tuning, the exact
-value of this tuning depends quite strongly on the charges of the extra
-$U(1)$ gauge symmetry it is associated with. This is illustrated in Fig~\ref{}, 
-in which we show the fine tuning for several other commonly studied
-$U(1)$ extensions for the same set of $Z^\prime$ masses as were considered in the
-E$_6$SSM. As can be seen in Fig.~\ref{}, the severity of the tunings varies
-quite a bit. This can be understood from the fact that the $D$-terms $D_{H_d}$, $D_{H_u}$
-that enter the EWSB condition Eq. (\ref{eq:E6MZequation}) are proportional to
-the $U(1)'$ charges. It is therefore possible to significantly reduce the size
-of the additional $D$-term contributions to the EWSB conditions by choosing the $U(1)'$ 
-charges appropriately. For $s\gg v$, as is
-required in all of the $U(1)$ extended models considered in order to have $M_{Z^\prime}\geq 2.5$ TeV,
-the $D$-term contribution to Eq. (\ref{eq:E6MZequation}) is well approximated by
-\begin{equation*}
-\frac{D_{H_d}-D_{H_u}\tan^2\beta}{\tan^2-1}\approx \frac{g_1'^2}{2}\tilde{Q}_Ss^2\left ( \frac{\tilde{Q}_1-\tilde{Q}_2\tan^2\beta}{\tan^2\beta-1}\right )\approx d(\theta,\tan\beta)\frac{M_{Z^\prime}^2}{2},\qquad d(\theta,\tan\beta)\equiv \left ( \frac{\tilde{Q}_1-\tilde{Q}_2\tan^2\beta}{\tilde{Q}_S\left ( \tan^2\beta - 1\right )}\right ) 
-\end{equation*}
-for models with $\tilde{Q}_S\neq 0$. Written in this form one might expect that the fine tuning
-associated with this contribution will be reduced when this expression is 
-minimised. This is indeed the case. For example, in the E$_6$SSM with $\theta=\arctan\sqrt{15}$ one finds that for $\tan\beta=10$, $d\approx 0.398$. This can be compared to the $U(1)_\psi$ ($\theta=\pi/2$) and $U(1)_\eta$ ($\theta=-\arctan\sqrt{5/3}$) models, for which $d=0.5$ and $d\approx 0.806$, respectively. The larger values of the $D$-term contributions in these models result in them having a larger fine tuning than in the E$_6$SSM, as is evident from Fig.~\ref{}. Of particular note is the inert $U(1)_I$ model ($\theta=\pi+\arctan\sqrt{3/5}$), which has $\tilde{Q}_2=0$, resulting in the coefficient $d$ being suppressed by $\tan^2\beta$. For this model we find that $d\approx-0.01$, and so the $D$-term contribution is much smaller than in the other models described. The fine tuning is as a result somewhat smaller, not being much greater than that found in the MSSM. 
 
 
 [We should add some discussion about the $U(1)_I$ and the physics of

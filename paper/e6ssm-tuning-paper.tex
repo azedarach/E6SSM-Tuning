@@ -1,17 +1,20 @@
-\documentclass[preprint,amsmath,amssymb,aps,superscriptaddress,prd,showpacs,floatfix]{revtex4-1}
+\documentclass[preprint,amsmath,amssymb,aps,superscriptaddress,prd,showpacs,floatfix,nofootinbib]{revtex4-1}
 
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}
 \usepackage{hyperref}
-
+\usepackage{footmisc}
 % macros
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
 \newcommand{\ba}{\begin{eqnarray}}
 \newcommand{\ea}{\end{eqnarray}}
 \newcommand{\SuperField}[1]{\hat{#1}}
+
+ \renewcommand\footnotelayout{\fontsize{10}{9}\selectfont}                               
+
 \allowdisplaybreaks
 %\nofiles
 % For draft, uncomment to avoid huge spaces
@@ -298,15 +301,25 @@ The structure of this paper is as follows.  In section \ref{sec:model} we review
  
 
 \section{\label{sec:model}U(1) extensions and the E$_6$SSM}
-In this paper we consider U(1) extensions of the MSSM where the gauge group at low energies is,
- \be
-SU(3)_C\times SU(2)_W\times U(1)_Y\times U(1)^\prime, \ee 
-where $U(1)^\prime$ is the new gauge group beyond that of the SM and MSSM. The minimal superfield content of $U(1)$ extensions which solve the $\mu$-problem should be ordinary left handed quark, $\hat{Q}_i$ and lepton $\hat{L}_i$ ($i=1,2,3$)superfields along with right handed superfields $\hat{u}^c_i$, $\hat{d}^c_i$,  $\hat{e}^c_i$ ($i=1,2,3$) for the up-type (s)quarks, down-type (s)quarks and charged (s)leptons respectively and three Higgs superfields, up-type $\hat{H}_u$, down-type $\hat{H}_d$ and a singlet under the SM gauge group $\hat{S}$.
+In this paper we consider U(1) extensions of the MSSM where the gauge
+group at low energies is, \be SU(3)_C\times SU(2)_W\times U(1)_Y\times
+U(1)^\prime, \ee where $U(1)^\prime$ is the new gauge group beyond
+that of the SM and MSSM. The minimal superfield content of $U(1)$
+extensions which solve the $\mu$-problem should be ordinary left
+handed quark, $\hat{Q}_i$ and lepton $\hat{L}_i$
+($i=1,2,3$)superfields along with right handed superfields
+$\hat{u}^c_i$, $\hat{d}^c_i$, $\hat{e}^c_i$ ($i=1,2,3$) for the
+up-type (s)quarks, down-type (s)quarks and charged (s)leptons
+respectively and three Higgs superfields, up-type $\hat{H}_u$,
+down-type $\hat{H}_d$ and a singlet under the SM gauge group
+$\hat{S}$.
 
-  The couplings for the $U(1)^\prime$ gauge group should allow the following renormalisable superpotential terms required in the USSM,
-\be
-W_{USSM} =  y^U_{ij} \hat{u}^c_i \hat{H}_u \hat{Q}_j + y^D_{ij} \hat{d}^c_i \hat{H}_d \hat{Q}_j + y^E_{ij} \hat{e}^c_i \hat{H}_d \hat{L}_j + \lambda \hat{S} \hat{H}_d \hat{H}_u,
-\ee with $i,j \in \{1,2,3\}$.  
+  The couplings for the $U(1)^\prime$ gauge group should allow the
+  following renormalisable superpotential terms required in the USSM,
+  \be W_{USSM} = y^U_{ij} \hat{u}^c_i \hat{H}_u \hat{Q}_j + y^D_{ij}
+  \hat{d}^c_i \hat{H}_d \hat{Q}_j + y^E_{ij} \hat{e}^c_i \hat{H}_d
+  \hat{L}_j + \lambda \hat{S} \hat{H}_d \hat{H}_u, \ee with $i,j \in
+  \{1,2,3\}$.
 
 
 The $U(1)^\prime$ charges should allow for cancellations of gauge
@@ -373,7 +386,15 @@ W_2 &=& g^N_{ijk} \hat{N}^c_i \hat{D}_j \hat{d}^c_k + g^E_{ijk} \hat{e}^c_i \hat
 \label{Eq:e6-superpot-parts}
 \end{eqnarray}
 
-Nonetheless while this model is very elegant so far, the  superpotential, (\ref{Eq:e6-superpot}) contains dangerous terms which can induce proton decay and lead to large flavour changing neutral currents (FCNCs).  There are a number of approaches to suppress these terms, involving the use of different discrete symmetries.  Here for the purposes of renormalisation group running we will simply include the following unsuppressed superpotential terms, which follows the approach taking in work on the cE$_6$SSM \cite{Athron:2009ue, Athron:2009bs},
+Nonetheless while this model is very elegant so far, the
+superpotential, (\ref{Eq:e6-superpot}) contains dangerous terms which
+can induce proton decay and lead to large flavour changing neutral
+currents (FCNCs).  There are a number of approaches to suppress these
+terms, involving the use of different discrete symmetries.  Here for
+the purposes of renormalisation group running we will simply include
+the following unsuppressed superpotential terms, which follows the
+approach taking in work on the cE$_6$SSM \cite{Athron:2009ue,
+  Athron:2009bs},
 %
 %% \begin{align}
 %%   \begin{split}
@@ -412,8 +433,18 @@ V_{E_6}^F&=\lambda^2|S|^2(|H_1|^2+|H_2|^2)+\lambda^2|(H_1\cdot H_2)|^2,\label{eq
 V_{E_6}^D&=\frac{\bar{g}^2}{8}\left ( |H_2|^2-|H_1|^2\right )^2+\frac{g_2^2}{2}|H_1^\dagger H_2|^2+\frac{g_1'^2}{2}(\tilde{Q}_1|H_1|^2+\tilde{Q}_2|H_2|^2+\tilde{Q}_S|S|^2)^2,\label{eq:E6VDterms}\\
 V_{E_6}^{\textrm{soft}}&=m_S^2|S|^2+m_{H_d}^2|H_1|^2+m_{H_u}^2|H_2|^2+\Big [\lambda A_\lambda S(H_1\cdot H_2)+\textrm{h.c.}\Big ].\label{eq:E6Vsoft}
 \end{align}
-In these expressions $g_2$, $g'=\sqrt{3/5}g_1$, and $g_1'$ are the $SU(2)$, (non-GUT normalized) $U(1)_Y$ and $U(1)'$ gauge couplings, respectively, and $\bar{g}^2=g_2^2+g'^2$. The charges $\tilde{Q}_1$, $\tilde{Q}_2$ and $\tilde{Q}_S$ are effective $U(1)'$ charges for $H_1$, $H_2$ and $S$, respectively. Note that the $SU(2)$ dot product is defined by $A\cdot B\equiv \epsilon_{\alpha\beta}A^\alpha B^\beta=A^2B^1-A^1B^2$. The term $\Delta V_{E_6}$ contains the Coleman-Weinberg contributions to the effective potential. In the case of the $U(1)_\chi$ model, $V_{E_6}^F$ may also contain an elementary $\mu$ term contribution, as occurs in the MSSM.\\ \\
-Demanding that the Higgs fields $H_1$, $H_2$ and the singlet $S$ acquire real VEVs of the form
+In these expressions $g_2$, $g'=\sqrt{3/5}g_1$, and $g_1'$ are the
+$SU(2)$, (non-GUT normalized) $U(1)_Y$ and $U(1)'$ gauge couplings,
+respectively, and $\bar{g}^2=g_2^2+g'^2$. The charges $\tilde{Q}_1$,
+$\tilde{Q}_2$ and $\tilde{Q}_S$ are effective $U(1)'$ charges for
+$H_1$, $H_2$ and $S$, respectively. Note that the $SU(2)$ dot product
+is defined by $A\cdot B\equiv \epsilon_{\alpha\beta}A^\alpha
+B^\beta=A^2B^1-A^1B^2$. The term $\Delta V_{E_6}$ contains the
+Coleman-Weinberg contributions to the effective potential. In the case
+of the $U(1)_\chi$ model, $V_{E_6}^F$ may also contain an elementary
+$\mu$ term contribution, as occurs in the MSSM.\\ \\ Demanding that
+the Higgs fields $H_1$, $H_2$ and the singlet $S$ acquire real VEVs of
+the form
 \begin{equation}\label{eq:E6vevs}
 \langle H_1 \rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} v_1 \\ 0\end{pmatrix}, \; \langle H_2 \rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} 0 \\ v_2 \end{pmatrix}, \; \langle S \rangle =\frac{s}{\sqrt{2}}
 \end{equation}
@@ -443,7 +474,26 @@ with $M_Z^2=\bar{g}^2v^2/4$, $v^2=v_1^2+v_2^2$ and $\tan\beta = v_2/v_1$ and whe
 \tilde{m}_{H_d}^2&=m_{H_d}^2+\frac{1}{v_1}\frac{\partial \Delta V_{E_6}}{\partial v_1},\\
 \tilde{m}_{H_u}^2&=m_{H_u}^2+\frac{1}{v_2}\frac{\partial \Delta V_{E_6}}{\partial v_2}.
 \end{align*}
-Written in the form of Eq. (\ref{eq:E6MZequation}) we see the potential new source of fine tuning alluded to above, in the form of the third term on the right-hand side. For large values of the VEV $s$, the $D$-term contributions can be quite a bit larger than $M_Z^2$. In particular, recent experimental limits \cite{Aad:2014cka} require that the $Z'$ mass be large, with bounds of $M_{Z'}\gtrsim 2.51$ TeV in $U(1)_\psi$ models and $M_{Z'}\gtrsim 2.62$ TeV in $U(1)_\chi$ models. To satisfy these limits typically requires large values of the singlet VEV $s$. For example $s\gtrsim 6$ TeV is required in the E$_6$SSM with $U(1)'=U(1)_N$, so that $|D_{H_1}|,|D_{H_2}|\gg M_Z^2$ for $E_6$ models with $\tilde{Q}_S\neq 0$. As a result the remaining terms on the right-hand side of Eq. (\ref{eq:E6MZequation}) must be tuned to cancel the resulting very large contribution to $M_Z$. Moreover, because this is a large tree level fine tuning, it may negate the increase in naturalness that is associated with having a reduced need for heavy superpartners. In $U(1)$ extended models for which $\tilde{Q}_S\neq 0$, the importance of the $Z^\prime$ mass to the fine tuning in these models can be made even clearer by writing Eq. (\ref{eq:E6MZequation}) in the form given in \cite{Athron:2013ipa},
+Written in the form of Eq. (\ref{eq:E6MZequation}) we see the
+potential new source of fine tuning alluded to above, in the form of
+the third term on the right-hand side. For large values of the VEV
+$s$, the $D$-term contributions can be quite a bit larger than
+$M_Z^2$. In particular, recent experimental limits \cite{Aad:2014cka}
+require that the $Z'$ mass be large, with bounds of $M_{Z'}\gtrsim
+2.51$ TeV in $U(1)_\psi$ models and $M_{Z'}\gtrsim 2.62$ TeV in
+$U(1)_\chi$ models. To satisfy these limits typically requires large
+values of the singlet VEV $s$. For example $s\gtrsim 6$ TeV is
+required in the E$_6$SSM with $U(1)'=U(1)_N$, so that
+$|D_{H_1}|,|D_{H_2}|\gg M_Z^2$ for $E_6$ models with $\tilde{Q}_S\neq
+0$. As a result the remaining terms on the right-hand side of
+Eq. (\ref{eq:E6MZequation}) must be tuned to cancel the resulting very
+large contribution to $M_Z$. Moreover, because this is a large tree
+level fine tuning, it may negate the increase in naturalness that is
+associated with having a reduced need for heavy superpartners. In
+$U(1)$ extended models for which $\tilde{Q}_S\neq 0$, the importance
+of the $Z^\prime$ mass to the fine tuning in these models can be made
+even clearer by writing Eq. (\ref{eq:E6MZequation}) in the form given
+in \cite{Athron:2013ipa},
 \begin{equation}\label{eq:originalE6MZequation}
 c(\theta,\tan\beta)\frac{M_Z^2}{2}=-\frac{\lambda^2 s^2}{2}+\frac{\tilde{m}_{H_d}^2-\tilde{m}_{H_u}^2\tan^2\beta}{\tan^2\beta-1}+d(\theta,\tan\beta)\frac{M_{Z^\prime}^2}{2}
 \end{equation}
@@ -464,7 +514,12 @@ Written like so it is evident that the fine tuning contribution coming from the 
 % How we calculate the tuning using spectrum generator, for E6SSM uses
 % FlexibleSUSY (cite FlexibleSUSY and SARAH).
 \subsection{\label{subsec:tuningmeasure}The Fine Tuning Measure}
-As stated above, in order to quantify the resulting fine tuning we apply the traditional Ellis-Barbieri-Giudice measure \cite{Ellis:1986yg,Barbieri:1987fn}. A specific model is characterised by a set of $n$ model parameters $\{p_i\}$ and is defined at some input scale $M_X$. For a given parameter $p$ in this set, one computes an associated sensitivity coefficient \cite{Feng:2013pwa}
+As stated above, in order to quantify the resulting fine tuning we
+apply the traditional Ellis-Barbieri-Giudice measure
+\cite{Ellis:1986yg,Barbieri:1987fn}. A specific model is characterised
+by a set of $n$ model parameters $\{p_i\}$ and is defined at some
+input scale $M_X$. For a given parameter $p$ in this set, one computes
+an associated sensitivity coefficient \cite{Feng:2013pwa}
 \begin{equation}\label{eq:bgmeasure}
 \Delta_p=\left | \frac{\partial \log M_Z^2}{\partial \log p}\right |=\left | \frac{p}{M_Z^2}\frac{\partial M_Z^2}{\partial p}\right |,
 \end{equation}
@@ -526,14 +581,16 @@ Using the approach outlined above, we are able to scan the low energy parameter 
 \section{\label{sec:results}Results}
 % Our results. Plots to go in here:
 %    - tuning as a function of stop mass for the MSSM and E6SSM
-Many recent papers have focussed on light stops as allowing natural
-SUSY and there has been a lot of theoretical effort to find SUSY
-models with a $125$ GeV Higgs boson while still having light stops
-and experimental efforts to search for light stops.  This is entirely
-appropriate, however the fine tuning problem from the stops depends
-crucially on the RG evolution from the GUT scale, since this is how
-the squark masses feed into the soft Higgs masses that appear in the
-EWSB conditions.
+As discussed in the introduction many recent papers have focussed on
+light stops as allowing natural SUSY and there has been a lot of
+theoretical effort to find SUSY models with a $125$ GeV Higgs boson
+while still having light stops and experimental efforts to search for
+light stops.  This is entirely appropriate since there are many good
+reasons to expect the soft masses to be set at high energies.  However
+that is not the only possibility and the fine tuning problem depends
+strongly the RG evolution from the GUT scale, as the soft Higgs masses
+that appear in the EWSB conditions pick up contributions from the soft
+squark masses.
 
 
 \begin{figure}[h]
@@ -559,23 +616,27 @@ bottom to top) $M_X=20$ TeV, $M_X=50$ TeV, $M_X=100$ TeV and $M_X=10^{16}$ GeV.}
 \label{Fig:mssmhiggstuning}
 \end{center}
 \end{figure}
-To illustrate this, in Fig.~\ref{Fig:mssmstoptuning} we show the variation in fine
-tuning when we scan over the
-stop masses and mixing, with $500 \textrm{ GeV} \leq
-m_{Q_3},m_{u_3}\leq 10\textrm{ TeV}$ and $-3810\textrm{ GeV}\leq
-A_t\leq -20\textrm{ GeV}$, for $M_X=20$ TeV, $50$ TeV and $100$ TeV.
-The remaining parameters we fix such that at $M_{SUSY}$ they have the values $\mu=-97.5$ GeV, $B=-84.8$ GeV,
-$M_1=92.1$ GeV, $M_2=95.9$ GeV, $M_3=352$ GeV, $A_b=-117.9$ GeV, $A_\tau=-7.8$ GeV, $m_{L_i}=400$ GeV, $m_{e_i}=204$ GeV,
-$m_{Q_{1,2}}=438$ GeV, $m_{u_{1,2}}436$ GeV and $m_{d_i}=438$ GeV ($i=1,2,3$). By making this choice for the 
-remaining parameters we ensure that fine tuning due to each is small, allowing us to see the fine tuning
-impact of the stops for stop masses of less than 1 TeV. For models in which the spectrum is heavier the fine tuning
-reaches a lower bound imposed by other heavier parameters as the stop masses become very small.
-Note that the Higgs mass is also allowed to vary over the scan, as shown in 
-Fig.~\ref{Fig:mssmhiggstuning}.
-However this tuning only really becomes large for very large stop
-masses.  On the other hand if the cuttoff is increased then stop masses of
-several TeV can result in tuning of [insert] as shown in
-Fig.~\ref{Fig:mssmstoptuning}.\\ \\
+To illustrate this, in Fig.~\ref{Fig:mssmstoptuning} we show the
+variation in fine tuning when we scan over the stop masses and mixing,
+with $500 \textrm{ GeV} \leq m_{Q_3},m_{u_3}\leq 10\textrm{ TeV}$ and
+$-3810\textrm{ GeV}\leq A_t\leq -20\textrm{ GeV}$, for $M_X=20$ TeV,
+$50$ TeV and $100$ TeV.  The remaining parameters we fix such that at
+$M_{SUSY}$ they have the values $\mu=-97.5$ GeV, $B=-84.8$ GeV,
+$M_1=92.1$ GeV, $M_2=95.9$ GeV, $M_3=352$ GeV, $A_b=-117.9$ GeV,
+$A_\tau=-7.8$ GeV, $m_{L_i}=400$ GeV, $m_{e_i}=204$ GeV,
+$m_{Q_{1,2}}=438$ GeV, $m_{u_{1,2}}436$ GeV and $m_{d_i}=438$ GeV
+($i=1,2,3$). By making this choice for the remaining parameters we
+ensure that fine tuning due to each is small, so that we avoid washing
+out the fine tuning impact of the stops when the tuning is
+small \footnote{For models in which the spectrum is heavier, when the
+  stop masses become very small the fine tuning reaches a lower bound
+  imposed by other heavier parameters.} as can be the case when the
+stop masses are less than 1 TeV.  Note that the Higgs mass is also
+allowed to vary over the scan, as shown in
+Fig.~\ref{Fig:mssmhiggstuning}.  However this tuning only really
+becomes large for very large stop masses.  On the other hand if the
+cuttoff is increased then stop masses of several TeV can result in
+tuning of [insert] as shown in Fig.~\ref{Fig:mssmstoptuning}.\\ \\
 
 
  
@@ -665,13 +726,13 @@ $Z^\prime$ masses as we did for the E$_6$SSM.
 %      U(1)_\eta \theta = -\arctan\sqrt{5/3}
 
 
-As can be seen in Fig.~\ref{} the severity of the tunings varies quite a
-bit.  This is because the charges appear as coefficients in front of
+As can be seen in Fig.~\ref{} the severity of the tunings varies quite
+a bit.  This is because the charges appear as coefficients in front of
 the $Z^\prime$ mass in the EWSB condition.  These charges change the
-value of the coefficient $d$ in Eq. (\ref{eq:originalE6MZequation}).  The values of the
-coefficient $d$ in each model, for $\tan\beta = 10$, is $\{-0.01, 0.40, 0.50, 0.81 \}$ for
-$\{U(1)_I, U(1)_N, U(1)_\psi, U(1)_\eta \}$ and this determines which
-of the models are most tuned.
+value of the coefficient $d$ in Eq. (\ref{eq:originalE6MZequation}).
+The values of the coefficient $d$ in each model, for $\tan\beta = 10$,
+is $\{-0.01, 0.40, 0.50, 0.81 \}$ for $\{U(1)_I, U(1)_N, U(1)_\psi,
+U(1)_\eta \}$ and this determines which of the models are most tuned.
 
 
 [We should add some discussion about the $U(1)_I$ and the physics of

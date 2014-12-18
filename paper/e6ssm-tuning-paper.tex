@@ -289,7 +289,8 @@ While this approach has many merits here will employ the traditional
 measure of fine tuning because it is both simple to apply and easy to
 compare with previous results due to it's widespread use.  Fortunately
 the derivatives which appear in these tuning are also similar to the
-Bayesian motivated measure so there should not be too large a discrepancy between the two approaches.
+Bayesian motivated measure so there should not be too large a
+discrepancy between the two approaches.
 
 
 The structure of this paper is as follows.  In section \ref{sec:model} we review the models we consider.  In section \ref{sec:ewsb} we specify the EWSB conditions of the models, with particular focus on how the $Z^\prime$ mass influences the prediction of $M_Z$.  Then in section \ref{sec:tuning} we introduce our fine tuning measure and our approach to evaluating it to obtain the individual sensitivities.  The numerical procedure we use to obtain our results is given in \ref{subsec:numericalprocedure} and then the results are specified in section \ref{sec:results}. 
@@ -629,7 +630,7 @@ $m_{Q_{1,2}}=438$ GeV, $m_{u_{1,2}}436$ GeV and $m_{d_i}=438$ GeV
 lead to a spectrum which is in conflict with the LHC limits, doing so
 ensures that fine tuning due to the other parameters is small, so that
 we avoid washing out the fine tuning impact of the stops when the
-tuning is small \footnote{For models in which the spectrum is heavier,
+tuning is small\footnote{For models in which the spectrum is heavier,
   when the stop masses are small the fine tuning reaches a lower bound
   imposed by other heavier parameters.} as can be the case when the
 stop masses are less than 1 TeV.  Note that the Higgs mass is also
@@ -643,28 +644,56 @@ severe unless the stops are very heavy, and a 125 geV Higgs can be
 obtained without much tuning in this unrealistic case where we have
 minimised other sources of tuning.  On the other hand the tuning
 becomes more severe as we increase the cuttoff such that for $M_X =
-10^{16}$ GeV is increased then a lightest stop masses of 1-3 TeV can
-result in a fine tuning of $\approx 200 - 1000$ as shown in
-Fig.~\ref{Fig:mssmstoptuning} and the minimum tuning we see consistent with a $125$ GeV Higgs is $\approx 200$.\\ \\
-
-
- 
+10^{16}$ GeV a lightest stop masses of $1-3$ TeV can result in a fine
+tuning of $\approx 200 - 1000$ as shown in
+Fig.~\ref{Fig:mssmstoptuning} and the minimum tuning we see consistent
+with a $125$ GeV Higgs is $\approx 200$, as shown in
+Fig.~\ref{Fig:mssmhiggstuning}.
 
 %    - full scatter plots of MSSM and E6SSM, including different
 %      M_Z' values
 
-Since the stop mass does not have a large impact on the fine tuning when the 
-cutoff scale is very low we can use this to see more clearly the impact of the
-$Z^\prime$ mass on fine tuning. To do so we select a fixed low cutoff of $M_X=20$ TeV and compare the
-fine tuning for two different values of the $Z^\prime$ mass. We choose to look at
-$M_{Z^\prime}=2.5$ TeV, which is just above the current limits, and $M_{Z^\prime}=4.5$ TeV, 
-which should be in reach in run II at the LHC. We also compare the fine tuning calculated
-in each case to the tuning in the MSSM. For this, we have performed a parameter space scan in both the 
-MSSM and E$_6$SSM, scanning over those parameters that appear at tree level in the EWSB conditions in the
-models. While the contribution from large stop masses to the fine tuning is small for such a low cut-off scale, the 
-stop contributions to the effective potential can play a significant role in reducing the fine tuning.
-For this reason it is still important to properly treat the tuning associated with stop contributions to the one-loop effective potential, and so we also scan over the soft masses $m_{Q_3}^2$, $m_{u_3}^2$ and the stop mixing $A_t$.
-The relevant parameters and ranges that were scanned over are summarised in Table \ref{tab:scanranges}. With the exception of the stop mixing $A_t$ and the soft trilinear $A_\lambda$, which are logarithmically scanned, all parameters are linearly scanned. In both the MSSM and E$_6$SSM, we then decouple all other parameters by setting the remaining soft masses to values of $5$ TeV, while the first and second generation Yukawa couplings and their associated soft trilinears are taken to vanish. The $U(1)$ gaugino soft mass $M_1$ was fixed to $M_1=300$ GeV, and we fix $M_3=2000$ GeV. Additionally, in the E$_6$SSM the $U(1)_N$ gaugino soft mass $M_1'$ is held fixed with $M_1'=M_1=300$ GeV, and $\mu^\prime=5$ TeV.
+Since the stop mass does not have such a large impact on the fine
+tuning when the cutoff scale is very low we can use this to see more
+clearly the impact of the $Z^\prime$ mass on fine tuning. To do so we
+select a fixed low cutoff of $M_X=20$ TeV and compare the fine tuning
+for two different values of the $Z^\prime$ mass. We choose to look at
+$M_{Z^\prime}=2.5$ TeV, which is just above the current limits, and
+$M_{Z^\prime}=4.5$ TeV, which should be in reach in run II at the LHC
+and then compare the fine tuning calculated in each case to the tuning
+in the MSSM.  For this, we have performed a large six dimensional
+parameter space scan in both the MSSM and E$_6$SSM, varying those
+parameters most relevant for the fine tuning and the Higgs mass.
+Therefore the set of parameters which we vary includes $\mu$, $B$ and
+$\tan \beta$ for the MSSM, and $\lambda$, $A_\lambda$ and $\tan
+\beta$, for the E$_6$SSM, which appear at tree level in the EWSB
+conditions of the models. While the contribution from large stop
+masses to the fine tuning is small for such a low cut-off scale, the
+stop contributions to the effective potential can play a significant
+role in reducing the fine tuning.  For this reason it is still
+important to properly treat the tuning associated with stop
+contributions to the one-loop effective potential, and so we also scan
+over the soft masses $m_{Q_3}^2$, $m_{u_3}^2$ and the stop mixing
+$A_t$.  The relevant parameters and ranges that were scanned over are
+summarised in Table \ref{tab:scanranges}. With the exception of the
+stop mixing $A_t$ and the soft trilinear $A_\lambda$, which are
+logarithmically scanned, all parameters are linearly scanned.  In
+addition to this we also repeat each scan for three different values
+of $M_2$ to introduce more variation in the chargino masses, which can
+also be importnat due to the link between $\mu$ and the fine tuning.
+
+ In this case we now consider realistic scenarios, where the
+ parameters that are not scanned over are set to values which keep the
+ associated states comfortably above their experimental limits.  So in
+ both the MSSM and E$_6$SSM, all other soft [scalar?] masses are set
+ to $5$ TeV.  Since we work in the third family approximation, taking
+ the first and second generation Yukawa couplings to be zero, we also
+ assume their associated soft trilinears vanish [what about
+   $A_\tau$?]. The $U(1)$ gaugino soft mass $M_1$ was fixed to
+ $M_1=300$ GeV, and we fix $M_3=2000$ GeV. Additionally, in the
+ E$_6$SSM the $U(1)_N$ gaugino soft mass $M_1'$ is held fixed with
+ $M_1'=M_1=300$ GeV, and $\mu^\prime=5$ TeV.
+
 \begin{table}[h]
 \centering
 \begin{ruledtabular}
@@ -680,7 +709,7 @@ $ -10 \textrm{ TeV } \leq A_t \leq 10 \textrm { TeV}$ & $ -10 \textrm{ TeV } \le
 $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ & $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ \\
 \end{tabular}
 \end{ruledtabular}
-\caption{The parameters scanned over and the ranges of values used in the MSSM and the $E_6$ models.}
+\caption{The parameters scanned over and the ranges of values used in the MSSM and the $E_6SSM$ models.}
 \label{tab:scanranges}
 \end{table}
 

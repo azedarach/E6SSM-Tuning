@@ -59,7 +59,7 @@ namespace flexiblesusy {
       unsigned ewsb_loop_order = pars->ewsb_loop_order;
       unsigned beta_loop_order = pars->beta_loop_order;
       lowE6SSM_info::Parameters p = pars->p;
-
+      
       model.set_loops(beta_loop_order);
       model.set_ewsb_loop_order(ewsb_loop_order);
 
@@ -118,7 +118,7 @@ namespace flexiblesusy {
       const double vev2 = Sqr(vu) + Sqr(vd);
 
       double MVZ2 = 0.25 * gbar2 * vev2;
-      
+
       return MVZ2;
    }
 
@@ -127,7 +127,7 @@ namespace flexiblesusy {
       bool tuning_problem = false;
 
       lowE6SSM_ew_derivs ew_derivs(model);
-      
+
       double scale = model.get_scale();
 
       if (is_equal_rel(scale, input_scale)) {
@@ -142,6 +142,12 @@ namespace flexiblesusy {
       }
 
       const double epsilon = 1.0e-5;
+      
+      if (tuning_beta_loop_order == 0) {
+         model.set_scale(tuning_scale);
+      } else {
+         model.run_to(tuning_scale);
+      }
 
       // Reference value of M_Z^2
       const double g1 = model.get_g1();
@@ -172,7 +178,7 @@ namespace flexiblesusy {
 
          if (Abs(abs_err / numeric_deriv) > 1.0 && Abs(numeric_deriv) > 1.0e-10)
             tuning_problem = true;
-
+         
          fine_tunings[it->first] = Abs((it->second / MVZ2) * numeric_deriv);
       }
 
@@ -233,6 +239,90 @@ namespace flexiblesusy {
             model.run_to(tuning_scale);
             ew_derivs.set_model(model);
          }
+      }
+
+      ew_derivs.set_ewsb_loop_order(tuning_ewsb_loop_order);
+      
+      Eigen::Matrix<double,num_ewsb_eqs,num_ewsb_eqs> mass_matrix = ew_derivs.calculate_unrotated_mass_matrix_hh();
+      
+      // N.B. extra minus sign
+      Eigen::Matrix<double, num_ewsb_eqs, Eigen::Dynamic> ewsb_derivs = -1.0 * calculate_ewsb_parameter_derivs(ew_derivs);
+      
+      // Solve system. Use inverse directly since mass matrix is small in the E6SSM (3 x 3),
+      // but note this has to change for matrices larger than 4 x 4.
+      bool invertible;
+      Eigen::Matrix<double,num_ewsb_eqs,num_ewsb_eqs> mass_matrix_inverse;
+      mass_matrix.computeInverseWithCheck(mass_matrix_inverse, invertible);
+
+      if (!invertible) {
+         tuning_problem = true;
+         return tuning_problem;
+      }
+
+      Eigen::Matrix<double,num_ewsb_eqs,num_tuning_pars> vev_derivs
+         = mass_matrix_inverse * ewsb_derivs * beta_derivs;
+
+      // Additional solution check here?
+
+      double g1_at_tuning_scale = ew_derivs.get_model().get_g1();
+      double g2_at_tuning_scale = ew_derivs.get_model().get_g2();
+      double vd_at_tuning_scale = ew_derivs.get_model().get_vd();
+      double vu_at_tuning_scale = ew_derivs.get_model().get_vu();
+      const Eigen::Array<double,1,num_tuning_pars> g1_derivs = beta_derivs.row(get_g1_row());
+      const Eigen::Array<double,1,num_tuning_pars> g2_derivs = beta_derivs.row(get_g2_row());
+      const Eigen::Array<double,1,num_tuning_pars> vd_derivs = vev_derivs.row(0);
+      const Eigen::Array<double,1,num_tuning_pars> vu_derivs = vev_derivs.row(1);
+
+      for (std::map<lowE6SSM_info::Parameters,double>::iterator it = fine_tunings.begin(),
+              end = fine_tunings.end(); it != end; ++it) {
+         it->second = calculate_fine_tuning(input_scale_pars[it->first], g1_at_tuning_scale,
+                                            g2_at_tuning_scale, vd_at_tuning_scale, vu_at_tuning_scale,
+                                            get_deriv(it->first, g1_derivs), get_deriv(it->first, g2_derivs),
+                                            get_deriv(it->first, vd_derivs), get_deriv(it->first, vu_derivs));
+      }
+
+      return tuning_problem;
+   }
+
+   bool lowE6SSM_tuning_calculator::calculate_fine_tunings_using_rge_derivs()
+   {
+      bool tuning_problem = false;
+      
+      lowE6SSM_ew_derivs ew_derivs(model);
+      Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> beta_derivs;
+      
+      double scale = model.get_scale();
+
+      bool derivs_problem = false;
+      if (tuning_beta_loop_order == 0) {
+         model.set_scale(input_scale);
+         beta_derivs = calculate_beta_derivs_numerically(derivs_problem);
+         get_input_scale_pars();
+         model.set_scale(tuning_scale);
+         ew_derivs.set_model(model);
+      } else {
+         if (is_equal_rel(scale, tuning_scale)) {
+            ew_derivs.set_model(model);
+            model.run_to(input_scale);
+            beta_derivs = calculate_beta_derivs_numerically(derivs_problem);
+            get_input_scale_pars();
+         } else if (is_equal_rel(scale, input_scale)) {
+            beta_derivs = calculate_beta_derivs_numerically(derivs_problem);
+            get_input_scale_pars();
+            model.run_to(tuning_scale);
+            ew_derivs.set_model(model);
+         } else {
+            model.run_to(input_scale);
+            beta_derivs = calculate_beta_derivs_numerically(derivs_problem);
+            get_input_scale_pars();
+            model.run_to(tuning_scale);
+            ew_derivs.set_model(model);
+         }
+      }
+
+      if (derivs_problem) {
+         tuning_problem = true;
+         return tuning_problem;
       }
 
       ew_derivs.set_ewsb_loop_order(tuning_ewsb_loop_order);
@@ -1182,6 +1272,156 @@ namespace flexiblesusy {
       derivs.col(11) = calculate_deriv_dlowscale_dMassBp();
 
       return derivs;
+   }
+
+   Eigen::Matrix<double,Eigen::Dynamic,lowE6SSM_tuning_calculator::num_tuning_pars> lowE6SSM_tuning_calculator::calculate_beta_derivs_numerically(bool & problem) const
+   {
+      problem = false;
+
+      Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> derivs;
+      if (tuning_ewsb_loop_order == 0) {
+         derivs.resize(num_tree_level_ewsb_pars, num_tuning_pars);
+      } else {
+         derivs.resize(num_tree_level_ewsb_pars + num_one_loop_ewsb_pars, num_tuning_pars);
+      }
+      
+      derivs.col(0) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::Lambdax, problem);
+      derivs.col(1) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::TLambdax, problem);
+      derivs.col(2) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::TYu22, problem);
+      derivs.col(3) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::mq222, problem);
+      derivs.col(4) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::mHd2, problem);
+      derivs.col(5) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::mHu2, problem);
+      derivs.col(6) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::mu222, problem);
+      derivs.col(7) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::ms2, problem);
+      derivs.col(8) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::MassB, problem);
+      derivs.col(9) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::MassWB, problem);
+      derivs.col(10) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::MassG, problem);
+      derivs.col(11) = calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::MassBp, problem);
+
+      return derivs;
+   }
+
+   double lowE6SSM_tuning_calculator::low_scale_par(double x, void * params)
+   {
+      const low_scale_par_params* pars
+         = static_cast<low_scale_par_params*>(params);
+
+      lowE6SSM<Two_scale> model = pars->model;
+      double low_scale = pars->low_scale;
+      std::size_t beta_loops = pars->beta_loops;
+      lowE6SSM_info::Parameters p = pars->p;
+      lowE6SSM_info::Parameters q = pars->q;
+
+      if (p == lowE6SSM_info::Lambdax) {
+         const double underflow = 1.0e-100;
+         double Alambda;
+
+         if (is_zero(model.get_TLambdax())) {
+            Alambda = 0.;
+         } else if (Abs(model.get_Lambdax()) < underflow) {
+            throw DivideByZeroError("in lowE6SSM_tuning_calculator::beta_fn");
+         } else {
+            Alambda = model.get_TLambdax() / model.get_Lambdax();
+         }
+
+         model.set_parameter(p, x);
+         model.set_parameter(lowE6SSM_info::TLambdax, x * Alambda);
+      } else if (p == lowE6SSM_info::TLambdax) {
+         model.set_parameter(p, model.get_Lambdax() * x);
+      } else if (p == lowE6SSM_info::TYu22) {
+         model.set_parameter(p, model.get_Yu(2,2) * x);
+      } else {
+         model.set_parameter(p, x);
+      }
+
+      if (beta_loops != 0) {
+         model.set_loops(beta_loops);
+         model.run_to(low_scale);
+      }
+
+      return model.get_parameter(q);
+   }
+
+   Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::Parameters p, bool & problem) const
+   {
+      const double epsilon = 1.0e-5;
+      double x;     
+      double h;
+
+      if (tuning_ewsb_loop_order == 0) {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars,1> derivs;
+         std::vector<lowE6SSM_info::Parameters> pars 
+            = {lowE6SSM_info::Lambdax, lowE6SSM_info::g1, lowE6SSM_info::g2, lowE6SSM_info::gN,
+               lowE6SSM_info::TLambdax, lowE6SSM_info::mHd2, lowE6SSM_info::mHu2, lowE6SSM_info::ms2};
+
+         if (p == lowE6SSM_info::TLambdax) {
+            x = get_ALambdax();
+         } else if (p == lowE6SSM_info::TYu22) {
+            x = get_AYu22();
+         } else {
+            x = model.get_parameter(p);
+         }
+         
+         for (std::size_t i = 0; i < num_tree_level_ewsb_pars; ++i) {
+            lowE6SSM_info::Parameters q = pars[i];
+            double numeric_deriv;
+            double abs_err;
+            
+            low_scale_par_params pars = {model, tuning_scale, tuning_beta_loop_order, p, q};
+            gsl_function func = {low_scale_par, &pars};
+            
+            h = epsilon * Abs(x);
+            if (h == 0.0) h = epsilon;
+            double tmp_1 = x;
+            double tmp_2 = tmp_1 + h;
+            h = tmp_2 - tmp_1;
+            
+            gsl_deriv_central(&func, x, h, &numeric_deriv, &abs_err);
+            
+            derivs(i) = numeric_deriv;
+            
+            if (Abs(abs_err / numeric_deriv) > 1.0 && Abs(numeric_deriv) > 1.0e-10)
+               problem = true;
+         }
+         return derivs;
+      } else {
+         Eigen::Matrix<double,num_tree_level_ewsb_pars + num_one_loop_ewsb_pars,1> derivs;
+         std::vector<lowE6SSM_info::Parameters> pars 
+            = {lowE6SSM_info::Lambdax, lowE6SSM_info::Yu22, lowE6SSM_info::g1, lowE6SSM_info::g2, lowE6SSM_info::gN,
+               lowE6SSM_info::TLambdax, lowE6SSM_info::TYu22, lowE6SSM_info::mq222, lowE6SSM_info::mHd2, 
+               lowE6SSM_info::mHu2, lowE6SSM_info::mu222, lowE6SSM_info::ms2};
+
+         if (p == lowE6SSM_info::TLambdax) {
+            x = get_ALambdax();
+         } else if (p == lowE6SSM_info::TYu22) {
+            x = get_AYu22();
+         } else {
+            x = model.get_parameter(p);
+         }
+         
+         for (std::size_t i = 0; i < num_tree_level_ewsb_pars + num_one_loop_ewsb_pars; ++i) {
+            lowE6SSM_info::Parameters q = pars[i];
+            double numeric_deriv;
+            double abs_err;
+            
+            low_scale_par_params pars = {model, tuning_scale, tuning_beta_loop_order, p, q};
+            gsl_function func = {low_scale_par, &pars};
+            
+            h = epsilon * Abs(x);
+            if (h == 0.0) h = epsilon;
+            double tmp_1 = x;
+            double tmp_2 = tmp_1 + h;
+            h = tmp_2 - tmp_1;
+            
+            gsl_deriv_central(&func, x, h, &numeric_deriv, &abs_err);
+            
+            derivs(i) = numeric_deriv;
+            
+            if (Abs(abs_err / numeric_deriv) > 1.0 && Abs(numeric_deriv) > 1.0e-10)
+               problem = true;
+         }
+         return derivs;         
+      }
    }
 
    Eigen::Matrix<double,Eigen::Dynamic,1> lowE6SSM_tuning_calculator::calculate_deriv_dlowscale_dLambdax() const

@@ -56,6 +56,7 @@ namespace flexiblesusy {
       /// Calculate the fine tunings. Returns true if there is a problem.
       bool calculate_fine_tunings_numerically();
       bool calculate_fine_tunings_approximately();
+      bool calculate_fine_tunings_using_rge_derivs();
 
       /// Coefficients at leading log order; useful for constructing
       /// Taylor series approximation to the RGE solutions
@@ -109,6 +110,9 @@ namespace flexiblesusy {
 
       Eigen::Matrix<double,num_ewsb_eqs,Eigen::Dynamic> calculate_ewsb_parameter_derivs(const lowE6SSM_ew_derivs&) const;
       Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs() const;
+      Eigen::Matrix<double,Eigen::Dynamic,num_tuning_pars> calculate_beta_derivs_numerically(bool &) const;
+
+      Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dparam_numerically(lowE6SSM_info::Parameters, bool &) const;
 
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dLambdax() const;
       Eigen::Matrix<double,Eigen::Dynamic,1> calculate_deriv_dlowscale_dALambdax() const;
@@ -409,6 +413,17 @@ namespace flexiblesusy {
       double deriv_dlead_log_one_loop_ms2_dMassG() const;
       double deriv_dlead_log_one_loop_ms2_dMassBp() const;
 
+
+      /// For numerical calculations
+      struct low_scale_par_params {
+         lowE6SSM<Two_scale> model;
+         double low_scale;
+         std::size_t beta_loops;
+         lowE6SSM_info::Parameters p;
+         lowE6SSM_info::Parameters q;
+      };
+
+      static double low_scale_par(double x, void * params);
    };
 
 } // namespace flexiblesusy

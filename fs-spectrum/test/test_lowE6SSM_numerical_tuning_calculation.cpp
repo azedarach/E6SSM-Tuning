@@ -14,7 +14,7 @@
 #include "lowE6SSM_two_scale_tuning_calculator.hpp"
 
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE test_lowE6SSM_tuning_calculation
+#define BOOST_TEST_MODULE test_lowE6SSM_numerical_tuning_calculation
 
 #include <boost/test/unit_test.hpp>
 #include <boost/test/floating_point_comparison.hpp>
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE( test_fine_tuning_tree_level_no_running )
    tuning_calc.set_input_scale(input_scale);
    tuning_calc.set_tuning_scale(tuning_scale);
 
-   bool numerical_problem = tuning_calc.calculate_fine_tunings_numerically();
+   bool numerical_problem = tuning_calc.calculate_fine_tunings_using_rge_derivs();
 
    std::map<lowE6SSM_info::Parameters, double> numerical_tunings = tuning_calc.get_fine_tunings();
 
@@ -313,7 +313,7 @@ BOOST_AUTO_TEST_CASE( test_fine_tuning_one_loop_no_running )
    tuning_calc.set_input_scale(input_scale);
    tuning_calc.set_tuning_scale(tuning_scale);
 
-   bool numerical_problem = tuning_calc.calculate_fine_tunings_numerically();
+   bool numerical_problem = tuning_calc.calculate_fine_tunings_using_rge_derivs();
 
    std::map<lowE6SSM_info::Parameters, double> numerical_tunings = tuning_calc.get_fine_tunings();
 
@@ -399,14 +399,14 @@ BOOST_AUTO_TEST_CASE( test_fine_tuning_one_loop_with_running )
    tuning_calc.set_input_scale(input_scale);
    tuning_calc.set_tuning_scale(tuning_scale);
 
-   bool numerical_problem = tuning_calc.calculate_fine_tunings_numerically();
+   bool numerical_problem = tuning_calc.calculate_fine_tunings_using_rge_derivs();
 
    std::map<lowE6SSM_info::Parameters, double> numerical_tunings = tuning_calc.get_fine_tunings();
-
 
    bool approximate_problem = tuning_calc.calculate_fine_tunings_approximately();
 
    std::map<lowE6SSM_info::Parameters, double> approximate_tunings = tuning_calc.get_fine_tunings();
+
 
    BOOST_REQUIRE(numerical_problem == false && approximate_problem == false);
    BOOST_CHECK_LE(Abs(approximate_tunings[lowE6SSM_info::Lambdax]

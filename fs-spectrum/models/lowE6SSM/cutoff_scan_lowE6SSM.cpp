@@ -519,17 +519,103 @@ int main()
 
          const lowE6SSM<algorithm_type>& model
             = spectrum_generator.get_model();
+         const lowE6SSM_physical& pole_masses = model.get_physical();
          const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& problems
             = spectrum_generator.get_problems();
 
-         
+         const bool error = problems.have_serious_problem();         
+
          // if no problems, calculate tuning (numerically)
-         if (!problems.have_serious_problem()) {
-            
+         std::map<lowE6SSM_info::Parameters,double> fine_tunings;
+         double max_tuning = 0.;
+         bool tuning_problem = false;
+         if (!error) {
+            lowE6SSM_tuning_calculator tuning_calc(model);
+            tuning_calc.set_tuning_scale(model.get_scale());
+            tuning_calc.set_input_scale(mx_value);
+            tuning_calc.set_tuning_ewsb_loop_order(1);
+            tuning_calc.set_tuning_beta_loop_order(2);
+            try {
+               tuning_problem = tuning_calc.calculate_fine_tunings_using_rge_derivs();
+            } catch (const std::string & a) {
+               std::cerr << "WARNING: serious numerical problem encountered in fine tuning calculation.\n";
+               tuning_problem = true;
+            } catch (const char* a) {
+               std::cerr << "WARNING: serious numerical problem encountered in fine tuning calculation.\n";
+               tuning_problem = true;
+            } catch (...) {
+               std::cerr << "WARNING: serious numerical problem encountered in fine tuning calculation.\n";
+               tuning_problem = true;
+            }
+            fine_tunings = tuning_calc.get_fine_tunings();
+            max_tuning = maximum_tuning(fine_tunings);
          }
 
          // write out
-
+         std::cout << " "
+                   << std::setw(12) << std::left << input.TanBeta << ' '
+                   << std::setw(12) << std::left << model.get_Lambdax() << ' '
+                   << std::setw(12) << std::left << model.get_TLambdax() / model.get_Lambdax() << ' '
+                   << std::setw(12) << std::left << model.get_TYu(2,2) / model.get_Yu(2,2) << ' '
+                   << std::setw(12) << std::left << model.get_mq2(2,2) << ' '
+                   << std::setw(12) << std::left << model.get_mu2(2,2) << ' '
+                   << std::setw(12) << std::left << model.get_MassWB() << ' '
+                   << std::setw(12) << std::left << pole_masses.Mhh(0) << ' '
+                   << std::setw(12) << std::left << pole_masses.Mhh(1) << ' '
+                   << std::setw(12) << std::left << pole_masses.Mhh(2) << ' '
+                   << std::setw(12) << std::left << model.get_mHd2() << ' '
+                   << std::setw(12) << std::left << model.get_mHu2() << ' '
+                   << std::setw(12) << std::left << model.get_ms2() << ' '
+                   << std::setw(12) << std::left << model.get_g1() << ' '
+                   << std::setw(12) << std::left << model.get_gN() << ' '
+                   << std::setw(12) << std::left << Sqrt(model.get_MSu()(0) * model.get_MSu()(1)) << ' '
+                   << std::setw(12) << std::left << mx_value << ' '
+                   << std::setw(12) << std::left << input.vsInput << ' '
+                   << std::setw(12) << std::left << model.get_MVZ() << ' '
+                   << std::setw(12) << std::left << model.get_MVZp() << ' '
+                   << std::setw(12) << std::left << model.get_MSu()(0) << ' '
+                   << std::setw(12) << std::left << model.get_MSu()(1) << ' '
+                   << std::setw(12) << std::left << model.get_MSd()(0) << ' '
+                   << std::setw(12) << std::left << model.get_MSd()(1) << ' '
+                   << std::setw(12) << std::left << model.get_MCha()(0) << ' '
+                   << std::setw(12) << std::left << model.get_MCha()(1) << ' '
+                   << std::setw(12) << std::left << model.get_MChi()(0)<< ' '
+                   << std::setw(12) << std::left << model.get_MChi()(1)<< ' '
+                   << std::setw(12) << std::left << model.get_MChi()(2)<< ' '
+                   << std::setw(12) << std::left << model.get_MChi()(3)<< ' '
+                   << std::setw(12) << std::left << model.get_MChi()(4)<< ' '
+                   << std::setw(12) << std::left << model.get_MChi()(5)<< ' '
+                   << std::setw(12) << std::left << model.get_Mhh()(0) << ' '
+                   << std::setw(12) << std::left << model.get_Mhh()(1) << ' '
+                   << std::setw(12) << std::left << model.get_Mhh()(2) << ' '
+                   << std::setw(12) << std::left << model.get_MAh()(0) << ' '
+                   << std::setw(12) << std::left << model.get_MAh()(1) << ' '
+                   << std::setw(12) << std::left << model.get_MAh()(2) << ' '
+                   << std::setw(12) << std::left << max_tuning << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::Lambdax] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::TLambdax] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::TYu22] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mq222] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mHd2] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mHu2] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::mu222] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::ms2] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassB] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassWB] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassG] << ' '
+                   << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassBp] << ' '
+                   << std::setw(12) << std::left << error << ' ';
+         if (error || tuning_problem) {
+            std::cout << "# " << problems;
+            if (tuning_problem) {
+               std::cout << ", tuning error\n"; 
+            } else {
+               std::cout << '\n';
+            }
+         } else {
+            std::cout << '\n';
+         }
+         
          scan.step_forward();
       } // while (!scan.has_finished())
 

@@ -37,6 +37,7 @@ LIBlowE6SSM_SRC += \
 		$(DIR)/lowE6SSM_two_scale_gauge_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_high_scale_constraint.cpp \
 		$(DIR)/lowE6SSM_two_scale_initial_guesser.cpp \
+		$(DIR)/lowE6SSM_two_scale_input_scale_constraint.cpp \
 		$(DIR)/lowE6SSM_two_scale_Lambdax_derivs.cpp \
 		$(DIR)/lowE6SSM_two_scale_LL_g1.cpp \
 		$(DIR)/lowE6SSM_two_scale_LL_g2.cpp \
@@ -81,6 +82,7 @@ LIBlowE6SSM_HDR += \
 		$(DIR)/lowE6SSM_info.hpp \
 		$(DIR)/lowE6SSM_initial_guesser.hpp \
 		$(DIR)/lowE6SSM_input_parameters.hpp \
+		$(DIR)/lowE6SSM_input_scale_constraint.hpp \
 		$(DIR)/lowE6SSM_low_scale_constraint.hpp \
 		$(DIR)/lowE6SSM_model.hpp \
 		$(DIR)/lowE6SSM_physical.hpp \
@@ -91,6 +93,7 @@ LIBlowE6SSM_HDR += \
 		$(DIR)/lowE6SSM_two_scale_convergence_tester.hpp \
 		$(DIR)/lowE6SSM_two_scale_high_scale_constraint.hpp \
 		$(DIR)/lowE6SSM_two_scale_initial_guesser.hpp \
+		$(DIR)/lowE6SSM_two_scale_input_scale_constraint.hpp \
 		$(DIR)/lowE6SSM_two_scale_low_scale_constraint.hpp \
 		$(DIR)/lowE6SSM_two_scale_model.hpp \
 		$(DIR)/lowE6SSM_two_scale_soft_parameters.hpp \

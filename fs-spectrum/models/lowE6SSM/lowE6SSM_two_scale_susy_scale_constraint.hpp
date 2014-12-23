@@ -44,14 +44,17 @@ public:
 
    void clear();
    double get_initial_scale_guess() const;
+   bool get_input_parameters_fixed_at_susy_scale() const;
    void initialize();
    void set_input_parameters(const lowE6SSM_input_parameters&);
+   void set_input_parameters_fixed_at_susy_scale(bool);
 
 private:
    double scale;
    double initial_scale_guess;
    lowE6SSM<Two_scale>* model;
    lowE6SSM_input_parameters inputPars;
+   bool input_parameters_fixed_at_susy_scale;
 
    void update_scale();
 };

@@ -48,6 +48,7 @@ lowE6SSM_susy_scale_constraint<Two_scale>::lowE6SSM_susy_scale_constraint()
    , initial_scale_guess(0.)
    , model(0)
    , inputPars()
+   , input_parameters_fixed_at_susy_scale(true)
 {
 }
 
@@ -76,15 +77,13 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    const auto Lambda12Input = INPUTPARAMETER(Lambda12Input);
    const auto LambdaxInput = INPUTPARAMETER(LambdaxInput);
    const auto MuPrInput = INPUTPARAMETER(MuPrInput);
-   const auto gNInput = INPUTPARAMETER(gNInput);
    const auto vsInput = INPUTPARAMETER(vsInput);
-   const auto TYdInput = INPUTPARAMETER(TYdInput);
-   const auto TYeInput = INPUTPARAMETER(TYeInput);
+   const auto AYdInput = INPUTPARAMETER(AYdInput);
+   const auto AYeInput = INPUTPARAMETER(AYeInput);
    const auto TKappaInput = INPUTPARAMETER(TKappaInput);
    const auto TLambda12Input = INPUTPARAMETER(TLambda12Input);
-   // DH:: note changed meaning here
-   const auto ALambdaxInput = INPUTPARAMETER(TLambdaxInput);
-   const auto AYuInput = INPUTPARAMETER(TYuInput);
+   const auto TLambdaxInput = INPUTPARAMETER(TLambdaxInput);
+   const auto AYuInput = INPUTPARAMETER(AYuInput);
    const auto BMuPrInput = INPUTPARAMETER(BMuPrInput);
    const auto mq2Input = INPUTPARAMETER(mq2Input);
    const auto ml2Input = INPUTPARAMETER(ml2Input);
@@ -103,37 +102,41 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::apply()
    const auto MassGInput = INPUTPARAMETER(MassGInput);
    const auto MassBpInput = INPUTPARAMETER(MassBpInput);
 
+   const auto Yd = MODELPARAMETER(Yd);
+   const auto Ye = MODELPARAMETER(Ye);
    const auto Yu = MODELPARAMETER(Yu);
 
-   MODEL->set_Kappa(KappaInput);
-   MODEL->set_Lambda12(Lambda12Input);
-   MODEL->set_Lambdax(LambdaxInput);
-   MODEL->set_MuPr(MuPrInput);
-   //MODEL->set_gN(gNInput);
    MODEL->set_vs(vsInput);
-   MODEL->set_TYd(TYdInput);
-   MODEL->set_TYe(TYeInput);
-   MODEL->set_TKappa(TKappaInput);
-   MODEL->set_TLambda12(TLambda12Input);
-   MODEL->set_TLambdax(LambdaxInput * ALambdaxInput);
-   MODEL->set_TYu((Yu.array() * AYuInput.array()).matrix());
-   MODEL->set_BMuPr(BMuPrInput);
-   MODEL->set_mq2(mq2Input);
-   MODEL->set_ml2(ml2Input);
-   MODEL->set_md2(md2Input);
-   MODEL->set_mu2(mu2Input);
-   MODEL->set_me2(me2Input);
-   MODEL->set_mH1I2(mH1I2Input);
-   MODEL->set_mH2I2(mH2I2Input);
-   MODEL->set_msI2(msI2Input);
-   MODEL->set_mDx2(mDx2Input);
-   MODEL->set_mDxbar2(mDxbar2Input);
-   MODEL->set_mHp2(mHp2Input);
-   MODEL->set_mHpbar2(mHpbar2Input);
-   MODEL->set_MassB(MassBInput);
-   MODEL->set_MassWB(MassWBInput);
-   MODEL->set_MassG(MassGInput);
-   MODEL->set_MassBp(MassBpInput);
+
+   if (input_parameters_fixed_at_susy_scale) { 
+      MODEL->set_Kappa(KappaInput);
+      MODEL->set_Lambda12(Lambda12Input);
+      MODEL->set_Lambdax(LambdaxInput);
+      MODEL->set_MuPr(MuPrInput);
+      MODEL->set_TYd((Yd.array() * AYdInput.array()).matrix());
+      MODEL->set_TYe((Ye.array() * AYeInput.array()).matrix());
+      MODEL->set_TKappa(TKappaInput);
+      MODEL->set_TLambda12(TLambda12Input);
+      MODEL->set_TLambdax(TLambdaxInput);
+      MODEL->set_TYu((Yu.array() * AYuInput.array()).matrix());
+      MODEL->set_BMuPr(BMuPrInput);
+      MODEL->set_mq2(mq2Input);
+      MODEL->set_ml2(ml2Input);
+      MODEL->set_md2(md2Input);
+      MODEL->set_mu2(mu2Input);
+      MODEL->set_me2(me2Input);
+      MODEL->set_mH1I2(mH1I2Input);
+      MODEL->set_mH2I2(mH2I2Input);
+      MODEL->set_msI2(msI2Input);
+      MODEL->set_mDx2(mDx2Input);
+      MODEL->set_mDxbar2(mDxbar2Input);
+      MODEL->set_mHp2(mHp2Input);
+      MODEL->set_mHpbar2(mHpbar2Input);
+      MODEL->set_MassB(MassBInput);
+      MODEL->set_MassWB(MassWBInput);
+      MODEL->set_MassG(MassGInput);
+      MODEL->set_MassBp(MassBpInput);
+   }
 
    
    // the parameters, which are fixed by the EWSB eqs., will now be
@@ -152,6 +155,11 @@ double lowE6SSM_susy_scale_constraint<Two_scale>::get_initial_scale_guess() cons
    return initial_scale_guess;
 }
 
+bool lowE6SSM_susy_scale_constraint<Two_scale>::get_input_parameters_fixed_at_susy_scale() const
+{
+   return input_parameters_fixed_at_susy_scale;
+}
+
 void lowE6SSM_susy_scale_constraint<Two_scale>::set_model(Two_scale_model* model_)
 {
    model = cast_model<lowE6SSM<Two_scale> >(model_);
@@ -162,11 +170,17 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::set_input_parameters(const lowE6
    inputPars = inputPars_;
 }
 
+void lowE6SSM_susy_scale_constraint<Two_scale>::set_input_parameters_fixed_at_susy_scale(bool b)
+{
+   input_parameters_fixed_at_susy_scale = b;
+}
+
 void lowE6SSM_susy_scale_constraint<Two_scale>::clear()
 {
    scale = 0.;
    initial_scale_guess = 0.;
    model = NULL;
+   input_parameters_fixed_at_susy_scale = true;
 }
 
 void lowE6SSM_susy_scale_constraint<Two_scale>::initialize()
@@ -174,6 +188,8 @@ void lowE6SSM_susy_scale_constraint<Two_scale>::initialize()
    initial_scale_guess = 1000;
 
    scale = initial_scale_guess;
+
+   input_parameters_fixed_at_susy_scale = true;
 }
 
 void lowE6SSM_susy_scale_constraint<Two_scale>::update_scale()

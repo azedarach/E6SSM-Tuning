@@ -52,6 +52,10 @@ struct lowE6SSM_input_parameters {
    Eigen::Matrix<double,2,2> TLambda12Input;
    double TLambdaxInput;
    Eigen::Matrix<double,3,3> TYuInput;
+   // Note alternate format for modified BCs
+   Eigen::Matrix<double,3,3> AYdInput;
+   Eigen::Matrix<double,3,3> AYeInput;
+   Eigen::Matrix<double,3,3> AYuInput;
    double BMuPrInput;
    Eigen::Matrix<double,3,3> mq2Input;
    Eigen::Matrix<double,3,3> ml2Input;

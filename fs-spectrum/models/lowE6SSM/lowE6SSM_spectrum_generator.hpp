@@ -22,6 +22,8 @@
 #define lowE6SSM_SPECTRUM_GENERATOR_H
 
 #include "lowE6SSM_two_scale_model.hpp"
+#include "lowE6SSM_two_scale_high_scale_constraint.hpp"
+#include "lowE6SSM_two_scale_input_scale_constraint.hpp"
 #include "lowE6SSM_two_scale_susy_scale_constraint.hpp"
 #include "lowE6SSM_two_scale_low_scale_constraint.hpp"
 #include "lowE6SSM_two_scale_convergence_tester.hpp"
@@ -41,8 +43,12 @@ class lowE6SSM_spectrum_generator {
 public:
    lowE6SSM_spectrum_generator()
       : solver(), model()
+      , high_scale_constraint()
+      , input_scale_constraint()
       , susy_scale_constraint()
       , low_scale_constraint()
+      , high_scale(0.)
+      , input_scale(0.)
       , susy_scale(0.)
       , low_scale(0.)
       , parameter_output_scale(0.)
@@ -50,7 +56,8 @@ public:
       , max_iterations(0)
       , beta_loop_order(2)
       , threshold_corrections_loop_order(1)
-      , calculate_sm_masses(false) {}
+      , calculate_sm_masses(false)
+      , fixed_input_scale(false) {}
    ~lowE6SSM_spectrum_generator() {}
 
    double get_susy_scale() const { return susy_scale; }
@@ -60,7 +67,7 @@ public:
       return model.get_problems();
    }
    int get_exit_code() const { return get_problems().have_serious_problem(); };
-   void set_input_scale(double) {}
+   void set_input_scale(double s);
    void set_parameter_output_scale(double s) { parameter_output_scale = s; }
    void set_precision_goal(double precision_goal_) { precision_goal = precision_goal_; }
    void set_pole_mass_loop_order(unsigned l) { model.set_pole_mass_loop_order(l); }
@@ -77,16 +84,41 @@ public:
 private:
    RGFlow<T> solver;
    lowE6SSM<T> model;
+   lowE6SSM_high_scale_constraint<T> high_scale_constraint;
+   lowE6SSM_input_scale_constraint<T> input_scale_constraint;
    lowE6SSM_susy_scale_constraint<T> susy_scale_constraint;
    lowE6SSM_low_scale_constraint<T>  low_scale_constraint;
-   double susy_scale, low_scale;
+   double high_scale, input_scale, susy_scale, low_scale;
    double parameter_output_scale; ///< output scale for running parameters
    double precision_goal; ///< precision goal
    unsigned max_iterations; ///< maximum number of iterations
    unsigned beta_loop_order; ///< beta-function loop order
    unsigned threshold_corrections_loop_order; ///< threshold corrections loop order
    bool calculate_sm_masses; ///< calculate SM pole masses
+   bool fixed_input_scale; ///< use fixed input scale
 };
+
+/**
+ * @brief Sets a fixed input scale to set the parameters at
+ *
+ * This function allows to choose a fixed input scale, other
+ * than the high scale (g1 == g2) or the SUSY scale, at
+ * which to set the values of the model parameters. If s <= 0,
+ * the SUSY scale is selected automatically. At the moment
+ * no option is provided to select the high scale.
+ *
+ * @param s fixed input scale
+ */
+template <class T>
+void lowE6SSM_spectrum_generator<T>::set_input_scale(double s)
+{
+   input_scale = s;
+   if (s <= 0.) {
+      fixed_input_scale = false;
+   } else {
+      fixed_input_scale = true;
+   }
+}
 
 /**
  * @brief Run's the RG solver with the given input parameters
@@ -103,23 +135,48 @@ template <class T>
 void lowE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
                                 const lowE6SSM_input_parameters& input)
 {
+   high_scale_constraint.clear();
+   input_scale_constraint.clear();
    susy_scale_constraint.clear();
    low_scale_constraint .clear();
+   high_scale_constraint.set_input_parameters(input);
+   input_scale_constraint.set_input_parameters(input);
    susy_scale_constraint.set_input_parameters(input);
    low_scale_constraint .set_input_parameters(input);
    low_scale_constraint .set_sm_parameters(oneset);
+   high_scale_constraint.initialize();
+   input_scale_constraint.initialize();
    susy_scale_constraint.initialize();
    low_scale_constraint .initialize();
 
-   std::vector<Constraint<T>*> upward_constraints {
-      &low_scale_constraint,
-      &susy_scale_constraint
-   };
+   std::vector<Constraint<T>*> upward_constraints;
+   std::vector<Constraint<T>*> downward_constraints;
 
-   std::vector<Constraint<T>*> downward_constraints {
-      &susy_scale_constraint,
-      &low_scale_constraint
-   };
+   if (!fixed_input_scale) {
+
+      susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(true);
+
+      upward_constraints.push_back(&low_scale_constraint);
+      upward_constraints.push_back(&high_scale_constraint);
+
+      downward_constraints.push_back(&high_scale_constraint);
+      downward_constraints.push_back(&susy_scale_constraint);
+      downward_constraints.push_back(&low_scale_constraint);
+
+   } else {
+
+      susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(false);
+      input_scale_constraint.set_scale(input_scale);
+
+      upward_constraints.push_back(&low_scale_constraint);
+      upward_constraints.push_back(&input_scale_constraint);
+      upward_constraints.push_back(&high_scale_constraint);
+
+      downward_constraints.push_back(&high_scale_constraint);
+      downward_constraints.push_back(&susy_scale_constraint);
+      downward_constraints.push_back(&low_scale_constraint);
+
+   }
 
    model.set_input_parameters(input);
    model.do_calculate_sm_pole_masses(calculate_sm_masses);
@@ -129,7 +186,7 @@ void lowE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    lowE6SSM_convergence_tester<T> convergence_tester(&model, precision_goal);
    if (max_iterations > 0)
       convergence_tester.set_max_iterations(max_iterations);
-
+   // DH::TODO
    lowE6SSM_initial_guesser<T> initial_guesser(&model, input, oneset,
                                                   low_scale_constraint,
                                                   susy_scale_constraint);

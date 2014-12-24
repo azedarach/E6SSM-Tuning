@@ -39,7 +39,9 @@ lowE6SSM_initial_guesser<Two_scale>::lowE6SSM_initial_guesser(
    const lowE6SSM_input_parameters& input_pars_,
    const QedQcd& oneset_,
    const lowE6SSM_low_scale_constraint<Two_scale>& low_constraint_,
-   const lowE6SSM_susy_scale_constraint<Two_scale>& susy_constraint_
+   const lowE6SSM_susy_scale_constraint<Two_scale>& susy_constraint_,
+   const lowE6SSM_input_scale_constraint<Two_scale>& input_constraint_,
+   const lowE6SSM_high_scale_constraint<Two_scale>& high_constraint_
 )
    : Initial_guesser<Two_scale>()
    , model(model_)
@@ -57,6 +59,8 @@ lowE6SSM_initial_guesser<Two_scale>::lowE6SSM_initial_guesser(
    , running_precision(1.0e-3)
    , low_constraint(low_constraint_)
    , susy_constraint(susy_constraint_)
+   , input_constraint(input_constraint_)
+   , high_constraint(high_constraint_)
 {
    assert(model && "lowE6SSM_initial_guesser: Error: pointer to model"
           " lowE6SSM<Two_scale> must not be zero");
@@ -204,12 +208,32 @@ void lowE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
 {
    const double low_scale_guess = low_constraint.get_initial_scale_guess();
    const double susy_scale_guess = susy_constraint.get_initial_scale_guess();
+   const double input_scale = input_constraint.get_scale();
+   const double high_scale_guess = high_constraint.get_initial_scale_guess();
 
-   model->run_to(susy_scale_guess, running_precision);
+   if (susy_constraint.get_input_parameters_fixed_at_susy_scale()) {
+      model->run_to(susy_scale_guess, running_precision);
 
-   // apply susy-scale constraint
-   susy_constraint.set_model(model);
-   susy_constraint.apply();
+      // apply susy-scale constraint
+      susy_constraint.set_model(model);
+      susy_constraint.apply();
+   } else {
+      model->run_to(input_scale, running_precision);
+
+      // apply input-scale constraint
+      input_constraint.set_model(model);
+      input_constraint.apply();
+
+      model->run_to(high_scale_guess, running_precision);
+
+      high_constraint.set_model(model);
+      high_constraint.apply();
+
+      model->run_to(susy_scale_guess, running_precision);
+
+      susy_constraint.set_model(model);
+      susy_constraint.apply();
+   }
 
    model->run_to(low_scale_guess, running_precision);
 
@@ -218,6 +242,7 @@ void lowE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
 
    // calculate tree-level spectrum
    model->calculate_DRbar_parameters();
+   model->print(std::cout);
 }
 
 } // namespace flexiblesusy

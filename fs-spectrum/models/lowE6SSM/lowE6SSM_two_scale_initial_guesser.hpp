@@ -25,6 +25,8 @@
 #include "lowE6SSM_input_parameters.hpp"
 #include "lowE6SSM_two_scale_low_scale_constraint.hpp"
 #include "lowE6SSM_two_scale_susy_scale_constraint.hpp"
+#include "lowE6SSM_two_scale_input_scale_constraint.hpp"
+#include "lowE6SSM_two_scale_high_scale_constraint.hpp"
 #include "two_scale_initial_guesser.hpp"
 #include "error.hpp"
 #include "lowe.h"
@@ -50,7 +52,9 @@ public:
                                const lowE6SSM_input_parameters&,
                                const QedQcd&,
                                const lowE6SSM_low_scale_constraint<Two_scale>&,
-                               const lowE6SSM_susy_scale_constraint<Two_scale>&);
+                               const lowE6SSM_susy_scale_constraint<Two_scale>&,
+                               const lowE6SSM_input_scale_constraint<Two_scale>&,
+                               const lowE6SSM_high_scale_constraint<Two_scale>&);
    virtual ~lowE6SSM_initial_guesser();
    virtual void guess(); ///< initial guess
 
@@ -72,6 +76,8 @@ private:
    double running_precision; ///< Runge-Kutta RG running precision
    lowE6SSM_low_scale_constraint<Two_scale> low_constraint;
    lowE6SSM_susy_scale_constraint<Two_scale> susy_constraint;
+   lowE6SSM_input_scale_constraint<Two_scale> input_constraint;
+   lowE6SSM_high_scale_constraint<Two_scale> high_constraint;
 
    void guess_susy_parameters();
    void guess_soft_parameters();

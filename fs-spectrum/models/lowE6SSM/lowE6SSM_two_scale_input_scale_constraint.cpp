@@ -117,7 +117,7 @@ namespace flexiblesusy {
       MODEL->set_MassWB(MassWBInput);
       MODEL->set_MassG(MassGInput);
       MODEL->set_MassBp(MassBpInput);
-
+      MODEL->print(std::cout);
    }
 
    double lowE6SSM_input_scale_constraint<Two_scale>::get_scale() const

@@ -60,6 +60,8 @@ public:
       , fixed_input_scale(false) {}
    ~lowE6SSM_spectrum_generator() {}
 
+   double get_high_scale() const { return high_scale; }
+   double get_input_scale() const { return input_scale; }
    double get_susy_scale() const { return susy_scale; }
    double get_low_scale()  const { return low_scale;  }
    const lowE6SSM<T>& get_model() const { return model; }
@@ -186,10 +188,12 @@ void lowE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    lowE6SSM_convergence_tester<T> convergence_tester(&model, precision_goal);
    if (max_iterations > 0)
       convergence_tester.set_max_iterations(max_iterations);
-   // DH::TODO
+   
    lowE6SSM_initial_guesser<T> initial_guesser(&model, input, oneset,
                                                   low_scale_constraint,
-                                                  susy_scale_constraint);
+                                                  susy_scale_constraint,
+                                                  input_scale_constraint,
+                                                  high_scale_constraint);
    Two_scale_increasing_precision precision(10.0, precision_goal);
 
    solver.reset();
@@ -198,10 +202,11 @@ void lowE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    solver.set_initial_guesser(&initial_guesser);
    solver.add_model(&model, upward_constraints, downward_constraints);
 
-   susy_scale = low_scale = 0.;
+   high_scale = susy_scale = low_scale = 0.;
 
    try {
       solver.solve();
+      high_scale = high_scale_constraint.get_scale();
       susy_scale = susy_scale_constraint.get_scale();
       low_scale  = low_scale_constraint.get_scale();
 

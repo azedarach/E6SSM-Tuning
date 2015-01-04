@@ -17,6 +17,7 @@ TEST_SRC := \
 		$(DIR)/test_lowE6SSM_ew_derivs.cpp \
 		$(DIR)/test_lowE6SSM_gauge_derivs.cpp \
 		$(DIR)/test_lowE6SSM_higgs_masses.cpp \
+		$(DIR)/test_lowE6SSM_Lambdax_2lp_beta.cpp \
 		$(DIR)/test_lowE6SSM_Lambdax_derivs.cpp \
 		$(DIR)/test_lowE6SSM_leading_log_coeffs.cpp \
 		$(DIR)/test_lowE6SSM_mHd2_derivs.cpp \
@@ -115,6 +116,9 @@ $(DIR)/test_lowE6SSM_gauge_derivs.x: $(DIR)/test_lowE6SSM_gauge_derivs.o $(LIBlo
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_higgs_masses.x: $(DIR)/test_lowE6SSM_higgs_masses.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_Lambdax_2lp_beta.x: $(DIR)/test_lowE6SSM_Lambdax_2lp_beta.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_Lambdax_derivs.x: $(DIR)/test_lowE6SSM_Lambdax_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))

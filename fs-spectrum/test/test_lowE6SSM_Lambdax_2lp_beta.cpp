@@ -7,7 +7,6 @@
 #include <random>
 #include <chrono>
 #include <Eigen/Core>
-#include <gsl/gsl_deriv.h>
 
 #include "wrappers.hpp"
 #include "lowE6SSM_two_scale_model.hpp"
@@ -339,7 +338,7 @@ BOOST_AUTO_TEST_CASE( test_2lp_beta_Lambdax_gN_g1_coeff )
       model.set_parameter(parameters_to_zero.at(i), 0.);
    }
 
-   // use 6 combinations of (Lambdax, Yd(2,2), gN) to obtain the
+   // use 6 combinations of (Lambdax, g1, gN) to obtain the
    // coefficients of the various non-zero terms
    const std::size_t num_terms = 6;
    

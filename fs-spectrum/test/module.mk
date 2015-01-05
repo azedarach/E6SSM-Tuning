@@ -14,6 +14,7 @@ LIBTEST_DEP := \
 LIBTEST     := $(DIR)/lib$(MODNAME)$(LIBEXT)
 
 TEST_SRC := \
+		$(DIR)/test_E6SpecGen_Lambdax_2lp_beta.cpp \
 		$(DIR)/test_lowE6SSM_ew_derivs.cpp \
 		$(DIR)/test_lowE6SSM_gauge_derivs.cpp \
 		$(DIR)/test_lowE6SSM_higgs_masses.cpp \
@@ -108,6 +109,9 @@ execute-compiled-tests: $(TEST_EXE_LOG)
 clean:: clean-$(MODNAME)
 
 distclean:: distclean-$(MODNAME)
+
+$(DIR)/test_E6SpecGen_Lambdax_2lp_beta.x: $(DIR)/test_E6SpecGen_Lambdax_2lp_beta.o $(LIBSOFTSUSY) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_ew_derivs.x: $(DIR)/test_lowE6SSM_ew_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)

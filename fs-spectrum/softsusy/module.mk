@@ -10,6 +10,8 @@ LIBSOFTSUSY_TARBALL := \
 		   $(MODNAME).tar.gz
 
 LIBSOFTSUSY_SRC := \
+		   $(DIR)/flags.cpp \
+		   $(DIR)/mssm_tuning_utils.cpp \
 		   $(DIR)/softsusy_def.cpp \
 		   $(DIR)/softsusy_essmsoftpars.cpp \
 		   $(DIR)/softsusy_essmsusy.cpp \
@@ -27,15 +29,19 @@ LIBSOFTSUSY_SRC := \
 		   $(DIR)/softsusy_susy.cpp \
 		   $(DIR)/softsusy_tensor.cpp \
 		   $(DIR)/softsusy_twoloophiggs.f \
-		   $(DIR)/softsusy_utils.cpp
+		   $(DIR)/softsusy_utils.cpp \
+		   $(DIR)/tuning_numerics.cpp
 
 EXESOFTSUSY_SRC := \
+		   $(DIR)/cutoff_scan_mssm.cpp \
 		   $(DIR)/softsusy_main.cpp \
 		   $(DIR)/softsusy_rpvmain.cpp \
 		   $(DIR)/softsusy_rpvneutmain.cpp \
 		   $(DIR)/softsusy_softpoint.cpp
 
 LIBSOFTSUSY_HDR := \
+		   $(DIR)/flags.h \
+		   $(DIR)/mssm_tuning_utils.h \
 		   $(DIR)/softsusy_def.h \
 		   $(DIR)/softsusy_essmsoftpars.h \
 		   $(DIR)/softsusy_essmsusy.h \
@@ -57,7 +63,9 @@ LIBSOFTSUSY_HDR := \
 		   $(DIR)/softsusy_utils.h \
 		   $(DIR)/softsusy_xpr_base.h \
 		   $(DIR)/softsusy_xpr_matrix.h \
-		   $(DIR)/softsusy_xpr_vector.h
+		   $(DIR)/softsusy_xpr_vector.h \
+		   $(DIR)/tuning_numerics.h \
+		   $(DIR)/tuning_utils.h
 
 EXESOFTSUSY_HDR := \
 		   $(DIR)/softsusy_main.h \
@@ -80,6 +88,9 @@ EXESOFTSUSY_DEP := \
 		   $(EXESOFTSUSY_OBJ:.o=.d)
 
 LIBSOFTSUSY	:= $(DIR)/lib$(MODNAME)$(LIBEXT)
+
+CUTOFF_SCAN_OBJ := $(DIR)/cutoff_scan_mssm.o
+CUTOFF_SCAN_EXE := $(DIR)/cutoff_scan_mssm.x
 
 SOFTSUSY_MAIN_OBJ := $(DIR)/softsusy_main.o
 SOFTSUSY_MAIN_EXE := $(DIR)/softsusy_main.x
@@ -138,6 +149,11 @@ pack-$(MODNAME)-src:
 $(LIBSOFTSUSY): $(LIBSOFTSUSY_OBJ)
 		$(MAKELIB) $@ $^
 
+$(EXESOFTSUSY_DEP) $(EXESOFTSUSY_OBJ): CPPFLAGS += $(GSLFLAGS) $(EIGENFLAGS) $(BOOSTFLAGS)
+
+$(CUTOFF_SCAN_EXE): $(CUTOFF_SCAN_OBJ) $(LIBSOFTSUSY) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 $(SOFTSUSY_MAIN_EXE): $(SOFTSUSY_MAIN_OBJ) $(LIBSOFTSUSY)
 		$(CXX) -o $@ $(call abspathx,$^) $(FLIBS)
 
@@ -154,4 +170,4 @@ $(SOFTSUSY_SOFTPOINT_EXE): $(SOFTSUSY_SOFTPOINT_OBJ) $(LIBSOFTSUSY)
 ALLDEP += $(LIBSOFTSUSY_DEP) $(EXESOFTSUSY_DEP)
 ALLSRC += $(LIBSOFTSUSY_SRC) $(EXESOFTSUSY_SRC)
 ALLLIB += $(LIBSOFTSUSY)
-ALLEXE += $(SOFTSUSY_MAIN_EXE) $(SOFTSUSY_RPVMAIN_EXE) $(SOFTSUSY_RPVNEUTMAIN_EXE) $(SOFTSUSY_SOFTPOINT_EXE)
+ALLEXE += $(CUTOFF_SCAN_EXE) $(SOFTSUSY_MAIN_EXE) $(SOFTSUSY_RPVMAIN_EXE) $(SOFTSUSY_RPVNEUTMAIN_EXE) $(SOFTSUSY_SOFTPOINT_EXE)

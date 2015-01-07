@@ -52,6 +52,28 @@ Eigen::VectorXd fill_linear_values(std::size_t num_points, double lower, double 
    return vec;
 }
 
+Eigen::VectorXd fill_log_values(std::size_t num_points, double lower, double upper)
+{
+   Eigen::VectorXd vec;
+   vec.resize(num_points);
+
+   double incr = 0.;
+
+   if (lower <= 0. || upper <= 0.) {
+      ERROR("Bounds must be positive.");
+      return vec;
+   }
+
+   if (num_points > 1)
+      incr = (Log(upper) - Log(lower)) / (num_points - 1.);
+
+   for (std::size_t i = 0; i < num_points; ++i) {
+      vec(i) = std::exp(Log(lower) + incr * i);
+   }
+
+   return vec;
+}
+
 void initialize_e6_charges(double theta, lowE6SSM_input_parameters& input)
 {
    input.QQp = lowE6SSM_info::get_e6_charge(lowE6SSM_info::QL, theta);
@@ -403,7 +425,7 @@ int main()
       }
 
       // get scanned cut-off scale values
-      Eigen::VectorXd mx_vals = fill_linear_values(mx_npts, mx_lower, mx_upper);
+      Eigen::VectorXd mx_vals = fill_log_values(mx_npts, mx_lower, mx_upper);
 
       std::vector<std::size_t> scan_dimensions
          = {mx_npts};
@@ -413,23 +435,20 @@ int main()
       // print header line
       std::cout << "# "
                 << std::setw(12) << std::left << "TanBeta" << ' '
-                << std::setw(12) << std::left << "Lambdax(MS)" << ' '
-                << std::setw(12) << std::left << "ALambdax(MS)/GeV" << ' '
-                << std::setw(12) << std::left << "AYu22(MS)/GeV" << ' '
-                << std::setw(12) << std::left << "mq222(MS)/GeV^2" << ' '
-                << std::setw(12) << std::left << "mu222(MS)/GeV^2" << ' '
-                << std::setw(12) << std::left << "MassWB(MS)/GeV" << ' '
                 << std::setw(12) << std::left << "Lambdax(MX)" << ' '
-                << std::setw(12) << std::left << "Kappa22(MX)" << ' '
+                << std::setw(12) << std::left << "ALambdax(MX)/GeV" << ' '
+                << std::setw(12) << std::left << "AYu22(MX)/GeV" << ' '
+                << std::setw(12) << std::left << "mq222(MX)/GeV^2" << ' '
+                << std::setw(12) << std::left << "mu222(MX)/GeV^2" << ' '
+                << std::setw(12) << std::left << "MassWB(MX)/GeV" << ' '
                 << std::setw(12) << std::left << "Mhh(1)/GeV" << ' '
                 << std::setw(12) << std::left << "Mhh(2)/GeV" << ' '
                 << std::setw(12) << std::left << "Mhh(3)/GeV" << ' '
                 << std::setw(12) << std::left << "mHd2/GeV^2" << ' '
                 << std::setw(12) << std::left << "mHu2/GeV^2" << ' '
                 << std::setw(12) << std::left << "ms2/GeV^2" << ' '
-                << std::setw(12) << std::left << "f1" << ' '
-                << std::setw(12) << std::left << "f2" << ' '
-                << std::setw(12) << std::left << "f3" << ' '
+                << std::setw(12) << std::left << "g1(MS)" << ' '
+                << std::setw(12) << std::left << "g2(MS)" << ' '
                 << std::setw(12) << std::left << "MS/Gev" << ' '
                 << std::setw(12) << std::left << "MX/GeV" << ' '
                 << std::setw(12) << std::left << "s/GeV" << ' '
@@ -466,13 +485,6 @@ int main()
                 << std::setw(12) << std::left << "D(MassWB)" << ' '
                 << std::setw(12) << std::left << "D(MassG)" << ' '
                 << std::setw(12) << std::left << "D(MassBp)" << ' '
-                << std::setw(12) << std::left << "tachyon(Su)" << ' '
-                << std::setw(12) << std::left << "tachyon(Sd)" << ' '
-                << std::setw(12) << std::left << "tachyon(VZ)" << ' '
-                << std::setw(12) << std::left << "tachyon(VZp)" << ' '
-                << std::setw(12) << std::left << "tachyon(hh)" << ' '
-                << std::setw(12) << std::left << "tachyon(Ah)" << ' '
-                << std::setw(12) << std::left << "tachyon(Hpm)" << ' '
                 << std::setw(12) << std::left << "tuning_err" << ' '
                 << std::setw(12) << std::left << "error"
                 << '\n';
@@ -530,8 +542,21 @@ int main()
          double max_tuning = 0.;
          bool tuning_problem = false;
          if (!error) {
-            lowE6SSM_tuning_calculator tuning_calc(model);
-            tuning_calc.set_tuning_scale(model.get_scale());
+
+            // solve ewsb
+            lowE6SSM_ew_derivs ew_derivs(model);
+
+            double mHd2 = ew_derivs.get_model().get_mHd2();
+            double mHu2 = ew_derivs.get_model().get_mHu2();
+            double ms2 = ew_derivs.get_model().get_ms2();         
+
+            lowE6SSM<Two_scale> tuning_model(model);
+            tuning_model.set_mHd2(mHd2);
+            tuning_model.set_mHu2(mHu2);
+            tuning_model.set_ms2(ms2);
+
+            lowE6SSM_tuning_calculator tuning_calc(tuning_model);
+            tuning_calc.set_tuning_scale(tuning_model.get_scale());
             tuning_calc.set_input_scale(mx_value);
             tuning_calc.set_tuning_ewsb_loop_order(1);
             tuning_calc.set_tuning_beta_loop_order(2);
@@ -554,12 +579,12 @@ int main()
          // write out
          std::cout << " "
                    << std::setw(12) << std::left << input.TanBeta << ' '
-                   << std::setw(12) << std::left << model.get_Lambdax() << ' '
-                   << std::setw(12) << std::left << model.get_TLambdax() / model.get_Lambdax() << ' '
-                   << std::setw(12) << std::left << model.get_TYu(2,2) / model.get_Yu(2,2) << ' '
-                   << std::setw(12) << std::left << model.get_mq2(2,2) << ' '
-                   << std::setw(12) << std::left << model.get_mu2(2,2) << ' '
-                   << std::setw(12) << std::left << model.get_MassWB() << ' '
+                   << std::setw(12) << std::left << Lambdax_value << ' '
+                   << std::setw(12) << std::left << ALambdax_value << ' '
+                   << std::setw(12) << std::left << AYu22_value << ' '
+                   << std::setw(12) << std::left << mq222_value << ' '
+                   << std::setw(12) << std::left << mu222_value << ' '
+                   << std::setw(12) << std::left << MassWB_value << ' '
                    << std::setw(12) << std::left << pole_masses.Mhh(0) << ' '
                    << std::setw(12) << std::left << pole_masses.Mhh(1) << ' '
                    << std::setw(12) << std::left << pole_masses.Mhh(2) << ' '
@@ -604,6 +629,7 @@ int main()
                    << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassWB] << ' '
                    << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassG] << ' '
                    << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::MassBp] << ' '
+                   << std::setw(12) << std::left << tuning_problem << ' '
                    << std::setw(12) << std::left << error << ' ';
          if (error || tuning_problem) {
             std::cout << "# " << problems;

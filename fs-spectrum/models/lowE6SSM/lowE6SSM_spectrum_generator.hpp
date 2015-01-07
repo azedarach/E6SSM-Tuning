@@ -151,34 +151,23 @@ void lowE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
    susy_scale_constraint.initialize();
    low_scale_constraint .initialize();
 
+   if (!is_zero(input_scale)) {
+      if (input_scale <= 0.) {
+         susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(true);
+      } else {
+         high_scale_constraint.set_scale(input_scale);
+      }
+   }
+
    std::vector<Constraint<T>*> upward_constraints;
    std::vector<Constraint<T>*> downward_constraints;
 
-   if (!fixed_input_scale) {
-
-      susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(true);
-
-      upward_constraints.push_back(&low_scale_constraint);
-      upward_constraints.push_back(&high_scale_constraint);
-
-      downward_constraints.push_back(&high_scale_constraint);
-      downward_constraints.push_back(&susy_scale_constraint);
-      downward_constraints.push_back(&low_scale_constraint);
-
-   } else {
-
-      susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(false);
-      input_scale_constraint.set_scale(input_scale);
-
-      upward_constraints.push_back(&low_scale_constraint);
-      upward_constraints.push_back(&input_scale_constraint);
-      upward_constraints.push_back(&high_scale_constraint);
-
-      downward_constraints.push_back(&high_scale_constraint);
-      downward_constraints.push_back(&susy_scale_constraint);
-      downward_constraints.push_back(&low_scale_constraint);
-
-   }
+   upward_constraints.push_back(&low_scale_constraint);
+   upward_constraints.push_back(&high_scale_constraint);
+   
+   downward_constraints.push_back(&high_scale_constraint);
+   downward_constraints.push_back(&susy_scale_constraint);
+   downward_constraints.push_back(&low_scale_constraint);
 
    model.set_input_parameters(input);
    model.do_calculate_sm_pole_masses(calculate_sm_masses);

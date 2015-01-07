@@ -99,6 +99,8 @@ void lowE6SSM_low_scale_constraint<Two_scale>::apply()
    model->set_g1(new_g1);
    model->set_g2(new_g2);
    model->set_g3(new_g3);
+   // DH:: note
+   model->set_gN(1.01 * new_g1);
 }
 
 double lowE6SSM_low_scale_constraint<Two_scale>::get_scale() const

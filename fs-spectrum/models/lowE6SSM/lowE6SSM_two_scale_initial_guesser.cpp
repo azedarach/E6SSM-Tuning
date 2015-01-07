@@ -242,7 +242,7 @@ void lowE6SSM_initial_guesser<Two_scale>::guess_soft_parameters()
 
    // calculate tree-level spectrum
    model->calculate_DRbar_parameters();
-   model->print(std::cout);
+   
 }
 
 } // namespace flexiblesusy

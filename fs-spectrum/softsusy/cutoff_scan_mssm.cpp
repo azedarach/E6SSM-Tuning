@@ -63,6 +63,28 @@ Eigen::VectorXd fill_linear_values(std::size_t num_points, double lower, double 
    return vec;
 }
 
+Eigen::VectorXd fill_log_values(std::size_t num_points, double lower, double upper)
+{
+   Eigen::VectorXd vec;
+   vec.resize(num_points);
+
+   double incr = 0.;
+
+   if (lower <= 0. || upper <= 0.) {
+      ERROR("Bounds of logarithmic scan must be positive.");
+      return vec;
+   }
+
+   if (num_points > 1)
+      incr = (flexiblesusy::Log(upper) - flexiblesusy::Log(lower)) / (num_points - 1.);
+
+   for (std::size_t i = 0; i < num_points; ++i) {
+      vec(i) = std::exp(flexiblesusy::Log(lower) + incr * i);
+   }
+
+   return vec;
+}
+
 void fill_default_input_pars(DoubleVector & pars)
 {
    // default values used in scan
@@ -301,7 +323,7 @@ int main() {
       }
 
       // get scanned cut-off scale values
-      Eigen::VectorXd mx_vals = fill_linear_values(mx_npts, mx_lower, mx_upper);
+      Eigen::VectorXd mx_vals = fill_log_values(mx_npts, mx_lower, mx_upper);
 
       std::vector<std::size_t> scan_dimensions
          = {mx_npts};
@@ -442,13 +464,13 @@ int main() {
 
                // calculate the parameter B
                if (fix_at_msusy) {
-                  B = model.displayM3Squared() / model.displayMu();
+                  B = model.displayM3Squared() / model.displaySusyMu();
                }
                
                tuning_model.runto(mx_value);
                
                if (!fix_at_msusy) {
-                  B = model.displayM3Squared() / model.displayMu();
+                  B = model.displayM3Squared() / model.displaySusyMu();
                }
                
                // calculate the fine tuning

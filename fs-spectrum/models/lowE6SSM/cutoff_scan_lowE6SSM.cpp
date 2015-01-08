@@ -1,7 +1,32 @@
 // ====================================================================
 // Scanning code for calculating fine tuning in the E6SSM, 
 // keeping the parameters fixed and varying the cut-off (i.e.
-// input) scale
+// input) scale. Reads data from standard input and writes to standard
+// output, with parameter values and scan ranges specified by flags. 
+//
+// Standard usage would be:
+//
+// >$ cat input_file.txt
+// # Input file suitable for cutoff_scan_lowE6SSM.x
+// MXLL=20000.0                  # lower limit of MX
+// MXUL=1.0e16                   # upper limit of MX 
+// MXNPTS=10                     # number of MX values to use
+// TBVAL=10                      # value of \tan\beta(M_Z)
+// LAMBDAXVAL=0.230769           # value of \lambda(MX)
+// ALAMBDAXVAL=3792.69           # value of A_\lambda(MX)
+// ATVAL=-1438.45                # value of A_t(MX)
+// MQLSQVAL=449655.0             # value of m_Q^2(MX)
+// MURSQVAL=586207.0             # value of m_u^2(MX)
+// M2VAL=1050.0                  # value of M_2(MX)
+// VSVAL=6700.0                  # value of singlet vev s(MSUSY) 
+// THETAVAL=1.318116072          # U(1) mixing angle
+// INPUTSCALE=MSUSY              # set inputs at MX or MSUSY
+// INPUTSCALEBC=UNCONSTRAINED    # set remaining parameters using default input 
+//                               # (UNCONSTRAINED) or to values in BM2 of 
+//                               # arXiv:1302.5291 [hep-ph] (CONSTRAINED)
+// # End of input file
+// >$ ./cutoff_scan_lowE6SSM.x < input_file.txt
+//
 // ====================================================================
 
 #include "lowE6SSM_input_parameters.hpp"

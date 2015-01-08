@@ -206,8 +206,12 @@ clean-$(MODNAME)-obj:
 
 clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(LIBlowE6SSM)
+		-rm -f $(CUTOFF_lowE6SSM_EXE)
+		-rm -f $(ESTIMATE_lowE6SSM_EXE)
+		-rm -f $(FULL_lowE6SSM_EXE)
 		-rm -f $(RUN_lowE6SSM_EXE)
 		-rm -f $(SCAN_lowE6SSM_EXE)
+		-rm -f $(TUNING_SCAN_lowE6SSM_EXE)
 
 distclean-$(MODNAME): clean-$(MODNAME)
 

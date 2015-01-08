@@ -196,7 +196,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, bool is_constrained)
       const double Lambda0 = 0.1;
       const double Kappa0 = 0.1923;
       const double m0 = 1951.;
-      const double m12 = 600.;//1003.;
+      const double m12 = 1003.;
       const double Azero = 500.;
 
       input.KappaInput = Eigen::Matrix<double,3,3>::Zero();
@@ -636,9 +636,13 @@ int main()
 
       QedQcd oneset;
       oneset.toMz();
-
+      // DH::note
+      std::size_t point_num = 1;
       std::vector<std::size_t> position;
       while (!scan.has_finished()) {
+         point_num++;
+         // std::cout << "At output line number " << point_num << "\n";
+         // std::cerr << "At output line number " << point_num << "\n";
          // initialise spectrum generator and do iteration
          position = scan.get_position();
          double mx_value = mx_vals(position.at(0));

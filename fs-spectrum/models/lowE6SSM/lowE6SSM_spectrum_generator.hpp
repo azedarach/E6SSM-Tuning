@@ -155,6 +155,7 @@ void lowE6SSM_spectrum_generator<T>::run(const QedQcd& oneset,
       if (input_scale <= 0.) {
          susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(true);
       } else {
+         susy_scale_constraint.set_input_parameters_fixed_at_susy_scale(false);
          high_scale_constraint.set_scale(input_scale);
       }
    }

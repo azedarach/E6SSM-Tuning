@@ -347,7 +347,14 @@ namespace flexiblesusy {
          = mass_matrix_inverse * ewsb_derivs * beta_derivs;
 
       // Additional solution check here?
-      std::cout << beta_derivs << "\n";
+      // std::cout << "-------------------------------------------------------------\n";
+      // std::cout << "inverse * ewsb = \n";
+      // std::cout << mass_matrix_inverse * ewsb_derivs;
+      // std::cout << "beta_derivs = \n";
+      // std::cout << beta_derivs << "\n";
+      // std::cout << "vev derivs = \n";
+      // std::cout << vev_derivs << "\n";
+      // std::cout << "-------------------------------------------------------------\n";
       double g1_at_tuning_scale = ew_derivs.get_model().get_g1();
       double g2_at_tuning_scale = ew_derivs.get_model().get_g2();
       double vd_at_tuning_scale = ew_derivs.get_model().get_vd();

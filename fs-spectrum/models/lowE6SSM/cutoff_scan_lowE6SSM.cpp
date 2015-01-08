@@ -12,15 +12,15 @@
 // MXUL=1.0e16                   # upper limit of MX 
 // MXNPTS=10                     # number of MX values to use
 // TBVAL=10                      # value of \tan\beta(M_Z)
-// LAMBDAXVAL=0.230769           # value of \lambda(MX)
-// ALAMBDAXVAL=3792.69           # value of A_\lambda(MX)
-// ATVAL=-1438.45                # value of A_t(MX)
-// MQLSQVAL=449655.0             # value of m_Q^2(MX)
-// MURSQVAL=586207.0             # value of m_u^2(MX)
-// M2VAL=1050.0                  # value of M_2(MX)
+// LAMBDAXVAL=0.230769           # value of \lambda(M_{input})
+// ALAMBDAXVAL=3792.69           # value of A_\lambda(M_{input})
+// ATVAL=-1438.45                # value of A_t(M_{input})
+// MQLSQVAL=449655.0             # value of m_Q^2(M_{input})
+// MURSQVAL=586207.0             # value of m_u^2(M_{input})
+// M2VAL=1050.0                  # value of M_2(M_{input})
 // VSVAL=6700.0                  # value of singlet vev s(MSUSY) 
 // THETAVAL=1.318116072          # U(1) mixing angle
-// INPUTSCALE=MSUSY              # set inputs at MX or MSUSY
+// INPUTSCALE=MSUSY              # set M_{input} = MX or MSUSY
 // INPUTSCALEBC=UNCONSTRAINED    # set remaining parameters using default input 
 //                               # (UNCONSTRAINED) or to values in BM2 of 
 //                               # arXiv:1302.5291 [hep-ph] (CONSTRAINED)

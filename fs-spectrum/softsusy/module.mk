@@ -129,6 +129,7 @@ clean-$(MODNAME)-obj:
 
 clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(LIBSOFTSUSY)
+		-rm -f $(CUTOFF_SCAN_EXE)
 		-rm -f $(SOFTSUSY_RPVNEUTMAIN_EXE)
 		-rm -f $(SOFTSUSY_RPVMAIN_EXE)
 		-rm -f $(SOFTSUSY_MAIN_EXE)

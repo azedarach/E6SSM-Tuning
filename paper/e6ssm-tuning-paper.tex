@@ -12,6 +12,7 @@
 \newcommand{\ba}{\begin{eqnarray}}
 \newcommand{\ea}{\end{eqnarray}}
 \newcommand{\SuperField}[1]{\hat{#1}}
+\usepackage{url}
 
 \renewcommand\footnotelayout{\fontsize{10}{9}\selectfont}        
 
@@ -803,8 +804,7 @@ summarised in Table \ref{tab:scanranges}. With the exception of the
 stop mixing $A_t$ and the soft trilinear $A_\lambda$, which are
 logarithmically scanned, all parameters are linearly scanned.  In
 addition to this we also repeat each scan for three different values
-of $M_2$ to introduce more variation in the chargino masses, which can
-also be importnat due to the link between $\mu$ and the fine tuning.
+of $M_2$ to allow more variation in the chargino masses.
 
  In this case we now consider realistic scenarios, where the
  parameters that are not scanned over are set to values which keep the
@@ -816,7 +816,7 @@ also be importnat due to the link between $\mu$ and the fine tuning.
 $A_b=A_\tau=0$ GeV. The $U(1)$ gaugino soft mass $M_1$ was fixed to
  $M_1=300$ GeV, and we fix $M_3=2000$ GeV. Additionally, in the
  E$_6$SSM the $U(1)_N$ gaugino soft mass $M_1'$ is held fixed with
- $M_1'=M_1=300$ GeV, and $\mu^\prime=5$ TeV.
+ $M_1'=M_1=300$ GeV, and $\mu^\prime=5$ TeV.  
 
 \begin{table}[h]
 \centering
@@ -833,7 +833,8 @@ $ -10 \textrm{ TeV } \leq A_t \leq 10 \textrm { TeV}$ & $ -10 \textrm{ TeV } \le
 $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ & $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ \\
 \end{tabular}
 \end{ruledtabular}
-\caption{The parameters scanned over and the ranges of values used in the MSSM and the $E_6SSM$ models.}
+\caption{The parameters scanned over and the ranges of values used in
+  the MSSM and the $E_6SSM$ models.}
 \label{tab:scanranges}
 \end{table}
 
@@ -862,47 +863,63 @@ In Fig \ref{Fig:e6ssmvsmssm} results from the scan are plotted showing
 the tuning for each case against the lightest Higgs mass.  As expected
 the dependence on the Higgs mass is now quite weak, while the minimum
 tuning in the model for the E$_6$SSM is increased by the mass of the
-$Z^\prime$ boson.  So in the case of a very low cutoff much of the
-tuning required to get a 125 GeV Higgs has gone away.  However the
-tuning from the $Z^\prime$ mass appears already at tree level and is
-unavoidable regardless of the cutoff scale chosen, so in the E$_6$SSM
-current limits on the mass of the $Z^\prime$ boson imply that the
-E$_6$SSM fine tuning must be at least 100 regardless of assumptions
-about the way SUSY breaking happens.  Additionally if run II of the
-LHC pushes the limit on the $Z^\prime$ mass to be above $4.5$ TeV then
-the fine tuning in the model will be greater than at least 350.
+$Z^\prime$ boson.  So in the case of a very low cutoff the tuning
+required to get a 125 GeV Higgs is not so large.  However the tuning
+from the $Z^\prime$ mass appears already at tree level and is
+therefore not heavily suprressed when the cutoff scale is low. We find
+that in the E$_6$SSM current limits on the mass of the $Z^\prime$
+boson imply that the E$_6$SSM fine tuning is at least 100.
+Additionally if run II of the LHC pushes the limit on the $Z^\prime$
+mass to be above $4.5$ TeV then the fine tuning in the model will be
+greater than at least 350.
 
 This demopnstrates two important points about these $U(1)$
 extensions. Firstly that limits on the $Z^\prime$ mass play an
 incredibly important role in constraining natural scenarios in such
 models and secondly that the tuning from the $Z^\prime$ limits in
 these models depends on less assumptions about SUSY breaking than the
-tuning reqyired by the $125$ GeV Higgs measurement which concerns
+tuning required by the $125$ GeV Higgs measurement which concerns
 people in the MSSM.
 
 However we should also acknowledge that there are other limits which
 play a similar role.  Chargino limits directly constrain the $\mu$
 parameter (or effective $\mu$ parameter in these $U(1)$ extensions).
-Unfortunately the chargino limits from the LHC are not general enough
-so as to provide an absolute constraint on the model [Add: XSdetails on
-  limits and what they depend on].
+However the chargino limits from the LHC are scenario dependent and
+depending on whether there are light sleptons or sneutralinos and the mass
+difference between the lightest chargino and lightest neutralino.
+Current limits placed by CMS and ATLAS extend up to $m_{\chi^\pm_1}
+\approx 700-740$ GeV if there are light
+sleptons\cite{Khachatryan:2014qwa,Aad:2014nua} with much weaker bounds
+if there are no light sleptons or sneutrinos\footnote{Useful summary
+  plots of these limit may be found on the public pages of ATLAS,
+  \url{https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/CombinedSummaryPlots/SUSY/ATLAS_SUSY_EWSummary/ATLAS_SUSY_EWSummary.png}
+  and CMS
+  \url{http://cms.web.cern.ch/sites/cms.web.cern.ch/files/styles/large/public/field/image/Image_03_exclusion_Combined.png?itok=8FMBpu_1}.}.
+
+
+
 
 Nonetheless the MSSM the impact of chargino limit is shown in
-Fig.~\ref{}.  There we see that if the the full parameter space with
-$m_{\chi^\pm} < 700$ GeV was excluded the impact would be to make the
-tuning in the MSSM with a $20$ TeV cutoff slightly worse than that of
-the E$_6$SSM with the same cutoff and a $Z^\prime$ mass just larger
-than current limits.  would be similar to that can also be attcked
-more directly by looking at chargino mass limits as this rasies $\mu$
-directly.  In the E$_6$SSM, while raising the chargino limit can have
-the same impact in princuiple, due to current limits on the $Z^\prime$
-mass already imposing a significant degree of tuning, chargino masses
-do not make much of a noticable change.
+Fig.~\ref{Fig:chargino-plot}.  There we see that if the the full
+  parameter space with $m_{\chi^\pm} < 700$ GeV was excluded the
+  impact would be to make the tuning in the MSSM with a $20$ TeV
+  cutoff slightly worse than that of the E$_6$SSM with the same cutoff
+  and a $Z^\prime$ mass just larger than current limits.  would be
+  similar to that can also be attcked more directly by looking at
+  chargino mass limits as this rasies $\mu$ directly.  In the
+  E$_6$SSM, while raising the chargino limit can have the same impact
+  in principle, due to current limits on the $Z^\prime$ mass already
+  imposing a significant degree of tuning, chargino masses do not make
+  much of a noticable change.
 
-[show plots in MSSM and E6SSM if it gets clened up, though maybe we
-  can just leave it out if it only shows that there is no big impact?]
-%    - plots of chargino bound impacts
-
+\begin{figure}[h]
+\begin{center}
+\resizebox{!}{10cm}{%
+\includegraphics{mssm_chargino_plot.png}}%%
+\caption{Scatter plot of fine tuning vs lightest Higgs mass in the MSSM with $m_{\chi^\pm_1} = 200$ GeV shown in green $m_{\chi^\pm_1} = 500$ GeV in blue and $m_{\chi^\pm_1} = 700$ GeV in red.}
+\label{Fig:chargino-plot}
+\end{center}
+\end{figure}
 
 The exact level of tuning from the $Z^\prime$ depends on the charges
 of the extra $U(1)$ gauge symmetry it is associated with.  In
@@ -911,27 +928,20 @@ other U(1) extensions for the same $Z^\prime$ masses as we did for the
 E$_6$SSM.  To simplify the analysis we fix $\tan \beta = 10$, but scan
 over the remaining parameters as in Table \ref{tab:scanranges} and fix
 the rest to the same values we did in the scan carried out for
-Fig.~\ref{Fig:e6ssmvsmssm}
-% - plots for different U(1)' charge 
+Fig.~\ref{Fig:e6ssmvsmssm}.
 
-% DH:: for reference:
-%      U(1)_I \theta = \pi+\arctan\sqrt{3/5}
-%      U(1)_\psi \theta = \pi / 2
-%      U(1)_\eta \theta = -\arctan\sqrt{5/3}
-
-\begin{figure}[h]
+\begin{figure}
 \begin{center}
 \resizebox{!}{5cm}{%
 \includegraphics{e6inert_tb10_tuning_vs_higgs.png}}
 \resizebox{!}{5cm}{%
 \includegraphics{e6psi_tb10_tuning_vs_higgs.png}}\\
 \resizebox{!}{5cm}{%
-\includegraphics{e6eta_tb10_tuning_vs_higgs.png}}
+\includegraphics{e6eta_tb10_tuning_vs_higgs.png}}%%
 \caption{Scatter plot of fine tuning vs lightest Higgs mass in ... with $M_{Z^\prime} = 2.5$ TeV shown in blue and $M_{Z^\prime} = 4.5$ TeV in red.}
 \label{Fig:othere6modelsvsmssm}
 \end{center}
 \end{figure}
-
 
 As can be seen in Fig.~\ref{Fig:othere6modelsvsmssm} the severity of the tunings varies quite
 a bit.  This is because the charges appear as coefficients in front of
@@ -947,7 +957,7 @@ tuning from the $U(1)_I$ symmetry.  This is a result of the $H_u$
 charge associated with $U(1)_I$ vansihing, which means that the
 D-terms to the lightest Higgs which is predominantly $H_u$ at large
 $\tan \beta$ are suppressed, making it difficult to raise the Higgs
-mass in the same way as happens in the other models, explaining why
+mass in the same way as happens in the other models and explaining why
 % DH:: I strongly suspect that they are invalid - but running scan
 % to check this currently
 the heavier Higgs values are less well populated [can't be obtained? -

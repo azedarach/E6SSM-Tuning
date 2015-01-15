@@ -63,7 +63,8 @@ DoubleVector doCalcFineTuning(SoftPars susyModel, void (*BCatMX)(SoftPars &, Dou
   	{
 	  hasError = false;
 
-  	  QR_solve(Q_mat, lhs_mat, n, rhsVector(susyModel, BCatMX, pars, vevs, i, mx, hasError), dVevs, sing);
+          DoubleVector rhsVec = rhsVector(susyModel, BCatMX, pars, vevs, i, mx, hasError);
+  	  QR_solve(Q_mat, lhs_mat, n, rhsVec, dVevs, sing);
 
 	  if (hasError)
 	    {

@@ -386,6 +386,46 @@ int main() {
                 << std::setw(12) << std::left << "error"
                 << '\n';
 
+      // DH::note
+      std::cerr << "# "
+                << std::setw(12) << std::left << "TanBeta" << ' '
+                << std::setw(12) << std::left << "Mu(MX)" << ' '
+                << std::setw(12) << std::left << "B(MX)/GeV" << ' '
+                << std::setw(12) << std::left << "AYu22(MX)/GeV" << ' '
+                << std::setw(12) << std::left << "mq222(MX)/GeV^2" << ' '
+                << std::setw(12) << std::left << "mu222(MX)/GeV^2" << ' '
+                << std::setw(12) << std::left << "MassWB(MX)/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(1)/GeV" << ' '
+                << std::setw(12) << std::left << "Mhh(2)/GeV" << ' '
+                << std::setw(12) << std::left << "mHd2/GeV^2" << ' '
+                << std::setw(12) << std::left << "mHu2/GeV^2" << ' '
+                << std::setw(12) << std::left << "MS/Gev" << ' '
+                << std::setw(12) << std::left << "MX/GeV" << ' '
+                << std::setw(12) << std::left << "Yu(2,2)" << ' '
+                << std::setw(12) << std::left << "Yd(2,2)" << ' '
+                << std::setw(12) << std::left << "Ye(2,2)" << ' '
+                << std::setw(12) << std::left << "g1" << ' '
+                << std::setw(12) << std::left << "g2" << ' '
+                << std::setw(12) << std::left << "g3" << ' '
+                << std::setw(12) << std::left << "Mu/GeV" << ' '
+                << std::setw(12) << std::left << "MassB/GeV" << ' '
+                << std::setw(12) << std::left << "MassWB/GeV" << ' '
+                << std::setw(12) << std::left << "MassG/GeV" << ' '
+                << std::setw(12) << std::left << "TYu(2,2)/GeV" << ' '
+                << std::setw(12) << std::left << "TYd(2,2)/GeV" << ' '
+                << std::setw(12) << std::left << "TYe(2,2)/GeV" << ' '
+                << std::setw(12) << std::left << "mq2(2,2)/GeV^2" << ' '
+                << std::setw(12) << std::left << "ml2(2,2)/GeV^2" << ' '
+                << std::setw(12) << std::left << "me2(2,2)/GeV^2" << ' '
+                << std::setw(12) << std::left << "mu2(2,2)/GeV^2" << ' '
+                << std::setw(12) << std::left << "md2(2,2)/GeV^2" << ' '
+                << std::setw(12) << std::left << "BMu/GeV^2" << ' '
+                << std::setw(12) << std::left << "MSu(1)/GeV" << ' '
+                << std::setw(12) << std::left << "MSu(2)/GeV" << ' '
+                << std::setw(12) << std::left << "tuning_err" << ' '
+                << std::setw(12) << std::left << "error"
+                << '\n';
+
       // initialise model and inputs
       const int sgnMu = 0;
       double mgut_guess = 1.0e3; //< default for fixing at M_SUSY
@@ -438,6 +478,10 @@ int main() {
          // model output is at M_SUSY
          model.runto(model.displayMsusy());
 
+         // DH::note
+         MssmSoftsusy high_scale_model(model);
+         high_scale_model.runto(mx_value);
+         high_scale_model.calcDrBarPars();
          double B = 0.;
          double f1 = 0.;
          double f2 = 0.;
@@ -498,8 +542,9 @@ int main() {
                tuningPars(20) = tuning_model.displaySoftMassSquared(mDr, 3, 3);
                
                // This is faster...
-               tunings = doCalcMSSMTuningNumerically(tuning_model, tuning_model.displayMsusy(), 
-                                                     mx_value, tuningPars, pMSSMftBCs); 
+               //tunings = doCalcMSSMTuningNumerically(tuning_model, tuning_model.displayMsusy(), 
+               //                                      mx_value, tuningPars, pMSSMftBCs); 
+               tunings = doCalcpMSSMFineTuning(tuning_model, tuning_model.displayMsusy(), ewsb_error, tuning_error, false, 10.);
                
                for (int i = 1; i <= tunings.displayEnd(); ++i) {
                   // Flag errors with negative values
@@ -597,6 +642,56 @@ int main() {
             std::cout << '\n';
          }
          
+
+         // DH::note
+         std::cerr << std::setw(12) << std::left << TanBeta_value << ' '
+                   << std::setw(12) << std::left << Mu_value << ' '
+                   << std::setw(12) << std::left << B << ' '
+                   << std::setw(12) << std::left << AYu22_value << ' '
+                   << std::setw(12) << std::left << mq222_value << ' '
+                   << std::setw(12) << std::left << mu222_value << ' '
+                   << std::setw(12) << std::left << MassWB_value << ' '
+                   << std::setw(12) << std::left << model.displayPhys().mh0 << ' '
+                   << std::setw(12) << std::left << model.displayPhys().mH0 << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayMh1Squared() << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayMh2Squared() << ' '
+                   << std::setw(12) << std::left << model.displayMu() << ' '
+                   << std::setw(12) << std::left << mx_value << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayYukawaElement(YU, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayYukawaElement(YD, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayYukawaElement(YE, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayGaugeCoupling(1) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayGaugeCoupling(2) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayGaugeCoupling(3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displaySusyMu() << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayGaugino(1) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayGaugino(2) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayGaugino(3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayTrilinear(UA, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayTrilinear(DA, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayTrilinear(EA, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displaySoftMassSquared(mQl, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displaySoftMassSquared(mLl, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displaySoftMassSquared(mEr, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displaySoftMassSquared(mUr, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displaySoftMassSquared(mDr, 3, 3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayM3Squared() << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayDrBarPars().mu(1,3) << ' '
+                   << std::setw(12) << std::left << high_scale_model.displayDrBarPars().mu(2,3) << ' '
+                   << std::setw(12) << std::left << tuning_error << ' '
+                   << std::setw(12) << std::left << error;
+
+         if (error || tuning_error) {
+            std::cerr << "# " << model.displayProblem();
+            if (tuning_error) {
+               std::cerr << ", tuning error\n"; 
+            } else {
+               std::cerr << '\n';
+            }
+         } else {
+            std::cerr << '\n';
+         }
+
          scan.step_forward();
       } // while (!scan.has_finished())
    }

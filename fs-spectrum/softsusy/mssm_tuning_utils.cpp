@@ -1957,7 +1957,7 @@ double predpMSSMMzSqRun(double parVal)
    // this also in general changes M_{SUSY} as well. If M_{SUSY}
    // is allowed to vary then we need to iterate until we converge
    // to a new estimate for the right scale.
-   bool ALLOWVARYINGMSUSY = false; // < this needs to be false to get exact agreement with our analytics
+   const bool ALLOWVARYINGMSUSY = false; // < this needs to be false to get exact agreement with our analytics
 
    int maxIters = 100;
    double tol = 1.0e-5;

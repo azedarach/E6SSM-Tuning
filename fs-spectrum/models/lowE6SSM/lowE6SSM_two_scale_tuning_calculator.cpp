@@ -1,6 +1,7 @@
 #include "lowE6SSM_two_scale_tuning_calculator.hpp"
 #include "numerics.hpp"
-
+//DH::note
+#include <iomanip>
 #include <gsl/gsl_deriv.h>
 
 namespace flexiblesusy {
@@ -263,7 +264,19 @@ namespace flexiblesusy {
          = mass_matrix_inverse * ewsb_derivs * beta_derivs;
 
       // Additional solution check here?
-
+      // std::cout << "-------------------------------------------------------------\n";
+      // std::cout << "MX scale pars = \n";
+      // for (std::map<lowE6SSM_info::Parameters,double>::const_iterator it = input_scale_pars.begin(),
+      //         end = input_scale_pars.end(); it != end; ++it) {
+      //    std::cout << lowE6SSM_info::parameter_names[it->first] << " = " << it->second << "\n";
+      // }
+      // std::cout << "inverse * ewsb = \n";
+      // std::cout << mass_matrix_inverse * ewsb_derivs;
+      // std::cout << "beta_derivs = \n";
+      // std::cout << beta_derivs << "\n";
+      // std::cout << "vev derivs = \n";
+      // std::cout << vev_derivs << "\n";
+      // std::cout << "-------------------------------------------------------------\n";
       double g1_at_tuning_scale = ew_derivs.get_model().get_g1();
       double g2_at_tuning_scale = ew_derivs.get_model().get_g2();
       double vd_at_tuning_scale = ew_derivs.get_model().get_vd();
@@ -348,13 +361,21 @@ namespace flexiblesusy {
 
       // Additional solution check here?
       // std::cout << "-------------------------------------------------------------\n";
+      // model.print(std::cout);
+      // std::cout << "MX scale pars = \n";
+      // for (std::map<lowE6SSM_info::Parameters,double>::const_iterator it = input_scale_pars.begin(),
+      //         end = input_scale_pars.end(); it != end; ++it) {
+      //    std::cout << lowE6SSM_info::parameter_names[it->first] << " = " << it->second << "\n";
+      // }
       // std::cout << "inverse * ewsb = \n";
-      // std::cout << mass_matrix_inverse * ewsb_derivs;
+      // std::cout << mass_matrix_inverse * ewsb_derivs << "\n";
       // std::cout << "beta_derivs = \n";
       // std::cout << beta_derivs << "\n";
       // std::cout << "vev derivs = \n";
       // std::cout << vev_derivs << "\n";
       // std::cout << "-------------------------------------------------------------\n";
+
+
       double g1_at_tuning_scale = ew_derivs.get_model().get_g1();
       double g2_at_tuning_scale = ew_derivs.get_model().get_g2();
       double vd_at_tuning_scale = ew_derivs.get_model().get_vd();
@@ -371,6 +392,32 @@ namespace flexiblesusy {
                                             get_deriv(it->first, g1_derivs), get_deriv(it->first, g2_derivs),
                                             get_deriv(it->first, vd_derivs), get_deriv(it->first, vu_derivs));
       }
+      Eigen::Matrix<double,num_ewsb_eqs,Eigen::Dynamic> coeffs = mass_matrix_inverse * ewsb_derivs;
+      std::cerr << std::setw(12) << std::left << input_scale << ' '
+                << std::setw(12) << std::left << vd_at_tuning_scale << ' '
+                << std::setw(12) << std::left << vu_at_tuning_scale << ' '
+                << std::setw(12) << std::left << ew_derivs.get_model().get_vs() << ' '
+                << std::setw(12) << std::left << coeffs(0,0) << ' '
+                << std::setw(12) << std::left << coeffs(0,5) << ' '
+                << std::setw(12) << std::left << coeffs(0,9) << ' '
+                << std::setw(12) << std::left << coeffs(0,11) << ' '
+                << std::setw(12) << std::left << coeffs(1,0) << ' '
+                << std::setw(12) << std::left << coeffs(1,5) << ' '
+                << std::setw(12) << std::left << coeffs(1,9) << ' '
+                << std::setw(12) << std::left << coeffs(1,11) << ' '
+                << std::setw(12) << std::left << coeffs(2,0) << ' '
+                << std::setw(12) << std::left << coeffs(2,5) << ' '
+                << std::setw(12) << std::left << coeffs(2,9) << ' '
+                << std::setw(12) << std::left << coeffs(2,11) << ' '
+                << std::setw(12) << std::left << beta_derivs(0,0) << ' '
+                << std::setw(12) << std::left << beta_derivs(5,0) << ' '
+                << std::setw(12) << std::left << beta_derivs(9,0) << ' '
+                << std::setw(12) << std::left << beta_derivs(11,0) << ' '
+                << std::setw(12) << std::left << get_deriv(lowE6SSM_info::Lambdax, vd_derivs) << ' '
+                << std::setw(12) << std::left << get_deriv(lowE6SSM_info::Lambdax, vu_derivs) << ' '
+                << std::setw(12) << std::left << get_deriv(lowE6SSM_info::Lambdax, vev_derivs.row(2)) << ' '
+                << std::setw(12) << std::left << fine_tunings[lowE6SSM_info::Lambdax] << ' '
+                << '\n';
 
       return tuning_problem;
    }

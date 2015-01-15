@@ -82,11 +82,12 @@ struct lowE6SSM_input_parameters {
    Eigen::Matrix<double,3,3>::Zero()), TYeInput(Eigen::Matrix<double,3,3>::Zero
    ()), TKappaInput(Eigen::Matrix<double,3,3>::Zero()), TLambda12Input(
    Eigen::Matrix<double,2,2>::Zero()), TLambdaxInput(0), TYuInput(Eigen::Matrix
-   <double,3,3>::Zero()), BMuPrInput(0), mq2Input(Eigen::Matrix<double,3,3>
-   ::Zero()), ml2Input(Eigen::Matrix<double,3,3>::Zero()), md2Input(
-   Eigen::Matrix<double,3,3>::Zero()), mu2Input(Eigen::Matrix<double,3,3>::Zero
-   ()), me2Input(Eigen::Matrix<double,3,3>::Zero()), mH1I2Input(Eigen::Matrix<
-   double,2,2>::Zero()), mH2I2Input(Eigen::Matrix<double,2,2>::Zero()),
+   <double,3,3>::Zero()), AYdInput(Eigen::Matrix<double,3,3>::Zero()), AYeInput(
+   Eigen::Matrix<double,3,3>::Zero()), AYuInput(Eigen::Matrix<double,3,3>::Zero()),
+   BMuPrInput(0), mq2Input(Eigen::Matrix<double,3,3>::Zero()), ml2Input(Eigen::Matrix
+   <double,3,3>::Zero()), md2Input(Eigen::Matrix<double,3,3>::Zero()), 
+   mu2Input(Eigen::Matrix<double,3,3>::Zero()), me2Input(Eigen::Matrix<double,3,3>::Zero()), 
+   mH1I2Input(Eigen::Matrix<double,2,2>::Zero()), mH2I2Input(Eigen::Matrix<double,2,2>::Zero()),
    msI2Input(Eigen::Matrix<double,2,2>::Zero()), mDx2Input(Eigen::Matrix<double
    ,3,3>::Zero()), mDxbar2Input(Eigen::Matrix<double,3,3>::Zero()), mHp2Input(0
    ), mHpbar2Input(0), MassBInput(0), MassWBInput(0), MassGInput(0),

@@ -809,7 +809,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.mHpbar2Input = Sqr(5000.); // GeV^2
          
          input.MassBInput = 300.; // GeV
-         input.MassGInput = 1200.0;//2000.; // GeV
+         input.MassGInput = 2000.;//1200.0;//2000.; // GeV
          input.MassBpInput = 300.; // GeV
          break;
       }

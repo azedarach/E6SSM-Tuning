@@ -310,7 +310,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.TKappaInput = Eigen::Matrix<double,3,3>::Zero();
          input.TKappaInput(0,0) = -7.19207879e+02;
          input.TKappaInput(1,1) = -7.19207879e+02;
-         input.TKappaInput(2,2) = -7.19207879e+02;
+         input.TKappaInput(2,2) = 7.19207879e+02; // note sign change
 
          input.TLambda12Input = Eigen::Matrix<double,2,2>::Zero();
          input.TLambda12Input(0,0) = -7.08483859;
@@ -371,7 +371,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.mHpbar2Input = 3.85796087e+06; // GeV^2
          
          input.MassBInput = 1.73364059e+02; // GeV
-         input.MassGInput = 7.11480225e+02; // GeV
+         input.MassGInput = 1200.0;//7.11480225e+02; // GeV
          input.MassBpInput = 1.75249244e+02; // GeV
 
          break;
@@ -767,12 +767,12 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.ml2Input = Eigen::Matrix<double,3,3>::Zero();
          input.ml2Input(0,0) = Sqr(5000.); // GeV^2
          input.ml2Input(1,1) = Sqr(5000.); // GeV^2
-         input.ml2Input(2,2) = Sqr(5000.); // GeV^2
+         input.ml2Input(2,2) = Sqr(9000.); // GeV^2
          
          input.md2Input = Eigen::Matrix<double,3,3>::Zero();
          input.md2Input(0,0) = Sqr(5000.); // GeV^2
          input.md2Input(1,1) = Sqr(5000.); // GeV^2
-         input.md2Input(2,2) = Sqr(5000.); // GeV^2
+         input.md2Input(2,2) = Sqr(9000.); // GeV^2
          
          input.mu2Input = Eigen::Matrix<double,3,3>::Zero();
          input.mu2Input(0,0) = Sqr(5000.); // GeV^2
@@ -781,7 +781,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.me2Input = Eigen::Matrix<double,3,3>::Zero();
          input.me2Input(0,0) = Sqr(5000.); // GeV^2
          input.me2Input(1,1) = Sqr(5000.); // GeV^2
-         input.me2Input(2,2) = Sqr(5000.); // GeV^2
+         input.me2Input(2,2) = Sqr(8000.); // GeV^2
          
          input.mH1I2Input = Eigen::Matrix<double,2,2>::Zero();
          input.mH1I2Input(0,0) = Sqr(5000.); // GeV^2
@@ -809,7 +809,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.mHpbar2Input = Sqr(5000.); // GeV^2
          
          input.MassBInput = 300.; // GeV
-         input.MassGInput = 2000.;//1200.0;//2000.; // GeV
+         input.MassGInput = 1200.0;//2000.; // GeV
          input.MassBpInput = 300.; // GeV
          break;
       }
@@ -1656,7 +1656,7 @@ int main()
          spectrum_generator.set_ewsb_loop_order(2);
          spectrum_generator.set_beta_loop_order(2);
          spectrum_generator.set_threshold_corrections_loop_order(1);
-
+         //spectrum_generator.set_parameter_output_scale(1.0e16);
          spectrum_generator.run(oneset, input);
 
          const lowE6SSM<algorithm_type>& model
@@ -1666,7 +1666,7 @@ int main()
             = spectrum_generator.get_problems();
 
          const bool error = problems.have_serious_problem();         
-
+         //std::cout << "MGlu = " << pole_masses.MGlu << "\n";
          // if no problems, calculate tuning (numerically)
          std::map<lowE6SSM_info::Parameters,double> fine_tunings;
          double max_tuning = 0.;

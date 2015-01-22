@@ -291,21 +291,21 @@ int main()
 
       try {
          input.LambdaxInput = boost::lexical_cast<double>(values[Lambdax_col]);
+         try {
+            input.TLambdaxInput = boost::lexical_cast<double>(values[ALambdax_col]);
+            input.TLambdaxInput *= input.LambdaxInput;
+
+         } catch (const boost::bad_lexical_cast& error) {
+            WARNING("Ignoring invalid input '" + values[ALambdax_col] + "'");
+            continue;
+         }
       } catch (const boost::bad_lexical_cast& error) {
          WARNING("Ignoring invalid input '" + values[Lambdax_col] + "'");
          continue;
       }
 
-      // note different interpretation
       try {
-         input.TLambdaxInput = boost::lexical_cast<double>(values[ALambdax_col]);
-      } catch (const boost::bad_lexical_cast& error) {
-         WARNING("Ignoring invalid input '" + values[ALambdax_col] + "'");
-         continue;
-      }
-
-      try {
-         input.TYuInput(2,2) = boost::lexical_cast<double>(values[AYu22_col]);
+         input.AYuInput(2,2) = boost::lexical_cast<double>(values[AYu22_col]);
       } catch (const boost::bad_lexical_cast& error) {
          WARNING("Ignoring invalid input '" + values[AYu22_col] + "'");
          continue;
@@ -361,8 +361,21 @@ int main()
       double max_tuning = 0;
       bool tuning_problem = false;
       if (!error) {
+
+         // solve ewsb
+         lowE6SSM_ew_derivs ew_derivs(model);
+         
+         double mHd2 = ew_derivs.get_model().get_mHd2();
+         double mHu2 = ew_derivs.get_model().get_mHu2();
+         double ms2 = ew_derivs.get_model().get_ms2();         
+         
+         lowE6SSM<Two_scale> tuning_model(model);
+         tuning_model.set_mHd2(mHd2);
+         tuning_model.set_mHu2(mHu2);
+         tuning_model.set_ms2(ms2);
+
          // calculate fine tuning
-         lowE6SSM_tuning_calculator tuning_calc(model);
+         lowE6SSM_tuning_calculator tuning_calc(tuning_model);
          tuning_calc.set_tuning_scale(Sqrt(model.get_MSu()(0) * model.get_MSu()(1)));
          tuning_calc.set_input_scale(mx);
          tuning_calc.set_tuning_ewsb_loop_order(1);

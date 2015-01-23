@@ -323,52 +323,52 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.BMuPrInput = -4.20990207e+05; // GeV^2
          
          input.mq2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.mq2Input(0,0) = 4.93021964e+06; // GeV^2
-         input.mq2Input(1,1) = 4.93017789e+06; // GeV^2
+         input.mq2Input(0,0) = 5.76210034E+06;//4.93021964e+06; // GeV^2
+         input.mq2Input(1,1) = 5.76205345E+06;//4.93017789e+06; // GeV^2
          
          input.ml2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.ml2Input(0,0) = 3.96022681e+06; // GeV^2
-         input.ml2Input(1,1) = 3.96008182e+06; // GeV^2
-         input.ml2Input(2,2) = 3.91708183e+06; // GeV^2
+         input.ml2Input(0,0) = 4.93965102E+06;//3.96022681e+06; // GeV^2
+         input.ml2Input(1,1) = 4.93949052E+06;//3.96008182e+06; // GeV^2
+         input.ml2Input(2,2) = 4.89189756E+06;//3.91708183e+06; // GeV^2
          
          input.md2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.md2Input(0,0) = 5.04926079e+06; // GeV^2
-         input.md2Input(1,1) = 5.04921454e+06; // GeV^2
-         input.md2Input(2,2) = 4.95687546e+06; // GeV^2
+         input.md2Input(0,0) = 5.88363593E+06;//5.04926079e+06; // GeV^2
+         input.md2Input(1,1) = 5.88358594E+06;//5.04921454e+06; // GeV^2
+         input.md2Input(2,2) = 5.78399108E+06;//4.95687546e+06; // GeV^2
          
          input.mu2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.mu2Input(0,0) = 4.63796804e+06; // GeV^2
-         input.mu2Input(1,1) = 4.63792998e+06; // GeV^2
+         input.mu2Input(0,0) = 5.53534602E+06;//4.63796804e+06; // GeV^2
+         input.mu2Input(1,1) = 5.53530132E+06;//4.63792998e+06; // GeV^2
          
          input.me2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.me2Input(0,0) = 4.25677859e+06; // GeV^2
-         input.me2Input(1,1) = 4.25648615e+06; // GeV^2
-         input.me2Input(2,2) = 4.16975022e+06; // GeV^2
+         input.me2Input(0,0) = 5.21097266E+06;//4.25677859e+06; // GeV^2
+         input.me2Input(1,1) = 5.21064896E+06;//4.25648615e+06; // GeV^2
+         input.me2Input(2,2) = 5.11465282E+06;//4.16975022e+06; // GeV^2
          
          input.mH1I2Input = Eigen::Matrix<double,2,2>::Zero();
-         input.mH1I2Input(0,0) = 3.40512919e+06; // GeV^2
-         input.mH1I2Input(1,1) = 3.40512919e+06; // GeV^2
+         input.mH1I2Input(0,0) = 4.46478081E+06;//3.40512919e+06; // GeV^2
+         input.mH1I2Input(1,1) = 4.46478081E+06;//3.40512919e+06; // GeV^2
          
          input.mH2I2Input = Eigen::Matrix<double,2,2>::Zero();
-         input.mH2I2Input(0,0) = 3.81203970e+06; // GeV^2
-         input.mH2I2Input(1,1) = 3.81203970e+06; // GeV^2
+         input.mH2I2Input(0,0) = 4.80681012E+06;//3.81203970e+06; // GeV^2
+         input.mH2I2Input(1,1) = 4.80681012E+06;//3.81203970e+06; // GeV^2
          
          input.msI2Input = Eigen::Matrix<double,2,2>::Zero();
-         input.msI2Input(0,0) = 4.36110508e+06; // GeV^2
-         input.msI2Input(1,1) = 4.36110508e+06; // GeV^2
+         input.msI2Input(0,0) = 5.28331572E+06;//4.36110508e+06; // GeV^2
+         input.msI2Input(1,1) = 5.28331572E+06;//4.36110508e+06; // GeV^2
          
          input.mDx2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.mDx2Input(0,0) = 3.98014509e+06; // GeV^2
-         input.mDx2Input(1,1) = 3.98014509e+06; // GeV^2
-         input.mDx2Input(2,2) = 3.98014509e+06; // GeV^2
+         input.mDx2Input(0,0) = 4.81205009E+06;//3.98014509e+06; // GeV^2
+         input.mDx2Input(1,1) = 4.81205009E+06;//3.98014509e+06; // GeV^2
+         input.mDx2Input(2,2) = 4.81205009E+06;//3.98014509e+06; // GeV^2
          
          input.mDxbar2Input = Eigen::Matrix<double,3,3>::Zero();
-         input.mDxbar2Input(0,0) = 4.08695764e+06; // GeV^2
-         input.mDxbar2Input(1,1) = 4.08695764e+06; // GeV^2
-         input.mDxbar2Input(2,2) = 4.08695764e+06; // GeV^2
+         input.mDxbar2Input(0,0) = 4.90389439E+06;//4.08695764e+06; // GeV^2
+         input.mDxbar2Input(1,1) = 4.90389439E+06;//4.08695764e+06; // GeV^2
+         input.mDxbar2Input(2,2) = 4.90389439E+06;//4.08695764e+06; // GeV^2
          
-         input.mHp2Input = 3.96022682e+06; // GeV^2
-         input.mHpbar2Input = 3.85796087e+06; // GeV^2
+         input.mHp2Input = 4.93965103E+06;//3.96022682e+06; // GeV^2
+         input.mHpbar2Input = 4.86889351E+06;//3.85796087e+06; // GeV^2
          
          input.MassBInput = 1.73364059e+02; // GeV
          input.MassGInput = 1200.0;//7.11480225e+02; // GeV
@@ -750,7 +750,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.Lambda12Input(0,0) = 0.2;
          input.Lambda12Input(1,1) = 0.2;
          
-         input.MuPrInput = 5000.; // GeV
+         input.MuPrInput = 3000.; // GeV
          
          input.TYdInput = Eigen::Matrix<double,3,3>::Zero();
          input.TYeInput = Eigen::Matrix<double,3,3>::Zero();
@@ -767,12 +767,12 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.ml2Input = Eigen::Matrix<double,3,3>::Zero();
          input.ml2Input(0,0) = Sqr(5000.); // GeV^2
          input.ml2Input(1,1) = Sqr(5000.); // GeV^2
-         input.ml2Input(2,2) = Sqr(9000.); // GeV^2
+         input.ml2Input(2,2) = Sqr(5000.); // GeV^2
          
          input.md2Input = Eigen::Matrix<double,3,3>::Zero();
          input.md2Input(0,0) = Sqr(5000.); // GeV^2
          input.md2Input(1,1) = Sqr(5000.); // GeV^2
-         input.md2Input(2,2) = Sqr(9000.); // GeV^2
+         input.md2Input(2,2) = Sqr(5000.); // GeV^2
          
          input.mu2Input = Eigen::Matrix<double,3,3>::Zero();
          input.mu2Input(0,0) = Sqr(5000.); // GeV^2
@@ -781,7 +781,7 @@ lowE6SSM_input_parameters get_default_inputs(double theta, Input_set point, bool
          input.me2Input = Eigen::Matrix<double,3,3>::Zero();
          input.me2Input(0,0) = Sqr(5000.); // GeV^2
          input.me2Input(1,1) = Sqr(5000.); // GeV^2
-         input.me2Input(2,2) = Sqr(8000.); // GeV^2
+         input.me2Input(2,2) = Sqr(5000.); // GeV^2
          
          input.mH1I2Input = Eigen::Matrix<double,2,2>::Zero();
          input.mH1I2Input(0,0) = Sqr(5000.); // GeV^2
@@ -1704,6 +1704,12 @@ int main()
             }
             fine_tunings = tuning_calc.get_fine_tunings();
             max_tuning = maximum_tuning(fine_tunings);
+
+            // tuning_model.run_to(mx_value);
+            // std::cout << "In tuning, Q = " << tuning_model.get_scale() << "\n";
+            // std::cout << "In tuning, Sigma1 = " << tuning_model.get_mq2().trace() - 2.0 * tuning_model.get_mu2().trace() + tuning_model.get_md2().trace() + tuning_model.get_me2().trace() - tuning_model.get_ml2().trace() + tuning_model.get_mHu2() - tuning_model.get_mHu2() + tuning_model.get_mH2I2().trace() - tuning_model.get_mH1I2().trace() + tuning_model.get_mDxbar2().trace() - tuning_model.get_mDx2().trace() - tuning_model.get_mHp2() + tuning_model.get_mHpbar2() << "\n";
+
+            // std::cout << "In tuning, Sigma1' = " << 6.0 * tuning_model.get_mq2().trace() + 3.0 * tuning_model.get_mu2().trace() + 6.0 * tuning_model.get_md2().trace() + tuning_model.get_me2().trace() + 4.0 * tuning_model.get_ml2().trace() - 4.0 * tuning_model.get_mHu2() - 4.0 * tuning_model.get_mH2I2().trace() - 6.0 * tuning_model.get_mHd2() - 6.0 * tuning_model.get_mH1I2().trace() + 5.0 * tuning_model.get_ms2() + 5.0 * tuning_model.get_msI2().trace() - 9.0 * tuning_model.get_mDxbar2().trace() - 6.0 * tuning_model.get_mDx2().trace() + 4.0 * tuning_model.get_mHp2() - 4.0 * tuning_model.get_mHpbar2() << "\n";
          }
 
          // write out

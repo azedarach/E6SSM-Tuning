@@ -87,25 +87,48 @@ Eigen::VectorXd fill_log_values(std::size_t num_points, double lower, double upp
 
 void fill_default_input_pars(DoubleVector & pars)
 {
-   // default values used in scan
-   pars(1) = 300.; //< M1
-   pars(3) = 2000.; //< M3
-   pars(12) = 0.; //< AYd(2,2)
-   pars(13) = 0.; //< AYe(2,2)
-   pars(31) = 5000.; //< ml(0,0)
-   pars(32) = 5000.; //< ml(1,1)
-   pars(33) = 5000.; //< ml(2,2)
-   pars(34) = 5000.; //< me(0,0)
-   pars(35) = 5000.; //< me(1,1)
-   pars(36) = 5000.; //< me(2,2)
-   pars(41) = 5000.; //< mq(0,0)
-   pars(42) = 5000.; //< mq(1,1)
-   pars(44) = 5000.; //< mu(0,0)
-   pars(45) = 5000.; //< mu(1,1)
-   pars(46) = 5000.; //< mu(2,2)
-   pars(47) = 5000.; //< md(0,0)
-   pars(48) = 5000.; //< md(1,1)
-   pars(49) = 5000.; //< md(2,2)
+   const bool use_default_pars = false;
+
+   if (use_default_pars) {
+      // default values used in scan
+      pars(1) = 300.; //< M1
+      pars(3) = 1170.0;//2000.; //< M3
+      pars(12) = 0.; //< AYd(2,2)
+      pars(13) = 0.; //< AYe(2,2)
+      pars(31) = 5000.; //< ml(0,0)
+      pars(32) = 5000.; //< ml(1,1)
+      pars(33) = 5000.; //< ml(2,2)
+      pars(34) = 5000.; //< me(0,0)
+      pars(35) = 5000.; //< me(1,1)
+      pars(36) = 5000.; //< me(2,2)
+      pars(41) = 5000.; //< mq(0,0)
+      pars(42) = 5000.; //< mq(1,1)
+      pars(44) = 5000.; //< mu(0,0)
+      pars(45) = 5000.; //< mu(1,1)
+      pars(46) = 5000.; //< mu(2,2)
+      pars(47) = 5000.; //< md(0,0)
+      pars(48) = 5000.; //< md(1,1)
+      pars(49) = 5000.; //< md(2,2)
+   } else {
+      pars(1) = 4.35809794e+02; //< M1
+      pars(3) = 1160.0;//2.09996302e+03; //< M3
+      pars(12) = -1.92476064e+03; //< AYd(2,2)
+      pars(13) = -8.31473226e+01; //< AYe(2,2)
+      pars(31) = 2.28409908e+03; //< ml(0,0)
+      pars(32) = 2.28406934e+03; //< ml(1,1)
+      pars(33) = 2.27516902e+03; //< ml(2,2)
+      pars(34) = 2.22578992e+03; //< me(0,0)
+      pars(35) = 2.22572861e+03; //< me(1,1)
+      pars(36) = 2.20733853e+03; //< me(2,2)
+      pars(41) = 2.86004800e+03; //< mq(0,0)
+      pars(42) = 2.86003809e+03; //< mq(1,1)
+      pars(44) = 2.81426818e+03; //< mu(0,0)
+      pars(45) = 2.81425727e+03; //< mu(1,1)
+      pars(46) = 1.99865480e+03; //< mu(2,2)
+      pars(47) = 2.80871491e+03; //< md(0,0)
+      pars(48) = 2.80870549e+03; //< md(1,1)
+      pars(49) = 2.79059537e+03; //< md(2,2)
+   }
    
 }
 
@@ -478,6 +501,9 @@ int main() {
          // model output is at M_SUSY
          model.runto(model.displayMsusy());
 
+         //model.lesHouchesAccordOutput(cout, "nonUniversal", pars, sgnMu, TanBeta_value, 0.0,  
+         //                             1, ewsb_BC_scale);
+
          // DH::note
          MssmSoftsusy high_scale_model(model);
          high_scale_model.runto(mx_value);
@@ -578,6 +604,7 @@ int main() {
          }
 
          // print output
+         //std::cout << "MGlu = " << model.displayPhys().mGluino << "\n";
          std::cout << std::setw(12) << std::left << TanBeta_value << ' '
                    << std::setw(12) << std::left << Mu_value << ' '
                    << std::setw(12) << std::left << B << ' '

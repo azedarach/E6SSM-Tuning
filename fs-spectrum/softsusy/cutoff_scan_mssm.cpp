@@ -501,7 +501,7 @@ int main() {
          // model output is at M_SUSY
          model.runto(model.displayMsusy());
 
-         //model.lesHouchesAccordOutput(cout, "nonUniversal", pars, sgnMu, TanBeta_value, 0.0,  
+         //model.lesHouchesAccordOutput(cout, "nonUniversal", pars, sgnMu, TanBeta_value, model.displayMxBC(),  
          //                             1, ewsb_BC_scale);
 
          // DH::note

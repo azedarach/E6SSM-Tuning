@@ -1705,6 +1705,9 @@ int main()
             fine_tunings = tuning_calc.get_fine_tunings();
             max_tuning = maximum_tuning(fine_tunings);
 
+            //tuning_model.run_to(spectrum_generator.get_high_scale());
+            //tuning_model.print(std::cout);
+
             // tuning_model.run_to(mx_value);
             // std::cout << "In tuning, Q = " << tuning_model.get_scale() << "\n";
             // std::cout << "In tuning, Sigma1 = " << tuning_model.get_mq2().trace() - 2.0 * tuning_model.get_mu2().trace() + tuning_model.get_md2().trace() + tuning_model.get_me2().trace() - tuning_model.get_ml2().trace() + tuning_model.get_mHu2() - tuning_model.get_mHu2() + tuning_model.get_mH2I2().trace() - tuning_model.get_mH1I2().trace() + tuning_model.get_mDxbar2().trace() - tuning_model.get_mDx2().trace() - tuning_model.get_mHp2() + tuning_model.get_mHpbar2() << "\n";
@@ -1713,7 +1716,8 @@ int main()
          }
 
          // write out
-         //model.print(std::cout);
+         //tuning_model.run_to(spectrum_generator.get_high_scale());
+         //tuning_model.print(std::cout);
          // lowE6SSM_slha_io slha_io;
          // slha_io.set_spinfo(problems);
          // slha_io.set_sminputs(oneset);

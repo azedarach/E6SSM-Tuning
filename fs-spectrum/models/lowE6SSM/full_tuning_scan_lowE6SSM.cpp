@@ -38,8 +38,12 @@ namespace flexiblesusy {
    lowE6SSM_input_parameters get_default_inputs()
    {
       lowE6SSM_input_parameters input;
-      
-      const double theta = ArcTan(Sqrt(15.));
+
+      // U(1)_N: theta = ArcTan(Sqrt(15.0))
+      // U(1)_I: theta = PI + ArcTan(Sqrt(0.6))
+      // U(1)_psi: theta = 0.5 * PI
+
+      const double theta = 0.5 * PI;
       
       initialize_e6_charges(theta, input);
       

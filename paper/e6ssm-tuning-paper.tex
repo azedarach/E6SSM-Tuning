@@ -1424,8 +1424,28 @@ masses and soft trilinears, along with the one-loop RGEs for the soft
 scalar masses, were given in \cite{Athron:2009bs} for the particular
 case of the E$_6$SSM. At tree level in the EWSB conditions the
 parameters that must be considered are $\lambda$, $A_\lambda$,
-$m_{H_u}^2$, $m_{H_d}^2$, $m_S^2$ and $g_1$, $g_2$ and $g_1'$. The
-one- and two-loop contributions to the $\beta$ function for $\lambda$
+$m_{H_u}^2$, $m_{H_d}^2$, $m_S^2$ and $g_1$, $g_2$ and $g_1'$. Neglecting kinetic
+mixing, the two-loop $\beta$ functions for the gauge couplings read
+\begin{subequations}\label{eq:USSMGaugeBetas}
+\begin{align}
+\beta_{g_1}^{(1)}&=\frac{48}{5}g_1^3,\label{eq:USSMg1BetaOneLoop}\\
+\beta_{g_1}^{(2)}&=\frac{2}{25},\label{eq:USSMg1BetaTwoLoop}\\
+\beta_{g_2}^{(1)}&=4g_2^3,\label{eq:USSMg2BetaOneLoop}\\
+\beta_{g_3}^{(1)}&=0,\label{eq:USSMg3BetaOneLoop}\\
+\beta_{g_1'}^{(1)}&=g_1'^3\Sigma_{\tilde{Q}},\label{eq:USSMg1pBetaOneLoop}
+\end{align}
+\end{subequations}
+In order to keep our expressions compact we have used the notation
+\begin{align*}
+\Sigma_{\tilde{Q}}=\sum_i \tilde{Q}_i^2
+\end{align*}
+to denote the trace over the $U(1)'$ charges, and
+\begin{align*}
+\Sigma_{\tilde{Q}}^Y&=\sum_i \sqrt{\frac{5}{3}}Q_i^Y\tilde{Q}_i\\
+&=-3\tilde{Q}_1+3\tilde{Q}_2+3\tilde{Q}_d-3\tilde{Q}_D+3\tilde{Q}_e-3\tilde{Q}_L+3\tilde{Q}_Q-6\tilde{Q}_u+3\tilde{Q}_{\overline{D}}+\tilde{Q}_{\overline{H'}}-\tilde{Q}_{H'}.
+\end{align*}
+Note that in these expressions the $U(1)_Y$ and $U(1)'$ charges are assumed to be GUT-normalised.\\ \\
+The one- and two-loop contributions to the $\beta$ function for $\lambda$
 are
 \begin{subequations}\label{eq:USSMLambdaBetas}
 \begin{align}
@@ -1442,16 +1462,6 @@ where
 \begin{equation*}
 \Sigma_\lambda=\lambda_1^2+\lambda_2^2+\lambda_3^2, \qquad \Sigma_\kappa=\kappa_1^2+\kappa_2^2+\kappa_3^2.
 \end{equation*}
-Similarly, in order to keep our expressions compact we also use the notation
-\begin{align*}
-\Sigma_{\tilde{Q}}=\sum_i \tilde{Q}_i^2
-\end{align*}
-to denote sums over the $U(1)'$ charges, and
-\begin{align*}
-\Sigma_{\tilde{Q}}^Y&=\sum_i \sqrt{\frac{5}{3}}Q_i^Y\tilde{Q}_i\\
-&=-3\tilde{Q}_1+3\tilde{Q}_2+3\tilde{Q}_d-3\tilde{Q}_D+3\tilde{Q}_e-3\tilde{Q}_L+3\tilde{Q}_Q-6\tilde{Q}_u+3\tilde{Q}_{\overline{D}}+\tilde{Q}_{\overline{H'}}-\tilde{Q}_{H'}.
-\end{align*}
-Note that in these expressions the $U(1)_Y$ and $U(1)'$ charges are assumed to be GUT-normalised.
 % NB before submission replace this with a copy-paste of the bbl file?
 \bibliography{bibliography}{}
 \end{document}

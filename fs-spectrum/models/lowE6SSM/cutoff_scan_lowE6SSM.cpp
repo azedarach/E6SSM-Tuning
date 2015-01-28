@@ -1680,10 +1680,16 @@ int main()
             double mHu2 = ew_derivs.get_model().get_mHu2();
             double ms2 = ew_derivs.get_model().get_ms2();         
 
+            std::cout << "1 loop mHd2 = " << mHd2 << "\n";
+            std::cout << "1 loop mHu2 = " << mHu2 << "\n";
+            std::cout << "1 loop ms2 = " << ms2 << "\n";
+
             lowE6SSM<Two_scale> tuning_model(model);
             tuning_model.set_mHd2(mHd2);
             tuning_model.set_mHu2(mHu2);
             tuning_model.set_ms2(ms2);
+
+            std::cout << "MassG = " << tuning_model.get_MassG() << "\n";
 
             lowE6SSM_tuning_calculator tuning_calc(tuning_model);
             tuning_calc.set_tuning_scale(tuning_model.get_scale());

@@ -529,6 +529,10 @@ int main() {
                tuning_model.setMh1Squared(soft_masses_1lp(1));
                tuning_model.setMh2Squared(soft_masses_1lp(2));
                
+               // note
+               std::cout << "1 loop mHd2 = " << soft_masses_1lp(1) << "\n";
+               std::cout << "1 loop mHu2 = " << soft_masses_1lp(2) << "\n";
+
                f1 = MSSM_EWSBCondition1(tuning_model);
                f2 = MSSM_EWSBCondition2(tuning_model);
 

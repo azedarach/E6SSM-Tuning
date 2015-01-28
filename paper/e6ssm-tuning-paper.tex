@@ -6,6 +6,7 @@
 \usepackage{bm}
 \usepackage{hyperref}
 \usepackage{footmisc}
+\usepackage{longtable}
 % macros
 \newcommand{\be}{\begin{equation}}
 \newcommand{\ee}{\end{equation}}
@@ -534,7 +535,7 @@ is defined by $A\cdot B\equiv \epsilon_{\alpha\beta}A^\alpha
 B^\beta=A^2B^1-A^1B^2$. The term $\Delta V$ contains the
 Coleman-Weinberg contributions to the effective potential. In the case
 of the $U(1)_\chi$ model, $V_F$ may also contain an elementary
-$\mu$ term contribution, as occurs in the MSSM.\\ \\ Demanding that
+$\mu$ term, as occurs in the MSSM.\\ \\ Demanding that
 the Higgs fields $H_1$, $H_2$ and the singlet $S$ acquire real VEVs of
 the form
 \begin{equation}\label{eq:E6vevs}
@@ -1040,43 +1041,57 @@ Fig.~\ref{Fig:BMs-varyMX}. Since the behaviour is quite complicated we
 now discuss these in detail as it provides some insight into the many
 differences in the tuning between the two models.
 
+\begingroup
+\squeezetable
 \begin{table}[h]
 \centering
 \begin{ruledtabular}
-\begin{tabular}{cccc}
-& MSSM & E$_6$SSM BM1 & E$_6$SSM BM2 \\
+\begin{tabular}{ccccc}
+& MSSM BM1 & MSSM BM2 & E$_6$SSM BM1 & E$_6$SSM BM2 \\
 \hline
-$\tan\beta(M_Z)$ & 10 & 10 & 10 \\
-$s(M_{\mathrm{SUSY}})$ [GeV] & $-$ & 6700 & 6700 \\
-$\kappa_{1,2,3}(M_{\mathrm{SUSY}})$ & $-$ & 0.6 & 0.52 \\
-$\lambda_{1,2}(M_{\mathrm{SUSY}})$ & $-$ & 0.2 & 0.13 \\
-$\mu_{\mathrm{eff}}(M_{\mathrm{SUSY}})$ [GeV] & 689.7 & 1093.3 & 1313.0 \\
-$B_{\mathrm{eff}}(M_{\mathrm{SUSY}})$ [GeV] & 345.7 & 3792.7 & 817.8 \\
-$A_t(M_{\mathrm{SUSY}})$ [GeV] & -3335.7 & -1100 & -1103.2 \\
-$m_{Q3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $4.45\times 10^6$ & $4.50\times 10^5$ & $3.61\times 10^6$ \\
-$m_{u3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $4\times 10^6$ & $5.86\times 10^5$ & $2.04\times 10^6$ \\
-$M_1(M_{\mathrm{SUSY}})$ [GeV] & 300 & 300 & 173.4 \\
-$M_2(M_{\mathrm{SUSY}})$ [GeV] & 2000 & 1050 & 281.4 \\
-$M_3(M_{\mathrm{SUSY}})$ [GeV] & 2000 & 2000 & 1200 \\
-$M_1^\prime(M_{\mathrm{SUSY}})$ [GeV] & $-$ & 300 & 175.2 \\
+$\tan\beta(M_Z)$ & $10$ & $10$ & $10$ & $10$ \\
+$s(M_{\mathrm{SUSY}})$ [GeV] & $-$ & $-$ & $6700$ & $6700$ \\
+$\kappa_{1,2,3}(M_{\mathrm{SUSY}})$ & $-$ & $-$ & $0.6$ & $0.52$ \\
+$\lambda_{1,2}(M_{\mathrm{SUSY}})$ & $-$ & $-$ & $0.2$ & $0.13$ \\
+$\mu_{\mathrm{eff}}(M_{\mathrm{SUSY}})$ [GeV] & $689.7$ & $1013.5$ & $1093.3$ & $1313.0$ \\
+$B_{\mathrm{eff}}(M_{\mathrm{SUSY}})$ [GeV] & $345.7$ & $1032.5$ & $3792.7$ & $817.8$ \\
+$A_\tau(M_{\mathrm{SUSY}})$ [GeV] & $0$ & $-5057.9$ & $0$ & $-88.5$ \\
+$A_b(M_{\mathrm{SUSY}})$ [GeV] & $0$ & $-5707.2$ & $0$ & $-1720.7$\\
+$A_t(M_{\mathrm{SUSY}})$ [GeV] & $-3335.7$ & $-2734.8$ & $-1100$ & $-1103.2$ \\
+$m_{L1,2}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $6.35\times 10^6$ & $2.5\times 10^7$ & $4.94\times 10^6$ \\
+$m_{L3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $6.22\times 10^6$ & $2.5\times 10^7$ & $4.90\times 10^6$ \\
+$m_{e1,2}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $6.27\times 10^6$ & $2.5\times 10^7$ & $5.21\times 10^6$ \\
+$m_{e3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $6.03\times 10^6$ & $2.5\times 10^7$ & $5.11\times 10^6$ \\
+$m_{Q1,2}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $7.37\times 10^6$ & $2.5\times 10^7$ & $5.76\times 10^6$ \\
+$m_{Q3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $4.45\times 10^6$ & $3.97\times 10^6$ & $4.50\times 10^5$ & $3.61\times 10^6$ \\
+$m_{u1,2}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $7.30\times 10^6$ & $2.5\times 10^7$ & $5.54\times 10^6$ \\
+$m_{u3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $4.0 \times 10^6$ & $6.60\times10^5$& $5.86\times 10^5$ & $2.04\times 10^6$ \\
+$m_{d1,2}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $7.30\times 10^6$ & $2.5\times 10^7$ & $5.88\times 10^6$ \\
+$m_{d3}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $2.5\times 10^7$ & $7.03\times 10^6$ & $2.5\times 10^7$ & $5.78\times 10^6$ \\
+$m_{H_d}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & & & & \\
+$m_{H_u}^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & & & & \\
+$m_S^2(M_{\mathrm{SUSY}})$ [GeV$^2$] & $-$ & $-$ & & \\
+$M_1(M_{\mathrm{SUSY}})$ [GeV] & $300$ & $260.8$ & $300$ & $173.4$ \\
+$M_2(M_{\mathrm{SUSY}})$ [GeV] & $2000$ & $479.2$ & $1050$ & $281.4$ \\
+$M_3(M_{\mathrm{SUSY}})$ [GeV] & $2000$ & $1312.3$ & $2000$ & $1200$ \\
+$M_1^\prime(M_{\mathrm{SUSY}})$ [GeV] & $-$ & $-$ & $300$ & $175.2$ \\
 \hline
-$M_{Z^\prime}$ [GeV] & $-$ & 2473.2 & 2512.7 \\
-$m_{h_1}$ [GeV] & 124.3 & 125.0 & 126.2 \\
-$m_{\tilde{t}_1}$ [GeV] & 1942.1 & 993.8 & 1665.0 \\
-$m_{\tilde{t}_2}$ [GeV] & 2220.1 & 1174.8 & 2094.4 \\
-$m_{\tilde{g}}$ [GeV] & 2259.8 & 2290.0 & 1407.4\\
+$M_{Z^\prime}$ [GeV] & $-$ & $-$ & $2473.2$ & $2512.7$ \\
+$m_{h_1}$ [GeV] & $124.3$ & $124.4$ & $125.0$ & $126.2$ \\
+$m_{\tilde{t}_1}$ [GeV] & $1942.1$ & $861.6$ & $993.8$ & $1665.0$ \\
+$m_{\tilde{t}_2}$ [GeV] & $2220.1$ & $2023.9$ & $1174.8$ & $2094.4$ \\
+$m_{\tilde{g}}$ [GeV] & $2259.8$ & $1472.9$ & $2290.0$ & $1407.4$ \\
 \hline
-$\Delta(M_X=20\textrm{ TeV})$ & 157.3 & 165.3 & 402.1 \\
-$\Delta(M_X=10^{16}\textrm{ GeV})$ & 1089.0 & 1722.3 & 546.7
+$\Delta(M_X=20\textrm{ TeV})$ & $157.3$ & $242.8$ & $165.3$ & $402.1$ \\
+$\Delta(M_X=10^{16}\textrm{ GeV})$ & $1089.0$ & $949.0$ & $1722.3$ & $546.7$
 \end{tabular}
 \end{ruledtabular}
-\caption{Parameters and masses for the MSSM point and the E$_6$SSM benchmark points 
-BM1 and BM2. For the
-E$_6$SSM we define $\mu_{\mathrm{eff}}\equiv \lambda s/\sqrt{2}$ and
-$B_{\mathrm{eff}}=A_\lambda$. In BM1 all other (diagonal) soft scalar squared masses not shown above are set to $(5\mathrm{ TeV})^2$, the soft trilinears $A_b$, $A_\tau=0$, $\mu^\prime=5000$ GeV and $B\mu^\prime=5000$ GeV$^2$. In BM2 the parameters not shown above are set to the values obtained by running the cE$_6$SSM point with $m_0=2.2$ TeV, $A_0=500$ GeV, $M_{1/2}=1003$ GeV, $\kappa_{1,2,3}(M_X)=0.1923$, $\lambda(M_X)=0.2646$ to the SUSY scale, and setting $\mu^\prime(M_{\mathrm{SUSY}})=897.9$ GeV and $B\mu^\prime(M_{\mathrm{SUSY}})=-4.2\times10^5$ GeV$^2$.}
+\caption{Parameters for the MSSM and E$_6$SSM benchmark points. In the E$_6$SSM we define $\mu_{\mathrm{eff}}\equiv \lambda s/\sqrt{2}$ and
+$B_{\mathrm{eff}}=A_\lambda$. The soft masses $m_{H_d}^2$, $m_{H_u}^2$ and $m_S^2$ are those that satisfy the EWSB conditions including 1-loop Coleman-Weinberg corrections involving the top and stops. For E$_6$SSM BM1 (BM2) we also set $\mu^\prime = 5000.0$ $(897.9)$ GeV, $B\mu^\prime = 5000.0$ $(-4.21\times 10^5)$ GeV$^2$, $A_{\kappa 1,2,3} = 0$ $(-1389.2)$ GeV, $A_{\lambda 1,2} = 0$ $(-52.9)$ GeV, $m_{D1,2,3}^2 = 2.5\times 10^7$ $(4.81\times 10^6)$ GeV$^2$, $m_{\overline{D}1,2,3}^2 = 2.5\times 10^7$ $(4.90\times 10^6)$ GeV$^2$, $m_{H^d_{1,2}}^2 = 2.5\times 10^7$ $(4.46\times 10^6)$ GeV$^2$, $m_{H^u_{1,2}}^2 = 2.5\times 10^7$ $(4.81\times 10^6)$ GeV$^2$, $m_{S_{1,2}}^2 = 2.5\times 10^7$ $(5.28\times 10^6)$ GeV$^2$, $m_{H'}^2 = 2.5\times 10^7$ $(4.94\times 10^6)$ GeV$^2$ and $m_{\overline{H'}}^2 = 2.5\times 10^7$ $(4.87\times 10^6)$ GeV$^2$.
+}
 \label{tab:benchmarks}
 \end{table}
-
+\endgroup
 \begin{figure}
 \begin{center}
 \resizebox{!}{5.5cm}{%

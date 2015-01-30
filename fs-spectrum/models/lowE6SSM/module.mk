@@ -70,6 +70,7 @@ LIBlowE6SSM_SRC += \
 
 EXElowE6SSM_SRC += \
 		$(DIR)/cutoff_scan_lowE6SSM.cpp \
+		$(DIR)/fill_scan_lowE6SSM.cpp \
 		$(DIR)/full_tuning_scan_lowE6SSM.cpp \
 		$(DIR)/estimate_gN_lowE6SSM.cpp \
 		$(DIR)/run_lowE6SSM.cpp \
@@ -156,6 +157,9 @@ CUTOFF_lowE6SSM_EXE := $(DIR)/cutoff_scan_lowE6SSM.x
 ESTIMATE_lowE6SSM_OBJ := $(DIR)/estimate_gN_lowE6SSM.o
 ESTIMATE_lowE6SSM_EXE := $(DIR)/estimate_gN_lowE6SSM.x
 
+FILL_lowE6SSM_OBJ := $(DIR)/fill_scan_lowE6SSM.o
+FILL_lowE6SSM_EXE := $(DIR)/fill_scan_lowE6SSM.x
+
 FULL_lowE6SSM_OBJ := $(DIR)/full_tuning_scan_lowE6SSM.o
 FULL_lowE6SSM_EXE := $(DIR)/full_tuning_scan_lowE6SSM.x
 
@@ -208,6 +212,7 @@ clean-$(MODNAME): clean-$(MODNAME)-dep clean-$(MODNAME)-obj
 		-rm -f $(LIBlowE6SSM)
 		-rm -f $(CUTOFF_lowE6SSM_EXE)
 		-rm -f $(ESTIMATE_lowE6SSM_EXE)
+		-rm -f $(FILL_lowE6SSM_EXE)
 		-rm -f $(FULL_lowE6SSM_EXE)
 		-rm -f $(RUN_lowE6SSM_EXE)
 		-rm -f $(SCAN_lowE6SSM_EXE)
@@ -261,6 +266,9 @@ $(CUTOFF_lowE6SSM_EXE): $(CUTOFF_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBL
 $(ESTIMATE_lowE6SSM_EXE): $(ESTIMATE_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
+$(FILL_lowE6SSM_EXE): $(FILL_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
+
 $(FULL_lowE6SSM_EXE): $(FULL_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(GSLLIBS) $(BOOSTTHREADLIBS) $(LAPACKLIBS) $(BLASLIBS) $(FLIBS) $(THREADLIBS)
 
@@ -277,4 +285,4 @@ $(TUNING_SCAN_lowE6SSM_EXE): $(TUNING_SCAN_lowE6SSM_OBJ) $(LIBlowE6SSM) $(LIBFLE
 ALLDEP += $(LIBlowE6SSM_DEP) $(EXElowE6SSM_DEP)
 ALLSRC += $(LIBlowE6SSM_SRC) $(EXElowE6SSM_SRC)
 ALLLIB += $(LIBlowE6SSM)
-ALLEXE += $(CUTOFF_lowE6SSM_EXE) $(ESTIMATE_lowE6SSM_EXE) $(FULL_lowE6SSM_EXE) $(RUN_lowE6SSM_EXE) $(SCAN_lowE6SSM_EXE) $(TUNING_SCAN_lowE6SSM_EXE)
+ALLEXE += $(CUTOFF_lowE6SSM_EXE) $(ESTIMATE_lowE6SSM_EXE) $(FILL_lowE6SSM_EXE) $(FULL_lowE6SSM_EXE) $(RUN_lowE6SSM_EXE) $(SCAN_lowE6SSM_EXE) $(TUNING_SCAN_lowE6SSM_EXE)

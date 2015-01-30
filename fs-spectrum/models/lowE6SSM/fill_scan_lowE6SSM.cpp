@@ -560,7 +560,7 @@ int main()
          
          // generate additional points from read-in point
          const double ALambdax_width = 1000.0;
-         const double AYu22_width = 10000.0;
+         const double AYu22_width = 1000.0;
 
          for (std::size_t i = 0; i < num_points; ++i) {
             lowE6SSM_input_parameters random_input = input;

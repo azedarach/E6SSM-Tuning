@@ -1,0 +1,578 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     21309,        569]
+NotebookOptionsPosition[     21068,        556]
+NotebookOutlinePosition[     21409,        571]
+CellTagsIndexPosition[     21366,        568]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"diagonalReplacements", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Yd01", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yd02", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yd10", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yd12", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yd20", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yd21", "\[Rule]", "0"}], ",", 
+      RowBox[{"Ye01", "\[Rule]", "0"}], ",", 
+      RowBox[{"Ye02", "\[Rule]", "0"}], ",", 
+      RowBox[{"Ye10", "\[Rule]", "0"}], ",", 
+      RowBox[{"Ye12", "\[Rule]", "0"}], ",", 
+      RowBox[{"Ye20", "\[Rule]", "0"}], ",", 
+      RowBox[{"Ye21", "\[Rule]", "0"}], ",", 
+      RowBox[{"Kappa01", "\[Rule]", "0"}], ",", 
+      RowBox[{"Kappa02", "\[Rule]", "0"}], ",", 
+      RowBox[{"Kappa10", "\[Rule]", "0"}], ",", 
+      RowBox[{"Kappa12", "\[Rule]", "0"}], ",", 
+      RowBox[{"Kappa20", "\[Rule]", "0"}], ",", 
+      RowBox[{"Kappa21", "\[Rule]", "0"}], ",", 
+      RowBox[{"Lambda1201", "\[Rule]", "0"}], ",", 
+      RowBox[{"Lambda1210", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yu01", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yu02", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yu10", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yu12", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yu20", "\[Rule]", "0"}], ",", 
+      RowBox[{"Yu21", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYd01", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYd02", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYd10", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYd12", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYd20", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYd21", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYe01", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYe02", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYe10", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYe12", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYe20", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYe21", "\[Rule]", "0"}], ",", 
+      RowBox[{"TKappa01", "\[Rule]", "0"}], ",", 
+      RowBox[{"TKappa02", "\[Rule]", "0"}], ",", 
+      RowBox[{"TKappa10", "\[Rule]", "0"}], ",", 
+      RowBox[{"TKappa12", "\[Rule]", "0"}], ",", 
+      RowBox[{"TKappa20", "\[Rule]", "0"}], ",", 
+      RowBox[{"TKappa21", "\[Rule]", "0"}], ",", 
+      RowBox[{"TLambda1201", "\[Rule]", "0"}], ",", 
+      RowBox[{"TLambda1210", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYu01", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYu02", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYu10", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYu12", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYu20", "\[Rule]", "0"}], ",", 
+      RowBox[{"TYu21", "\[Rule]", "0"}], ",", 
+      RowBox[{"mq201", "\[Rule]", "0"}], ",", 
+      RowBox[{"mq202", "\[Rule]", "0"}], ",", 
+      RowBox[{"mq210", "\[Rule]", "0"}], ",", 
+      RowBox[{"mq212", "\[Rule]", "0"}], ",", 
+      RowBox[{"mq220", "\[Rule]", "0"}], ",", 
+      RowBox[{"mq221", "\[Rule]", "0"}], ",", 
+      RowBox[{"ml201", "\[Rule]", "0"}], ",", 
+      RowBox[{"ml202", "\[Rule]", "0"}], ",", 
+      RowBox[{"ml210", "\[Rule]", "0"}], ",", 
+      RowBox[{"ml212", "\[Rule]", "0"}], ",", 
+      RowBox[{"ml220", "\[Rule]", "0"}], ",", 
+      RowBox[{"ml221", "\[Rule]", "0"}], ",", 
+      RowBox[{"md201", "\[Rule]", "0"}], ",", 
+      RowBox[{"md202", "\[Rule]", "0"}], ",", 
+      RowBox[{"md210", "\[Rule]", "0"}], ",", 
+      RowBox[{"md212", "\[Rule]", "0"}], ",", 
+      RowBox[{"md220", "\[Rule]", "0"}], ",", 
+      RowBox[{"md221", "\[Rule]", "0"}], ",", 
+      RowBox[{"mu201", "\[Rule]", "0"}], ",", 
+      RowBox[{"mu202", "\[Rule]", "0"}], ",", 
+      RowBox[{"mu210", "\[Rule]", "0"}], ",", 
+      RowBox[{"mu212", "\[Rule]", "0"}], ",", 
+      RowBox[{"mu220", "\[Rule]", "0"}], ",", 
+      RowBox[{"mu221", "\[Rule]", "0"}], ",", 
+      RowBox[{"me201", "\[Rule]", "0"}], ",", 
+      RowBox[{"me202", "\[Rule]", "0"}], ",", 
+      RowBox[{"me210", "\[Rule]", "0"}], ",", 
+      RowBox[{"me212", "\[Rule]", "0"}], ",", 
+      RowBox[{"me220", "\[Rule]", "0"}], ",", 
+      RowBox[{"me221", "\[Rule]", "0"}], ",", 
+      RowBox[{"mH1I201", "\[Rule]", "0"}], ",", 
+      RowBox[{"mH1I210", "\[Rule]", "0"}], ",", 
+      RowBox[{"mH2I201", "\[Rule]", "0"}], ",", 
+      RowBox[{"mH2I210", "\[Rule]", "0"}], ",", 
+      RowBox[{"msI201", "\[Rule]", "0"}], ",", 
+      RowBox[{"msI210", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDx201", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDx202", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDx210", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDx212", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDx220", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDx221", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDxbar201", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDxbar202", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDxbar210", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDxbar212", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDxbar220", "\[Rule]", "0"}], ",", 
+      RowBox[{"mDxbar221", "\[Rule]", "0"}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"thirdGenerationReplacements", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"Yd00", "\[Rule]", "0"}], ",", 
+     RowBox[{"Yd11", "\[Rule]", "0"}], ",", 
+     RowBox[{"Ye00", "\[Rule]", "0"}], ",", 
+     RowBox[{"Ye11", "\[Rule]", "0"}], ",", 
+     RowBox[{"Yu00", "\[Rule]", "0"}], ",", 
+     RowBox[{"Yu11", "\[Rule]", "0"}], ",", 
+     RowBox[{"TYd00", "\[Rule]", "0"}], ",", 
+     RowBox[{"TYd11", "\[Rule]", "0"}], ",", 
+     RowBox[{"TYe00", "\[Rule]", "0"}], ",", 
+     RowBox[{"TYe11", "\[Rule]", "0"}], ",", 
+     RowBox[{"TYu00", "\[Rule]", "0"}], ",", 
+     RowBox[{"TYu11", "\[Rule]", "0"}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"definitionReplacements", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"Kappa00", "^", "2"}], "+", 
+        RowBox[{"Kappa11", "^", "2"}], "+", 
+        RowBox[{"Kappa22", "^", "2"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalSigma]", "\[Kappa]"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Lambda1200", "^", "2"}], "+", 
+        RowBox[{"Lambda1211", "^", "2"}], "+", 
+        RowBox[{"Lambdax", "^", "2"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalSigma]", "\[Lambda]"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Kappa00", "^", "4"}], "+", 
+        RowBox[{"Kappa11", "^", "4"}], "+", 
+        RowBox[{"Kappa22", "^", "4"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalPi]", "\[Kappa]"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Lambda1200", "^", "4"}], "+", 
+        RowBox[{"Lambda1211", "^", "4"}], "+", 
+        RowBox[{"Lambdax", "^", "4"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalPi]", "\[Lambda]"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"9", "*", 
+         RowBox[{"Qdp", "^", "2"}]}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{"Qep", "^", "2"}]}], "+", 
+        RowBox[{"6", "*", 
+         RowBox[{"QH1p", "^", "2"}]}], "+", 
+        RowBox[{"6", "*", 
+         RowBox[{"QH2p", "^", "2"}]}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{"QSp", "^", "2"}]}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{"QHpbarp", "^", "2"}]}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{"QHpp", "^", "2"}]}], "+", 
+        RowBox[{"6", "*", 
+         RowBox[{"QLp", "^", "2"}]}], "+", 
+        RowBox[{"18", "*", 
+         RowBox[{"QQp", "^", "2"}]}], "+", 
+        RowBox[{"9", "*", 
+         RowBox[{"Qup", "^", "2"}]}], "+", 
+        RowBox[{"9", "*", 
+         RowBox[{"QDxp", "^", "2"}]}], "+", 
+        RowBox[{"9", "*", 
+         RowBox[{"QDxbarp", "^", "2"}]}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalSigma]", 
+        RowBox[{"OverTilde", "[", "Q", "]"}]]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"9", "*", 
+         RowBox[{"Qdp", "^", "4"}]}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{"Qep", "^", "4"}]}], "+", 
+        RowBox[{"6", "*", 
+         RowBox[{"QH1p", "^", "4"}]}], "+", 
+        RowBox[{"6", "*", 
+         RowBox[{"QH2p", "^", "4"}]}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{"QSp", "^", "4"}]}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{"QHpbarp", "^", "4"}]}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{"QHpp", "^", "4"}]}], "+", 
+        RowBox[{"6", "*", 
+         RowBox[{"QLp", "^", "4"}]}], "+", 
+        RowBox[{"18", "*", 
+         RowBox[{"QQp", "^", "4"}]}], "+", 
+        RowBox[{"9", "*", 
+         RowBox[{"Qup", "^", "4"}]}], "+", 
+        RowBox[{"9", "*", 
+         RowBox[{"QDxp", "^", "4"}]}], "+", 
+        RowBox[{"9", "*", 
+         RowBox[{"QDxbarp", "^", "4"}]}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalPi]", 
+        RowBox[{"OverTilde", "[", "Q", "]"}]]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Qdp", "^", "2"}], "+", 
+        RowBox[{"QDxbarp", "^", "2"}], "+", 
+        RowBox[{"QDxp", "^", "2"}], "+", 
+        RowBox[{"2", "*", 
+         RowBox[{"QQp", "^", "2"}]}], "+", 
+        RowBox[{"Qup", "^", "2"}]}], "\[Rule]", 
+       SuperscriptBox[
+        SubscriptBox["\[CapitalPi]", 
+         RowBox[{"OverTilde", "[", "Q", "]"}]], "C"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"-", "3"}], "*", "QH1p"}], "+", 
+        RowBox[{"3", "*", "QH2p"}], "+", 
+        RowBox[{"3", "*", "Qdp"}], "-", 
+        RowBox[{"3", "*", "QDxp"}], "+", 
+        RowBox[{"3", "*", "Qep"}], "-", 
+        RowBox[{"3", "*", "QLp"}], "+", 
+        RowBox[{"3", "*", "QQp"}], "-", 
+        RowBox[{"6", "*", "Qup"}], "+", 
+        RowBox[{"3", "*", "QDxbarp"}], "+", "QHpbarp", "-", "QHpp"}], 
+       "\[Rule]", 
+       SuperscriptBox[
+        SubscriptBox["\[CapitalSigma]", 
+         RowBox[{"OverTilde", "[", "Q", "]"}]], "Y"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Qdp", "^", "2"}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{"Qep", "^", "2"}]}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{
+          RowBox[{"QH1p", "^", "2"}], "/", "2"}]}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{
+          RowBox[{"QH2p", "^", "2"}], "/", "2"}]}], "+", 
+        RowBox[{
+         RowBox[{"QHpbarp", "^", "2"}], "/", "2"}], "+", 
+        RowBox[{
+         RowBox[{"QHpp", "^", "2"}], "/", "2"}], "+", 
+        RowBox[{"3", "*", 
+         RowBox[{
+          RowBox[{"QLp", "^", "2"}], "/", "2"}]}], "+", 
+        RowBox[{
+         RowBox[{"QQp", "^", "2"}], "/", "2"}], "+", 
+        RowBox[{"4", "*", 
+         RowBox[{"Qup", "^", "2"}]}], "+", 
+        RowBox[{"QDxbarp", "^", "2"}], "+", 
+        RowBox[{"QDxp", "^", "2"}]}], "\[Rule]", 
+       SuperscriptBox[
+        SubscriptBox["\[CapitalPi]", 
+         RowBox[{"OverTilde", "[", "Q", "]"}]], "Y"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"3", "*", " ", 
+         SuperscriptBox["QH1p", "2"]}], "+", 
+        RowBox[{"3", "*", " ", 
+         SuperscriptBox["QH2p", "2"]}], "+", 
+        SuperscriptBox["QHpbarp", "2"], "+", 
+        SuperscriptBox["QHpp", "2"], "+", 
+        RowBox[{"3", "*", 
+         SuperscriptBox["QLp", "2"]}], "+", 
+        RowBox[{"9", "*", 
+         SuperscriptBox["QQp", "2"]}]}], "\[Rule]", 
+       SuperscriptBox[
+        SubscriptBox["\[CapitalPi]", 
+         RowBox[{"OverTilde", "[", "Q", "]"}]], "L"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Lambda1200", "*", "TLambda1200"}], "+", 
+        RowBox[{"Lambda1211", "*", "TLambda1211"}], "+", 
+        RowBox[{"Lambdax", "*", "TLambdax"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalSigma]", 
+        SubscriptBox["A", "\[Lambda]"]]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Kappa00", "*", "TKappa00"}], "+", 
+        RowBox[{"Kappa11", "*", "TKappa11"}], "+", 
+        RowBox[{"Kappa22", "*", "TKappa22"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalSigma]", 
+        SubscriptBox["A", "\[Kappa]"]]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"Lambda1200", "^", "3"}], "*", "TLambda1200"}], "+", 
+        RowBox[{
+         RowBox[{"Lambda1211", "^", "3"}], "*", "TLambda1211"}], "+", 
+        RowBox[{
+         RowBox[{"Lambdax", "^", "3"}], "*", "TLambdax"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalPi]", 
+        SubscriptBox["A", "\[Lambda]"]]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{"Kappa00", "^", "3"}], "*", "TKappa00"}], "+", 
+        RowBox[{
+         RowBox[{"Kappa11", "^", "3"}], "*", "TKappa11"}], "+", 
+        RowBox[{
+         RowBox[{"Kappa22", "^", "3"}], "*", "TKappa22"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalPi]", 
+        SubscriptBox["A", "\[Kappa]"]]}]}], "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"latexReplacements", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"g1", "\[Rule]", 
+      SubscriptBox["g", "1"]}], ",", 
+     RowBox[{"g2", "\[Rule]", 
+      SubscriptBox["g", "2"]}], ",", 
+     RowBox[{"g3", "\[Rule]", 
+      SubscriptBox["g", "3"]}], ",", 
+     RowBox[{"gN", "\[Rule]", 
+      SuperscriptBox[
+       SubscriptBox["g", "1"], "\[Prime]"]}], ",", 
+     RowBox[{"Ye22", "\[Rule]", 
+      SubscriptBox["y", "\[Tau]"]}], ",", 
+     RowBox[{"Yd22", "\[Rule]", 
+      SubscriptBox["y", "b"]}], ",", 
+     RowBox[{"Yu22", "\[Rule]", 
+      SubscriptBox["y", "t"]}], ",", 
+     RowBox[{"Lambdax", "\[Rule]", "\[Lambda]"}], ",", 
+     RowBox[{"Lambda1200", "\[Rule]", 
+      SubscriptBox["\[Lambda]", "1"]}], ",", 
+     RowBox[{"Lambda1211", "\[Rule]", 
+      SubscriptBox["\[Lambda]", "2"]}], ",", 
+     RowBox[{"Kappa00", "\[Rule]", 
+      SubscriptBox["\[Kappa]", "1"]}], ",", 
+     RowBox[{"Kappa11", "\[Rule]", 
+      SubscriptBox["\[Kappa]", "2"]}], ",", 
+     RowBox[{"Kappa22", "\[Rule]", 
+      SubscriptBox["\[Kappa]", "3"]}], ",", 
+     RowBox[{"QQp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "Q"]}], ",", 
+     RowBox[{"Qup", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "u"]}], ",", 
+     RowBox[{"Qdp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "d"]}], ",", 
+     RowBox[{"QLp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "L"]}], ",", 
+     RowBox[{"Qep", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "e"]}], ",", 
+     RowBox[{"QSp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "S"]}], ",", 
+     RowBox[{"QH2p", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "2"]}], ",", 
+     RowBox[{"QH1p", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "1"]}], ",", 
+     RowBox[{"QDxp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], "D"]}], ",", 
+     RowBox[{"QDxbarp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], 
+       RowBox[{"OverBar", "[", "D", "]"}]]}], ",", 
+     RowBox[{"QHpp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], 
+       SuperscriptBox["H", "\[Prime]"]]}], ",", 
+     RowBox[{"QHpbarp", "\[Rule]", 
+      SubscriptBox[
+       RowBox[{"OverTilde", "[", "Q", "]"}], 
+       RowBox[{"OverBar", "[", 
+        SuperscriptBox["H", "\[Prime]"], "]"}]]}], ",", 
+     RowBox[{"MassB", "\[Rule]", 
+      SubscriptBox["M", "1"]}], ",", 
+     RowBox[{"MassWB", "\[Rule]", 
+      SubscriptBox["M", "2"]}], ",", 
+     RowBox[{"MassG", "\[Rule]", 
+      SubscriptBox["M", "3"]}], ",", 
+     RowBox[{"MassBp", "\[Rule]", 
+      SuperscriptBox[
+       SubscriptBox["M", "1"], "\[Prime]"]}], ",", 
+     RowBox[{"TYe22", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["y", "\[Tau]"], "*", 
+       SubscriptBox["A", "\[Tau]"]}]}], ",", 
+     RowBox[{"TYd22", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["y", "b"], "*", 
+       SubscriptBox["A", "b"]}]}], ",", 
+     RowBox[{"TYu22", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["y", "t"], "*", 
+       SubscriptBox["A", "t"]}]}], ",", 
+     RowBox[{"TLambdax", "\[Rule]", 
+      RowBox[{"\[Lambda]", "*", 
+       SubscriptBox["A", "\[Lambda]"]}]}], ",", 
+     RowBox[{"TLambda1200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["\[Lambda]", "1"], "*", 
+       SubscriptBox["A", 
+        SubscriptBox["\[Lambda]", "1"]]}]}], ",", 
+     RowBox[{"TLambda1211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["\[Lambda]", "2"], "*", 
+       SubscriptBox["A", 
+        SubscriptBox["\[Lambda]", "2"]]}]}], ",", 
+     RowBox[{"TKappa00", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["\[Kappa]", "1"], "*", 
+       SubscriptBox["A", 
+        SubscriptBox["\[Kappa]", "1"]]}]}], ",", 
+     RowBox[{"TKappa11", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["\[Kappa]", "2"], "*", 
+       SubscriptBox["A", 
+        SubscriptBox["\[Kappa]", "2"]]}]}], ",", 
+     RowBox[{"TKappa22", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["\[Kappa]", "3"], "*", 
+       SubscriptBox["A", 
+        SubscriptBox["\[Kappa]", "3"]]}]}], ",", 
+     RowBox[{"mq200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "Q1"], "^", "2"}]}], ",", 
+     RowBox[{"mq211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "Q2"], "^", "2"}]}], ",", 
+     RowBox[{"mq222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "Q3"], "^", "2"}]}], ",", 
+     RowBox[{"ml200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "L1"], "^", "2"}]}], ",", 
+     RowBox[{"ml211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "L2"], "^", "2"}]}], ",", 
+     RowBox[{"ml222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "L3"], "^", "2"}]}], ",", 
+     RowBox[{"md200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "d1"], "^", "2"}]}], ",", 
+     RowBox[{"md211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "d2"], "^", "2"}]}], ",", 
+     RowBox[{"md222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "d3"], "^", "2"}]}], ",", 
+     RowBox[{"mu200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "u1"], "^", "2"}]}], ",", 
+     RowBox[{"mu211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "u2"], "^", "2"}]}], ",", 
+     RowBox[{"mu222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "u3"], "^", "2"}]}], ",", 
+     RowBox[{"me200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "e1"], "^", "2"}]}], ",", 
+     RowBox[{"me211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "e2"], "^", "2"}]}], ",", 
+     RowBox[{"me222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "e3"], "^", "2"}]}], ",", 
+     RowBox[{"mH1I200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        SuperscriptBox[
+         SubscriptBox["H", "1"], "d"]], "^", "2"}]}], ",", 
+     RowBox[{"mH1I211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        SuperscriptBox[
+         SubscriptBox["H", "2"], "d"]], "^", "2"}]}], ",", 
+     RowBox[{"mH2I200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        SuperscriptBox[
+         SubscriptBox["H", "1"], "u"]], "^", "2"}]}], ",", 
+     RowBox[{"mH2I211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        SuperscriptBox[
+         SubscriptBox["H", "2"], "u"]], "^", "2"}]}], ",", 
+     RowBox[{"msI200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "S1"], "^", "2"}]}], ",", 
+     RowBox[{"msI211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "S2"], "^", "2"}]}], ",", 
+     RowBox[{"mDx200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "D1"], "^", "2"}]}], ",", 
+     RowBox[{"mDx211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "D2"], "^", "2"}]}], ",", 
+     RowBox[{"mDx222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", "D3"], "^", "2"}]}], ",", 
+     RowBox[{"mDxbar200", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        RowBox[{
+         RowBox[{"OverBar", "[", "D", "]"}], "1"}]], "^", "2"}]}], ",", 
+     RowBox[{"mDxbar211", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        RowBox[{
+         RowBox[{"OverBar", "[", "D", "]"}], "2"}]], "^", "2"}]}], ",", 
+     RowBox[{"mDxbar222", "\[Rule]", 
+      RowBox[{
+       SubscriptBox["m", 
+        RowBox[{
+         RowBox[{"Overbar", "[", "D", "]"}], "3"}]], "^", "2"}]}]}], "}"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.631789902834071*^9, 3.631789903456409*^9}, {
+   3.631789988669582*^9, 3.6317901698870897`*^9}, {3.631790500075263*^9, 
+   3.631790768316571*^9}, {3.6317908201953163`*^9, 3.631790956781386*^9}, {
+   3.6317911228679743`*^9, 3.631791463996751*^9}, {3.63179243526582*^9, 
+   3.631792455864051*^9}, {3.6317927447094088`*^9, 3.6317927458817863`*^9}, 
+   3.6317932205418053`*^9, 3.631794705323586*^9, 3.631795167838613*^9, 
+   3.63179608656091*^9}]
+},
+WindowSize->{1290, 669},
+WindowMargins->{{Automatic, -126}, {-9, Automatic}},
+FrontEndVersion->"10.0 for Linux x86 (64-bit) (September 9, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 20506, 534, 918, "Input"]
+}
+]
+*)
+
+(* End of internal cache information *)

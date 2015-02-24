@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     21309,        569]
-NotebookOptionsPosition[     21068,        556]
-NotebookOutlinePosition[     21409,        571]
-CellTagsIndexPosition[     21366,        568]
+NotebookDataLength[     21354,        569]
+NotebookOptionsPosition[     21113,        556]
+NotebookOutlinePosition[     21454,        571]
+CellTagsIndexPosition[     21411,        568]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -302,14 +302,14 @@ Cell[BoxData[{
         RowBox[{"Lambda1211", "*", "TLambda1211"}], "+", 
         RowBox[{"Lambdax", "*", "TLambdax"}]}], "\[Rule]", 
        SubscriptBox["\[CapitalSigma]", 
-        SubscriptBox["A", "\[Lambda]"]]}], ",", 
+        SubscriptBox["a", "\[Lambda]"]]}], ",", 
       RowBox[{
        RowBox[{
         RowBox[{"Kappa00", "*", "TKappa00"}], "+", 
         RowBox[{"Kappa11", "*", "TKappa11"}], "+", 
         RowBox[{"Kappa22", "*", "TKappa22"}]}], "\[Rule]", 
        SubscriptBox["\[CapitalSigma]", 
-        SubscriptBox["A", "\[Kappa]"]]}], ",", 
+        SubscriptBox["a", "\[Kappa]"]]}], ",", 
       RowBox[{
        RowBox[{
         RowBox[{
@@ -319,7 +319,7 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"Lambdax", "^", "3"}], "*", "TLambdax"}]}], "\[Rule]", 
        SubscriptBox["\[CapitalPi]", 
-        SubscriptBox["A", "\[Lambda]"]]}], ",", 
+        SubscriptBox["a", "\[Lambda]"]]}], ",", 
       RowBox[{
        RowBox[{
         RowBox[{
@@ -329,7 +329,7 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"Kappa22", "^", "3"}], "*", "TKappa22"}]}], "\[Rule]", 
        SubscriptBox["\[CapitalPi]", 
-        SubscriptBox["A", "\[Kappa]"]]}]}], "}"}]}], ";"}], 
+        SubscriptBox["a", "\[Kappa]"]]}]}], "}"}]}], ";"}], 
   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"latexReplacements", "=", 
@@ -552,10 +552,10 @@ Cell[BoxData[{
    3.6317911228679743`*^9, 3.631791463996751*^9}, {3.63179243526582*^9, 
    3.631792455864051*^9}, {3.6317927447094088`*^9, 3.6317927458817863`*^9}, 
    3.6317932205418053`*^9, 3.631794705323586*^9, 3.631795167838613*^9, 
-   3.63179608656091*^9}]
+   3.63179608656091*^9, {3.633746878032943*^9, 3.63374688928813*^9}}]
 },
 WindowSize->{1290, 669},
-WindowMargins->{{Automatic, -126}, {-9, Automatic}},
+WindowMargins->{{Automatic, -10}, {-10, Automatic}},
 FrontEndVersion->"10.0 for Linux x86 (64-bit) (September 9, 2014)",
 StyleDefinitions->"Default.nb"
 ]
@@ -570,7 +570,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 20506, 534, 918, "Input"]
+Cell[558, 20, 20551, 534, 918, "Input"]
 }
 ]
 *)

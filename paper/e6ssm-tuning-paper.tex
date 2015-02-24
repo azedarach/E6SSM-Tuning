@@ -1442,7 +1442,7 @@ mixing, the two-loop $\beta$ functions for the relevant gauge couplings read
    \left(\tilde{Q}_u^2+\tilde{Q}_2^2+\tilde{Q}_Q^2\right)\right).\label{eq:USSMg1pBetaTwoLoop}
 \end{align}
 \end{subequations}
-In order to keep our expressions compact we have used the notation
+In order to keep these expressions compact we have used the notation
 \begin{align*}
 \Sigma_{\tilde{Q}}=\sum_i \tilde{Q}_i^2
 \end{align*}
@@ -1454,10 +1454,11 @@ to denote the trace over the $U(1)'$ charges, along with
 \Pi_{\tilde{Q}}^L&=3\tilde{Q}_1^2+3\tilde{Q}_2^2+\tilde{Q}_{H'}^2+\tilde{Q}_{\overline{H'}}^2+3\tilde{Q}_L^2+9\tilde{Q}_Q^2,\\
 \Pi_{\tilde{Q}}^C&=\tilde{Q}_d^2+\tilde{Q}_D^2+\tilde{Q}_{\overline{D}}^2+2\tilde{Q}_Q^2+\tilde{Q}_u^2.
 \end{align*}
-Note that in these expressions the $U(1)_Y$ and $U(1)'$ charges are assumed to be GUT-normalised. Similarly we have set
-\begin{equation*}
-\Sigma_\lambda=\lambda_1^2+\lambda_2^2+\lambda_3^2, \qquad \Sigma_\kappa=\kappa_1^2+\kappa_2^2+\kappa_3^2.
-\end{equation*}
+Note that in these expressions the $U(1)_Y$ and $U(1)'$ charges are assumed to be GUT-normalised. Similarly we will write
+\begin{align*}
+&\Sigma_\lambda=\lambda_1^2+\lambda_2^2+\lambda_3^2, \qquad \Sigma_\kappa=\kappa_1^2+\kappa_2^2+\kappa_3^2,\\
+&\Pi_\lambda=\lambda_1^4+\lambda_2^4+\lambda_3^4,\qquad \Pi_\kappa=\kappa_1^4+\kappa_2^4+\kappa_3^4.
+\end{align*}
 The corresponding $O(t^2)$ coefficients for the gauge couplings are simply
 \begin{subequations}\label{eq:USSMGaugeOt2Coeffs}
 \begin{align}
@@ -1467,7 +1468,7 @@ b_{g_1'}^{(2)}&=\frac{3}{2}g_1'^5\Sigma_{\tilde{Q}}^2.\label{eq:USSMg1pOt2Coeff}
 \end{align}
 \end{subequations}
 The one- and two-loop contributions to the $\beta$ function for $\lambda$
-are
+and the $O(t^2)$ coefficient in the series expansion are
 \begin{subequations}\label{eq:USSMLambdaBetas}
 \begin{align}
 \beta_\lambda^{(1)}&=\lambda  \left[2\lambda ^2+2 \Sigma_\lambda +3 \Sigma_\kappa +3 y_t^2+3 y_b^2+y_{\tau }^2-3 g_2^2-\frac{3}{5} g_1^2 -2 \left ( \tilde{Q}_1^2 + \tilde{Q}_2^2 + \tilde{Q}_S^2\right )g_1'^2 \right],\label{eq:USSMLambdaBetaOneLoop}\\
@@ -1476,7 +1477,16 @@ are
 &{}\left.+g_1'^2\left [ 4\tilde{Q}_S^2\lambda^2 -6\left ( \tilde{Q}_2^2-\tilde{Q}_Q^2-\tilde{Q}_u^2\right )y_t^2-6\left ( \tilde{Q}_1^2-\tilde{Q}_Q^2-\tilde{Q}_d^2\right )y_b^2 \right.\right.\nonumber\\
 &{}\left.-2\left ( \tilde{Q}_1^2-\tilde{Q}_L^2-\tilde{Q}_e^2\right )y_\tau^2-6\left ( \tilde{Q}_S^2-\tilde{Q}_D^2-\tilde{Q}_{\overline{D}}^2 \right )\Sigma_\kappa-4\left ( \tilde{Q}_S^2-\tilde{Q}_1^2-\tilde{Q}_2^2\right )\Sigma_\lambda\right ]\nonumber\\
 &{}+16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa\right ) +\frac{33}{2}g_2^4+\frac{297}{50}g_1^4+2g_1'^4\left [ 2\tilde{Q}_1^4+2\tilde{Q}_2^4+2\tilde{Q}_S^4+\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\Sigma_{\tilde{Q}}\right ]\nonumber\\
-&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left [\tilde{Q}_1^2+\tilde{Q}_2^2+\left ( \tilde{Q}_2-\tilde{Q}_1\right )\Sigma_{\tilde{Q}}^Y\right ]\bigg \}.\label{eq:USSMLambdaBetaTwoLoop}
+&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left [\tilde{Q}_1^2+\tilde{Q}_2^2+\left ( \tilde{Q}_2-\tilde{Q}_1\right )\Sigma_{\tilde{Q}}^Y\right ]\bigg \},\label{eq:USSMLambdaBetaTwoLoop}\\
+b_\lambda^{(2)}&=\lambda \bigg \{ 2\lambda^2\left ( 3\lambda^2 +4\Sigma_\lambda +6\Sigma_\kappa \right )+4\Pi_\lambda + 6\Pi_\kappa +6\left ( \Sigma_\lambda+\frac{3}{2}\Sigma_\kappa\right )^2+7\lambda^2\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\nonumber\\
+&{}+\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\left (2\Sigma_\lambda+3\Sigma_\kappa\right ) +3\left ( \frac{15}{2}y_t^4+\frac{15}{2}y_b^4+\frac{3}{2}y_\tau^4 +5y_b^2y_t^2 +3y_b^2y_\tau^2 +y_t^2y_\tau^2\right )\nonumber\\
+&{}-\frac{1}{5}g_1^2\left ( 12\lambda^2+16y_b^2+22y_t^2+12y_\tau^2+12\Sigma_\lambda +13\Sigma_\kappa \right )\nonumber\\
+&{}-3g_2^2\left ( 4\lambda^2+6y_t^2+6y_b^2+2y_\tau^2+4\Sigma_\lambda+3\Sigma_\kappa\right )-16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa \right )\nonumber\\
+&{}-2g_1'^2\left [ 4\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\left ( \lambda^2 +\Sigma_\lambda \right )+3\Sigma_\kappa\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2+\tilde{Q}_D^2+\tilde{Q}_{\overline{D}}^2\right )\right .\nonumber\\
+&{}+3y_b^2\left ( 2\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_d^2+\tilde{Q}_Q^2+\tilde{Q}_S^2 \right )+3y_t^2\left ( \tilde{Q}_1^2+2\tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_S^2+\tilde{Q}_u^2\right )\nonumber\\
+&{}\left.+y_\tau^2\left ( 2\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_e^2+\tilde{Q}_L^2+\tilde{Q}_S^2\right )\right ]-\frac{15}{2}g_2^4-\frac{279}{50}g_1^4\nonumber\\
+&{}+2g_1'^4\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2 \right )\left (\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2-\Sigma_{\tilde{Q}}\right )+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\nonumber\\
+&{}+\frac{6}{5}g_1^2g_1'^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2 \right ) \bigg \}.
 \end{align}
 \end{subequations}
 % NB before submission replace this with a copy-paste of the bbl file?

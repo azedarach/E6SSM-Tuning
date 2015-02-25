@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     21354,        569]
-NotebookOptionsPosition[     21113,        556]
-NotebookOutlinePosition[     21454,        571]
-CellTagsIndexPosition[     21411,        568]
+NotebookDataLength[     23884,        629]
+NotebookOptionsPosition[     23641,        616]
+NotebookOutlinePosition[     23983,        631]
+CellTagsIndexPosition[     23940,        628]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -329,8 +329,66 @@ Cell[BoxData[{
         RowBox[{
          RowBox[{"Kappa22", "^", "3"}], "*", "TKappa22"}]}], "\[Rule]", 
        SubscriptBox["\[CapitalPi]", 
-        SubscriptBox["a", "\[Kappa]"]]}]}], "}"}]}], ";"}], 
-  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+        SubscriptBox["a", "\[Kappa]"]]}], ",", 
+      RowBox[{
+       RowBox[{
+       "md200", "+", "md211", "+", "md222", "-", "mDx200", "-", "mDx211", "-",
+         "mDx222", "+", "mDxbar200", "+", "mDxbar211", "+", "mDxbar222", "+", 
+        "me200", "+", "me211", "+", "me222", "-", "mH1I200", "-", "mH1I211", 
+        "+", "mH2I200", "+", "mH2I211", "-", "mHd2", "-", "mHp2", "+", 
+        "mHpbar2", "+", "mHu2", "-", "ml200", "-", "ml211", "-", "ml222", "+",
+         "mq200", "+", "mq211", "+", "mq222", "-", 
+        RowBox[{"2", " ", "mu200"}], "-", 
+        RowBox[{"2", "mu211"}], "-", 
+        RowBox[{"2", "mu222"}]}], "\[Rule]", 
+       SubscriptBox["\[CapitalSigma]", "1"]}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"3", " ", 
+         RowBox[{"(", 
+          RowBox[{"md200", "+", "md211", "+", "md222"}], ")"}], " ", "Qdp"}], 
+        "+", 
+        RowBox[{"3", " ", 
+         RowBox[{"(", 
+          RowBox[{"mDxbar200", "+", "mDxbar211", "+", "mDxbar222"}], ")"}], 
+         " ", "QDxbarp"}], "+", 
+        RowBox[{"3", " ", 
+         RowBox[{"(", 
+          RowBox[{"mDx200", "+", "mDx211", "+", "mDx222"}], ")"}], " ", 
+         "QDxp"}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"me200", "+", "me211", "+", "me222"}], ")"}], " ", "Qep"}], 
+        "+", 
+        RowBox[{"2", " ", 
+         RowBox[{"(", 
+          RowBox[{"mH1I200", "+", "mH1I211"}], ")"}], " ", "QH1p"}], "+", 
+        RowBox[{"2", " ", "mHd2", " ", "QH1p"}], "+", 
+        RowBox[{"2", " ", 
+         RowBox[{"(", 
+          RowBox[{"mH2I200", "+", "mH2I211"}], ")"}], " ", "QH2p"}], "+", 
+        RowBox[{"2", " ", "mHu2", " ", "QH2p"}], "+", 
+        RowBox[{"2", " ", "mHpbar2", " ", "QHpbarp"}], "+", 
+        RowBox[{"2", " ", "mHp2", " ", "QHpp"}], "+", 
+        RowBox[{"2", " ", 
+         RowBox[{"(", 
+          RowBox[{"ml200", "+", "ml211", "+", "ml222"}], ")"}], " ", "QLp"}], 
+        "+", 
+        RowBox[{"6", " ", 
+         RowBox[{"(", 
+          RowBox[{"mq200", "+", "mq211", "+", "mq222"}], ")"}], " ", "QQp"}], 
+        "+", 
+        RowBox[{"ms2", " ", "QSp"}], "+", 
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{"msI200", "+", "msI211"}], ")"}], " ", "QSp"}], "+", 
+        RowBox[{"3", " ", 
+         RowBox[{"(", 
+          RowBox[{"mu200", "+", "mu211", "+", "mu222"}], ")"}], " ", 
+         "Qup"}]}], "\[Rule]", 
+       SuperscriptBox[
+        SubscriptBox["\[CapitalSigma]", "1"], "\[Prime]"]}]}], "}"}]}], ";"}],
+   "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
  RowBox[{
   RowBox[{"latexReplacements", "=", 
    RowBox[{"{", 
@@ -552,10 +610,12 @@ Cell[BoxData[{
    3.6317911228679743`*^9, 3.631791463996751*^9}, {3.63179243526582*^9, 
    3.631792455864051*^9}, {3.6317927447094088`*^9, 3.6317927458817863`*^9}, 
    3.6317932205418053`*^9, 3.631794705323586*^9, 3.631795167838613*^9, 
-   3.63179608656091*^9, {3.633746878032943*^9, 3.63374688928813*^9}}]
+   3.63179608656091*^9, {3.633746878032943*^9, 3.63374688928813*^9}, {
+   3.6338108177216454`*^9, 3.633810860409754*^9}, {3.633810970340414*^9, 
+   3.6338109920299597`*^9}}]
 },
 WindowSize->{1290, 669},
-WindowMargins->{{Automatic, -10}, {-10, Automatic}},
+WindowMargins->{{Automatic, -10}, {-283, Automatic}},
 FrontEndVersion->"10.0 for Linux x86 (64-bit) (September 9, 2014)",
 StyleDefinitions->"Default.nb"
 ]
@@ -570,7 +630,7 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 20551, 534, 918, "Input"]
+Cell[558, 20, 23079, 594, 1052, "Input"]
 }
 ]
 *)

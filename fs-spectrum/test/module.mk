@@ -44,6 +44,7 @@ TEST_SRC := \
 		$(DIR)/test_lowE6SSM_top_second_derivs.cpp \
 		$(DIR)/test_lowE6SSM_tuning_calculation.cpp \
 		$(DIR)/test_lowE6SSM_TYu22_derivs.cpp \
+		$(DIR)/test_lowE6SSM_Yu22_2lp_beta.cpp \
 		$(DIR)/test_lowE6SSM_Yu22_derivs.cpp
 
 ifneq ($(findstring lattice,$(ALGORITHMS)),)
@@ -198,6 +199,9 @@ $(DIR)/test_lowE6SSM_tuning_calculation.x: $(DIR)/test_lowE6SSM_tuning_calculati
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS) 
 
 $(DIR)/test_lowE6SSM_TYu22_derivs.x: $(DIR)/test_lowE6SSM_TYu22_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
+		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
+
+$(DIR)/test_lowE6SSM_Yu22_2lp_beta.x: $(DIR)/test_lowE6SSM_Yu22_2lp_beta.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))
 		$(CXX) -o $@ $(call abspathx,$^) $(filter -%,$(LOOPFUNCLIBS)) $(BOOSTTESTLIBS) $(GSLLIBS) $(LAPACKLIBS) $(FLIBS) $(THREADLIBS)
 
 $(DIR)/test_lowE6SSM_Yu22_derivs.x: $(DIR)/test_lowE6SSM_Yu22_derivs.o $(LIBlowE6SSM) $(LIBFLEXI) $(LIBLEGACY) $(filter-out -%,$(LOOPFUNCLIBS))

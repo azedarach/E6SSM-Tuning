@@ -10,10 +10,10 @@
 NotebookFileLineBreakTest
 NotebookFileLineBreakTest
 NotebookDataPosition[       158,          7]
-NotebookDataLength[     23884,        629]
-NotebookOptionsPosition[     23641,        616]
-NotebookOutlinePosition[     23983,        631]
-CellTagsIndexPosition[     23940,        628]
+NotebookDataLength[     32791,        886]
+NotebookOptionsPosition[     32506,        872]
+NotebookOutlinePosition[     32847,        887]
+CellTagsIndexPosition[     32804,        884]
 WindowFrame->Normal*)
 
 (* Beginning of Notebook Content *)
@@ -612,10 +612,266 @@ Cell[BoxData[{
    3.6317932205418053`*^9, 3.631794705323586*^9, 3.631795167838613*^9, 
    3.63179608656091*^9, {3.633746878032943*^9, 3.63374688928813*^9}, {
    3.6338108177216454`*^9, 3.633810860409754*^9}, {3.633810970340414*^9, 
-   3.6338109920299597`*^9}}]
+   3.6338109920299597`*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"collectTermsList", "=", 
+    RowBox[{"{", 
+     RowBox[{
+      SuperscriptBox["g1", "4"], ",", 
+      SuperscriptBox["g2", "4"], ",", 
+      SuperscriptBox["g3", "4"], ",", 
+      SuperscriptBox["gN", "4"], ",", 
+      SuperscriptBox["Lambda1200", "4"], ",", 
+      SuperscriptBox["Lambda1211", "4"], ",", 
+      SuperscriptBox["Lambdax", "4"], ",", 
+      SuperscriptBox["Kappa00", "4"], ",", 
+      SuperscriptBox["Kappa11", "4"], ",", 
+      SuperscriptBox["Kappa22", "4"], ",", 
+      SuperscriptBox["Yu22", "4"], ",", 
+      SuperscriptBox["Yd22", "4"], ",", 
+      SuperscriptBox["Ye22", "4"], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["g2", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["g3", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["gN", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Kappa00", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Kappa11", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Kappa22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g1", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["g3", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["gN", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Kappa00", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Kappa11", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Kappa22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g2", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["gN", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Kappa00", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Kappa11", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Kappa22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["g3", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Kappa00", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Kappa11", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Kappa22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["gN", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1200", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1200", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa22", "2"], " ", 
+       SuperscriptBox["Lambda1200", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1200", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1200", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1200", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1211", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa22", "2"], " ", 
+       SuperscriptBox["Lambda1211", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1211", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1211", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambda1211", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa22", "2"], " ", 
+       SuperscriptBox["Lambdax", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambdax", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambdax", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Lambdax", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Kappa11", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Kappa22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa00", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Kappa22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa11", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa22", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa22", "2"], " ", 
+       SuperscriptBox["Yd22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Kappa22", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Yd22", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Ye22", "2"], " ", 
+       SuperscriptBox["Yu22", "2"]}], ",", 
+      RowBox[{
+       SuperscriptBox["Yd22", "2"], " ", 
+       SuperscriptBox["Ye22", "2"]}]}], "}"}]}], ";"}]}]], "Input",
+ CellChangeTimes->{{3.6339835938947897`*^9, 3.633983597674739*^9}, 
+   3.63399000555881*^9}]
 },
 WindowSize->{1290, 669},
-WindowMargins->{{Automatic, -10}, {-283, Automatic}},
+WindowMargins->{{Automatic, -10}, {-10, Automatic}},
 FrontEndVersion->"10.0 for Linux x86 (64-bit) (September 9, 2014)",
 StyleDefinitions->"Default.nb"
 ]
@@ -630,7 +886,8 @@ CellTagsIndex->{}
 *)
 (*NotebookFileOutline
 Notebook[{
-Cell[558, 20, 23079, 594, 1052, "Input"]
+Cell[558, 20, 23079, 594, 1052, "Input"],
+Cell[23640, 616, 8862, 254, 313, "Input"]
 }
 ]
 *)

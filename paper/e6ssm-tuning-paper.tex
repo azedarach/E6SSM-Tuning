@@ -525,14 +525,14 @@ where
 V_F&=\lambda^2|S|^2(|H_1|^2+|H_2|^2)+\lambda^2|(H_1\cdot
 H_2)|^2,\label{eq:E6VFterms}\\ V_D&=\frac{\bar{g}^2}{8}\left (
 |H_2|^2-|H_1|^2\right )^2+\frac{g_2^2}{2}|H_1^\dagger
-H_2|^2+\frac{g_1'^2}{2}(\tilde{Q}_1|H_1|^2+\tilde{Q}_2|H_2|^2+\tilde{Q}_S|S|^2)^2,\label{eq:E6VDterms}\\ V_{\textrm{soft}}&=m_S^2|S|^2+m_{H_d}^2|H_1|^2+m_{H_u}^2|H_2|^2+\Big
+H_2|^2+\frac{g_1'^2}{2}(Q_1|H_1|^2+Q_2|H_2|^2+Q_S|S|^2)^2,\label{eq:E6VDterms}\\ V_{\textrm{soft}}&=m_S^2|S|^2+m_{H_d}^2|H_1|^2+m_{H_u}^2|H_2|^2+\Big
 [\lambda A_\lambda S(H_1\cdot H_2)+\textrm{h.c.}\Big
 ].\label{eq:E6Vsoft}
 \end{align}
 In these expressions $g_2$, $g'=\sqrt{3/5}g_1$, and $g_1'$ are the
 $SU(2)$, (non-GUT normalized) $U(1)_Y$ and $U(1)'$ gauge couplings
-respectively and $\bar{g}^2=g_2^2+g'^2$. The charges $\tilde{Q}_1$,
-$\tilde{Q}_2$ and $\tilde{Q}_S$ are effective $U(1)'$ charges for
+respectively and $\bar{g}^2=g_2^2+g'^2$. The charges $Q_1$,
+$Q_2$ and $Q_S$ are effective $U(1)'$ charges for
 $H_1$, $H_2$ and $S$, respectively. The term $\Delta V$ contains the
 Coleman-Weinberg contributions to the effective potential. In the case
 of the $U(1)_\chi$ model, $V_F$ may also contain an elementary
@@ -557,8 +557,8 @@ $U(1)'$ $D$-term contributions that are absent in the MSSM and NMSSM
 and are given by
 \begin{equation}\label{eq:E6Dterms}
 D_\phi\equiv \frac{g_1'^2}{2}\left (
-\tilde{Q}_1v_1^2+\tilde{Q}_2v_2^2+\tilde{Q}_Ss^2\right
-)\tilde{Q}_\phi.
+Q_1v_1^2+Q_2v_2^2+Q_Ss^2\right
+)Q_\phi.
 \end{equation}
 As was noted in \cite{Athron:2013ipa}, the first two of these
 conditions may be rewritten in the form
@@ -587,13 +587,13 @@ require that the $Z'$ mass be large, with bounds of $M_{Z'}\gtrsim
 $U(1)_\chi$ models. Bounds on the $Z^\prime$ mass for other $E_6$ inspired models, such as the $U(1)_N$ of the E$_6$SSM, lie between those on the $U(1)_\psi$ and $U(1)_\chi$. To satisfy these limits typically requires large
 values of the singlet VEV $s$. For example $s\gtrsim 6$ TeV is
 required in the E$_6$SSM with $U(1)'=U(1)_N$, so that
-$|D_{H_1}|,|D_{H_2}|\gg M_Z^2$ for $E_6$ models with $\tilde{Q}_S\neq
+$|D_{H_1}|,|D_{H_2}|\gg M_Z^2$ for $E_6$ models with $Q_S\neq
 0$. As a result the remaining terms on the right-hand side of
 Eq. (\ref{eq:E6MZequation}) must be tuned to cancel the resulting very
 large contribution to $M_Z$. Moreover, because this is a large tree
 level fine tuning, it may negate the increase in naturalness that is
 associated with having a reduced need for heavy superpartners. In
-$U(1)$ extended models for which $\tilde{Q}_S\neq 0$, the importance
+$U(1)$ extended models for which $Q_S\neq 0$, the importance
 of the $Z^\prime$ mass to the fine tuning in these models can be made
 even clearer by writing Eq. (\ref{eq:E6MZequation}) in the form given
 in \cite{Athron:2013ipa},
@@ -602,8 +602,8 @@ c(\theta,\tan\beta)\frac{M_Z^2}{2}=-\frac{\lambda^2 s^2}{2}+\frac{\tilde{m}_{H_d
 \end{equation}
 where 
 \begin{align}
-c(\theta,\tan\beta)&=1-\frac{4}{\left ( \tan^2\beta-1\right )}\frac{g_1'^2}{\bar{g}^2}\left ( \tilde{Q}_1-\tilde{Q}_2\tan^2\beta \right )\left ( \tilde{Q}_1\cos^2\beta+\tilde{Q}_2\sin^2\beta \right ),\label{eq:cdefn}\\
-d(\theta,\tan\beta)&= \frac{\tilde{Q}_1-\tilde{Q}_2\tan^2\beta}{\tilde{Q}_S\left ( \tan^2\beta - 1\right )}.\label{eq:ddefn}
+c(\theta,\tan\beta)&=1-\frac{4}{\left ( \tan^2\beta-1\right )}\frac{g_1'^2}{\bar{g}^2}\left ( Q_1-Q_2\tan^2\beta \right )\left ( Q_1\cos^2\beta+Q_2\sin^2\beta \right ),\label{eq:cdefn}\\
+d(\theta,\tan\beta)&= \frac{Q_1-Q_2\tan^2\beta}{Q_S\left ( \tan^2\beta - 1\right )}.\label{eq:ddefn}
 \end{align}
 Written like so it is evident that the fine tuning contribution coming
 from the new $D$-terms depends both on the $U(1)'$ charges and the
@@ -1303,16 +1303,16 @@ z_i =\epsilon_{ijk} \frac{\partial f_j}{\partial s}\frac{\partial f_k}{\partial 
 \end{equation}
 with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). The relevant partial derivatives are
 \ba
-\frac{\partial f_1}{\partial \tan\beta}&=&-\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\cos\beta+\sin\beta \left [ m_{H_d}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2\tilde{Q}_1\tilde{Q}_S \right )\right.\right.\nonumber\\
-&&\left.\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}\tilde{Q}_1\tilde{Q}_2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_1^2\right )\right ]+3M_Z^2\,\sin^3\beta\left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\right.\nonumber\\
-&&\left.\left.+\frac{2g_1'^2}{\bar{g}^2}\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q}_1^2\right )\right ]\right \},\nonumber\\
-\frac{\partial f_1}{\partial s}&=&\frac{2M_Z}{\bar{g}}\left [ s\left ( \lambda^2+g_1'^2\tilde{Q}_1\tilde{Q}_S\right )\,\cos\beta-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin\beta \right ],\nonumber\\
-\frac{\partial f_2}{\partial \tan\beta}&=&\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\sin\beta+\cos\beta\left [ m_{H_u}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2\tilde{Q}_2\tilde{Q}_S \right )\right.\right.\nonumber\\
-&&\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}\tilde{Q}_1\tilde{Q}_2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_2^2\right )\right ]+3M_Z^2\,\cos^3\beta \left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\nonumber\\
-&&\left.\left.+\frac{2g_1'^2}{\bar{g}^2}\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q}_2^2\right )\right ]\right \},\nonumber\\
-\frac{\partial f_2}{\partial s}&=&\frac{2M_Z}{\bar{g}}\left [ s\left ( \lambda^2+g_1'^2\tilde{Q}_2\tilde{Q}_S\right )\,\sin\beta-\frac{\lambda A_\lambda}{\sqrt{2}}\,\cos\beta\right ],\nonumber\\
-\frac{\partial f_3}{\partial \tan\beta}&=&\frac{2M_Z^2}{\bar{g}^2}\,\cos^2\beta\left [ g_1'^2\tilde{Q}_Ss\left ( \tilde{Q}_2-\tilde{Q}_1\right )\,\sin 2\beta-\sqrt{2}\lambda A_\lambda\,\cos 2\beta\right ],\nonumber\\
-\frac{\partial f_3}{\partial s}&=&m_S^2+\frac{2\lambda^2M_Z^2}{\bar{g}^2}+\frac{g_1'^2}{2}\tilde{Q}_S\left [\frac{4M_Z^2}{\bar{g}^2}\left ( \tilde{Q}_1\,\cos^2\beta+\tilde{Q}_2\,\sin^2\beta\right ) +3\tilde{Q}_S s^2\right ].\nonumber
+\frac{\partial f_1}{\partial \tan\beta}&=&-\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\cos\beta+\sin\beta \left [ m_{H_d}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2Q_1Q_S \right )\right.\right.\nonumber\\
+&&\left.\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}Q_1Q_2+\frac{6g_1'^2}{\bar{g}^2}Q_1^2\right )\right ]+3M_Z^2\,\sin^3\beta\left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\right.\nonumber\\
+&&\left.\left.+\frac{2g_1'^2}{\bar{g}^2}\left ( Q_1Q_2-Q_1^2\right )\right ]\right \},\nonumber\\
+\frac{\partial f_1}{\partial s}&=&\frac{2M_Z}{\bar{g}}\left [ s\left ( \lambda^2+g_1'^2Q_1Q_S\right )\,\cos\beta-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin\beta \right ],\nonumber\\
+\frac{\partial f_2}{\partial \tan\beta}&=&\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\sin\beta+\cos\beta\left [ m_{H_u}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2Q_2Q_S \right )\right.\right.\nonumber\\
+&&\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}Q_1Q_2+\frac{6g_1'^2}{\bar{g}^2}Q_2^2\right )\right ]+3M_Z^2\,\cos^3\beta \left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\nonumber\\
+&&\left.\left.+\frac{2g_1'^2}{\bar{g}^2}\left ( Q_1Q_2-Q_2^2\right )\right ]\right \},\nonumber\\
+\frac{\partial f_2}{\partial s}&=&\frac{2M_Z}{\bar{g}}\left [ s\left ( \lambda^2+g_1'^2Q_2Q_S\right )\,\sin\beta-\frac{\lambda A_\lambda}{\sqrt{2}}\,\cos\beta\right ],\nonumber\\
+\frac{\partial f_3}{\partial \tan\beta}&=&\frac{2M_Z^2}{\bar{g}^2}\,\cos^2\beta\left [ g_1'^2Q_Ss\left ( Q_2-Q_1\right )\,\sin 2\beta-\sqrt{2}\lambda A_\lambda\,\cos 2\beta\right ],\nonumber\\
+\frac{\partial f_3}{\partial s}&=&m_S^2+\frac{2\lambda^2M_Z^2}{\bar{g}^2}+\frac{g_1'^2}{2}Q_S\left [\frac{4M_Z^2}{\bar{g}^2}\left ( Q_1\,\cos^2\beta+Q_2\,\sin^2\beta\right ) +3Q_S s^2\right ].\nonumber
 \ea
 For a running parameter $q$ appearing in the tree level EWSB conditions, the corresponding contribution to the sensitivity coefficient can then be written 
 \be
@@ -1326,11 +1326,11 @@ C=\frac{1}{2}\left ( z_1\frac{\partial f_1}{\partial M_Z}+z_2\frac{\partial f_2}
 \ee
 with 
 \ba
-\frac{\partial f_1}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\cos\beta\left ( m_{H_d}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_1\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_1^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\sin\beta\nonumber \\
-&&+\frac{3M_Z^2}{\bar{g}}\,\cos\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\sin\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left(\tilde{Q}_1\tilde{Q}_2-\tilde{Q}_1^2\right )\right ],\nonumber\\
-\frac{\partial f_2}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\sin\beta\left ( m_{H_u}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}\tilde{Q}_2\tilde{Q}_Ss^2+\frac{6g_1'^2}{\bar{g}^2}\tilde{Q}_2^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\cos\beta \nonumber\\
-&&-\frac{3M_Z^2}{\bar{g}}\,\sin\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\cos\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left ( \tilde{Q}_1\tilde{Q}_2-\tilde{Q_2}^2\right )\right ],\nonumber \\
-\frac{\partial f_3}{\partial M_Z}&=&\frac{4M_Z}{\bar{g}^2}\left [ \lambda^2s-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin 2\beta+g_1'^2\tilde{Q}_Ss\left ( \tilde{Q}_1\,\cos^2\beta+\tilde{Q}_2\,\sin^2\beta \right )\right ].\nonumber
+\frac{\partial f_1}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\cos\beta\left ( m_{H_d}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}Q_1Q_Ss^2+\frac{6g_1'^2}{\bar{g}^2}Q_1^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\sin\beta\nonumber \\
+&&+\frac{3M_Z^2}{\bar{g}}\,\cos\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\sin\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left(Q_1Q_2-Q_1^2\right )\right ],\nonumber\\
+\frac{\partial f_2}{\partial M_Z}&=&\frac{2}{\bar{g}}\,\sin\beta\left ( m_{H_u}^2+\frac{\lambda^2s^2}{2}+\frac{g_1'^2}{2}Q_2Q_Ss^2+\frac{6g_1'^2}{\bar{g}^2}Q_2^2M_Z^2\right )-\sqrt{2}\frac{\lambda A_\lambda s}{\bar{g}}\,\cos\beta \nonumber\\
+&&-\frac{3M_Z^2}{\bar{g}}\,\sin\beta\,\cos 2\beta+\frac{6}{\bar{g}^3}M_Z^2\,\cos\beta\,\sin 2\beta\left [ \lambda^2+g_1'^2\left ( Q_1Q_2-\tilde{Q_2}^2\right )\right ],\nonumber \\
+\frac{\partial f_3}{\partial M_Z}&=&\frac{4M_Z}{\bar{g}^2}\left [ \lambda^2s-\frac{\lambda A_\lambda}{\sqrt{2}}\,\sin 2\beta+g_1'^2Q_Ss\left ( Q_1\,\cos^2\beta+Q_2\,\sin^2\beta \right )\right ].\nonumber
 \ea
 \section{\label{app:rges}RGE Contributions}
 % List the derivatives needed in the Taylor series approximation
@@ -1427,33 +1427,33 @@ mixing, the two-loop $\beta$ functions for the relevant gauge couplings read
 \begin{subequations}\label{eq:USSMGaugeBetas}
 \begin{align}
 \beta_{g_1}^{(1)}&=\frac{48}{5}g_1^3,\label{eq:USSMg1BetaOneLoop}\\
-\beta_{g_1}^{(2)}&=\frac{2}{25} g_1^3 \left(30 g_1'^2 \Pi_{\tilde{Q}}^Y-35 y_b^2+117 g_1^2+135 g_2^2+300 g_3^2-10 \Sigma _{\kappa }-15
+\beta_{g_1}^{(2)}&=\frac{2}{25} g_1^3 \left(30 g_1'^2 \Pi_{Q}^Y-35 y_b^2+117 g_1^2+135 g_2^2+300 g_3^2-10 \Sigma _{\kappa }-15
    \Sigma _{\lambda }-65 y_t^2-45 y_{\tau }^2\right),\label{eq:USSMg1BetaTwoLoop}\\
 \beta_{g_2}^{(1)}&=4g_2^3,\label{eq:USSMg2BetaOneLoop}\\
-\beta_{g_2}^{(2)}&=\frac{2}{5} g_2^3 \left(5 g_1'^2 \Pi _{\tilde{Q}}^L-15 y_b^2+9 g_1^2+115 g_2^2+60 g_3^2-5 \Sigma _{\lambda }-15
+\beta_{g_2}^{(2)}&=\frac{2}{5} g_2^3 \left(5 g_1'^2 \Pi _{Q}^L-15 y_b^2+9 g_1^2+115 g_2^2+60 g_3^2-5 \Sigma _{\lambda }-15
    y_t^2-5 y_{\tau }^2\right),\label{eq:USSMg2BetaTwoLoop}\\
-\beta_{g_1'}^{(1)}&=g_1'^3\Sigma_{\tilde{Q}},\label{eq:USSMg1pBetaOneLoop}\\
-\beta_{g_1'}^{(2)}&=\frac{2}{5} g_1'^3 \left(-15 \Sigma _{\kappa } \left(\tilde{Q}_{\bar{D}}^2+\tilde{Q}_D^2+\tilde{Q}_S^2\right)-30
-   y_b^2 \left(\tilde{Q}_d^2+\tilde{Q}_1^2+\tilde{Q}_Q^2\right)+120 g_3^2 \Pi _{\tilde{Q}}^C\right.\nonumber \\
+\beta_{g_1'}^{(1)}&=g_1'^3\Sigma_{Q},\label{eq:USSMg1pBetaOneLoop}\\
+\beta_{g_1'}^{(2)}&=\frac{2}{5} g_1'^3 \left(-15 \Sigma _{\kappa } \left(Q_{\bar{D}}^2+Q_D^2+Q_S^2\right)-30
+   y_b^2 \left(Q_d^2+Q_1^2+Q_Q^2\right)+120 g_3^2 \Pi _{Q}^C\right.\nonumber \\
 &\quad{}-10 y_{\tau }^2
-   \left(\tilde{Q}_e^2+\tilde{Q}_L^2+\tilde{Q}_1^2\right)+15 g_2^2 \Pi _{\tilde{Q}}^L+10 g_1'^2 \Pi _{\tilde{Q}}+6
-   g_1^2 \Pi _{\tilde{Q}}^Y\nonumber\\
-&\quad\left.{}-10 \Sigma _{\lambda } \left(\tilde{Q}_S^2+\tilde{Q}_1^2+\tilde{Q}_2^2\right)-30 y_t^2
-   \left(\tilde{Q}_u^2+\tilde{Q}_2^2+\tilde{Q}_Q^2\right)\right).\label{eq:USSMg1pBetaTwoLoop}
+   \left(Q_e^2+Q_L^2+Q_1^2\right)+15 g_2^2 \Pi _{Q}^L+10 g_1'^2 \Pi _{Q}+6
+   g_1^2 \Pi _{Q}^Y\nonumber\\
+&\quad\left.{}-10 \Sigma _{\lambda } \left(Q_S^2+Q_1^2+Q_2^2\right)-30 y_t^2
+   \left(Q_u^2+Q_2^2+Q_Q^2\right)\right).\label{eq:USSMg1pBetaTwoLoop}
 \end{align}
 \end{subequations}
 In order to keep these expressions compact we have used the notation
 \begin{align*}
-\Sigma_{\tilde{Q}}=\sum_i \tilde{Q}_i^2=\frac{321}{40}\cos^2\theta+\frac{217}{24}\sin^2\theta+\frac{27}{8\sqrt{15}}\sin 2\theta
+\Sigma_{Q}=\sum_i Q_i^2=\frac{321}{40}\cos^2\theta+\frac{217}{24}\sin^2\theta+\frac{27}{8\sqrt{15}}\sin 2\theta
 \end{align*}
 to denote the trace over the $U(1)'$ charges, along with
 \begin{align*}
-\Sigma_{\tilde{Q}}^Y&=\sum_i \sqrt{\frac{5}{3}}Q_i^Y\tilde{Q}_i=-\frac{3}{\sqrt{10}}\cos\theta-\frac{1}{\sqrt{6}}\sin\theta,\\
-\Pi_{\tilde{Q}}&=\sum_i \tilde{Q}_i^4\\
+\Sigma_{Q}^Y&=\sum_i \sqrt{\frac{5}{3}}Q_i^YQ_i=-\frac{3}{\sqrt{10}}\cos\theta-\frac{1}{\sqrt{6}}\sin\theta,\\
+\Pi_{Q}&=\sum_i Q_i^4\\
 &=\frac{2049}{1600}\cos^4\theta+\frac{483}{80\sqrt{15}}\cos^3\theta\sin\theta+\frac{681}{160}\cos^2\theta\sin^2\theta+\frac{9}{16\sqrt{15}}\cos\theta\sin^3\theta+\frac{1297}{576}\sin^4\theta,\\
-\Pi_{\tilde{Q}}^Y&=\sum_i \left ( \sqrt{\frac{5}{3}}Q_i^Y\right )^2\tilde{Q}_i^2=\frac{59}{40}\cos^2\theta+\frac{31}{24}\sin^2\theta+\frac{3}{8\sqrt{15}}\sin 2\theta,\\
-\Pi_{\tilde{Q}}^L&=3\tilde{Q}_1^2+3\tilde{Q}_2^2+\tilde{Q}_{H'}^2+\tilde{Q}_{\overline{H'}}^2+3\tilde{Q}_L^2+9\tilde{Q}_Q^2=\frac{39}{20}\cos^2\theta+\frac{19}{12}\sin^2\theta+\frac{3}{4\sqrt{15}}\sin 2\theta,\\
-\Pi_{\tilde{Q}}^C&=\tilde{Q}_d^2+\tilde{Q}_D^2+\tilde{Q}_{\overline{D}}^2+2\tilde{Q}_Q^2+\tilde{Q}_u^2=\frac{1}{2}.
+\Pi_{Q}^Y&=\sum_i \left ( \sqrt{\frac{5}{3}}Q_i^Y\right )^2Q_i^2=\frac{59}{40}\cos^2\theta+\frac{31}{24}\sin^2\theta+\frac{3}{8\sqrt{15}}\sin 2\theta,\\
+\Pi_{Q}^L&=3Q_1^2+3Q_2^2+Q_{H'}^2+Q_{\overline{H'}}^2+3Q_L^2+9Q_Q^2=\frac{39}{20}\cos^2\theta+\frac{19}{12}\sin^2\theta+\frac{3}{4\sqrt{15}}\sin 2\theta,\\
+\Pi_{Q}^C&=Q_d^2+Q_D^2+Q_{\overline{D}}^2+2Q_Q^2+Q_u^2=\frac{1}{2}.
 \end{align*}
 Note that in these expressions the $U(1)_Y$ and $U(1)'$ charges are assumed to be GUT-normalised. The expressions in terms of the $E_6$ mixing angle $\theta$ follow from the charge assignments given in Table \ref{tab:E6charges} and hold provided that $U(1)$ mixing is neglected. Similarly we will write
 \begin{align*}
@@ -1465,37 +1465,37 @@ The corresponding $O(t^2)$ coefficients for the gauge couplings are simply
 \begin{align}
 b_{g_1}^{(2)}&=\frac{3456}{25}g_1^5,\label{eq:USSMg1Ot2Coeff}\\
 b_{g_2}^{(2)}&=24g_2^5,\label{eq:USSMg2Ot2Coeff}\\
-b_{g_1'}^{(2)}&=\frac{3}{2}g_1'^5\Sigma_{\tilde{Q}}^2.\label{eq:USSMg1pOt2Coeff}
+b_{g_1'}^{(2)}&=\frac{3}{2}g_1'^5\Sigma_{Q}^2.\label{eq:USSMg1pOt2Coeff}
 \end{align}
 \end{subequations}
 The one- and two-loop contributions to the $\beta$ function for $\lambda$
 and the $O(t^2)$ coefficient in the series expansion are
 \begin{subequations}\label{eq:USSMLambdaBetas}
 \begin{align}
-\beta_\lambda^{(1)}&=\lambda  \left[2\lambda ^2+2 \Sigma_\lambda +3 \Sigma_\kappa +3 y_t^2+3 y_b^2+y_{\tau }^2-3 g_2^2-\frac{3}{5} g_1^2 -2 \left ( \tilde{Q}_1^2 + \tilde{Q}_2^2 + \tilde{Q}_S^2\right )g_1'^2 \right],\label{eq:USSMLambdaBetaOneLoop}\\
+\beta_\lambda^{(1)}&=\lambda  \left[2\lambda ^2+2 \Sigma_\lambda +3 \Sigma_\kappa +3 y_t^2+3 y_b^2+y_{\tau }^2-3 g_2^2-\frac{3}{5} g_1^2 -2 \left ( Q_1^2 + Q_2^2 + Q_S^2\right )g_1'^2 \right],\label{eq:USSMLambdaBetaOneLoop}\\
 \beta_\lambda^{(2)}&=\lambda \bigg \{ -2\lambda^2\left ( \lambda^2+2\Sigma_\lambda+3\Sigma_\kappa\right )-4\Pi_\lambda-6\Pi_\kappa-3\lambda^2\left ( 3y_t^2+3y_b^2+y_\tau^2\right ) \nonumber\\
 &{} -3\left ( 3y_t^4+3y_b^4+2y_t^2y_b^2+y_\tau^2 \right )+6g_2^2\Sigma_\lambda+\frac{2}{5}g_1^2\left ( 2y_t^2-y_b^2+3y_\tau^2+2\Sigma_\kappa +3\Sigma_\lambda\right )\nonumber\\
-&{}\left.+g_1'^2\left [ 4\tilde{Q}_S^2\lambda^2 -6\left ( \tilde{Q}_2^2-\tilde{Q}_Q^2-\tilde{Q}_u^2\right )y_t^2-6\left ( \tilde{Q}_1^2-\tilde{Q}_Q^2-\tilde{Q}_d^2\right )y_b^2 \right.\right.\nonumber\\
-&{}\left.-2\left ( \tilde{Q}_1^2-\tilde{Q}_L^2-\tilde{Q}_e^2\right )y_\tau^2-6\left ( \tilde{Q}_S^2-\tilde{Q}_D^2-\tilde{Q}_{\overline{D}}^2 \right )\Sigma_\kappa-4\left ( \tilde{Q}_S^2-\tilde{Q}_1^2-\tilde{Q}_2^2\right )\Sigma_\lambda\right ]\nonumber\\
-&{}+16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa\right ) +\frac{33}{2}g_2^4+\frac{297}{50}g_1^4+2g_1'^4\left [ 2\tilde{Q}_1^4+2\tilde{Q}_2^4+2\tilde{Q}_S^4+\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\Sigma_{\tilde{Q}}\right ]\nonumber\\
-&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left [\tilde{Q}_1^2+\tilde{Q}_2^2+\left ( \tilde{Q}_2-\tilde{Q}_1\right )\Sigma_{\tilde{Q}}^Y\right ]\bigg \},\label{eq:USSMLambdaBetaTwoLoop}\\
+&{}\left.+g_1'^2\left [ 4Q_S^2\lambda^2 -6\left ( Q_2^2-Q_Q^2-Q_u^2\right )y_t^2-6\left ( Q_1^2-Q_Q^2-Q_d^2\right )y_b^2 \right.\right.\nonumber\\
+&{}\left.-2\left ( Q_1^2-Q_L^2-Q_e^2\right )y_\tau^2-6\left ( Q_S^2-Q_D^2-Q_{\overline{D}}^2 \right )\Sigma_\kappa-4\left ( Q_S^2-Q_1^2-Q_2^2\right )\Sigma_\lambda\right ]\nonumber\\
+&{}+16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa\right ) +\frac{33}{2}g_2^4+\frac{297}{50}g_1^4+2g_1'^4\left [ 2Q_1^4+2Q_2^4+2Q_S^4+\left ( Q_1^2+Q_2^2+Q_S^2\right )\Sigma_{Q}\right ]\nonumber\\
+&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( Q_1^2+Q_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left [Q_1^2+Q_2^2+\left ( Q_2-Q_1\right )\Sigma_{Q}^Y\right ]\bigg \},\label{eq:USSMLambdaBetaTwoLoop}\\
 b_\lambda^{(2)}&=\lambda \bigg \{ 2\lambda^2\left ( 3\lambda^2 +4\Sigma_\lambda +6\Sigma_\kappa \right )+4\Pi_\lambda + 6\Pi_\kappa +6\left ( \Sigma_\lambda+\frac{3}{2}\Sigma_\kappa\right )^2+7\lambda^2\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\nonumber\\
 &{}+\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\left (2\Sigma_\lambda+3\Sigma_\kappa\right ) +3\left ( \frac{15}{2}y_t^4+\frac{15}{2}y_b^4+\frac{3}{2}y_\tau^4 +5y_b^2y_t^2 +3y_b^2y_\tau^2 +y_t^2y_\tau^2\right )\nonumber\\
 &{}-\frac{1}{5}g_1^2\left ( 12\lambda^2+16y_b^2+22y_t^2+12y_\tau^2+12\Sigma_\lambda +13\Sigma_\kappa \right )\nonumber\\
 &{}-3g_2^2\left ( 4\lambda^2+6y_t^2+6y_b^2+2y_\tau^2+4\Sigma_\lambda+3\Sigma_\kappa\right )-16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa \right )\nonumber\\
-&{}-2g_1'^2\left [ 4\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\left ( \lambda^2 +\Sigma_\lambda \right )+3\Sigma_\kappa\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2+\tilde{Q}_D^2+\tilde{Q}_{\overline{D}}^2\right )\right .\nonumber\\
-&{}+3y_b^2\left ( 2\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_d^2+\tilde{Q}_Q^2+\tilde{Q}_S^2 \right )+3y_t^2\left ( \tilde{Q}_1^2+2\tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_S^2+\tilde{Q}_u^2\right )\nonumber\\
-&{}\left.+y_\tau^2\left ( 2\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_e^2+\tilde{Q}_L^2+\tilde{Q}_S^2\right )\right ]-\frac{15}{2}g_2^4-\frac{279}{50}g_1^4\nonumber\\
-&{}+2g_1'^4\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2 \right )\left (\tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2-\Sigma_{\tilde{Q}}\right )+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2\right )\nonumber\\
-&{}+\frac{6}{5}g_1^2g_1'^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2 \right ) \bigg \}.\label{eq:USSMLambdaOt2Coeff}
+&{}-2g_1'^2\left [ 4\left ( Q_1^2+Q_2^2+Q_S^2\right )\left ( \lambda^2 +\Sigma_\lambda \right )+3\Sigma_\kappa\left ( Q_1^2+Q_2^2+Q_S^2+Q_D^2+Q_{\overline{D}}^2\right )\right .\nonumber\\
+&{}+3y_b^2\left ( 2Q_1^2+Q_2^2+Q_d^2+Q_Q^2+Q_S^2 \right )+3y_t^2\left ( Q_1^2+2Q_2^2+Q_Q^2+Q_S^2+Q_u^2\right )\nonumber\\
+&{}\left.+y_\tau^2\left ( 2Q_1^2+Q_2^2+Q_e^2+Q_L^2+Q_S^2\right )\right ]-\frac{15}{2}g_2^4-\frac{279}{50}g_1^4\nonumber\\
+&{}+2g_1'^4\left ( Q_1^2+Q_2^2+Q_S^2 \right )\left (Q_1^2+Q_2^2+Q_S^2-\Sigma_{Q}\right )+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( Q_1^2+Q_2^2+Q_S^2\right )\nonumber\\
+&{}+\frac{6}{5}g_1^2g_1'^2\left ( Q_1^2+Q_2^2+Q_S^2 \right ) \bigg \}.\label{eq:USSMLambdaOt2Coeff}
 \end{align}
 \end{subequations}
 It is sufficient for our purposes to consider the trilinear coupling $a_\lambda\equiv \lambda A_\lambda$, rather than $A_\lambda$, for which the relevant expressions read
 \begin{subequations}
 \begin{align}
-\beta_{a_\lambda}^{(1)}&=a_\lambda \left[2\lambda ^2+2 \Sigma_\lambda +3 \Sigma_\kappa +3 y_t^2+3 y_b^2+y_{\tau }^2-3 g_2^2-\frac{3}{5} g_1^2 -2 \left ( \tilde{Q}_1^2 + \tilde{Q}_2^2 + \tilde{Q}_S^2\right )g_1'^2 \right]\nonumber\\
+\beta_{a_\lambda}^{(1)}&=a_\lambda \left[2\lambda ^2+2 \Sigma_\lambda +3 \Sigma_\kappa +3 y_t^2+3 y_b^2+y_{\tau }^2-3 g_2^2-\frac{3}{5} g_1^2 -2 \left ( Q_1^2 + Q_2^2 + Q_S^2\right )g_1'^2 \right]\nonumber\\
 &{}+\lambda \left [ 4\lambda a_\lambda +4\Sigma_{a_\lambda}+6\Sigma_{a_\kappa}+6y_ta_t+6y_ba_b+2y_\tau a_\tau +6g_2^2M_2+\frac{6}{5}g_1^2M_1\right.\nonumber\\
-&{}\left.+4g_1'^2M_1'\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+\tilde{Q}_S^2 \right )\right ],\label{eq:USSMTLambdaBetaOneLoop}\\
+&{}\left.+4g_1'^2M_1'\left ( Q_1^2+Q_2^2+Q_S^2 \right )\right ],\label{eq:USSMTLambdaBetaOneLoop}\\
 \beta_{a_\lambda}^{(2)}&=,\label{eq:USSMTLambdaBetaTwoLoop}\\
 b_{a_\lambda}^{(2)}&=,\label{eq:USSMTLambdaOt2Coeff}
 \end{align}
@@ -1508,15 +1508,15 @@ where
 Note that $a_{\lambda_i}\equiv\lambda_i A_{\lambda_i}$, $a_{\kappa_i}\equiv\kappa_i A_{\kappa_i}$, $a_t\equiv y_t A_t$, $a_b\equiv y_b A_b$ and $a_\tau= y_\tau A_\tau$. Defining 
 \begin{align}
 \Sigma_1&=\sum_{i=1}^3\left ( m_{Qi}^2-2m_{ui}^2+m_{di}^2+m_{ei}^2-m_{Li}^2+m_{H_{ui}}^2-m_{H_{di}}^2+m_{\overline{D}_i}^2-m_{Di}^2\right )-m_{H'}^2+m_{\overline{H'}}^2,\label{eq:USSMGaugeSigmaTerm1}\\
-\Sigma_1'&=\sum_{i=1}^3\left ( 6\tilde{Q}_Qm_{Qi}^2+3\tilde{Q}_um_{ui}^2+3\tilde{Q}_dm_{di}^2+\tilde{Q}_em_{ei}^2+2\tilde{Q}_Lm_{Li}^2+2\tilde{Q}_2m_{H_{ui}}^2+2\tilde{Q}_1m_{H_{di}}^2\right.\nonumber\\
-&\quad{}\left.+\tilde{Q}_Sm_{Si}^2+3\tilde{Q}_{\overline{D}}m_{\overline{D}_i}^2+3\tilde{Q}_Dm_{Di}^2\right )+2\tilde{Q}_{H'}m_{H'}^2+2\tilde{Q}_{\overline{H'}}m_{\overline{H'}}^2,\label{eq:USSMGaugeSigmaTerm1Pr}
+\Sigma_1'&=\sum_{i=1}^3\left ( 6Q_Qm_{Qi}^2+3Q_um_{ui}^2+3Q_dm_{di}^2+Q_em_{ei}^2+2Q_Lm_{Li}^2+2Q_2m_{H_{ui}}^2+2Q_1m_{H_{di}}^2\right.\nonumber\\
+&\quad{}\left.+Q_Sm_{Si}^2+3Q_{\overline{D}}m_{\overline{D}_i}^2+3Q_Dm_{Di}^2\right )+2Q_{H'}m_{H'}^2+2Q_{\overline{H'}}m_{\overline{H'}}^2,\label{eq:USSMGaugeSigmaTerm1Pr}
 \end{align}
 the one- and two-loop $\beta$ functions and the $O(t^2)$ coefficients for $m_{H_d}^2$ are
 \begin{subequations}
 \begin{align}
 \beta_{m_{H_d}^2}^{(1)}&=2\lambda^2\left ( m_{H_d}^2+m_{H_u}^2+m_S^2\right )+2a_\lambda^2+6y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2\right )+6a_b^2\nonumber\\
-&{}+2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2+m_{e3}^2\right )+2a_\tau^2-6g_2^2 M_2^2-\frac{6}{5}g_1^2 M_1^2-8\tilde{Q}_1^2g_1'^2 M_1'^2\nonumber\\
-&{}-\frac{3}{5}g_1^2\Sigma_1+2\tilde{Q}_1g_1'^2\Sigma_1',\label{eq:USSMmHd2BetaOneLoop}\\
+&{}+2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2+m_{e3}^2\right )+2a_\tau^2-6g_2^2 M_2^2-\frac{6}{5}g_1^2 M_1^2-8Q_1^2g_1'^2 M_1'^2\nonumber\\
+&{}-\frac{3}{5}g_1^2\Sigma_1+2Q_1g_1'^2\Sigma_1',\label{eq:USSMmHd2BetaOneLoop}\\
 \beta_{m_{H_d}^2}^{(2)}&=,\label{eq:USSMmHd2BetaTwoLoop}\\
 b_{m_{H_d}^2}^{(2)}&=.\label{eq:USSMmHd2Ot2Coeff}
 \end{align}
@@ -1525,7 +1525,7 @@ Similarly, those for $m_{H_u}^2$ read
 \begin{subequations}
 \begin{align}
 \beta_{m_{H_u}^2}^{(1)}&=2\lambda^2\left ( m_{H_d}^2+m_{H_u}^2+m_S^2\right )+2a_\lambda^2+6y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2\right )+6a_t^2\nonumber\\
-&{}-6g_2^2M_2^2-\frac{6}{5}g_1^2M_1^2-8\tilde{Q}_2^2g_1'^2M_1'^2+\frac{3}{5}g_1^2\Sigma_1+2\tilde{Q}_2g_1'^2\Sigma_1',\label{eq:USSMmHu2BetaOneLoop}\\
+&{}-6g_2^2M_2^2-\frac{6}{5}g_1^2M_1^2-8Q_2^2g_1'^2M_1'^2+\frac{3}{5}g_1^2\Sigma_1+2Q_2g_1'^2\Sigma_1',\label{eq:USSMmHu2BetaOneLoop}\\
 \beta_{m_{H_u}^2}^{(2)}&=,\label{eq:USSMmHu2BetaTwoLoop}\\
 b_{m_{H_u}^2}^{(2)}&=,\label{eq:USSMmHu2Ot2Coeff}
 \end{align}
@@ -1534,7 +1534,7 @@ while those for $m_S^2$ are
 \begin{subequations}
 \begin{align}
 \beta_{m_S^2}^{(1)}&=\sum_{i=1}^3\left [ 4\lambda_i^2\left ( m_{H_i^d}^2+m_{H_i^u}^2+m_S^2\right )+4a_{\lambda_i}^2+6\kappa_i\left ( m_S^2+m_{D_i}^2+m_{\overline{D}_i}^2\right )+6a_{\kappa_i}^2\right ]\nonumber\\
-&{}-8\tilde{Q}_S^2g_1'^2M_1'^2+2\tilde{Q}_Sg_1'^2\Sigma_1',\label{eq:USSMms2BetaOneLoop}\\
+&{}-8Q_S^2g_1'^2M_1'^2+2Q_Sg_1'^2\Sigma_1',\label{eq:USSMms2BetaOneLoop}\\
 \beta_{m_S^2}^{(2)}&=,\label{eq:USSMms2BetaTwoLoop}\\
 b_{m_S^2}^{(2)}&=.\label{eq:USSMms2Ot2Coeff}
 \end{align}
@@ -1542,28 +1542,28 @@ b_{m_S^2}^{(2)}&=.\label{eq:USSMms2Ot2Coeff}
 If the one-loop contributions to the effective potential from top and stop loops are also included it is necessary to consider the expansions for $y_t$, $a_t$, $m_{Q3}^2$ and $m_{u3}^2$. The necessary expressions for $y_t$ read
 \begin{subequations}
 \begin{align}
-\beta_{y_t}^{(1)}&=y_t\left [ \lambda^2+6y_t^2+y_b^2-\frac{16}{3}g_3^2-3g_2^2-\frac{13}{15}g_1^2-2g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2 \right )\right ],\label{eq:USSMYu22BetaOneLoop}\\
+\beta_{y_t}^{(1)}&=y_t\left [ \lambda^2+6y_t^2+y_b^2-\frac{16}{3}g_3^2-3g_2^2-\frac{13}{15}g_1^2-2g_1'^2\left ( Q_2^2+Q_Q^2+Q_u^2 \right )\right ],\label{eq:USSMYu22BetaOneLoop}\\
 \beta_{y_t}^{(2)}&=y_t\bigg \{-22y_t^4-5y_b^4-5y_t^2y_b^2-y_b^2y_\tau^2-\lambda^2 \left ( \lambda^2+3y_t^2+4y_b^2+y_\tau^2+2\Sigma_\lambda + 3\Sigma_\kappa\right )\nonumber\\
-&{}+2g_1'^2\left [ \lambda^2\left ( \tilde{Q}_1^2-\tilde{Q}_2^2+\tilde{Q}_S^2 \right )+2y_t^2\left ( 2\tilde{Q}_Q^2+\tilde{Q}_u^2\right )+y_b^2\left ( \tilde{Q}_1^2-\tilde{Q}_Q^2+\tilde{Q}_d^2\right )\right ]\nonumber\\
+&{}+2g_1'^2\left [ \lambda^2\left ( Q_1^2-Q_2^2+Q_S^2 \right )+2y_t^2\left ( 2Q_Q^2+Q_u^2\right )+y_b^2\left ( Q_1^2-Q_Q^2+Q_d^2\right )\right ]\nonumber\\
 &{}+16g_3^2y_t^2+6g_2^2y_t^2+g_1^2\left ( \frac{6}{5}y_t^2+\frac{2}{5}y_b^2\right )+\frac{128}{9}g_3^4+\frac{33}{2}g_2^4+\frac{3913}{450}g_1^4\nonumber\\
-&{}+2g_1'^4\left [ 2\left ( \tilde{Q}_2^4+\tilde{Q}_Q^4+\tilde{Q}_u^4\right )+\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2\right )\Sigma_{\tilde{Q}}\right ]+8g_3^2g_2^2+\frac{136}{45}g_3^2g_1^2\nonumber\\
-&{}+\frac{32}{3}g_3^2g_1'^2\left ( \tilde{Q}_Q^2+\tilde{Q}_u^2\right )+g_2^2g_1^2+6g_2^2g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2\right )\nonumber\\
-&{}+\frac{2}{5}g_1^2g_1'^2\left [ 3\tilde{Q}_2^2+\frac{1}{3}\tilde{Q}_Q^2+\frac{16}{3}\tilde{Q}_u^2+\left ( 3\tilde{Q}_2+\tilde{Q}_Q-4\tilde{Q}_u\right )\Sigma_{\tilde{Q}}^Y\right ]\bigg \},\label{eq:USSMYu22BetaTwoLoop}\\
+&{}+2g_1'^4\left [ 2\left ( Q_2^4+Q_Q^4+Q_u^4\right )+\left ( Q_2^2+Q_Q^2+Q_u^2\right )\Sigma_{Q}\right ]+8g_3^2g_2^2+\frac{136}{45}g_3^2g_1^2\nonumber\\
+&{}+\frac{32}{3}g_3^2g_1'^2\left ( Q_Q^2+Q_u^2\right )+g_2^2g_1^2+6g_2^2g_1'^2\left ( Q_2^2+Q_Q^2\right )\nonumber\\
+&{}+\frac{2}{5}g_1^2g_1'^2\left [ 3Q_2^2+\frac{1}{3}Q_Q^2+\frac{16}{3}Q_u^2+\left ( 3Q_2+Q_Q-4Q_u\right )\Sigma_{Q}^Y\right ]\bigg \},\label{eq:USSMYu22BetaTwoLoop}\\
 b_{y_t}^{(2)}&=y_t\bigg \{ 54y_t^4+\frac{13}{2}y_b^4+13y_t^2y_b^2+y_b^2y_\tau^2+\lambda^2\left ( \frac{5}{2}\lambda^2+15y_t^2+5y_b^2+y_\tau^2+2\Sigma_\lambda+3\Sigma_\kappa \right )\nonumber\\
 &{}-\frac{16}{3}g_3^2\left ( \lambda^2+2y_b^2+12y_t^2\right )-6g_2^2\left ( \lambda^2+y_b^2+6y_t^2\right )-g_1^2\left ( \frac{22}{15}\lambda^2+\frac{4}{3}y_b^2+\frac{52}{5}y_t^2\right )\nonumber\\
-&{}-2g_1'^2\left [ \lambda^2 \left (\tilde{Q}_1^2+2\tilde{Q}_2^2+\tilde{Q}_S^2+\tilde{Q}_Q^2+\tilde{Q}_u^2 \right )+y_b^2\left ( \tilde{Q}_1^2+\tilde{Q}_2^2+2\tilde{Q}_Q^2+\tilde{Q}_u^2+\tilde{Q}_d^2\right )\right.\nonumber\\
-&{}\left.+12y_t^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2\right )\right ]+\frac{128}{9}g_3^4-\frac{15}{2}g_2^4-\frac{143}{18}g_1^4\nonumber\\
-&{}+2g_1'^4\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2\right )\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2-\Sigma_{\tilde{Q}}\right )+16g_3^2g_2^2+\frac{208}{45}g_3^2g_1^2\nonumber\\
-&{}+\frac{32}{3}g_3^2g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2\right )+\frac{13}{5}g_2^2g_1^2+6g_2^2g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2 \right )\nonumber\\
-&{}+\frac{26}{15}g_1^2g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2 \right )\bigg \},\label{eq:USSMYu22Ot2Coeff}
+&{}-2g_1'^2\left [ \lambda^2 \left (Q_1^2+2Q_2^2+Q_S^2+Q_Q^2+Q_u^2 \right )+y_b^2\left ( Q_1^2+Q_2^2+2Q_Q^2+Q_u^2+Q_d^2\right )\right.\nonumber\\
+&{}\left.+12y_t^2\left ( Q_2^2+Q_Q^2+Q_u^2\right )\right ]+\frac{128}{9}g_3^4-\frac{15}{2}g_2^4-\frac{143}{18}g_1^4\nonumber\\
+&{}+2g_1'^4\left ( Q_2^2+Q_Q^2+Q_u^2\right )\left ( Q_2^2+Q_Q^2+Q_u^2-\Sigma_{Q}\right )+16g_3^2g_2^2+\frac{208}{45}g_3^2g_1^2\nonumber\\
+&{}+\frac{32}{3}g_3^2g_1'^2\left ( Q_2^2+Q_Q^2+Q_u^2\right )+\frac{13}{5}g_2^2g_1^2+6g_2^2g_1'^2\left ( Q_2^2+Q_Q^2+Q_u^2 \right )\nonumber\\
+&{}+\frac{26}{15}g_1^2g_1'^2\left ( Q_2^2+Q_Q^2+Q_u^2 \right )\bigg \},\label{eq:USSMYu22Ot2Coeff}
 \end{align}
 \end{subequations}
 and those for $a_t$ read
 \begin{subequations}
 \begin{align}
-\beta_{a_t}^{(1)}&=a_t\left [ \lambda^2+6y_t^2+y_b^2-\frac{16}{3}g_3^2-3g_2^2-\frac{13}{15}g_1^2-2g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2 \right )\right ]\nonumber\\
+\beta_{a_t}^{(1)}&=a_t\left [ \lambda^2+6y_t^2+y_b^2-\frac{16}{3}g_3^2-3g_2^2-\frac{13}{15}g_1^2-2g_1'^2\left ( Q_2^2+Q_Q^2+Q_u^2 \right )\right ]\nonumber\\
 &{}+y_t\left [ 2\lambda a_\lambda + 12y_ta_t+2y_ba_b+\frac{32}{3}g_3^2M_3+6g_2^2M_2+\frac{26}{15}g_1^2M_1\right.\nonumber\\
-&{}\left.+4g_1'^2M_1'\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2+\tilde{Q}_u^2 \right )\right ],\label{eq:USSMTYu22BetaOneLoop}\\
+&{}\left.+4g_1'^2M_1'\left ( Q_2^2+Q_Q^2+Q_u^2 \right )\right ],\label{eq:USSMTYu22BetaOneLoop}\\
 \beta_{a_t}^{(2)}&=,\label{eq:USSMTYu22BetaTwoLoop}\\
 b_{a_t}^{(2)}&=.\label{eq:USSMTYu22Ot2Coeff}
 \end{align}
@@ -1572,7 +1572,7 @@ The one- and two-loop $\beta$ functions and the resulting $O(t^2)$ coefficient f
 \begin{subequations}
 \begin{align}
 \beta_{m_{Q3}^2}^{(1)}&=2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2\right )+2a_t^2+2y_b^2\left ( m_{H_d}^2+m_{Q3}^2+m_{d3}^2\right )+2a_b^2\nonumber\\
-&{}-\frac{32}{3}g_3^2M_3^2-6g_2^2M_2^2-\frac{2}{15}g_1^2M_1^2-8\tilde{Q}_Q^2g_1'^2M_1'^2+\frac{1}{5}g_1^2\Sigma_1+2\tilde{Q}_Qg_1'^2\Sigma_1',\label{eq:USSMmq222BetaOneLoop}\\
+&{}-\frac{32}{3}g_3^2M_3^2-6g_2^2M_2^2-\frac{2}{15}g_1^2M_1^2-8Q_Q^2g_1'^2M_1'^2+\frac{1}{5}g_1^2\Sigma_1+2Q_Qg_1'^2\Sigma_1',\label{eq:USSMmq222BetaOneLoop}\\
 \beta_{m_{Q3}^2}^{(2)}&=,\label{eq:USSMmq222BetaTwoLoop}\\
 b_{m_{Q3}^2}^{(2)}&=.\label{eq:USSMmq222Ot2Coeff}
 \end{align}
@@ -1580,38 +1580,38 @@ b_{m_{Q3}^2}^{(2)}&=.\label{eq:USSMmq222Ot2Coeff}
 Finally, the relevant expressions for the soft mass $m_{u3}^2$ read
 \begin{subequations}
 \begin{align}
-\beta_{m_{u3}^2}^{(1)}&=4y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2\right )+4a_t^2-\frac{32}{3}g_3^2M_3^2-\frac{32}{15}g_1^1M_1^2-8\tilde{Q}_u^2g_1'^2M_1'^2\nonumber\\
-&{}-\frac{4}{5}g_1^2\Sigma_1+2\tilde{Q}_ug_1'^2\Sigma_1',\label{eq:USSMmu222BetaOneLoop}\\
+\beta_{m_{u3}^2}^{(1)}&=4y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2\right )+4a_t^2-\frac{32}{3}g_3^2M_3^2-\frac{32}{15}g_1^1M_1^2-8Q_u^2g_1'^2M_1'^2\nonumber\\
+&{}-\frac{4}{5}g_1^2\Sigma_1+2Q_ug_1'^2\Sigma_1',\label{eq:USSMmu222BetaOneLoop}\\
 \beta_{m_{u3}^2}^{(2)}&=-32y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2\right )-4y_t^2y_b^2\left ( m_{H_u}^2+m_{H_d}^2+2m_{Q3}^2+m_{u3}^2+m_{d3}^2\right )\nonumber\\
 &{}-64y_t^2a_t^2-4\left ( y_ta_b+y_ba_t\right )^2-4\lambda^2y_t^2\left ( 2m_{H_u}^2+m_{H_d}^2+m_S^2+m_{Q3}^2+m_{u3}^2\right )\nonumber\\
 &{}-4\left ( \lambda a_t + y_ta_\lambda \right )^2+12g_2^2y_t^2\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2M_2^2\right )+12g_2^2\left ( a_t^2-2y_ta_tM_2\right )\nonumber\\
 &{}-\frac{4}{5}g_1^2y_t^2\left ( -5m_{H_u}^2-m_{Q3}^2+9m_{u3}^2+2M_1^2\right )-\frac{4}{5}g_1^2\left ( a_t^2-2y_ta_tM_1 \right )\nonumber\\
 &{}-\frac{8}{5}g_1^2y_b^2\left ( 3m_{H_d}^2-m_{Q3}^2-2m_{d3}^2\right )-\frac{8}{5}g_1^2y_\tau^2\left ( m_{H_d}^2+m_{L3}^2-2m_{e3}^2\right )\nonumber\\
 &{}-\frac{8}{5}g_1^2\sum_{i=1}^3\left [ \kappa_i^2\left ( m_{Di}^2-m_{\overline{D}i}^2 \right )+\lambda_i^2\left ( m_{H_i^d}^2-m_{H_i^u}^2 \right )\right ]\nonumber\\
-&{}+8g_1'^2y_t^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2-\tilde{Q}_u^2\right )\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2M_1'^2\right )\nonumber\\
-&{}+8g_1'^2\left ( \tilde{Q}_2^2+\tilde{Q}_Q^2-\tilde{Q}_u^2\right )\left ( a_t^2-2y_ta_tM_1'\right )-24\tilde{Q}_ug_1'^2y_t^2\left (\tilde{Q}_2m_{H_u}^2+\tilde{Q}_Qm_{Q3}^2+\tilde{Q}_um_{u3}^2\right )\nonumber\\
-&{}-24\tilde{Q}_ug_1'^2y_b^2\left ( \tilde{Q}_1m_{H_d}^2+\tilde{Q}_Qm_{Q3}^2+\tilde{Q}_dm_{d3}^2\right )-8\tilde{Q}_ug_1'^2y_\tau^2\left ( \tilde{Q}_1m_{H_d}^2+\tilde{Q}_Lm_{L3}^2+\tilde{Q}_em_{e3}^2\right )\nonumber\\
-&{}-12\tilde{Q}_ug_1'^2\sum_{i=1}^3\kappa_i^2\left ( \tilde{Q}_Sm_S^2+\tilde{Q}_Dm_{Di}^2+\tilde{Q}_{\overline{D}}m_{\overline{D}i}^2\right )\nonumber\\
-&{}-8\tilde{Q}_ug_1'^2\sum_{i=1}^3\left ( \tilde{Q}_1m_{H_d}^2+\tilde{Q}_2m_{H_u}^2+\tilde{Q}_Sm_S^2\right )\nonumber\\
+&{}+8g_1'^2y_t^2\left ( Q_2^2+Q_Q^2-Q_u^2\right )\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2+2M_1'^2\right )\nonumber\\
+&{}+8g_1'^2\left ( Q_2^2+Q_Q^2-Q_u^2\right )\left ( a_t^2-2y_ta_tM_1'\right )-24Q_ug_1'^2y_t^2\left (Q_2m_{H_u}^2+Q_Qm_{Q3}^2+Q_um_{u3}^2\right )\nonumber\\
+&{}-24Q_ug_1'^2y_b^2\left ( Q_1m_{H_d}^2+Q_Qm_{Q3}^2+Q_dm_{d3}^2\right )-8Q_ug_1'^2y_\tau^2\left ( Q_1m_{H_d}^2+Q_Lm_{L3}^2+Q_em_{e3}^2\right )\nonumber\\
+&{}-12Q_ug_1'^2\sum_{i=1}^3\kappa_i^2\left ( Q_Sm_S^2+Q_Dm_{Di}^2+Q_{\overline{D}}m_{\overline{D}i}^2\right )\nonumber\\
+&{}-8Q_ug_1'^2\sum_{i=1}^3\left ( Q_1m_{H_d}^2+Q_2m_{H_u}^2+Q_Sm_S^2\right )\nonumber\\
 &{}+\frac{16}{3}g_3^4\left [ 10M_3^2+\sum_{i=1}^3\left ( m_{di}^2+m_{Di}^2+m_{\overline{D}i}^2+2m_{Qi}^2+m_{ui}^2\right )\right ]\nonumber\\
 &{}+\frac{64}{45}g_3^2g_1^2\left [ 8\left (M_1^2+M_1M_3+M_3^2\right )-3\sum_{i=1}^3\left ( m_{di}^2-m_{Di}^2+m_{\overline{D}i}^2+m_{qi}^2-2m_{ui}^2\right )\right ]\nonumber\\
-&{}+\frac{8}{3}\tilde{Q}_ug_3^2g_1'^2\bigg [ 16\tilde{Q}_u\left (M_1'^2+M_1'M_3+M_3^2\right )\nonumber\\
-&{}+12\sum_{i=1}^3\left ( \tilde{Q}_dm_{di}^2+\tilde{Q}_Dm_{Di}^2+\tilde{Q}_{\overline{D}}m_{\overline{D}i}^2+2\tilde{Q}_Qm_{Qi}^2+\tilde{Q}_um_{ui}^2\right )\bigg ]\nonumber\\
+&{}+\frac{8}{3}Q_ug_3^2g_1'^2\bigg [ 16Q_u\left (M_1'^2+M_1'M_3+M_3^2\right )\nonumber\\
+&{}+12\sum_{i=1}^3\left ( Q_dm_{di}^2+Q_Dm_{Di}^2+Q_{\overline{D}}m_{\overline{D}i}^2+2Q_Qm_{Qi}^2+Q_um_{ui}^2\right )\bigg ]\nonumber\\
 &{}+\frac{12}{5}g_2^2g_1^2\left [ m_{H'}^2-m_{\overline{H'}}^2+\sum_{i=1}^3\left ( m_{H_i^d}^2-m_{H_i^u}^2+m_{Li}^2-m_{Qi}^2\right )\right ]\nonumber\\
-&{}+12\tilde{Q}_ug_2^2g_1'^2\left [ \tilde{Q}_{H'}m_{H'}^2+\tilde{Q}_{\overline{H'}}m_{\overline{H'}}^2+\sum_{i=1}^3\left ( \tilde{Q}_1m_{H_i^d}^2+\tilde{Q}_2m_{H_i^u}^2+\tilde{Q}_Lm_{Li}^2+3\tilde{Q}_Qm_{Qi}^2\right )\right ]\nonumber\\
+&{}+12Q_ug_2^2g_1'^2\left [ Q_{H'}m_{H'}^2+Q_{\overline{H'}}m_{\overline{H'}}^2+\sum_{i=1}^3\left ( Q_1m_{H_i^d}^2+Q_2m_{H_i^u}^2+Q_Lm_{Li}^2+3Q_Qm_{Qi}^2\right )\right ]\nonumber\\
 &{}+\frac{4}{75}g_1^4\bigg [ 1261M_1^2+21m_{H'}^2+3m_{\overline{H'}}^2\nonumber\\
 &{}+\sum_{i=1}^3\left ( 4m_{di}^2+12m_{Di}^2+4m_{\overline{D}i}^2-12m_{ei}^2+21m_{H_i^d}^2+3m_{H_i^u}^2+21m_{Li}^2+3m_{Qi}^2+64m_{ui}^2\right )\bigg ]\nonumber\\
-&{}+\frac{4}{15}g_1^2g_1'^2\bigg [ -8\tilde{Q}_u\big ( 9\tilde{Q}_d+9\tilde{Q}_{\overline{D}}-9\tilde{Q}_D+9\tilde{Q}_e-9\tilde{Q}_1+9\tilde{Q}_2+3\tilde{Q}_{\overline{H'}}-3\tilde{Q}_{H'}-9\tilde{Q}_L\nonumber\\
-&{}+9\tilde{Q}_Q-22\tilde{Q}_u\big )\left ( M_1^2+M_1M_1'+M_1'^2 \right )+12\tilde{Q}_{H'}^2m_{H'}^2-\tilde{Q}_{\overline{H'}}^2m_{\overline{H'}}^2\nonumber\\
-&{}+12\sum_{i=1}^3\big ( -\tilde{Q}_d^2m_{di}^2-\tilde{Q}_{\overline{D}}^2m_{\overline{D}i}^2+\tilde{Q}_D^2m_{Di}^2-\tilde{Q}_e^2m_{ei}^2+\tilde{Q}_1^2m_{H_i^d}^2-\tilde{Q}_2^2m_{H_i^u}^2+\tilde{Q}_L^2m_{Li}^2\nonumber\\
-&{}-\tilde{Q}_Q^2m_{Qi}^2+\tilde{Q}_u^2m_{ui}^2\big )-15\tilde{Q}_{\overline{H'}}\tilde{Q}_um_{\overline{H'}}^2+33\tilde{Q}_{H'}\tilde{Q}_um_{H'}^2+\tilde{Q}_u\sum_{i=1}^3\big ( -18\tilde{Q}_dm_{di}^2\nonumber\\
-&{}-18\tilde{Q}_{\overline{D}}m_{\overline{D}i}^2+30\tilde{Q}_Dm_{Di}^2-6\tilde{Q}_em_{ei}^2+33\tilde{Q}_1m_{H_i^d}^2-15\tilde{Q}_2m_{H_i^u}^2+33\tilde{Q}_Lm_{Li}^2\nonumber\\
-&{}-21\tilde{Q}_Qm_{Qi}^2+84\tilde{Q}_um_{ui}^2\big )\bigg ]+8\tilde{Q}_ug_1'^4\bigg [ 3\tilde{Q}_uM_1'^2\big ( 9\tilde{Q}_d^2+9\tilde{Q}_{\overline{D}}^2+9\tilde{Q}_D^2+3\tilde{Q}_e^2+6\tilde{Q}_1^2\nonumber\\
-&{}+6\tilde{Q}_2^2+2\tilde{Q}_{\overline{H'}}^2+2\tilde{Q}_{H'}^2+6\tilde{Q}_L^2+18\tilde{Q}_Q^2+3\tilde{Q}_S^2+11\tilde{Q}_u^2 \big )+2\tilde{Q}_{H'}^3m_{H'}^2+2\tilde{Q}_{\overline{H'}}^3m_{\overline{H'}}^2\nonumber\\
-&{}+\sum_{i=1}^3\big ( 3\tilde{Q}_d^3m_{di}^2+3\tilde{Q}_{\overline{D}}^3m_{\overline{D}i}^2+3\tilde{Q}_D^3m_{Di}^2+\tilde{Q}_e^3m_{ei}^2+2\tilde{Q}_1^3m_{H_i^d}^2+2\tilde{Q}_2^3m_{H_i^u}^2+2\tilde{Q}_L^3m_{Li}^2\nonumber\\
-&{}+6\tilde{Q}_Q^3m_{Qi}^2+\tilde{Q}_S^3m_{Si}^2+3\tilde{Q}_u^3m_{ui}^2\big )+2\tilde{Q}_u\tilde{Q}_{H'}^2m_{H'}^2+2\tilde{Q}_u\tilde{Q}_{\overline{H'}}^2m_{\overline{H'}}^2\nonumber\\
-&{}+\tilde{Q}_u\sum_{i=1}^3\big ( 3\tilde{Q}_d^2m_{di}^2+3\tilde{Q}_{\overline{D}}^2m_{\overline{D}i}^2+3\tilde{Q}_D^2m_{Di}^2+\tilde{Q}_e^2m_{ei}^2+2\tilde{Q}_1^2m_{H_i^d}^2+2\tilde{Q}_2^2m_{H_i^u}^2+2\tilde{Q}_L^2m_{Li}^2\nonumber\\
-&{}+6\tilde{Q}_Q^2m_{Qi}^2+\tilde{Q}_S^2m_{Si}^2+3\tilde{Q}_u^2m_{ui}^2\big )\bigg ],\label{eq:USSMmu222BetaTwoLoop}\\
+&{}+\frac{4}{15}g_1^2g_1'^2\bigg [ -8Q_u\big ( 9Q_d+9Q_{\overline{D}}-9Q_D+9Q_e-9Q_1+9Q_2+3Q_{\overline{H'}}-3Q_{H'}-9Q_L\nonumber\\
+&{}+9Q_Q-22Q_u\big )\left ( M_1^2+M_1M_1'+M_1'^2 \right )+12Q_{H'}^2m_{H'}^2-Q_{\overline{H'}}^2m_{\overline{H'}}^2\nonumber\\
+&{}+12\sum_{i=1}^3\big ( -Q_d^2m_{di}^2-Q_{\overline{D}}^2m_{\overline{D}i}^2+Q_D^2m_{Di}^2-Q_e^2m_{ei}^2+Q_1^2m_{H_i^d}^2-Q_2^2m_{H_i^u}^2+Q_L^2m_{Li}^2\nonumber\\
+&{}-Q_Q^2m_{Qi}^2+Q_u^2m_{ui}^2\big )-15Q_{\overline{H'}}Q_um_{\overline{H'}}^2+33Q_{H'}Q_um_{H'}^2+Q_u\sum_{i=1}^3\big ( -18Q_dm_{di}^2\nonumber\\
+&{}-18Q_{\overline{D}}m_{\overline{D}i}^2+30Q_Dm_{Di}^2-6Q_em_{ei}^2+33Q_1m_{H_i^d}^2-15Q_2m_{H_i^u}^2+33Q_Lm_{Li}^2\nonumber\\
+&{}-21Q_Qm_{Qi}^2+84Q_um_{ui}^2\big )\bigg ]+8Q_ug_1'^4\bigg [ 3Q_uM_1'^2\big ( 9Q_d^2+9Q_{\overline{D}}^2+9Q_D^2+3Q_e^2+6Q_1^2\nonumber\\
+&{}+6Q_2^2+2Q_{\overline{H'}}^2+2Q_{H'}^2+6Q_L^2+18Q_Q^2+3Q_S^2+11Q_u^2 \big )+2Q_{H'}^3m_{H'}^2+2Q_{\overline{H'}}^3m_{\overline{H'}}^2\nonumber\\
+&{}+\sum_{i=1}^3\big ( 3Q_d^3m_{di}^2+3Q_{\overline{D}}^3m_{\overline{D}i}^2+3Q_D^3m_{Di}^2+Q_e^3m_{ei}^2+2Q_1^3m_{H_i^d}^2+2Q_2^3m_{H_i^u}^2+2Q_L^3m_{Li}^2\nonumber\\
+&{}+6Q_Q^3m_{Qi}^2+Q_S^3m_{Si}^2+3Q_u^3m_{ui}^2\big )+2Q_uQ_{H'}^2m_{H'}^2+2Q_uQ_{\overline{H'}}^2m_{\overline{H'}}^2\nonumber\\
+&{}+Q_u\sum_{i=1}^3\big ( 3Q_d^2m_{di}^2+3Q_{\overline{D}}^2m_{\overline{D}i}^2+3Q_D^2m_{Di}^2+Q_e^2m_{ei}^2+2Q_1^2m_{H_i^d}^2+2Q_2^2m_{H_i^u}^2+2Q_L^2m_{Li}^2\nonumber\\
+&{}+6Q_Q^2m_{Qi}^2+Q_S^2m_{Si}^2+3Q_u^2m_{ui}^2\big )\bigg ],\label{eq:USSMmu222BetaTwoLoop}\\
 b_{m_{u3}^2}^{(2)}&=.\label{eq:USSMmu222Ot2Coeff}
 \end{align}
 \end{subequations}

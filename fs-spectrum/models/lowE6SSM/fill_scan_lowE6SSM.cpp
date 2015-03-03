@@ -285,6 +285,15 @@ namespace flexiblesusy {
       if (endpos != std::string::npos) str.erase(endpos+1);
    }
 
+   double get_random_Lambdax(const lowE6SSM_input_parameters& input, double Lambdax_width, std::default_random_engine& generator)
+   {
+      const double LambdaxInput = input.LambdaxInput;
+
+      std::uniform_real_distribution<double> Lambdax_distribution(LambdaxInput - Lambdax_width, LambdaxInput + Lambdax_width);
+
+      return Lambdax_distribution(generator);
+   }
+
    double get_random_TLambdax(const lowE6SSM_input_parameters& input, double ALambdax_width, std::default_random_engine& generator)
    {
       const double LambdaxInput = input.LambdaxInput;
@@ -303,6 +312,24 @@ namespace flexiblesusy {
       std::uniform_real_distribution<double> AYu22_distribution(AYu22Input - AYu22_width, AYu22Input + AYu22_width);
 
       return AYu22_distribution(generator);
+   }
+
+   double get_random_mq222(const lowE6SSM_input_parameters& input, double mq222_width, std::default_random_engine& generator)
+   {
+      const double mq222Input = input.mq2Input(2,2);
+
+      std::uniform_real_distribution<double> mq222_distribution(mq222Input - mq222_width, mq222Input + mq222_width);
+
+      return mq222_distribution(generator);
+   }
+
+   double get_random_mu222(const lowE6SSM_input_parameters& input, double mu222_width, std::default_random_engine& generator)
+   {
+      const double mu222Input = input.mu2Input(2,2);
+
+      std::uniform_real_distribution<double> mu222_distribution(mu222Input - mu222_width, mu222Input + mu222_width);
+
+      return mu222_distribution(generator);
    }
 
 }
@@ -561,11 +588,20 @@ int main()
          // generate additional points from read-in point
          const double ALambdax_width = 1000.0;
          const double AYu22_width = 1000.0;
+         const double Lambdax_width = 0.05;
+         const double mq222_width = 1000.0;
+         const double mu222_width = 1000.0;
 
          for (std::size_t i = 0; i < num_points; ++i) {
             lowE6SSM_input_parameters random_input = input;
             random_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
             random_input.AYuInput(2,2) = get_random_AYu22(input, AYu22_width, generator);
+
+            // additional randomised values
+            random_input.LambdaxInput = get_random_Lambdax(input, Lambdax_width, generator);
+            random_input.mq2Input(2,2) = get_random_mq222(input, mq222_width, generator);
+            random_input.mu2Input(2,2) = get_random_mu222(input, mu222_width, generator);
+
             bool has_serious_problem = false;
 
             lowE6SSM<Two_scale> model;
@@ -665,7 +701,7 @@ int main()
                
 
                // print results
-               if (!has_serious_problem) {
+               if (!has_serious_problem && !tuning_problem) {
                   const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& problems = model.get_problems();
                   std::cout << " "
                             << std::setw(12) << std::left << random_input.TanBeta << ' '

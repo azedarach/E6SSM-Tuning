@@ -43,7 +43,7 @@ namespace flexiblesusy {
       // U(1)_I: theta = PI + ArcTan(Sqrt(0.6))
       // U(1)_psi: theta = 0.5 * PI
       // U(1)_eta: theta = -ArcTan(Sqrt(5.0 / 3.0))
-      const double theta = PI + ArcTan(Sqrt(0.6));
+      const double theta = -ArcTan(Sqrt(5.0 / 3.0));
       
       initialize_e6_charges(theta, input);
       

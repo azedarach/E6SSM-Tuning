@@ -1494,9 +1494,24 @@ It is sufficient for our purposes to consider the trilinear coupling $a_\lambda\
 \begin{subequations}
 \begin{align}
 \beta_{a_\lambda}^{(1)}&=a_\lambda \left[2\lambda ^2+2 \Sigma_\lambda +3 \Sigma_\kappa +3 y_t^2+3 y_b^2+y_{\tau }^2-3 g_2^2-\frac{3}{5} g_1^2 -2 \left ( Q_1^2 + Q_2^2 + Q_S^2\right )g_1'^2 \right]\nonumber\\
-&{}+\lambda \left [ 4\lambda a_\lambda +4\Sigma_{a_\lambda}+6\Sigma_{a_\kappa}+6y_ta_t+6y_ba_b+2y_\tau a_\tau +6g_2^2M_2+\frac{6}{5}g_1^2M_1\right.\nonumber\\
-&{}\left.+4g_1'^2M_1'\left ( Q_1^2+Q_2^2+Q_S^2 \right )\right ],\label{eq:USSMTLambdaBetaOneLoop}\\
-\beta_{a_\lambda}^{(2)}&=,\label{eq:USSMTLambdaBetaTwoLoop}\\
+&{}+\lambda \bigg [ 4\lambda a_\lambda +4\Sigma_{a_\lambda}+6\Sigma_{a_\kappa}+6y_ta_t+6y_ba_b+2y_\tau a_\tau +6g_2^2M_2+\frac{6}{5}g_1^2M_1\nonumber\\
+&{}+4g_1'^2M_1'\left ( Q_1^2+Q_2^2+Q_S^2 \right )\bigg ],\label{eq:USSMTLambdaBetaOneLoop}\\
+\beta_{a_\lambda}^{(2)}&=a_\lambda \bigg \{ -2\lambda^2\left ( \lambda^2+2\Sigma_\lambda+3\Sigma_\kappa\right )-4\Pi_\lambda-6\Pi_\kappa-3\lambda^2\left ( 3y_t^2+3y_b^2+y_\tau^2\right ) \nonumber\\
+&{} -3\left ( 3y_t^4+3y_b^4+2y_t^2y_b^2+y_\tau^2 \right )+6g_2^2\Sigma_\lambda+\frac{2}{5}g_1^2\left ( 2y_t^2-y_b^2+3y_\tau^2+2\Sigma_\kappa +3\Sigma_\lambda\right )\nonumber\\
+&{}\left.+g_1'^2\left [ 4Q_S^2\lambda^2 -6\left ( Q_2^2-Q_Q^2-Q_u^2\right )y_t^2-6\left ( Q_1^2-Q_Q^2-Q_d^2\right )y_b^2 \right.\right.\nonumber\\
+&{}\left.-2\left ( Q_1^2-Q_L^2-Q_e^2\right )y_\tau^2-6\left ( Q_S^2-Q_D^2-Q_{\overline{D}}^2 \right )\Sigma_\kappa-4\left ( Q_S^2-Q_1^2-Q_2^2\right )\Sigma_\lambda\right ]\nonumber\\
+&{}+16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa\right ) +\frac{33}{2}g_2^4+\frac{297}{50}g_1^4+2g_1'^4\left [ 2Q_1^4+2Q_2^4+2Q_S^4+\left ( Q_1^2+Q_2^2+Q_S^2\right )\Sigma_{Q}\right ]\nonumber\\
+&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( Q_1^2+Q_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left (Q_1^2+Q_2^2\right )\bigg \}+\lambda \bigg \{ -4\lambda a_\lambda \left ( \lambda^2+2\Sigma_\lambda+3\Sigma_\kappa\right )\nonumber\\
+&{}-4\lambda^2\left ( \lambda a_\lambda+2\Sigma_{a_\lambda}+3\Sigma_{a_\kappa}\right )-16\Pi_{a_\lambda}-24\Pi_{a_\kappa}-6\lambda a_\lambda\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\nonumber\\
+&{}-6\lambda^2\left ( 3y_ta_t+3y_ba_b+y_\tau a_\tau\right )-12\left [ 3y_t^3a_t+3y_b^3a_b+y_ty_b\left ( y_ta_b+y_ba_t\right )+y_\tau^3 a_\tau\right ]\nonumber\\
+&{}+32g_3^2\left [ y_ta_t+y_ba_b+\Sigma_{a_\kappa}-\left ( y_t^2+y_b^2+\Sigma_\kappa\right )M_3\right ]+12g_2^2\left ( \Sigma_{a_\lambda}-\Sigma_\lambda M_2\right )\nonumber\\
+&{}+\frac{2}{5}g_1^2\left [ 4y_ta_t-2y_ba_b+6y_\tau a_\tau+4\Sigma_{a_\kappa}+6\Sigma_{a_\lambda}-2\left ( 2y_t^2-y_b^2+3y_\tau^2+2\Sigma_\kappa+3\Sigma_\lambda\right )M_1\right ]\nonumber\\
+&{}+4g_1'^2\big [ 3y_t\left ( Q_Q^2-Q_2^2+Q_u^2\right )\left ( a_t-y_t M_1'\right )+3y_b\left ( Q_Q^2-Q_1^2+Q_d^2\right )\left ( a_b-y_bM_1'\right )\nonumber\\
+&{}+y_\tau\left ( Q_L^2-Q_1^2+Q_e^2\right )\left ( a_\tau-y_\tau M_1'\right )+2Q_S^2\lambda\left ( a_\lambda-\lambda M_1'\right )\nonumber\\
+&{}+2\left ( Q_1^2+Q_2^2-Q_S^2\right )\left ( \Sigma_{a_\lambda}-\Sigma_\lambda M_1'\right )+3\left ( Q_D^2+Q_{\overline{D}}^2-Q_S^2\right )\left ( \Sigma_{a_\kappa}-\Sigma_\kappa M_1'\right ) \big ]\nonumber\\
+&{}-66g_2^4M_2-\frac{594}{25}g_1^4M_1-8g_1'^4M_1'\left [ 2\left ( Q_1^4+Q_2^4+Q_S^4\right )+\left ( Q_1^2+Q_2^2+Q_S^2\right )\Sigma_Q\right ]\nonumber\\
+&{}-\frac{18}{5}g_2^2g_1^2\left ( M_2+M_1\right )-12g_2^2g_1'^2\left ( Q_1^2+Q_2^2\right )\left ( M_2+M_1'\right )\nonumber\\
+&{}-\frac{12}{5}g_1^2g_1'^2\left ( Q_1^2+Q_2^2\right )\left ( M_1+M_1'\right )\bigg \},\label{eq:USSMTLambdaBetaTwoLoop}\\
 b_{a_\lambda}^{(2)}&=,\label{eq:USSMTLambdaOt2Coeff}
 \end{align}
 \end{subequations}

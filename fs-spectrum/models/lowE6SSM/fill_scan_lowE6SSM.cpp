@@ -349,8 +349,6 @@ int main()
    // U(1)_eta: theta = -ArcTan(Sqrt(5.0 / 3.0))
    const double theta = -ArcTan(Sqrt(5.0 / 3.0));
 
-   const std::size_t num_points = 10;
-
    Eigen::Matrix<double,3,3> YdInput; 
    Eigen::Matrix<double,3,3> YeInput;
    Eigen::Matrix<double,3,3> YuInput;
@@ -591,16 +589,64 @@ int main()
          const double Lambdax_width = 0.05;
          const double mq222_width = 1000.0;
          const double mu222_width = 1000.0;
+         const double MassWB_width = 50.0;
+
+         const std::size_t num_points = 50;
+         const bool is_random_scan = false;
+
+         const lowE6SSM_info::Parameters scan_parameter = lowE6SSM_info::TYu22;
+         
+         const double ALambdax_incr = (num_points > 1 ? ALambdax_width / (num_points - 1.0) : 0.0);
+         const double AYu22_incr = (num_points > 1 ? AYu22_width / (num_points - 1.0) : 0.0);
+         const double Lambdax_incr = (num_points > 1 ? Lambdax_width / (num_points - 1.0) : 0.0);
+         const double mq222_incr = (num_points > 1 ? mq222_width / (num_points - 1.0) : 0.0);
+         const double mu222_incr = (num_points > 1 ? mu222_width / (num_points - 1.0) : 0.0);
+         const double MassWB_incr = (num_points > 1 ? MassWB_width / (num_points - 1.0) : 0.0);
 
          for (std::size_t i = 0; i < num_points; ++i) {
-            lowE6SSM_input_parameters random_input = input;
-            random_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
-            random_input.AYuInput(2,2) = get_random_AYu22(input, AYu22_width, generator);
+            lowE6SSM_input_parameters next_input = input;
 
-            // additional randomised values
-            random_input.LambdaxInput = get_random_Lambdax(input, Lambdax_width, generator);
-            random_input.mq2Input(2,2) = get_random_mq222(input, mq222_width, generator);
-            random_input.mu2Input(2,2) = get_random_mu222(input, mu222_width, generator);
+            // generate random values if random fill scan
+            if (is_random_scan) {
+               next_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
+               next_input.AYuInput(2,2) = get_random_AYu22(input, AYu22_width, generator);
+
+               // additional randomised values
+               next_input.LambdaxInput = get_random_Lambdax(input, Lambdax_width, generator);
+               next_input.mq2Input(2,2) = get_random_mq222(input, mq222_width, generator);
+               next_input.mu2Input(2,2) = get_random_mu222(input, mu222_width, generator);
+            } else {
+               // update in 1D parameter scan
+               switch (scan_parameter) {
+               case lowE6SSM_info::Lambdax: {
+                  next_input.LambdaxInput = input.LambdaxInput - 0.5 * Lambdax_width + Lambdax_incr * i; 
+                  break;
+               }
+               case lowE6SSM_info::TLambdax: {
+                  next_input.TLambdaxInput = input.TLambdaxInput - 0.5 * input.LambdaxInput * ALambdax_width 
+                     + input.LambdaxInput * ALambdax_incr * i;
+                  break;
+               }
+               case lowE6SSM_info::TYu22: {
+                  next_input.AYuInput(2,2) = input.AYuInput(2,2) - 0.5 * AYu22_width + AYu22_incr * i;
+                  break;
+               }
+               case lowE6SSM_info::mq222: {
+                  next_input.mq2Input(2,2) = input.mq2Input(2,2) - 0.5 * mq222_width + mq222_incr * i;
+                  break;
+               }
+               case lowE6SSM_info::mu222: {
+                  next_input.mu2Input(2,2) = input.mu2Input(2,2) - 0.5 * mu222_width + mu222_incr * i;
+                  break;
+               }
+               case lowE6SSM_info::MassWB: {
+                  next_input.MassWBInput = input.MassWBInput - 0.5 * MassWB_width + MassWB_incr * i;
+                  break;
+               }
+               default:
+                  WARNING("Ignoring invalid scan parameter");
+               }
+            }
 
             bool has_serious_problem = false;
 
@@ -616,7 +662,7 @@ int main()
             model.set_Yd(YdInput);
             model.set_Ye(YeInput);
 
-            initialize_model_from_input(random_input, model);
+            initialize_model_from_input(next_input, model);
 
             model.set_vd(vInput / Sqrt(1.0 + Sqr(input.TanBeta)));
             model.set_vu(vInput * input.TanBeta / Sqrt(1.0 + Sqr(input.TanBeta)));
@@ -704,13 +750,13 @@ int main()
                if (!has_serious_problem && !tuning_problem) {
                   const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& problems = model.get_problems();
                   std::cout << " "
-                            << std::setw(12) << std::left << random_input.TanBeta << ' '
-                            << std::setw(12) << std::left << random_input.LambdaxInput << ' '
-                            << std::setw(12) << std::left << random_input.TLambdaxInput / random_input.LambdaxInput << ' '
-                            << std::setw(12) << std::left << random_input.AYuInput(2,2) << ' '
-                            << std::setw(12) << std::left << random_input.mq2Input(2,2) << ' '
-                            << std::setw(12) << std::left << random_input.mu2Input(2,2) << ' '
-                            << std::setw(12) << std::left << random_input.MassWBInput << ' '
+                            << std::setw(12) << std::left << next_input.TanBeta << ' '
+                            << std::setw(12) << std::left << next_input.LambdaxInput << ' '
+                            << std::setw(12) << std::left << next_input.TLambdaxInput / next_input.LambdaxInput << ' '
+                            << std::setw(12) << std::left << next_input.AYuInput(2,2) << ' '
+                            << std::setw(12) << std::left << next_input.mq2Input(2,2) << ' '
+                            << std::setw(12) << std::left << next_input.mu2Input(2,2) << ' '
+                            << std::setw(12) << std::left << next_input.MassWBInput << ' '
                             << std::setw(12) << std::left << Lambdax_at_MX << ' '
                             << std::setw(12) << std::left << Kappa22_at_MX << ' '
                             << std::setw(12) << std::left << ew_derivs.get_MHiggs()(0) << ' '
@@ -724,7 +770,7 @@ int main()
                             << std::setw(12) << std::left << ew_derivs.get_ewsb_condition_3() << ' '
                             << std::setw(12) << std::left << msusy << ' '
                             << std::setw(12) << std::left << mx << ' '
-                            << std::setw(12) << std::left << random_input.vsInput << ' '
+                            << std::setw(12) << std::left << next_input.vsInput << ' '
                             << std::setw(12) << std::left << model.get_MVZ() << ' '
                             << std::setw(12) << std::left << model.get_MVZp() << ' '
                             << std::setw(12) << std::left << mst1 << ' '

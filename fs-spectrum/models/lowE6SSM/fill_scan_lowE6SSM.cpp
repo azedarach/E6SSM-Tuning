@@ -586,15 +586,15 @@ int main()
          // generate additional points from read-in point
          const double ALambdax_width = 1000.0;
          const double AYu22_width = 1000.0;
-         const double Lambdax_width = 0.05;
-         const double mq222_width = 1000.0;
-         const double mu222_width = 1000.0;
+         const double Lambdax_width = 0.1;
+         const double mq222_width = 100000.0;
+         const double mu222_width = 100000.0;
          const double MassWB_width = 50.0;
 
-         const std::size_t num_points = 50;
-         const bool is_random_scan = false;
+         const std::size_t num_points = 10;
+         const bool is_random_scan = true;
 
-         const lowE6SSM_info::Parameters scan_parameter = lowE6SSM_info::TYu22;
+         const lowE6SSM_info::Parameters scan_parameter = lowE6SSM_info::Lambdax;
          
          const double ALambdax_incr = (num_points > 1 ? ALambdax_width / (num_points - 1.0) : 0.0);
          const double AYu22_incr = (num_points > 1 ? AYu22_width / (num_points - 1.0) : 0.0);
@@ -608,7 +608,7 @@ int main()
 
             // generate random values if random fill scan
             if (is_random_scan) {
-               next_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
+               //next_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
                next_input.AYuInput(2,2) = get_random_AYu22(input, AYu22_width, generator);
 
                // additional randomised values
@@ -747,7 +747,9 @@ int main()
                
 
                // print results
-               if (!has_serious_problem && !tuning_problem) {
+               // note that for 1D scans we print irrespective of whether or not
+               // there is an error
+               if (!is_random_scan || (!has_serious_problem && !tuning_problem)) {
                   const Problems<lowE6SSM_info::NUMBER_OF_PARTICLES>& problems = model.get_problems();
                   std::cout << " "
                             << std::setw(12) << std::left << next_input.TanBeta << ' '

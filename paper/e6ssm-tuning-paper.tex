@@ -1359,9 +1359,11 @@ calculations. The corresponding soft SUSY breaking trilinears are
 likewise omitted. Additionally, all soft mass matrices are assumed
 diagonal, and the gaugino masses are taken to be real.\\ \\ In the
 MSSM, the relevant parameters for the fine tuning calculation are
-$\mu$, $B$, $m_{H_u}^2$, $m_{H_d}^2$ at tree level. The one- and
-two-loop RGEs for these parameters may be found in
-\cite{Martin:1993zk}. The corresponding $O(t^2)$ contributions are
+$\mu$, $B$, $m_{H_u}^2$, $m_{H_d}^2$ at tree level. For the
+renormalisation group running of the relevant parameters
+SOFTSUSY uses the one- and two-loop RGEs from
+\cite{Barger:1993gh,Martin:1993zk}. The corresponding $O(t^2)$
+contributions are
 \begin{subequations}\label{eq:MSSMTreeLevelCoeffs}
 \begin{align}
 b_\mu^{(2)}&=\frac{\mu}{2}\Bigg [ 45y_t^4+45y_b^4+9y_\tau^2+30y_t^2y_b^2+6y_t^2y_\tau^2+18y_b^2y_\tau^2-32g_3^2(y_t^2+y_b^2)\nonumber\\
@@ -1423,13 +1425,55 @@ b_{A_t}^{(2)}&=144y_t^4A_t+24y_b^4A_b+14y_t^2y_b^2(A_t+A_b)+2y_b^2y_\tau^2(A_b+A
 \end{subequations}
 Similarly we can obtain the two-loop $\beta$ functions and
 coefficients $b_p^{(2)}$ for a general set of $U(1)'$
-charges. Two-loop RGEs for the gauge and Yukawa couplings, gaugino
-masses and soft trilinears, along with the one-loop RGEs for the soft
-scalar masses, were given in \cite{Athron:2009bs} for the particular
-case of the E$_6$SSM. At tree level in the EWSB conditions the
-parameters that must be considered are $\lambda$, $A_\lambda$,
-$m_{H_u}^2$, $m_{H_d}^2$, $m_S^2$ and $g_1$, $g_2$ and $g_1'$. Neglecting kinetic
-mixing, the two-loop $\beta$ functions for the relevant gauge couplings read
+charges. 
+
+ Two-loop RGEs for the gauge and Yukawa couplings, gaugino masses and
+ soft trilinears, along with the one-loop RGEs for the soft scalar
+ masses, were originally obtained in \cite{Athron:2009bs} for the
+ particular case of the E$_6$SSM.  FlexibleSUSY uses full one- and
+ two-loop RGEs from SARAH, which for the models considered here are
+ based on \cite{Martin:1993zk} and the recent extension\footnote{In
+   the version of SARAH which we used the extra terms from this
+   extension were included for all terms except the trilinear and
+   bilinear soft masses. We have been in contact with the SARAH author
+   about this and understand they will be included in future
+   versions.}  \cite{Fonseca:2011vn} to include models with multiple
+ $U(1)$ gauge groups, in the most general case where the trace of the
+ matrix formed from the charges $Q^Y_i$ of the $U(1)_Y$ gauge symmetry
+ and $Q_i$ of the extra $U(1)^\prime$ symmetry does not vanish,
+ i.e.~$\sum_i Q_i^YQ_i \neq 0$.  
+
+When this trace is non-zero it will also induce gauge kinetic mixing
+to be generated during RGE evolution and this is the case in the
+models we consider here \footnote{In E$_6$ inspired models with only
+  complete $27$plet matter multiplets this trace would vanish.
+  However since we assume some incomplete multiplets so that our
+  models are consistent with gauge coupling unification this trace
+  doesn't vanish.}. However when these models are evolved down from
+the GUT scale the radiatively generated gauge kinetic mixing gives an
+off diagonal gauge coupling, $g_{11}$ of just $\approx 0.02$ at the
+electroweak scale \cite{King:2005jy} and so it does not play a large
+role.  At the same time if gauge kinetic mixing is included the RGE
+expressions become very large and unmanageable, so we neglected the
+gauge kinetic mixing by setting the SARAH flag NoU1Mixing to true.
+
+%% However for the results we present
+%%  here we set the SARAH flag NoU1Mixing to true to avoid generating
+%%  unmanageably large expressions.  It has previously been checked that
+%%  when these models are evolved down from the GUT scale the radiatively
+%%  generated gauge kinetic mixing gives an off diagonal gauge coupling,
+%%  $g_{11}$ of just $\approx 0.02$ at the electroweak scale
+%%  \cite{King:2005jy} and so it does not play a large role.
+
+
+
+
+
+At tree level in the EWSB
+conditions the parameters that must be considered are $\lambda$,
+$A_\lambda$, $m_{H_u}^2$, $m_{H_d}^2$, $m_S^2$ and $g_1$, $g_2$ and
+$g_1'$. Neglecting kinetic mixing, the two-loop $\beta$ functions for
+the relevant gauge couplings read
 \begin{subequations}\label{eq:USSMGaugeBetas}
 \begin{align}
 \beta_{g_1}^{(1)}&=\frac{48}{5}g_1^3,\label{eq:USSMg1BetaOneLoop}\\
@@ -1452,7 +1496,17 @@ In order to keep these expressions compact we have used the notation
 \begin{align*}
 \Sigma_{Q}=\sum_i Q_i^2=\frac{321}{40}\cos^2\theta+\frac{217}{24}\sin^2\theta+\frac{27}{8\sqrt{15}}\sin 2\theta
 \end{align*}
-to denote the trace over the $U(1)'$ charges, along with
+to denote the trace over the $U(1)'$ charges, along
+with \footnote{This is the trace which is assumed to vanish in
+  \cite{Martin:1993zk}.  Although we use the the NoU1Mixing to neglect
+  gauge kinetic mixing this is done in SARAH by removing the RGE for
+  the off diagonal gauge couplings and effectively setting them to
+  zero at all scales by removing all terms involving them from the
+  RGEs.  Therefore some terms with this trace remain and the RGEs here
+  do not reduce to those which one would obtain from
+  \cite{Martin:1993zk} nor those which appear in \cite{Athron:2009bs}.
+  Note however these contributions do not appear in the
+  corresponding trilinears due to the version of SARAH used. }
 \begin{align*}
 \Sigma_{Q}^Y&=\sum_i \sqrt{\frac{5}{3}}Q_i^YQ_i=-\frac{3}{\sqrt{10}}\cos\theta-\frac{1}{\sqrt{6}}\sin\theta,\\
 \Pi_{Q}&=\sum_i Q_i^4\\

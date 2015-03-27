@@ -43,7 +43,7 @@ namespace flexiblesusy {
       // U(1)_I: theta = PI + ArcTan(Sqrt(0.6))
       // U(1)_psi: theta = 0.5 * PI
       // U(1)_eta: theta = -ArcTan(Sqrt(5.0 / 3.0))
-      const double theta = -ArcTan(Sqrt(5.0 / 3.0));
+      const double theta = PI + ArcTan(Sqrt(0.6)); 
       
       initialize_e6_charges(theta, input);
       
@@ -167,12 +167,6 @@ int main()
    lowE6SSM_input_parameters input;
    QedQcd oneset;
    oneset.toMz();
-
-   lowE6SSM_spectrum_generator<algorithm_type> spectrum_generator;
-   spectrum_generator.set_precision_goal(1.0e-4);
-   spectrum_generator.set_max_iterations(0);         // 0 == automatic
-   spectrum_generator.set_calculate_sm_masses(0);    // 0 == no
-   spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
 
    std::vector<double> TanBeta_vals = {2, 4, 6, 8, 10, 15, 20, 30, 40, 50};
 
@@ -352,6 +346,12 @@ int main()
       }
 
       // calculate spectrum
+      lowE6SSM_spectrum_generator<algorithm_type> spectrum_generator;
+      spectrum_generator.set_precision_goal(1.0e-4);
+      spectrum_generator.set_max_iterations(0);         // 0 == automatic
+      spectrum_generator.set_calculate_sm_masses(0);    // 0 == no
+      spectrum_generator.set_parameter_output_scale(0); // 0 == susy scale
+
       spectrum_generator.run(oneset, input);
 
       const lowE6SSM<algorithm_type>& model = spectrum_generator.get_model();

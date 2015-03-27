@@ -347,7 +347,7 @@ int main()
    // U(1)_I: theta = PI + ArcTan(Sqrt(0.6))
    // U(1)_psi: theta = 0.5 * PI
    // U(1)_eta: theta = -ArcTan(Sqrt(5.0 / 3.0))
-   const double theta = -ArcTan(Sqrt(5.0 / 3.0));
+   const double theta = PI + ArcTan(Sqrt(0.6));
 
    Eigen::Matrix<double,3,3> YdInput; 
    Eigen::Matrix<double,3,3> YeInput;
@@ -361,7 +361,7 @@ int main()
    YdInput(1,2) = 0.0;
    YdInput(2,0) = 0.0;
    YdInput(2,1) = 0.0;
-   YdInput(2,2) = 1.22357994e-01;
+   YdInput(2,2) = 1.26129729e-01; //1.24073356e-01; //1.25830060e-01; //1.23986233e-01; //1.26812790e-01; //1.22357994e-01;
 
    YeInput(0,0) = 0.0;
    YeInput(0,1) = 0.0;
@@ -371,7 +371,7 @@ int main()
    YeInput(1,2) = 0.0;
    YeInput(2,0) = 0.0;
    YeInput(2,1) = 0.0;
-   YeInput(2,2) = 9.88254141e-02;
+   YeInput(2,2) = 9.82521715e-02; //9.81978185e-02; //9.83300957e-02; //9.81211077e-02; //9.87082739e-02; //9.88254141e-02;
 
    YuInput(0,0) = 0.0;
    YuInput(0,1) = 0.0;
@@ -381,13 +381,13 @@ int main()
    YuInput(1,2) = 0.0;
    YuInput(2,0) = 0.0;
    YuInput(2,1) = 0.0;
-   YuInput(2,2) = 8.74991501e-01;
+   YuInput(2,2) = 8.81939505e-01; //8.81785907e-01; //8.81246710e-01; //8.75250164e-01; //8.74478241e-01; //8.74991501e-01;
 
-   const double g1Input = 4.71880484e-01;
-   const double g2Input = 6.36109014e-01;
-   const double g3Input = 9.99300252e-01;
-   const double gNInput = 5.10342303e-01;
-   const double vInput = 2.41460403e+02;
+   const double g1Input = 4.71996005e-01; //4.71290081e-01; //4.71922380e-01; //4.72062287e-01; //4.72742529e-01; //4.71880484e-01;
+   const double g2Input = 6.36622104e-01; //6.34600717e-01; //6.43583668e-01; //6.42700369e-01; //6.38485277e-01; //6.36109014e-01;
+   const double g3Input = 1.00388754; //9.93512605e-01; //1.01209203; //1.00223899; //1.00914701; //9.99300252e-01;
+   const double gNInput = 4.78759935e-01; //4.78759574e-01; //4.82706635e-01; //4.82706361e-01; //5.10341792e-01; //5.10342303e-01;
+   const double vInput = 2.41441936e+02; //2.42043143e+02; //2.40803172e+02; //2.40979154e+02; //2.40801040e+02; //2.41460403e+02;
 
    lowE6SSM_input_parameters input;
    QedQcd oneset;
@@ -584,17 +584,17 @@ int main()
          }
          
          // generate additional points from read-in point
-         const double ALambdax_width = 1000.0;
-         const double AYu22_width = 1000.0;
+         const double ALambdax_width = 100.0;
+         const double AYu22_width = 100.0;
          const double Lambdax_width = 0.1;
-         const double mq222_width = 100000.0;
-         const double mu222_width = 100000.0;
+         const double mq222_width = 50000.0;
+         const double mu222_width = 50000.0;
          const double MassWB_width = 50.0;
 
-         const std::size_t num_points = 10;
+         const std::size_t num_points = 20;
          const bool is_random_scan = true;
 
-         const lowE6SSM_info::Parameters scan_parameter = lowE6SSM_info::Lambdax;
+         const lowE6SSM_info::Parameters scan_parameter = lowE6SSM_info::TLambdax;
          
          const double ALambdax_incr = (num_points > 1 ? ALambdax_width / (num_points - 1.0) : 0.0);
          const double AYu22_incr = (num_points > 1 ? AYu22_width / (num_points - 1.0) : 0.0);
@@ -608,7 +608,7 @@ int main()
 
             // generate random values if random fill scan
             if (is_random_scan) {
-               //next_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
+               next_input.TLambdaxInput = get_random_TLambdax(input, ALambdax_width, generator);
                next_input.AYuInput(2,2) = get_random_AYu22(input, AYu22_width, generator);
 
                // additional randomised values

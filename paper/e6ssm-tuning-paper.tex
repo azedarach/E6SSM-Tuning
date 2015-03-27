@@ -265,11 +265,11 @@ Here we will refer to U(1) extensions of the MSSM, which solve the
 $\mu$-problem, as the USSM \cite{Cvetic:1995rj, Jain:1995cb,
   Nir:1995bu, Cvetic:1996mf, Cvetic:1997ky}.  The couplings for the
 $U(1)^\prime$ gauge group should allow the following renormalisable
-superpotential terms required in the USSM, \be W_{USSM} = y^U_{ij}
-\hat{u}^c_i \left ( \hat{H}_u \cdot \hat{Q}_j \right ) + y^D_{ij} \hat{d}^c_i 
-\left ( \hat{Q}_j \cdot \hat{H}_d \right )
- + y^E_{ij} \hat{e}^c_i \left ( \hat{L}_j \cdot \hat{H}_d \right ) + \lambda \hat{S}
-\left ( \hat{H}_d \cdot \hat{H}_u \right ), \ee with $i,j \in \{1,2,3\}$. 
+superpotential terms required in the USSM, \begin{equation}
+ W_{USSM} = y^U_{ij}
+\hat{u}^c_i  \hat{H}_u \cdot \hat{Q}_j + y^D_{ij} \hat{d}^c_i  \hat{Q}_j \cdot \hat{H}_d
+ + y^E_{ij} \hat{e}^c_i \hat{L}_j \cdot \hat{H}_d  + \lambda \hat{S} \hat{H}_d \cdot \hat{H}_u, 
+\end{equation} with $i,j \in \{1,2,3\}$. 
 For the $SU(2)$ dot product we follow the convention $\hat{A}\cdot \hat{B}\equiv \epsilon_{\alpha\beta}\hat{A}^\alpha\hat{B}^\beta=\hat{A}^2\hat{B}^1-\hat{A}^1\hat{B}^2$.
 
 
@@ -286,8 +286,8 @@ SO(10)\times U(1)_{\psi}$, and the subsequent breaking of $SO(10)$
 into $SU(5)$, gives $SO(10)\to SU(5)\times U(1)_{\chi}$ (this is
 reviewed in e.g.~\cite{Langacker:2008yv}). The extra $U(1)$ gauge
 symmetry at low energies should then be a linear combination of these
-in the $E_6$ inspired case, \be U(1)^\prime = \cos(\theta) U(1)_{\chi}
-+ \sin(\theta) U(1)_{\psi}. \ee In Table \ref{tab:E6charges} the
+in the $E_6$ inspired case, \be U(1)^\prime = U(1)_{\chi}\cos\theta 
++ U(1)_{\psi}\sin\theta . \ee In Table \ref{tab:E6charges} the
 charges for several popular $E_6$ inspired $U(1)$ extensions are
 shown.
 % Table of U(1)' charges, which may or may not be useful to include.
@@ -415,10 +415,10 @@ W_{E_6} = W_0 + W_1 + W_2,
 \label{Eq:e6-superpot}
 \ee where
 \begin{eqnarray}
-W_0 &=& \lambda_{ijk} \hat{S}_i \left ( \hat{H}^d_{j} \cdot\hat{H}^u_{k}\right ) + \kappa_{ijk} \hat{S}_i \hat{D}_j \hat{\bar{D}}_k + h^N_{ijk} \hat{N}^c_i \left ( \hat{H}^u_{j} \cdot \hat{L}_k\right ) \nonumber \\
-& & + h^U_{ijk} \hat{u}^c_i \left ( \hat{H}^u_{j} \cdot \hat{Q}_k\right ) + h^D_{ijk} \hat{d}^c_i \left ( \hat{Q}_k\cdot\hat{H}^d_{j}\right )  + h^E_{ijk} \hat{e}^c_i \left ( \hat{L}_k\cdot\hat{H}^d_{j}\right ) , \\
-W_1 &=& g^Q_{ijk} \hat{D}_i \left ( \hat{Q}_j \cdot \hat{Q}_k \right )+ g^q_{ijk} \hat{\bar{D}}_i \hat{d}^c_j \hat{u}^c_k, \\
-W_2 &=& g^N_{ijk} \hat{N}^c_i \hat{D}_j \hat{d}^c_k + g^E_{ijk} \hat{e}^c_i \hat{D}_j \hat{u}^c_k + g^D_{ijk} \left ( \hat{Q}_i \cdot \hat{L}_j \right )\hat{\bar{D}}_k.
+W_0 &=& \lambda_{ijk} \hat{S}_i  \hat{H}^d_{j} \cdot\hat{H}^u_{k} + \kappa_{ijk} \hat{S}_i \hat{D}_j \hat{\bar{D}}_k + h^N_{ijk} \hat{N}^c_i  \hat{H}^u_{j} \cdot \hat{L}_k \nonumber \\
+& & + h^U_{ijk} \hat{u}^c_i  \hat{H}^u_{j} \cdot \hat{Q}_k + h^D_{ijk} \hat{d}^c_i  \hat{Q}_k\cdot\hat{H}^d_{j}  + h^E_{ijk} \hat{e}^c_i  \hat{L}_k\cdot\hat{H}^d_{j} , \\
+W_1 &=& g^Q_{ijk} \hat{D}_i  \hat{Q}_j \cdot \hat{Q}_k + g^q_{ijk} \hat{\bar{D}}_i \hat{d}^c_j \hat{u}^c_k, \\
+W_2 &=& g^N_{ijk} \hat{N}^c_i \hat{D}_j \hat{d}^c_k + g^E_{ijk} \hat{e}^c_i \hat{D}_j \hat{u}^c_k + g^D_{ijk}  \hat{Q}_i \cdot \hat{L}_j \hat{\bar{D}}_k.
 \label{Eq:e6-superpot-parts}
 \end{eqnarray}
 
@@ -435,15 +435,15 @@ approach taken in work on the cE$_6$SSM \cite{Athron:2009ue,
 %% \begin{align}
 %%   \begin{split}
     \ba
-    W &\approx& y_{\tau} \left (\SuperField{L}_3 \cdot \SuperField{H}_d
-     \right ) \SuperField{e}^C_3 + y_b \left (\SuperField{Q}_3\cdot\SuperField{H}_d
-     \right ) \SuperField{d}_3^C + y_t \left (\SuperField{H}_u\cdot\SuperField{Q}_3
-     \right ) \SuperField{u}_3^C\\
+    W &\approx& y_{\tau} \SuperField{L}_3 \cdot \SuperField{H}_d
+      \SuperField{e}^C_3 + y_b \SuperField{Q}_3\cdot\SuperField{H}_d
+      \SuperField{d}_3^C + y_t \SuperField{H}_u\cdot\SuperField{Q}_3
+      \SuperField{u}_3^C\\
     &&
-    + \lambda_i \SuperField{S} \left (\SuperField{H}_{1i}
-    \cdot \SuperField{H}_{2i} \right ) + \kappa_i \SuperField{S} \SuperField{D}_i
-    \SuperField{\overline{D}}_i + \mu' \left (\SuperField{H}'\cdot
-    \SuperField{\overline{H'}}\right ),
+    + \lambda_i \SuperField{S} \SuperField{H}_{1i}
+    \cdot \SuperField{H}_{2i}  + \kappa_i \SuperField{S} \SuperField{D}_i
+    \SuperField{\overline{D}}_i + \mu' \SuperField{H}'\cdot
+    \SuperField{\overline{H'}},
     \ea
   %% \end{split}
   \label{SuPot_RGE}
@@ -465,23 +465,30 @@ V=V_F+V_D+V_{\textrm{soft}}+\Delta V \, ,
 \end{equation}
 where
 \begin{align}
-V_F&=\lambda^2|S|^2(|H_1|^2+|H_2|^2)+\lambda^2|(H_1\cdot
-H_2)|^2,\label{eq:E6VFterms}\\ V_D&=\frac{\bar{g}^2}{8}\left (
+V_F&=\lambda^2|S|^2(|H_1|^2+|H_2|^2)+\lambda^2|H_1\cdot
+H_2|^2,\label{eq:E6VFterms}\\ 
+V_D&=\frac{\bar{g}^2}{8}\left (
 |H_2|^2-|H_1|^2\right )^2+\frac{g_2^2}{2}|H_1^\dagger
-H_2|^2+\frac{g_1'^2}{2}(Q_1|H_1|^2+Q_2|H_2|^2+Q_S|S|^2)^2,\label{eq:E6VDterms}\\ V_{\textrm{soft}}&=m_S^2|S|^2+m_{H_d}^2|H_1|^2+m_{H_u}^2|H_2|^2+\Big
-[\lambda A_\lambda S(H_1\cdot H_2)+\textrm{h.c.}\Big
+H_2|^2+\frac{g_1'^2}{2}(Q_1|H_1|^2+Q_2|H_2|^2+Q_S|S|^2)^2,\label{eq:E6VDterms}\\ 
+V_{\textrm{soft}}&=m_S^2|S|^2+m_{H_d}^2|H_1|^2+m_{H_u}^2|H_2|^2+\Big
+[\lambda A_\lambda SH_1\cdot H_2+\textrm{h.c.}\Big
 ].\label{eq:E6Vsoft}
 \end{align}
 In these expressions $g_2$, $g'=\sqrt{3/5}g_1$, and $g_1'$ are the
 $SU(2)$, (non-GUT normalized) $U(1)_Y$ and $U(1)'$ gauge couplings
 respectively and $\bar{g}^2=g_2^2+g'^2$. The charges $Q_1$,
 $Q_2$ and $Q_S$ are effective $U(1)'$ charges for
-$H_1$, $H_2$ and $S$, respectively. The term $\Delta V$ contains the
-Coleman-Weinberg contributions to the effective potential. In the case
+$H_1$, $H_2$ and $S$, respectively. In the case
 of the $U(1)_\chi$ model, $V_F$ may also contain an elementary
-$\mu$ term, as occurs in the MSSM.\\ \\ Demanding that
-the Higgs fields $H_1$, $H_2$ and the singlet $S$ acquire real VEVs of
-the form
+$\mu$ term, as occurs in the MSSM. The term $\Delta V$ contains the
+Coleman-Weinberg contributions to the effective potential. For the purposes of this study, 
+we include in $\Delta V$ only the one-loop contributions from the top quark and stop squarks,
+\begin{equation}
+\Delta V=\frac{3}{32\pi^2}\left [ m_{\tilde{t}_1}^4\left ( \log\frac{m_{\tilde{t}_1}^2}{Q^2}-\frac{3}{2}\right )+m_{\tilde{t}_2}^4\left ( \log\frac{m_{\tilde{t}_2}^2}{Q^2}-\frac{3}{2}\right )-2m_t^4\left ( \log\frac{m_t^2}{Q^2}-\frac{3}{2}\right )\right ].
+\end{equation}
+Explicit expressions for the running $\overline{\textrm{DR}}$ top mass $m_t$ and stop masses $m_{\tilde{t}_{1,2}}$ are given 
+below.\\
+Demanding that the Higgs fields $H_1$, $H_2$ and the singlet $S$ acquire real VEVs of the form
 \begin{equation}\label{eq:E6vevs}
 \langle H_1 \rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} v_1 \\ 0\end{pmatrix}, \; \langle H_2 \rangle = \frac{1}{\sqrt{2}}\begin{pmatrix} 0 \\ v_2 \end{pmatrix}, \; \langle S \rangle =\frac{s}{\sqrt{2}}
 \end{equation}
@@ -489,22 +496,25 @@ at the physical minimum leads to the minimization conditions
 \begin{subequations}\label{eq:E6EWSBConditions}
 \begin{align}
 &f_1=m_{H_d}^2v_1+\frac{\lambda^2}{2}(v_2^2+s^2)v_1-\frac{\lambda A_\lambda}{\sqrt{2}}sv_2-\frac{\bar{g}^2}{8}
-(v_2^2-v_1^2)v_1+D_{H_1}v_1+\frac{\partial \Delta V_{E_6}}{\partial v_1}=0,\label{eq:E6EWSBcondition1} \\
+(v_2^2-v_1^2)v_1+D_{H_1}v_1+\frac{\partial \Delta V}{\partial v_1}=0,\label{eq:E6EWSBcondition1} \\
 &f_2=m_{H_u}^2v_2+\frac{\lambda^2}{2}(v_1^2+s^2)v_2-\frac{\lambda A_\lambda}{\sqrt{2}}sv_1+\frac{\bar{g}^2}{8}
-(v_2^2-v_1^2)v_2+D_{H_2}v_2+\frac{\partial \Delta V_{E_6}}{\partial v_2}=0,\label{eq:E6EWSBcondition2} \\
-&f_3=m_S^2s+\frac{\lambda^2}{2}(v_2^2+v_1^2)s-\frac{\lambda A_\lambda}{\sqrt{2}}v_2v_1+D_Ss+\frac{\partial \Delta V_{E_6}}{\partial s}=0.\label{eq:E6EWSBcondition3}
+(v_2^2-v_1^2)v_2+D_{H_2}v_2+\frac{\partial \Delta V}{\partial v_2}=0,\label{eq:E6EWSBcondition2} \\
+&f_3=m_S^2s+\frac{\lambda^2}{2}(v_2^2+v_1^2)s-\frac{\lambda A_\lambda}{\sqrt{2}}v_2v_1+D_Ss+\frac{\partial \Delta V}{\partial s}=0.\label{eq:E6EWSBcondition3}
 \end{align}
 \end{subequations}
 The quantities $D_{H_1}$, $D_{H_2}$ and $D_S$ appearing above are
 $U(1)'$ $D$-term contributions that are absent in the MSSM and NMSSM
 and are given by
 \begin{equation}\label{eq:E6Dterms}
-D_\phi\equiv \frac{g_1'^2}{2}\left (
-Q_1v_1^2+Q_2v_2^2+Q_Ss^2\right
-)Q_\phi.
+D_\phi\equiv \frac{g_1'^2}{2}\left (Q_1v_1^2+Q_2v_2^2+Q_Ss^2\right )Q_\phi.
 \end{equation}
-As was noted in \cite{Athron:2013ipa}, the first two of these
-conditions may be rewritten in the form
+We also include these $U(1)'$ $D$-term contributions in the diagonalised stop masses,
+\begin{align}
+  m_{\tilde{t}_{1,2}}^2&=\frac{1}{2}\bigg \{ m_{Q3}^2+m_{u3}^2+\frac{1}{2}M_Z^2\cos 2\beta+D_Q+D_u+2m_t^2\nonumber\\
+&\quad{}\mp\sqrt{\left [ m_{Q3}^2+m_{u3}^2+\left ( \frac{1}{2}-\frac{4}{3}\sin^2\theta_W\right )M_Z^2\cos 2\beta + D_Q-D_u\right ]^2+4m_t^2X_t^2}\bigg \},
+\end{align}
+where $m_t^2=y_t^2v_2^2/2$ and $X_t=A_t-\frac{\lambda s v_1}{\sqrt{2}v_2}$. By definition we take $m_{\tilde{t}_1}$ to correspond to the lighter of the two states.\\
+As was noted in \cite{Athron:2013ipa}, the first two of these conditions may be rewritten in the form
 \begin{equation}\label{eq:E6MZequation}
 \frac{M_Z^2}{2}=-\frac{\lambda^2s^2}{2}+\frac{\tilde{m}_{H_d}^2-\tilde{m}_{H_u}^2\tan^2\beta}{\tan^2\beta-1}+\frac{D_{H_1}-D_{H_2}\tan^2\beta}{\tan^2\beta-1},
 \end{equation}
@@ -520,7 +530,7 @@ loop corrections into the soft masses,
   v_1},\\ \tilde{m}_{H_u}^2&=m_{H_u}^2+\frac{1}{v_2}\frac{\partial
   \Delta V}{\partial v_2}.
 \end{align*}
-Written in the form of Eq. (\ref{eq:E6MZequation}) we see the
+Written in the form of Eq.~(\ref{eq:E6MZequation}) we see the
 potential new source of fine tuning alluded to above, in the form of
 the third term on the right-hand side. For large values of the VEV
 $s$, the $D$-term contributions can be quite a bit larger than
@@ -532,13 +542,13 @@ limits typically requires large values of the singlet VEV $s$. For
 example $s\gtrsim 6$ TeV is required in the E$_6$SSM with
 $U(1)'=U(1)_N$, so that $|D_{H_1}|,|D_{H_2}|\gg M_Z^2$ for $E_6$
 models with $Q_S\neq 0$. As a result the remaining terms on the
-right-hand side of Eq. (\ref{eq:E6MZequation}) must be tuned to cancel
+right-hand side of Eq.~(\ref{eq:E6MZequation}) must be tuned to cancel
 the resulting very large contribution to $M_Z$. Moreover, because this
 is a large tree level fine tuning, it may negate the increase in
 naturalness that is associated with having a reduced need for heavy
 superpartners. In $U(1)$ extended models for which $Q_S\neq 0$, the
 importance of the $Z^\prime$ mass to the fine tuning in these models
-can be made even clearer by writing Eq. (\ref{eq:E6MZequation}) in the
+can be made even clearer by writing Eq.~(\ref{eq:E6MZequation}) in the
 form given in \cite{Athron:2013ipa},
 \begin{equation}\label{eq:originalE6MZequation}
 c(\theta,\tan\beta)\frac{M_Z^2}{2}=-\frac{\lambda^2 s^2}{2}+\frac{\tilde{m}_{H_d}^2-\tilde{m}_{H_u}^2\tan^2\beta}{\tan^2\beta-1}+d(\theta,\tan\beta)\frac{M_{Z^\prime}^2}{2}
@@ -554,16 +564,6 @@ $Z^\prime$ mass, and that the tuning can be expected to increase with
 $M_{Z^\prime}$. As shall be shown below, the exact size of this tuning
 then depends strongly on the choice of $U(1)'$ charges, via the
 coefficient $d$.
-%% \section{\label{sec:tuning}Fine Tuning}
-% Introduce tuning measure - BG measure (maybe Peter will add in a justification
-% here).
-% Explain that we derived the master formula in the E6SSM as given in Maien's 
-% paper, but including extra effects not in that formula. 
-% Full result is given in appendix.
-% Numerical technique for calculating 1-loop tunings and including RG effects
-% Outline is given here, full equations for RGE effects etc. given in appendix.
-% How we calculate the tuning using spectrum generator, for E6SSM uses
-% FlexibleSUSY (cite FlexibleSUSY and SARAH).
 \section{\label{sec:tuningmeasure}The Fine Tuning Measure}
 As stated above, to quantify the resulting fine tuning we
 apply the traditional Barbieri-Giudice measure
@@ -603,15 +603,16 @@ m_{H_d}^2,m_{H_u}^2,m_S^2,g_1,g_2,g_1'\}$. Expressions for the
 quantity $C$ and the $\tilde{\Delta}_q$ appearing above are given in
 Appendix \ref{app:masterformula}. It should be noted that the effects
 of $U(1)$ mixing are neglected in deriving
-Eq. (\ref{eq:E6masterformula}).\\ \\ However, it is well known in the
+Eq.~(\ref{eq:E6masterformula}).\\
+However, it is well known in the
 MSSM that radiative corrections can significantly change (indeed,
 reduce) the fine tuning \cite{Cassel:2010px}. It is therefore
 important when studying the fine tuning to include loop corrections to
 the effective potential in the fine tuning measure. To do so it is
 most convenient to work in terms of the EWSB conditions
-Eq. (\ref{eq:E6EWSBConditions}), rather than
-Eq. (\ref{eq:E6MZequation}). The general procedure is as follows
-\cite{Ellwanger:2011mu}. For a model in which $m$ fields develop real
+Eq.~(\ref{eq:E6EWSBConditions}), rather than
+Eq.~(\ref{eq:E6MZequation}). The general procedure that we use is as follows
+(this method has also previously been applied in the NMSSM, see for example \cite{Ellwanger:2011mu}). For a model in which $m$ fields develop real
 VEVs (e.g. $m=2$ in the MSSM, $m=3$ in the NMSSM and in the $E_6$
 models considered), we require that the $m$ minimization conditions
 \begin{equation}\label{eq:EWSBconditions}
@@ -653,14 +654,16 @@ M_h^2\begin{pmatrix}
 \end{pmatrix}.
 \end{equation} 
 The quantities forming the first matrix on the right-hand side, along
-with $M_h^2$, are easily calculated analytically. The remaining
-derivatives $\partial q_k /\partial p$ must be determined using the
+with $M_h^2$, are easily calculated by differentiating the conditions in Eq.~(\ref{eq:E6EWSBConditions})
+with respect to the VEVs and the running parameters. 
+The remaining derivatives $\partial q_k /\partial p$ must be determined using the
 RGEs. Once these have been obtained, it is straightforward to solve
 for the $\partial v_i /\partial p$. The sensitivities 
 $\Delta_p$ are then simply linear combinations of the $\partial
-v_i/\partial p$ and $\partial q_k/\partial p$. Radiative corrections
-may be easily incorporated by including the Coleman-Weinberg potential
-contributions in the EWSB conditions.\\ \\ Evaluating the derivatives
+v_i/\partial p$ and $\partial q_k/\partial p$. The effects of radiative corrections
+may be easily included by including the Coleman-Weinberg potential
+contributions $\Delta V$ in the EWSB conditions.\\
+Evaluating the derivatives
 $\partial q_k/\partial p$ must (in general) be done by numerically
 integrating the two-loop RGEs. This is time consuming and presents an
 obstacle to doing large scans of the parameter space. For studying
@@ -842,28 +845,21 @@ $M_2=100\textrm{ GeV, } 1050\textrm{ GeV, } 2000 \textrm{ GeV}$ & $M_2=100\textr
 \end{tabular}
 \end{ruledtabular}
 \caption{The parameters scanned over and the ranges of values used in
-  the MSSM and the $E_6SSM$ models.}
+  the MSSM and the E$_6SSM$ models.}
 \label{tab:scanranges}
 \end{table}
 
-%   Since the stop mass does not have a large impact on the fine tuning
-%   when the cutoff scale is very low we can use this to see more clearly
-%   the impact of the $Z^\prime$ mass on fine tuning. To do se we choose a
-%   cutoff of  look at the fine tuning for two different
-%   values of the $Z^\prime$ mass, $2.5$ TeV, which is just above the
-%   current limits and $4.5$ TeV which could be in reach of the LHC run
-%   II, and compare these to the MSSM.
-
-
-%   For this we also fix [what we fix + explain different choices to
-%   before and their impact].
 \begin{figure}[h]
 \begin{center}
 \resizebox{!}{10cm}{%
 \includegraphics{all_models_tuning_vs_higgs.png}}
 \caption{Scatter plot of fine tuning vs lightest Higgs mass for the
   MSSM (green, bottom band), E$_6$SSM with $M_{Z^\prime} = 2.5$ TeV (blue, middle band) and
-  E$_6$SSM with $M_{Z^\prime} = 4.5$ TeV (red, top band).}
+  E$_6$SSM with $M_{Z^\prime} = 4.5$ TeV (red, top band). Note that there are points for which
+the fine tuning in the MSSM and E$_6$SSM with $M_{Z'}=2.5$ TeV is larger than is visible on this plot
+and those below;
+however these points are obscured by the overlaid data for the E$_6$SSM with $M_{Z'}=4.5$ TeV, and it is the 
+lower bound on the achievable tuning that is of interest here.}
 \label{Fig:e6ssmvsmssm}
 \end{center}
 \end{figure}
@@ -939,7 +935,11 @@ other U(1) extensions for the same $Z^\prime$ masses as we did for the
 E$_6$SSM.  To simplify the analysis we fix $\tan \beta = 10$, but scan
 over the remaining parameters as in Table \ref{tab:scanranges} and fix
 the rest to the same values we did in the scan carried out for
-Fig.~\ref{Fig:e6ssmvsmssm}.
+Fig.~\ref{Fig:e6ssmvsmssm}. In order to more clearly identify the lower bound
+on the obtainable tuning in each model, the parameter values for points in
+these main grid scans with a low fine tuning were then used as the starting points for
+smaller scans about those values. In these smaller scans the parameters were more finely
+varied to populate the low fine tuning regions.
 
 \begin{figure}
 \begin{center}
@@ -958,7 +958,7 @@ Fig.~\ref{Fig:e6ssmvsmssm}.
 As can be seen in Fig.~\ref{Fig:othere6modelsvsmssm} the severity of the tunings varies quite
 a bit.  This is because the charges appear as coefficients in front of
 the $Z^\prime$ mass in the EWSB condition.  These charges change the
-value of the coefficient $d$ in Eq. (\ref{eq:originalE6MZequation}).
+value of the coefficient $d$ in Eq.~(\ref{eq:originalE6MZequation}).
 The values of the coefficient $d$ in each model, for $\tan\beta = 10$,
 is $\{-0.01, 0.40, 0.50, 0.81 \}$ for $\{U(1)_I, U(1)_N, U(1)_\psi,
 U(1)_\eta \}$ and this determines which of the models are most tuned.
@@ -1239,14 +1239,15 @@ case future LHC limits on the $Z^\prime$ mass would be especially
 interesting for this case as they would significantly raise the
 minimum level of tuning which can be obtained.
 
-\acknowledgements We would like to thank R. Nevzorov for many useful
-discussions and comments and Florian Staub for very helpful responses
+\acknowledgements We would like to thank R.~Nevzorov for many useful
+discussions and comments and F.~Staub for very helpful responses
 regarding the gauge kinetic mixing contributions in SARAH. DH would
-also like to thank A. Ismail and T. Rizzo. PA would like to thank
-J.H.~Park, A.~Voigt and D.~Stockinger for useful discussion regarding
-the use of FlexibleSUSY in this project. This work was supported by
-the University of Adelaide and by the ARC Centre of Excellence for
-Particle Physics at the Terascale.
+also like to thank A.~Ismail and T.~Rizzo for their helpful comments
+regarding fine tuning in the MSSM. 
+PA would like to thank J.H.~Park, A.~Voigt and D.~Stockinger for 
+useful discussion regarding the use of FlexibleSUSY in this project. 
+This work was supported by the University of Adelaide and by the ARC 
+Centre of Excellence for Particle Physics at the Terascale.
 
 \appendix
 \section{\label{app:masterformula}Fine Tuning Master Formula}
@@ -1256,7 +1257,7 @@ To write down the tree level master formula, it is convenient to define the quan
 z_i =\epsilon_{ijk} \frac{\partial f_j}{\partial s}\frac{\partial f_k}{\partial \tan\beta}
 \label{eq:masterformulacoefficients}
 \end{equation}
-with $f_1,f_2,f_3$ as given in Eq. (\ref{eq:E6EWSBConditions}). The relevant partial derivatives are
+with $f_1,f_2,f_3$ as given in Eq.~(\ref{eq:E6EWSBConditions}). The relevant partial derivatives are
 \ba
 \frac{\partial f_1}{\partial \tan\beta}&=&-\frac{2M_Z}{\bar{g}}\,\cos^2\beta\left \{ \frac{\lambda A_\lambda s}{\sqrt{2}}\,\cos\beta+\sin\beta \left [ m_{H_d}^2+\frac{s^2}{2}\left ( \lambda^2+g_1'^2Q_1Q_S \right )\right.\right.\nonumber\\
 &&\left.\left.+M_Z^2\left ( \frac{5}{2}-\frac{4\lambda^2}{\bar{g}^2}-\frac{4g_1'^2}{\bar{g}^2}Q_1Q_2+\frac{6g_1'^2}{\bar{g}^2}Q_1^2\right )\right ]+3M_Z^2\,\sin^3\beta\left [ \frac{2\lambda^2}{\bar{g}^2}-1\right.\right.\nonumber\\
@@ -1274,7 +1275,7 @@ For a running parameter $q$ appearing in the tree level EWSB conditions, the cor
 \tilde{\Delta}_q=z_1\frac{\partial f_1}{\partial q}+z_2\frac{\partial f_2}{\partial q}+z_3\frac{\partial f_3}{\partial q}.
 \label{eq:tuningContribution}
 \ee
-It is straightforward to compute the appropriate derivatives directly from the EWSB conditions (\ref{eq:E6EWSBConditions}). Similarly, the quantity $C$ appearing in Eq. (\ref{eq:E6masterformula}) is given by
+It is straightforward to compute the appropriate derivatives directly from the EWSB conditions (\ref{eq:E6EWSBConditions}). Similarly, the quantity $C$ appearing in Eq.~(\ref{eq:E6masterformula}) is given by
 \be
 C=\frac{1}{2}\left ( z_1\frac{\partial f_1}{\partial M_Z}+z_2\frac{\partial f_2}{\partial M_Z}+z_3\frac{\partial f_3}{\partial M_Z}\right ),
 \label{eq:tuningDenominator}
@@ -1291,7 +1292,7 @@ with
 
 Provided that one does not run over too large a range of scales, the
 solutions to the RG equations for a model can be reasonably well
-approximated by a Taylor series, Eq. (\ref{eq:rgeapproxsoln}).  For a
+approximated by a Taylor series, Eq.~(\ref{eq:rgeapproxsoln}).  For a
 parameter $p$, this reads
 \begin{equation*}
 q(Q)=q(M_X)+\frac{t}{16\pi^2}\left ( \beta_q^{(1)}+\frac{\beta_q^{(2)}}{16\pi^2}\right )+\frac{t^2}{(16\pi^2)^2}b_q^{(2)}(M_X),
@@ -1305,7 +1306,8 @@ and the $U(1)$ extended models. Due to the smallness of the first and
 second generation Yukawa couplings, we neglect them in our
 calculations. The corresponding soft SUSY breaking trilinears are
 likewise omitted. Additionally, all soft mass matrices are assumed
-diagonal, and the gaugino masses are taken to be real.\\ \\ In the
+diagonal, and the gaugino masses are taken to be real.\\
+In the
 MSSM, the relevant parameters for the fine tuning calculation are
 $\mu$, $B$, $m_{H_u}^2$, $m_{H_d}^2$ at tree level. For the
 renormalisation group running of the relevant parameters
@@ -1433,7 +1435,7 @@ In order to keep these expressions compact we have used the notation
 \Sigma_{Q}=\sum_i Q_i^2=\frac{321}{40}\cos^2\theta+\frac{217}{24}\sin^2\theta+\frac{27}{8\sqrt{15}}\sin 2\theta
 \end{align*}
 to denote the trace over the $U(1)'$ charges, along
-with \footnote{This is the trace which is assumed to vanish in
+with \footnote{The first of these is the trace which is assumed to vanish in
   \cite{Martin:1993zk}.  Although we use the NoU1Mixing to neglect
   gauge kinetic mixing, SARAH does this by removing the RGE for
   the off diagonal gauge couplings and effectively setting them to
@@ -1474,7 +1476,7 @@ and the $O(t^2)$ coefficient in the series expansion are
 &{}\left.+g_1'^2\left [ 4Q_S^2\lambda^2 -6\left ( Q_2^2-Q_Q^2-Q_u^2\right )y_t^2-6\left ( Q_1^2-Q_Q^2-Q_d^2\right )y_b^2 \right.\right.\nonumber\\
 &{}\left.-2\left ( Q_1^2-Q_L^2-Q_e^2\right )y_\tau^2-6\left ( Q_S^2-Q_D^2-Q_{\overline{D}}^2 \right )\Sigma_\kappa-4\left ( Q_S^2-Q_1^2-Q_2^2\right )\Sigma_\lambda\right ]\nonumber\\
 &{}+16g_3^2\left ( y_t^2+y_b^2+\Sigma_\kappa\right ) +\frac{33}{2}g_2^4+\frac{297}{50}g_1^4+2g_1'^4\left [ 2Q_1^4+2Q_2^4+2Q_S^4+\left ( Q_1^2+Q_2^2+Q_S^2\right )\Sigma_{Q}\right ]\nonumber\\
-&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( Q_1^2+Q_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left (Q_1^2+Q_2^2\right )\bigg \},\label{eq:USSMLambdaBetaTwoLoop}\\
+&{}+\frac{9}{5}g_1^2g_2^2+6g_1'^2g_2^2\left ( Q_1^2+Q_2^2\right )+\frac{6}{5}g_1^2g_1'^2\left [Q_1^2+Q_2^2+\left ( Q_2 - Q_1 \right )\Sigma_Q^Y\right ]\bigg \},\label{eq:USSMLambdaBetaTwoLoop}\\
 b_\lambda^{(2)}&=\lambda \bigg \{ 2\lambda^2\left ( 3\lambda^2 +4\Sigma_\lambda +6\Sigma_\kappa \right )+4\Pi_\lambda + 6\Pi_\kappa +6\left ( \Sigma_\lambda+\frac{3}{2}\Sigma_\kappa\right )^2+7\lambda^2\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\nonumber\\
 &{}+\left ( 3y_t^2+3y_b^2+y_\tau^2\right )\left (2\Sigma_\lambda+3\Sigma_\kappa\right ) +3\left ( \frac{15}{2}y_t^4+\frac{15}{2}y_b^4+\frac{3}{2}y_\tau^4 +5y_b^2y_t^2 +3y_b^2y_\tau^2 +y_t^2y_\tau^2\right )\nonumber\\
 &{}-\frac{1}{5}g_1^2\left ( 12\lambda^2+16y_b^2+22y_t^2+12y_\tau^2+12\Sigma_\lambda +13\Sigma_\kappa \right )\nonumber\\
@@ -1686,7 +1688,7 @@ b_{m_{H_u}^2}^{(2)}&=72y_t^4\left ( m_{H_u}^2+m_{Q3}^2+m_{u3}^2\right )+144y_t^2
 while those for $m_S^2$ are
 \begin{subequations}
 \begin{align}
-\beta_{m_S^2}^{(1)}&=\sum_{i=1}^3\left [ 4\lambda_i^2\left ( m_{H_i^d}^2+m_{H_i^u}^2+m_S^2\right )+4a_{\lambda_i}^2+6\kappa_i\left ( m_S^2+m_{D_i}^2+m_{\overline{D}_i}^2\right )+6a_{\kappa_i}^2\right ]\nonumber\\
+\beta_{m_S^2}^{(1)}&=\sum_{i=1}^3\left [ 4\lambda_i^2\left ( m_{H_i^d}^2+m_{H_i^u}^2+m_S^2\right )+4a_{\lambda_i}^2+6\kappa_i^2\left ( m_S^2+m_{D_i}^2+m_{\overline{D}_i}^2\right )+6a_{\kappa_i}^2\right ]\nonumber\\
 &{}-8Q_S^2g_1'^2M_1'^2+2Q_Sg_1'^2\Sigma_1',\label{eq:USSMms2BetaOneLoop}\\
 \beta_{m_S^2}^{(2)}&=\sum_{i=1}^3\bigg [ -16\lambda_i^2\left ( m_{H_i^u}^2+m_{H_i^d}^2+m_S^2 \right )-24\kappa_i^2\left ( m_{Di}^2+m_{\overline{D}i}^2+m_S^2 \right )\nonumber\\
 &{}-32\lambda_i^2a_{\lambda_i}^2-48\kappa_i^2a_{\kappa_i}^2\bigg ]-12\lambda^2y_t^2\left ( 2m_{H_u}^2+m_{H_d}^2+m_S^2+m_{Q3}^2+m_{u3}^2\right )\nonumber\\
@@ -1744,7 +1746,7 @@ If the one-loop contributions to the effective potential from top and stop loops
 &{}+16g_3^2y_t^2+6g_2^2y_t^2+g_1^2\left ( \frac{6}{5}y_t^2+\frac{2}{5}y_b^2\right )+\frac{128}{9}g_3^4+\frac{33}{2}g_2^4+\frac{3913}{450}g_1^4\nonumber\\
 &{}+2g_1'^4\left [ 2\left ( Q_2^4+Q_Q^4+Q_u^4\right )+\left ( Q_2^2+Q_Q^2+Q_u^2\right )\Sigma_{Q}\right ]+8g_3^2g_2^2+\frac{136}{45}g_3^2g_1^2\nonumber\\
 &{}+\frac{32}{3}g_3^2g_1'^2\left ( Q_Q^2+Q_u^2\right )+g_2^2g_1^2+6g_2^2g_1'^2\left ( Q_2^2+Q_Q^2\right )\nonumber\\
-&{}+\frac{2}{5}g_1^2g_1'^2\left [ 3Q_2^2+\frac{1}{3}Q_Q^2+\frac{16}{3}Q_u^2\right ]\bigg \},\label{eq:USSMYu22BetaTwoLoop}\\
+&{}+\frac{2}{5}g_1^2g_1'^2\left [ 3Q_2^2+\frac{1}{3}Q_Q^2+\frac{16}{3}Q_u^2+\left ( 3Q_2+Q_Q-4Q_u\right )\Sigma_Q^Y\right ]\bigg \},\label{eq:USSMYu22BetaTwoLoop}\\
 b_{y_t}^{(2)}&=y_t\bigg \{ 54y_t^4+\frac{13}{2}y_b^4+13y_t^2y_b^2+y_b^2y_\tau^2+\lambda^2\left ( \frac{5}{2}\lambda^2+15y_t^2+5y_b^2+y_\tau^2+2\Sigma_\lambda+3\Sigma_\kappa \right )\nonumber\\
 &{}-\frac{16}{3}g_3^2\left ( \lambda^2+2y_b^2+12y_t^2\right )-6g_2^2\left ( \lambda^2+y_b^2+6y_t^2\right )-g_1^2\left ( \frac{22}{15}\lambda^2+\frac{4}{3}y_b^2+\frac{52}{5}y_t^2\right )\nonumber\\
 &{}-2g_1'^2\left [ \lambda^2 \left (Q_1^2+2Q_2^2+Q_S^2+Q_Q^2+Q_u^2 \right )+y_b^2\left ( Q_1^2+Q_2^2+2Q_Q^2+Q_u^2+Q_d^2\right )\right.\nonumber\\

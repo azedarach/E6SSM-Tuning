@@ -10,53 +10,70 @@ paper. In response we have made changes to our manuscript and feel
 these have improved the paper, we therefore hope our paper will now be
 accepted for publication in PRD.
 \\
-\noindent We respond to each point rasied by the referee below, exaplaining
+\noindent We respond to each point raised by the referee below, explaining
 where appropriate what we have done to address it in the paper.
 
-
 \begin{itemize}
-\item Dylan to addresss
+\item {\it ``in eq. (9) an additional parameter $\mu'$ appears.  Where
+does it come from?  Even though it is later fixed to 5 TeV, it is not
+clear if it has any impact on their study?  Even if it has no impact,
+this should be stated somewhere.''}
 
-\item {\it ``page 11: the authors state that they
-  neglect gauge kinetic mixing. In view of possible effects on the LHC
-  bounds: is this really justified by the size of the off-diagonal
-  entries in the anomalous dimension matrix of the gauge fields? This
-  can be in particular important because gauge kinetic mixing and
-  additional decays in supersymmetric particles affect the mass bound
-  on a Z obtained from LHC and can lower them by up to 200 GeV as has
-  been discussed in arXiv:0909.1320, arXiv:1107.1133, arXiv:1205.5780,
-  arXiv:1206.3513 or their ref. 102. How would such a shift affect
-  their conclusions?''}
- 
+The referee is correct to point out that the bilinear coupling $\mu'$ is
+absent from the list of superpotential terms, and is lacking an explanation
+in our original submission. The $\mu'$ term violates the $E_6$ symmetry, as
+it is associated with the incomplete $27$ and $\overline{27}$ to which the
+fields $\hat{H'}$ and $\hat{\overline{H}'}$ belong, but is invariant under
+the Standard Model gauge group and the low energy $U(1)'$ symmetry. For this
+reason it is not given in the superpotential in eq. (5). Additionally, because
+this parameter does not appear in the EWSB conditions the impact from it on
+the fine tuning can be neglected, and so fixing the value of $\mu'$ does not
+impact the results.
+
+To address this, we have added a short discussion immediately
+following eq. (9) that explains the appearance of the additional parameter
+and states that the chosen value of $\mu'$ does not impact on the fine
+tuning in the study.
+
+\item {\it ``page 11: the authors state that they neglect gauge kinetic
+mixing.  In view of possible effects on the LHC bounds: is this really
+justified by the size of the off-diagonal entries in the anomalous
+dimension matrix of the gauge fields?  This can be in particular important
+because gauge kinetic mixing and additional decays in supersymmetric
+particles affect the mass bound on a Z obtained from LHC and can lower them
+by up to 200 GeV as has been discussed in arXiv:0909.1320, arXiv:1107.1133,
+arXiv:1205.5780, arXiv:1206.3513 or their ref. 102.  How would such a shift
+affect their conclusions?''}
+
 This is an important point which we neglected to comment on in our
-origional article. In the models we investigate numerically in our
+original article.  In the models we investigate numerically in our
 paper, if gauge kinetic mixing is absent at the GUT scale it, the
 radiatively induced gauge kinetic mixing will be rather small at the
 EW scale as has been shown in the literature.  Therefore we neglected
-this. However the referee is correct that it is not the case in all
+this.  However the referee is correct that it is not the case in all
 $U(1)$ extensions and this may have a significant impact on the
 $Z^\prime$ mass limit.
 
 To address this issue we have added remarks to the end of section III
-explaining why it is small in the models we consider, with referemce
+explaining why it is small in the models we consider, with reference
 to the previous literature and comment on how it will impact on tuning
 results if one considers a case with large gauge kinetic mixing.
 
 \item {\it ``page 13: the author state that the include leading
-  two-loop contribu- tions to the Higgs mass. Which are those? Are the
-  corresponding contributions to the minimization equations 16
-  included and, thus, in their measure of fine-tuning? Concerning the
-  two-loop part: in eq.(9) the couplings κi SDi Di are included. As
-  the extra D-quarks have to be heavy, one would naively expect that
-  they give a sizable contribution to the Higgs masses at the 2-loop
-  level, in particular as they take in their numerical studies |λ| ≤
-  3. Are those included as well?''}
+two-loop contributions to the Higgs mass.  Which are those?  Are the
+corresponding contributions to the minimization equations 16 included
+and, thus, in their measure of fine-tuning?  Concerning the two-loop part:
+in eq. (9) the couplings $\kappa_i S D_i D_i$ are included.  As the extra
+D-quarks have to be heavy, one would naively expect that they give a
+sizable contribution to the Higgs masses at the 2-loop level, in particular
+as they take in their numerical studies $|\lambda| \leq 3$.  Are those
+included as well?''}
 
 The referee is correct that we missed the references specifying what
-we mean by the leading two-loop corrections, so this was unclear. We
+we mean by the leading two-loop corrections, so this was unclear.  We
 included leading two-loop corrections calculated using effective field
 theory methods, which have been generalised from well known
-calculations in the MSSM and NMSSM. 
+calculations in the MSSM and NMSSM.
 
 To address this issue we have added references pointing out where we
 obtained the leading two-loop Higgs corrections from.  For
@@ -64,76 +81,96 @@ completeness we also added a footnote pointing readers to the new tool
 in the SARAH package which calculates the two-loop corrections to
 Higgs masses in non-SUSY models.
 
-We also understand why the referee
-may expect $\kappa$ couplings to give a large contribution to the
-light Higgs mass, however we find that already at one-loop the
-contribution from this coupling is small. The main reason for this is
-the fact that singlet mixing with lightest Higgs is highly suppressed
-in these models, which is a result of the of the large singlet VEV
+We also understand why the referee may expect $\kappa$ couplings to give
+a large contribution to the light Higgs mass, however we find that already
+at one-loop the contribution from this coupling is small. The main reason
+for this is the fact that singlet mixing with lightest Higgs is highly
+suppressed in these models, which is a result of the large singlet VEV
 required to meet the $Z^\prime$ limit.  The impact of the $\kappa$
 couplings on the Higgs mass was also looked at in section 5.2.2 of
 hep-ph/0510419.
 
-The leading two loop corrcetions to the effective potential are not
-included in our calculation of the fine tuning.  Although the one loop
+The leading two-loop corrcetions to the effective potential are not
+included in our calculation of the fine tuning.  Although the one-loop
 effective potential corrections are important they are already smaller
-than the RGE corrections and so we do not expect the two loop
-effective potential corrections to contribute at to the same level as
+than the RGE corrections and so we do not expect the two-loop
+effective potential corrections to contribute at the same level as
 the terms we include nor one which would significantly alter our
-conculusions.
+conclusions.
 
-To address this we have added a cooment specifying the precise one
+To address this we have added a comment specifying the precise one
 loop corrections we use to the end of the paragraph below Eqn 30.
 
- 
-
-
-\item {\it ``on page 15 the authors claim that for MX = 1016 GeV a
-  lower bound of 200 for the fine tuning taking mh = 125 GeV. Looking
-  at their approximation in the calculation of mh this mass has most
-  likely a theory uncertainty of about 10 GeV and, thus, I do not
-  understand how they can make such a statement. This also concerns
-  their statement on page 17.''}  
+\item {\it ``on page 15 the authors claim that for $M_X = 10^{16}$ GeV a
+lower bound of 200 for the fine tuning taking $m_h = 125$~GeV. Looking
+at their approximation in the calculation of $m_h$ this mass has most
+likely a theory uncertainty of about 10 GeV and, thus, I do not
+understand how they can make such a statement.  This also concerns
+their statement on page 17.''}
 
 The referee is correct to point out that there is a large theoretical
 uncertainty on the Higgs mass and we did not mean to suggest
 otherwise.  When we discuss the fine tuning dependence on the Higgs
 mass we are trying to show the qualitative behavior of the tuning
 increasing with the Higgs mass and how this changes depending on the
-UV cuttoff. We agree that the theoretical error on the Higgs mass is
+UV cutoff.  We agree that the theoretical error on the Higgs mass is
 rather large and that this affects the impact the Higgs mass
 measurement has on the minimum tuning that is consistent with
 observation.  However such discussions raise difficult questions about
-how large the theoretcial error and how to address that in the context
-of fine tuning. Therefore we leave such tricky questions to papers
+how large the theoretical error is and how to address that in the context
+of fine tuning.  Therefore we leave such tricky questions to papers
 which are focussed on the impact on the Higgs rather than the fine
 tuning from the $Z^\prime$ mass which we are interested in here.
 
-To address the referees remarks we have adjusted the wording of the
-first comment he refers to and have added a footnote pointing out that
+To address the referee's remarks we have adjusted the wording of the
+first comment referred to and have added a footnote pointing out that
 there will be a sizable uncertainty of the Higgs mass.
 
-\item Dylan to address
+\item {\it ``looking at their table II, one sees that in certain parts of
+the parameter space, $A_t$ can be much larger than the corresponding soft
+masses. This implies the danger of color and charge breaking minima as is
+known for long time. I guess that quite some points are excluded by this.
+Moreover, it seems that they allow also $|\mu|$ to be below 100 GeV which
+would conflict LEP2 data. Are such points really included in their analysis?''}
 
-\item Dylan to address
-\item Dylan to address
-\item Dylan to address
+\item {\it ``page 6: it is stated, that the $\hat N$ field remains
+interactionless. However, to obtain light neutrino masses, there should be
+at least Yukawa interactions.''}
 
+The referee is correct to point out this out, and the sentence should instead
+state that the $\hat N$ field does not participate in the gauge interactions
+under the choice of $U(1)_N$. We have corrected this to address the referee's
+comments.
+
+\item {\it ``page 7: the $\hat N$ field is missing in equation 4''}
+
+The referee's comment indicates that it was unclear the equation describes
+only the low energy matter content in each $27$-plet, once the heavy fields
+have been integrated out. The right-handed neutrinos are assumed to gain
+large masses at some intermediate scale above the electroweak scale in order
+to facilitate a see-saw mechanism for generating light neutrino masses.
+Consequently they do not appear in the low energy matter content, so that
+the equation is correct as currently written.
+
+In order to address this and clarify the discussion, we have added a comment
+immediately before the equation that explicitly mentions that the right-handed
+neutrinos have been integrated out of the low energy theory.
+
+\item {\it ``the journal is missing in ref. 57''}
+
+This has been corrected by adding the journal title.
 
 
 \end{itemize}
 
-In addition to the changes to address the referees comments we also took the opportuinity to add two references we had missed out when we submitted the article to PRD which are:
+In addition to the changes to address the referee's comments we also took the
+opportunity to add two references we had missed out when we submitted the
+article to PRD which are:
 \begin{itemize}
-\item [19]  M.~Drees, N.~K.~Falck and M.~Gluck,Phys.\ Lett.\ B {\bf 167}, 187 (1986).
-\item [46]  C.~Boehm, P.~S.~B.~Dev, A.~Mazumdar and E.~Pukartas, JHEP {\bf 1306}, 113 (2013)
- \end{itemize}
-
-
-
- 
-
-
-
+\item [19]  M.~Drees, N.~K.~Falck and M.~Gluck, Phys.\ Lett.\ B {\bf 167},
+187 (1986).
+\item [46]  C.~Boehm, P.~S.~B.~Dev, A.~Mazumdar and E.~Pukartas, JHEP
+{\bf 1306}, 113 (2013)
+\end{itemize}
 
 \end{document}
